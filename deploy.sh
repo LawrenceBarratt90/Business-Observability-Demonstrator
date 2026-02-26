@@ -46,6 +46,8 @@ DT_URL=""
 DT_API_TOKEN=""
 DT_OTEL_TOKEN=""
 OLLAMA_MODEL="llama3.2"
+APP_OAUTH_CLIENT_ID=""
+APP_OAUTH_CLIENT_SECRET=""
 EC_CLIENT_ID=""
 EC_CLIENT_SECRET=""
 EC_RESOURCE=""
@@ -59,6 +61,8 @@ while [[ $# -gt 0 ]]; do
     --dt-token)         DT_API_TOKEN="$2"; shift 2 ;;
     --otel-token)       DT_OTEL_TOKEN="$2"; shift 2 ;;
     --model)            OLLAMA_MODEL="$2"; shift 2 ;;
+    --app-oauth-id)     APP_OAUTH_CLIENT_ID="$2"; shift 2 ;;
+    --app-oauth-secret) APP_OAUTH_CLIENT_SECRET="$2"; shift 2 ;;
     --ec-client-id)     EC_CLIENT_ID="$2"; shift 2 ;;
     --ec-client-secret) EC_CLIENT_SECRET="$2"; shift 2 ;;
     --ec-resource)      EC_RESOURCE="$2"; shift 2 ;;
@@ -73,6 +77,8 @@ while [[ $# -gt 0 ]]; do
       echo "  --dt-token TOKEN          Dynatrace API token (problems.read, metrics.read, etc.)"
       echo "  --otel-token TOKEN        Dynatrace OTel ingest token (traces, metrics, logs ingest)"
       echo "  --model MODEL             Ollama model to use (default: llama3.2)"
+      echo "  --app-oauth-id ID         AppEngine deploy OAuth client ID"
+      echo "  --app-oauth-secret SECRET AppEngine deploy OAuth client secret"
       echo "  --ec-client-id ID         EdgeConnect OAuth client ID"
       echo "  --ec-client-secret SECRET EdgeConnect OAuth client secret"
       echo "  --ec-resource URN         EdgeConnect OAuth resource (urn:dtenvironment:TENANT_ID)"
@@ -348,21 +354,47 @@ if [[ -n "$SKIP_APPENGINE" ]]; then
 elif [[ -z "$DT_URL" ]]; then
   warn "Skipped — no Dynatrace URL configured"
 else
-  if ! npx dt-app --version &>/dev/null; then
-    warn "dt-app CLI not found — installing..."
-    npm install dt-app@latest --save-dev 2>&1 | tail -2
+  # Prompt for AppEngine deploy OAuth credentials (required for headless/CI deploy)
+  if [[ -z "$APP_OAUTH_CLIENT_ID" ]]; then
+    echo ""
+    echo -e "  ${BOLD}AppEngine deploy requires an OAuth client for headless deployment.${NC}"
+    echo -e "  ${CYAN}Create one in Dynatrace: Account Management → OAuth clients${NC}"
+    echo -e "  ${CYAN}Required permissions: app-engine:apps:install, app-engine:apps:run${NC}"
+    echo -e "  ${CYAN}(or enter 'skip' to skip AppEngine deployment)${NC}"
+    echo ""
+    echo -e "  ${BOLD}Enter AppEngine OAuth Client ID${NC}"
+    read -rp "  → " APP_OAUTH_CLIENT_ID
   fi
 
-  echo "  Building AppEngine app..."
-  npx dt-app build 2>&1 | tail -5
-  ok "AppEngine app built"
-
-  echo "  Deploying to ${DT_APPS_URL}..."
-  if npx dt-app deploy 2>&1 | tail -10; then
-    ok "AppEngine UI deployed to your Dynatrace tenant"
-    echo -e "  ${CYAN}Open Dynatrace → Apps → Business Observability Forge${NC}"
+  if [[ "$APP_OAUTH_CLIENT_ID" == "skip" || -z "$APP_OAUTH_CLIENT_ID" ]]; then
+    warn "AppEngine deploy skipped — deploy later with: DT_APP_OAUTH_CLIENT_ID=... DT_APP_OAUTH_CLIENT_SECRET=... npx dt-app deploy"
   else
-    warn "AppEngine deploy had issues — you can retry manually with: npx dt-app deploy"
+    if [[ -z "$APP_OAUTH_CLIENT_SECRET" ]]; then
+      echo -e "  ${BOLD}Enter AppEngine OAuth Client Secret${NC}"
+      read -rp "  → " APP_OAUTH_CLIENT_SECRET
+    fi
+
+    # Set env vars for dt-app CLI (CI/CD headless deploy)
+    export DT_APP_OAUTH_CLIENT_ID="$APP_OAUTH_CLIENT_ID"
+    export DT_APP_OAUTH_CLIENT_SECRET="$APP_OAUTH_CLIENT_SECRET"
+
+    if ! npx dt-app --version &>/dev/null; then
+      warn "dt-app CLI not found — installing..."
+      npm install dt-app@latest --save-dev 2>&1 | tail -2
+    fi
+
+    echo "  Building AppEngine app..."
+    npx dt-app build 2>&1 | tail -5
+    ok "AppEngine app built"
+
+    echo "  Deploying to ${DT_APPS_URL}..."
+    if npx dt-app deploy --non-interactive 2>&1 | tail -10; then
+      ok "AppEngine UI deployed to your Dynatrace tenant"
+      echo -e "  ${CYAN}Open Dynatrace → Apps → Business Observability Forge${NC}"
+    else
+      warn "AppEngine deploy had issues — you can retry manually with:"
+      echo -e "  ${CYAN}DT_APP_OAUTH_CLIENT_ID=$APP_OAUTH_CLIENT_ID DT_APP_OAUTH_CLIENT_SECRET=... npx dt-app deploy${NC}"
+    fi
   fi
 fi
 
