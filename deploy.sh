@@ -50,6 +50,7 @@ APP_OAUTH_CLIENT_ID=""
 APP_OAUTH_CLIENT_SECRET=""
 EC_CLIENT_ID=""
 EC_CLIENT_SECRET=""
+EC_NAME=""
 EC_RESOURCE=""
 SKIP_APPENGINE=""
 SKIP_EDGECONNECT=""
@@ -63,6 +64,7 @@ while [[ $# -gt 0 ]]; do
     --model)            OLLAMA_MODEL="$2"; shift 2 ;;
     --app-oauth-id)     APP_OAUTH_CLIENT_ID="$2"; shift 2 ;;
     --app-oauth-secret) APP_OAUTH_CLIENT_SECRET="$2"; shift 2 ;;
+    --ec-name)          EC_NAME="$2"; shift 2 ;;
     --ec-client-id)     EC_CLIENT_ID="$2"; shift 2 ;;
     --ec-client-secret) EC_CLIENT_SECRET="$2"; shift 2 ;;
     --ec-resource)      EC_RESOURCE="$2"; shift 2 ;;
@@ -424,8 +426,13 @@ else
   if [[ -z "$EC_CLIENT_ID" ]]; then
     echo ""
     echo -e "  ${BOLD}EdgeConnect connects the Dynatrace AppEngine UI to this server.${NC}"
-    echo -e "  ${CYAN}You create these in Dynatrace: Settings → OAuth clients → Add client${NC}"
+    echo -e "  ${CYAN}Create an EdgeConnect in Dynatrace: Apps → Edge Connect → Add Edge Connect${NC}"
+    echo -e "  ${CYAN}Then copy the OAuth client credentials from the setup page.${NC}"
     echo -e "  ${CYAN}(or enter 'skip' to set this up later)${NC}"
+    echo ""
+    echo -e "  ${BOLD}Enter the EdgeConnect name (as shown in Dynatrace)${NC}"
+    echo -e "  ${CYAN}(e.g. bizobs-forge — must match exactly what you created in Dynatrace)${NC}"
+    read -rp "  → " EC_NAME
     echo ""
     echo -e "  ${BOLD}Enter EdgeConnect OAuth Client ID${NC}"
     read -rp "  → " EC_CLIENT_ID
@@ -455,8 +462,11 @@ else
       EC_API_HOST="${DT_TENANT_ID}.apps.${DT_STRIPPED}"
     fi
 
+    # Use provided name or default
+    EC_NAME="${EC_NAME:-bizobs-forge}"
+
     cat > edgeconnect/edgeConnect.yaml << ECEOF
-name: bizobs-generator
+name: ${EC_NAME}
 api_endpoint_host: ${EC_API_HOST}
 oauth:
   client_id: ${EC_CLIENT_ID}
@@ -482,7 +492,7 @@ ECEOF
     fi
 
     # Stop existing container if running
-    CONTAINER_NAME="edgeconnect-bizobs"
+    CONTAINER_NAME="edgeconnect-${EC_NAME}"
     if sudo docker ps -a --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
       sudo docker stop "$CONTAINER_NAME" 2>/dev/null || true
       sudo docker rm "$CONTAINER_NAME" 2>/dev/null || true
