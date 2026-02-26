@@ -274,7 +274,8 @@ CREDSEOF
 
   # Update app.config.json with the correct tenant apps URL
   if [[ -f app.config.json ]]; then
-    sed -i "s|https://YOUR_TENANT_ID[^\"]*|${DT_APPS_URL}/|g" app.config.json 2>/dev/null || true
+    # Replace any existing environmentUrl value (placeholder or previous config)
+    sed -i "s|\"environmentUrl\": \"[^\"]*\"|\"environmentUrl\": \"${DT_APPS_URL}/\"|g" app.config.json 2>/dev/null || true
     ok "Updated app.config.json → ${DT_APPS_URL}"
   fi
 fi
@@ -369,8 +370,16 @@ elif [[ -z "$DT_URL" ]]; then
   warn "Skipped — no Dynatrace URL configured"
 else
   # Derive SSO endpoint from tenant domain
-  SSO_BASE=$(echo "$DT_URL" | sed -E 's|https?://[^.]+\.||; s|^|https://sso.|')
-  SSO_ENDPOINT="${SSO_BASE}/sso/oauth2/token"
+  # Sprint/dev: sso-sprint.dynatracelabs.com  Live/SaaS: sso.dynatrace.com
+  DT_STRIPPED_EC=$(echo "$DT_URL" | sed -E 's|https?://[^.]+\.||')
+  if echo "$DT_STRIPPED_EC" | grep -qE '^sprint\.|^dev\.'; then
+    DT_ENV_TYPE_EC=$(echo "$DT_STRIPPED_EC" | cut -d. -f1)
+    DT_BASE_DOMAIN_EC=$(echo "$DT_STRIPPED_EC" | sed -E 's|^[^.]+\.||')
+    SSO_ENDPOINT="https://sso-${DT_ENV_TYPE_EC}.${DT_BASE_DOMAIN_EC}/sso/oauth2/token"
+  else
+    SSO_BASE=$(echo "$DT_STRIPPED_EC" | sed 's|^|https://sso.|')
+    SSO_ENDPOINT="${SSO_BASE}/sso/oauth2/token"
+  fi
 
   # Prompt for EdgeConnect OAuth credentials if not provided
   if [[ -z "$EC_CLIENT_ID" ]]; then
