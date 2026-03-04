@@ -6,7 +6,7 @@
 #    git clone https://github.com/lawrobar90/Dynatrace-Business-Observability-Forge.git
 #    cd Dynatrace-Business-Observability-Forge && ./setup.sh
 #
-#  The script will prompt you for 4 values if setup.conf doesn't exist.
+#  The script will prompt you for values if setup.conf doesn't exist.
 #  Or pre-fill setup.conf and it runs non-interactively.
 # ============================================================
 set -e
@@ -56,85 +56,161 @@ prompt_if_missing() {
   fi
 }
 
+prompt_optional() {
+  local var_name="$1"
+  local prompt_text="$2"
+  local fallback_var="$3"
+  local current_val="${!var_name}"
+
+  if [ -z "$current_val" ]; then
+    echo -ne "  ${CYAN}${prompt_text}${NC} "
+    read -r input
+    if [ -z "$input" ]; then
+      eval "$var_name=\"${!fallback_var}\""
+      echo -e "  ${GREEN}  → Using same as EdgeConnect${NC}"
+    else
+      eval "$var_name=\"$input\""
+    fi
+  fi
+}
+
 NEED_PROMPT=false
 if [ -z "$TENANT_ID" ] || [ "$TENANT_ID" = "YOUR_TENANT_ID" ] || \
+   [ -z "$ENV_TYPE" ] || \
    [ -z "$API_TOKEN" ] || [[ "$API_TOKEN" == *"XXXX"* ]] || \
-   [ -z "$OAUTH_CLIENT_ID" ] || [[ "$OAUTH_CLIENT_ID" == *"XXXX"* ]] || \
-   [ -z "$OAUTH_CLIENT_SECRET" ] || [[ "$OAUTH_CLIENT_SECRET" == *"YYYY"* ]]; then
-  NEED_PROMPT=true
+   [ -z "$EC_OAUTH_CLIENT_ID" ] || [[ "$EC_OAUTH_CLIENT_ID" == *"XXXX"* ]] || \
+   [ -z "$EC_OAUTH_CLIENT_SECRET" ] || [[ "$EC_OAUTH_CLIENT_SECRET" == *"YYYY"* ]]; then
+  # Support legacy setup.conf that used OAUTH_CLIENT_ID
+  if [ -n "$OAUTH_CLIENT_ID" ] && [ -z "$EC_OAUTH_CLIENT_ID" ]; then
+    EC_OAUTH_CLIENT_ID="$OAUTH_CLIENT_ID"
+    EC_OAUTH_CLIENT_SECRET="$OAUTH_CLIENT_SECRET"
+    DEPLOY_OAUTH_CLIENT_ID="$OAUTH_CLIENT_ID"
+    DEPLOY_OAUTH_CLIENT_SECRET="$OAUTH_CLIENT_SECRET"
+    [ -z "$ENV_TYPE" ] && ENV_TYPE="sprint"
+  else
+    NEED_PROMPT=true
+  fi
 fi
 
 if [ "$NEED_PROMPT" = true ]; then
-  echo -e "${BOLD}  We need 4 values. The prompts below tell you where to find each one.${NC}"
+  echo -e "${BOLD}  The prompts below tell you where to find each value.${NC}"
   echo ""
 
-  # 1. Tenant ID
-  echo -e "  ${CYAN}─── 1/4: Tenant ID ───${NC}"
-  echo -e "  ${YELLOW}Look at your Dynatrace URL: https://${BOLD}<THIS-PART>${NC}${YELLOW}.sprint.dynatracelabs.com${NC}"
+  # 1. Environment type
+  echo -e "  ${CYAN}─── 1/6: Environment Type ───${NC}"
+  echo -e "  ${YELLOW}What kind of Dynatrace tenant are you using?${NC}"
+  echo -e "  ${YELLOW}  1) Sprint   (URL like: abc12345.sprint.dynatracelabs.com)${NC}"
+  echo -e "  ${YELLOW}  2) Prod/Live (URL like: abc12345.live.dynatrace.com or abc12345.apps.dynatrace.com)${NC}"
+  if [ -z "$ENV_TYPE" ] || [ "$ENV_TYPE" = "YOUR_ENV_TYPE" ]; then
+    echo -ne "  ${CYAN}Enter 1 or 2 [1]:${NC} "
+    read -r env_choice
+    case "$env_choice" in
+      2) ENV_TYPE="prod" ;;
+      *) ENV_TYPE="sprint" ;;
+    esac
+  fi
+  ok "Environment: $ENV_TYPE"
+  echo ""
+
+  # 2. Tenant ID
+  echo -e "  ${CYAN}─── 2/6: Tenant ID ───${NC}"
+  if [ "$ENV_TYPE" = "sprint" ]; then
+    echo -e "  ${YELLOW}Look at your Dynatrace URL: https://${BOLD}<THIS-PART>${NC}${YELLOW}.sprint.dynatracelabs.com${NC}"
+  else
+    echo -e "  ${YELLOW}Look at your Dynatrace URL: https://${BOLD}<THIS-PART>${NC}${YELLOW}.live.dynatrace.com${NC}"
+  fi
   prompt_if_missing "TENANT_ID" "Tenant ID:" "YOUR_TENANT_ID"
   echo ""
 
-  # 2. API Token
-  echo -e "  ${CYAN}─── 2/4: API Token ───${NC}"
+  # 3. API Token
+  echo -e "  ${CYAN}─── 3/6: API Token ───${NC}"
   echo -e "  ${YELLOW}Dynatrace → Settings → Access Tokens → Generate new token${NC}"
   echo -e "  ${YELLOW}Scopes: events.ingest, metrics.ingest, openTelemetryTrace.ingest, entities.read${NC}"
   echo -e "  ${YELLOW}Starts with: dt0c01.${NC}"
   prompt_if_missing "API_TOKEN" "API Token:" "dt0c01.XXXX..."
   echo ""
 
-  # 3. OAuth Client ID
-  echo -e "  ${CYAN}─── 3/4: OAuth Client ID ───${NC}"
+  # 4. EdgeConnect OAuth Client ID
+  echo -e "  ${CYAN}─── 4/6: EdgeConnect OAuth Client ID ───${NC}"
   echo -e "  ${YELLOW}Dynatrace → Settings → General → External Requests → Add EdgeConnect${NC}"
   echo -e "  ${YELLOW}DT generates the OAuth credentials — copy the Client ID${NC}"
   echo -e "  ${YELLOW}Starts with: dt0s10.  (NOT dt0s02 — that's account-level, won't work)${NC}"
-  echo -e "  ${YELLOW}${BOLD}THEN:${NC}${YELLOW} Account Management → IAM → OAuth clients → find this client → add scopes:${NC}"
-  echo -e "  ${YELLOW}  • app-engine:apps:install${NC}"
-  echo -e "  ${YELLOW}  • app-engine:apps:run${NC}"
-  prompt_if_missing "OAUTH_CLIENT_ID" "OAuth Client ID:" "dt0s10.XXXX"
+  echo -e "  ${YELLOW}Has scope: app-engine:edge-connects:connect (added automatically)${NC}"
+  prompt_if_missing "EC_OAUTH_CLIENT_ID" "EdgeConnect OAuth Client ID:" "dt0s10.XXXX"
   echo ""
 
-  # 4. OAuth Client Secret
-  echo -e "  ${CYAN}─── 4/4: OAuth Client Secret ───${NC}"
-  echo -e "  ${YELLOW}Same page as Step 3 — shown only once when you create the EdgeConnect!${NC}"
+  # 5. EdgeConnect OAuth Client Secret
+  echo -e "  ${CYAN}─── 5/6: EdgeConnect OAuth Client Secret ───${NC}"
+  echo -e "  ${YELLOW}Same page — shown only once when you create the EdgeConnect!${NC}"
   echo -e "  ${YELLOW}Starts with: dt0s10.  (longer than the ID, contains a dot in the middle)${NC}"
-  prompt_if_missing "OAUTH_CLIENT_SECRET" "OAuth Client Secret:" "dt0s10.XXXX.YYYY..."
+  prompt_if_missing "EC_OAUTH_CLIENT_SECRET" "EdgeConnect OAuth Client Secret:" "dt0s10.XXXX.YYYY..."
+  echo ""
+
+  # 6. AppEngine Deploy OAuth (can be same or different)
+  echo -e "  ${CYAN}─── 6/6: AppEngine Deploy OAuth ───${NC}"
+  echo -e "  ${YELLOW}This deploys the Forge UI to your Dynatrace Apps.${NC}"
+  echo -e "  ${YELLOW}Can be the SAME client as EdgeConnect (if you added deploy scopes to it)${NC}"
+  echo -e "  ${YELLOW}OR a different OAuth client with these scopes:${NC}"
+  echo -e "  ${YELLOW}  • app-engine:apps:install${NC}"
+  echo -e "  ${YELLOW}  • app-engine:apps:run${NC}"
+  echo -e "  ${YELLOW}Press Enter to use the same EdgeConnect client, or paste a different one.${NC}"
+  prompt_optional "DEPLOY_OAUTH_CLIENT_ID" "Deploy OAuth Client ID (Enter = same):" "EC_OAUTH_CLIENT_ID"
+  prompt_optional "DEPLOY_OAUTH_CLIENT_SECRET" "Deploy OAuth Client Secret (Enter = same):" "EC_OAUTH_CLIENT_SECRET"
   echo ""
 fi
 
 # ── Validate credential formats (always, even from setup.conf) ──
+# Default DEPLOY creds to EdgeConnect creds if not set (backward compat)
+[ -z "$DEPLOY_OAUTH_CLIENT_ID" ] && DEPLOY_OAUTH_CLIENT_ID="$EC_OAUTH_CLIENT_ID"
+[ -z "$DEPLOY_OAUTH_CLIENT_SECRET" ] && DEPLOY_OAUTH_CLIENT_SECRET="$EC_OAUTH_CLIENT_SECRET"
+[ -z "$ENV_TYPE" ] && ENV_TYPE="sprint"
+
 if [[ ! "$API_TOKEN" == dt0c01.* ]]; then
   fail "API Token must start with 'dt0c01.' — you entered '${API_TOKEN:0:10}...'. Delete setup.conf and re-run ./setup.sh"
 fi
-if [[ ! "$OAUTH_CLIENT_ID" == dt0s10.* ]]; then
-  echo -e "  ${RED}✗ OAuth Client ID must start with 'dt0s10.' (environment-level)${NC}"
-  echo -e "  ${YELLOW}  You entered '${OAUTH_CLIENT_ID:0:12}...' which looks like an account-level token (dt0s02).${NC}"
-  echo -e "  ${YELLOW}  Create it in: Dynatrace → Settings → General → External Requests → Add EdgeConnect${NC}"
-  echo -e "  ${YELLOW}  Then delete setup.conf and re-run ./setup.sh${NC}"
-  exit 1
-fi
-if [[ ! "$OAUTH_CLIENT_SECRET" == dt0s10.* ]]; then
-  echo -e "  ${RED}✗ OAuth Client Secret must start with 'dt0s10.' (environment-level)${NC}"
-  echo -e "  ${YELLOW}  You entered '${OAUTH_CLIENT_SECRET:0:12}...' — this looks like an account-level secret.${NC}"
-  echo -e "  ${YELLOW}  The secret comes from the same EdgeConnect page as the Client ID.${NC}"
-  echo -e "  ${YELLOW}  Delete setup.conf and re-run ./setup.sh${NC}"
-  exit 1
-fi
+for oauth_var in EC_OAUTH_CLIENT_ID DEPLOY_OAUTH_CLIENT_ID; do
+  val="${!oauth_var}"
+  if [[ ! "$val" == dt0s10.* ]]; then
+    echo -e "  ${RED}✗ $oauth_var must start with 'dt0s10.' (environment-level)${NC}"
+    echo -e "  ${YELLOW}  You entered '${val:0:12}...' which looks like an account-level token (dt0s02).${NC}"
+    echo -e "  ${YELLOW}  EdgeConnect client: Dynatrace → Settings → General → External Requests → Add EdgeConnect${NC}"
+    echo -e "  ${YELLOW}  Delete setup.conf and re-run ./setup.sh${NC}"
+    exit 1
+  fi
+done
+for oauth_var in EC_OAUTH_CLIENT_SECRET DEPLOY_OAUTH_CLIENT_SECRET; do
+  val="${!oauth_var}"
+  if [[ ! "$val" == dt0s10.* ]]; then
+    echo -e "  ${RED}✗ $oauth_var must start with 'dt0s10.' (environment-level)${NC}"
+    echo -e "  ${YELLOW}  Delete setup.conf and re-run ./setup.sh${NC}"
+    exit 1
+  fi
+done
 
 # Save valid credentials for future runs
 if [ "$NEED_PROMPT" = true ]; then
   cat > "$CONF_FILE" << EOF
+ENV_TYPE="$ENV_TYPE"
 TENANT_ID="$TENANT_ID"
 API_TOKEN="$API_TOKEN"
-OAUTH_CLIENT_ID="$OAUTH_CLIENT_ID"
-OAUTH_CLIENT_SECRET="$OAUTH_CLIENT_SECRET"
+EC_OAUTH_CLIENT_ID="$EC_OAUTH_CLIENT_ID"
+EC_OAUTH_CLIENT_SECRET="$EC_OAUTH_CLIENT_SECRET"
+DEPLOY_OAUTH_CLIENT_ID="$DEPLOY_OAUTH_CLIENT_ID"
+DEPLOY_OAUTH_CLIENT_SECRET="$DEPLOY_OAUTH_CLIENT_SECRET"
 EOF
   ok "Saved to setup.conf (won't ask again)"
 fi
 
-# Derive URLs
-TENANT_URL="https://${TENANT_ID}.sprint.dynatracelabs.com"
-APPS_URL="https://${TENANT_ID}.sprint.apps.dynatracelabs.com"
-SSO_URL="https://sso-sprint.dynatracelabs.com/sso/oauth2/token"
+# Derive URLs based on environment type
+if [ "$ENV_TYPE" = "prod" ]; then
+  TENANT_URL="https://${TENANT_ID}.live.dynatrace.com"
+  APPS_URL="https://${TENANT_ID}.apps.dynatrace.com"
+  SSO_URL="https://sso.dynatrace.com/sso/oauth2/token"
+else
+  TENANT_URL="https://${TENANT_ID}.sprint.dynatracelabs.com"
+  APPS_URL="https://${TENANT_ID}.sprint.apps.dynatracelabs.com"
+  SSO_URL="https://sso-sprint.dynatracelabs.com/sso/oauth2/token"
+fi
 PRIVATE_IP=$(hostname -I | awk '{print $1}')
 
 echo -e "  Tenant:     ${BOLD}$TENANT_URL${NC}"
@@ -234,10 +310,10 @@ step "Step 4/6: Starting EdgeConnect"
 
 cat > "$SCRIPT_DIR/edgeconnect/edgeConnect.yaml" << EOF
 name: bizobs-generator
-api_endpoint_host: ${TENANT_ID}.sprint.apps.dynatracelabs.com
+api_endpoint_host: $(echo "$APPS_URL" | sed 's|https://||')
 oauth:
-  client_id: ${OAUTH_CLIENT_ID}
-  client_secret: ${OAUTH_CLIENT_SECRET}
+  client_id: ${EC_OAUTH_CLIENT_ID}
+  client_secret: ${EC_OAUTH_CLIENT_SECRET}
   resource: urn:dtenvironment:${TENANT_ID}
   endpoint: ${SSO_URL}
 EOF
@@ -269,8 +345,12 @@ fi
 step "Step 5/6: Deploying Forge UI to Dynatrace"
 
 cd "$SCRIPT_DIR"
-export DT_APP_OAUTH_CLIENT_ID="$OAUTH_CLIENT_ID"
-export DT_APP_OAUTH_CLIENT_SECRET="$OAUTH_CLIENT_SECRET"
+export DT_APP_OAUTH_CLIENT_ID="$DEPLOY_OAUTH_CLIENT_ID"
+export DT_APP_OAUTH_CLIENT_SECRET="$DEPLOY_OAUTH_CLIENT_SECRET"
+
+# Update app.config.json environmentUrl to match the target tenant
+sed -i "s|\"environmentUrl\":.*|\"environmentUrl\": \"${APPS_URL}/\",|" "$SCRIPT_DIR/app.config.json"
+ok "app.config.json updated → $APPS_URL"
 
 echo "  Building and deploying (this takes ~30 seconds)..."
 DEPLOY_OUTPUT=$(npx dt-app deploy --non-interactive 2>&1)
@@ -279,8 +359,8 @@ echo "$DEPLOY_OUTPUT" | tail -5
 
 if echo "$DEPLOY_OUTPUT" | grep -qi 'forbidden\|unauthorized\|403\|401'; then
   echo ""
-  echo -e "  ${RED}✗ Deploy failed — 'Forbidden' means your OAuth client is missing deploy scopes.${NC}"
-  echo -e "  ${YELLOW}  Go to: Account Management → IAM → OAuth clients → find ${OAUTH_CLIENT_ID}${NC}"
+  echo -e "  ${RED}✗ Deploy failed — 'Forbidden' means your deploy OAuth client is missing scopes.${NC}"
+  echo -e "  ${YELLOW}  Go to: Account Management → IAM → OAuth clients → find ${DEPLOY_OAUTH_CLIENT_ID}${NC}"
   echo -e "  ${YELLOW}  Add these scopes:${NC}"
   echo -e "  ${YELLOW}    • app-engine:apps:install${NC}"
   echo -e "  ${YELLOW}    • app-engine:apps:run${NC}"
