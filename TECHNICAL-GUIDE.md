@@ -256,6 +256,8 @@ If you see OAuth errors, double-check your `client_id`, `client_secret`, and `re
 
 This deploys the Forge UI as a Dynatrace App. Run this **from the same repo you cloned in Step 1** — it's a unified repo containing both the Engine and the Forge UI.
 
+> **Before you deploy:** Make sure your Dynatrace account has the `app-engine:apps:install` scope. Without it, the deploy will fail at the upload step. Your account admin can grant this in **Account Management → Identity & Access Management → Policies**.
+
 ```bash
 # From the project root (Dynatrace-Business-Observability-Forge/) — NOT from edgeconnect/
 pwd   # should show .../Dynatrace-Business-Observability-Forge
@@ -270,9 +272,21 @@ npx dt-app deploy
 3. Subsequent deploys reuse the cached token (auto-refreshes until it expires)
 4. If the token expires, it'll prompt you to log in again
 
-**Verify:** Go to your Dynatrace tenant → **Apps** → you should see **Business Observability Forge** in the list. Click it to open.
+> **Headless server (SSH without VS Code)?** The SSO flow tries to open a browser, which won't work on a bare EC2 terminal. Two options:
+>
+> **Option A (recommended):** Run `npx dt-app deploy` from **VS Code's integrated terminal** (Remote-SSH). VS Code handles the browser redirect automatically.
+>
+> **Option B (manual):** When the terminal prints a URL like `https://sso-sprint.dynatracelabs.com/sso/oauth2/authorize?...`:
+> 1. Copy the full URL from the terminal
+> 2. Paste it into your **local browser** (on your laptop)
+> 3. Log in with your Dynatrace SSO credentials
+> 4. The browser will redirect to a `localhost:...` URL — this will show an error (can't connect) in your browser, **that's expected**
+> 5. Copy the **full URL from your browser's address bar** (including the `?code=...` part)
+> 6. Paste it back into the EC2 terminal when prompted
+>
+> After the first successful auth, the token is cached and you won't need to do this again until it expires.
 
-> **Common mistake:** Running `npx dt-app deploy` without logging in when prompted. If you're on a headless server (SSH), copy the URL it prints and open it in your local browser, then paste the callback URL back.
+**Verify:** Go to your Dynatrace tenant → **Apps** → you should see **Business Observability Forge** in the list. Click it to open.
 
 ---
 
@@ -549,7 +563,8 @@ Welcome Tab → Step 1: Company Details → Step 2: Generate Prompts → Step 3:
 | **Forge UI shows "Connection failed"** | Server IP not configured or EdgeConnect not tunneling | Settings → Config tab → set private IP + Test. Settings → EdgeConnect tab → verify green |
 | **Chaos injection sends 200+ events** | `entitySelector` too broad (old bug) | Fixed in v2.9.10+ — now scoped to target service name |
 | **AI agents don't respond** | Ollama not running or model not pulled | `ollama pull llama3.2` and `curl http://localhost:11434/api/tags` to verify |
-| **`npx dt-app deploy` fails** | SSO token expired or npm not installed | Re-authenticate when prompted (browser SSO login). Check `.dt-app/.tokens.json` exists after login. Run `npm install` first if you haven't |
+| **`npx dt-app deploy` fails** | SSO token expired, missing scope, or npm not installed | Re-authenticate when prompted (browser SSO login). Ensure your account has `app-engine:apps:install` scope. Run `npm install` first if you haven't |
+| **SSO won't open on headless EC2** | No browser available on bare SSH terminal | Use VS Code Remote-SSH (integrated terminal handles auth), or copy the SSO URL → open in local browser → paste redirect URL back. See Step 4 |
 | **Settings won't save (400 error)** | Sprint environment app-settings API limitation | App falls back to localStorage automatically — safe to ignore |
 | **`api_endpoint_host` rejected** | Using tenant URL instead of AppEngine URL | Use `YOUR_TENANT.sprint.apps.dynatracelabs.com` (with `.apps.`), not `YOUR_TENANT.sprint.dynatracelabs.com` |
 
