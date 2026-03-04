@@ -27,48 +27,34 @@ A full-stack business observability platform that dynamically creates microservi
 
 ---
 
-## Quick Start (From Scratch)
+## Deploy
 
 ### Prerequisites
 
-| # | What | Version | How To Check |
-|---|------|---------|--------------|
-| 1 | **Dynatrace Tenant** | Sprint or Managed | You have a `*.sprint.dynatracelabs.com` or `*.live.dynatrace.com` URL |
-| 2 | **Node.js** | v22+ | `node --version` |
-| 3 | **Docker** | Latest | `docker --version` |
-| 4 | **Dynatrace OneAgent** | Latest | `sudo systemctl status oneagent` |
-| 5 | **Ollama** (optional) | Latest | `ollama list` → should show `llama3.2` |
+- **Dynatrace Sprint tenant** (`*.sprint.dynatracelabs.com`)
+- **Node.js v22+** and **Docker** on your host (EC2/VM)
+- **2 Dynatrace credentials** (see [TECHNICAL-GUIDE.md](TECHNICAL-GUIDE.md#step-2-create-dynatrace-credentials) for how to create them):
 
-### Credentials You Need
+| Credential | Type | Where To Create |
+|-----------|------|-----------------|
+| **API Token** | `dt0c01.*` | DT tenant → Settings → Access Tokens (scopes: `events.ingest`, `metrics.ingest`, `openTelemetryTrace.ingest`, `entities.read`) |
+| **OAuth Client** | `dt0s10.*` | DT tenant → Settings → General → External Requests → Add EdgeConnect (then add `app-engine:apps:install` + `app-engine:apps:run` scopes in Account Management → IAM → OAuth clients) |
 
-You need **exactly 2 credentials**:
-
-| # | Credential | Type | Where To Create | What Uses It |
-|---|-----------|------|-----------------|--------------|
-| A | **API Token** | `dt0c01.*` | DT tenant → Settings → Access Tokens | Engine server (events/metrics) |
-| B | **OAuth Client** | `dt0s10.*` | DT tenant → Settings → General → External Requests → EdgeConnect | **Both** EdgeConnect (tunnel) **and** `dt-app deploy` (app deployment) |
-
-> See [TECHNICAL-GUIDE.md](TECHNICAL-GUIDE.md) for detailed step-by-step instructions on creating each credential.
-
----
-
-### Quick Start (2 commands)
+### One Command
 
 ```bash
-git clone https://github.com/lawrobar90/Dynatrace-Business-Observability-Forge.git
-cd Dynatrace-Business-Observability-Forge
-cp setup.conf.example setup.conf
+git clone https://github.com/lawrobar90/Dynatrace-Business-Observability-Forge.git && cd Dynatrace-Business-Observability-Forge && ./setup.sh
 ```
 
-Edit **`setup.conf`** with your 4 values (tenant ID, API token, OAuth client ID + secret), then:
+The script prompts you for 4 values (tenant ID, API token, OAuth client ID, OAuth client secret), then automatically:
 
-```bash
-./setup.sh
-```
+1. Installs npm packages
+2. Configures & starts EdgeConnect (Docker)
+3. Deploys the Forge UI to your Dynatrace tenant
+4. Builds TypeScript agents
+5. Starts the Engine server
 
-That's it. The script handles everything: npm install, EdgeConnect, app deploy, build, and server start.
-
-> After setup completes, open **Dynatrace → Apps → Business Observability Forge**, go to **Settings → Config**, enter your **private IP** (`hostname -I | awk '{print $1}'`), then work through the **Get Started** checklist.
+**After setup:** Open **Dynatrace → Apps → Business Observability Forge** → Settings → Config → enter your private IP → Save → Test → Get Started checklist.
 
 ---
 
@@ -83,12 +69,10 @@ cd Dynatrace-Business-Observability-Forge
 npm install
 ```
 
----
-
 ### Phase 2 — Deploy
 
 ```bash
-# 1. Copy your EdgeConnect YAML (downloaded from DT External Requests page in Step 2B)
+# 1. Copy your EdgeConnect YAML (downloaded from DT External Requests page)
 #    Or edit edgeconnect/edgeConnect.yaml manually with your OAuth Client values
 cp ~/Downloads/edgeConnect.yaml edgeconnect/edgeConnect.yaml
 
@@ -96,16 +80,13 @@ cp ~/Downloads/edgeConnect.yaml edgeconnect/edgeConnect.yaml
 bash edgeconnect/run-edgeconnect.sh
 
 # 3. Deploy Forge UI to Dynatrace AppEngine
-#    Uses the SAME OAuth client from Credential B — no browser needed
-export DT_APP_OAUTH_CLIENT_ID="dt0s10.XXXXX"          # ← your client ID
-export DT_APP_OAUTH_CLIENT_SECRET="dt0s10.XXXXX.YYYYY" # ← your client secret
+export DT_APP_OAUTH_CLIENT_ID="dt0s10.XXXXX"
+export DT_APP_OAUTH_CLIENT_SECRET="dt0s10.XXXXX.YYYYY"
 npx dt-app deploy
 
 # 4. Build agents & start the Engine server
 npm run build:agents
 npm start
-#    Or for background with auto-restart:
-#    nohup npm start > server.log 2>&1 &
 ```
 
 ### Phase 3 — Configure
