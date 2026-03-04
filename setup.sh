@@ -320,7 +320,7 @@ ok "Created .dt-credentials.json"
 step "Step 4/6: Starting EdgeConnect"
 
 cat > "$SCRIPT_DIR/edgeconnect/edgeConnect.yaml" << EOF
-name: bizobs-generator
+name: bizobs-forge
 api_endpoint_host: $(echo "$APPS_URL" | sed 's|https://||')
 oauth:
   client_id: ${EC_OAUTH_CLIENT_ID}

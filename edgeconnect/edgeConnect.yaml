@@ -1,5 +1,5 @@
 # EdgeConnect configuration — fill in your values from Step 2B of TECHNICAL-GUIDE.md
-name: bizobs-generator
+name: bizobs-forge
 api_endpoint_host: YOUR_TENANT.sprint.apps.dynatracelabs.com
 oauth:
   client_id: dt0s10.XXXXX
