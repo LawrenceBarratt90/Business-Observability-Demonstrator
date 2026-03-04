@@ -119,6 +119,12 @@ step "Step 1/6: Checking prerequisites"
 
 install_node22() {
   echo "  Installing Node.js v22..."
+  # Remove old Node.js first (dnf/yum won't upgrade if already installed from default repo)
+  if command -v node &>/dev/null; then
+    echo "  Removing old Node.js $(node --version)..."
+    sudo dnf remove -y nodejs npm 2>/dev/null || sudo yum remove -y nodejs npm 2>/dev/null || sudo apt-get remove -y nodejs 2>/dev/null || true
+    hash -r 2>/dev/null || true
+  fi
   if command -v dnf &>/dev/null; then
     # Amazon Linux 2023 / Fedora / RHEL 9+
     curl -fsSL https://rpm.nodesource.com/setup_22.x | sudo bash - 2>&1 | tail -1
