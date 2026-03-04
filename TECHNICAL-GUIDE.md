@@ -301,8 +301,11 @@ That's it. The CLI detects the env vars and uses the **client_credentials** flow
 
 ```bash
 # From the project root (same directory)
+npm run build:agents   # compile TypeScript agents → dist/
 npm start
 ```
+
+> **"Cannot find module dist/routes/gremlin.js"?** You skipped the build step. The `dist/` folder is not in git — it must be compiled locally. Run `npm run build:agents` first.
 
 **Verify:**
 ```bash
