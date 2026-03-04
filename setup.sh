@@ -134,7 +134,7 @@ if [ "$NEED_PROMPT" = true ]; then
   echo -e "  ${CYAN}─── 4/6: EdgeConnect OAuth Client ID ───${NC}"
   echo -e "  ${YELLOW}Dynatrace → Settings → General → External Requests → Add EdgeConnect${NC}"
   echo -e "  ${YELLOW}DT generates the OAuth credentials — copy the Client ID${NC}"
-  echo -e "  ${YELLOW}Starts with: dt0s10.  (NOT dt0s02 — that's account-level, won't work)${NC}"
+  echo -e "  ${YELLOW}Starts with: dt0s10. or dt0s02. (depends on your tenant)${NC}"
   echo -e "  ${YELLOW}Has scope: app-engine:edge-connects:connect (added automatically)${NC}"
   prompt_if_missing "EC_OAUTH_CLIENT_ID" "EdgeConnect OAuth Client ID:" "dt0s10.XXXX"
   echo ""
@@ -142,7 +142,7 @@ if [ "$NEED_PROMPT" = true ]; then
   # 5. EdgeConnect OAuth Client Secret
   echo -e "  ${CYAN}─── 5/6: EdgeConnect OAuth Client Secret ───${NC}"
   echo -e "  ${YELLOW}Same page — shown only once when you create the EdgeConnect!${NC}"
-  echo -e "  ${YELLOW}Starts with: dt0s10.  (longer than the ID, contains a dot in the middle)${NC}"
+  echo -e "  ${YELLOW}Starts with same prefix as the ID (dt0s10. or dt0s02.)${NC}"
   prompt_if_missing "EC_OAUTH_CLIENT_SECRET" "EdgeConnect OAuth Client Secret:" "dt0s10.XXXX.YYYY..."
   echo ""
 
@@ -170,16 +170,17 @@ if [[ ! "$API_TOKEN" == dt0c01.* ]]; then
   fail "API Token must start with 'dt0c01.' — you entered '${API_TOKEN:0:10}...'. Delete setup.conf and re-run ./setup.sh"
 fi
 
-# EdgeConnect OAuth MUST be dt0s10 (environment-level)
-if [[ ! "$EC_OAUTH_CLIENT_ID" == dt0s10.* ]]; then
-  echo -e "  ${RED}✗ EdgeConnect OAuth Client ID must start with 'dt0s10.' (environment-level)${NC}"
-  echo -e "  ${YELLOW}  You entered '${EC_OAUTH_CLIENT_ID:0:12}...' — that's account-level (dt0s02), won't work for EdgeConnect.${NC}"
+# EdgeConnect OAuth — accepts dt0s10 (environment-level) or dt0s02 (account-level)
+# Some DT tenants generate dt0s02 for EdgeConnect, others dt0s10
+if [[ ! "$EC_OAUTH_CLIENT_ID" == dt0s10.* ]] && [[ ! "$EC_OAUTH_CLIENT_ID" == dt0s02.* ]]; then
+  echo -e "  ${RED}✗ EdgeConnect OAuth Client ID must start with 'dt0s10.' or 'dt0s02.'${NC}"
+  echo -e "  ${YELLOW}  You entered '${EC_OAUTH_CLIENT_ID:0:12}...'${NC}"
   echo -e "  ${YELLOW}  Create it in: Dynatrace → Settings → General → External Requests → Add EdgeConnect${NC}"
   echo -e "  ${YELLOW}  Delete setup.conf and re-run ./setup.sh${NC}"
   exit 1
 fi
-if [[ ! "$EC_OAUTH_CLIENT_SECRET" == dt0s10.* ]]; then
-  echo -e "  ${RED}✗ EdgeConnect OAuth Client Secret must start with 'dt0s10.' (environment-level)${NC}"
+if [[ ! "$EC_OAUTH_CLIENT_SECRET" == dt0s10.* ]] && [[ ! "$EC_OAUTH_CLIENT_SECRET" == dt0s02.* ]]; then
+  echo -e "  ${RED}✗ EdgeConnect OAuth Client Secret must start with 'dt0s10.' or 'dt0s02.'${NC}"
   echo -e "  ${YELLOW}  Delete setup.conf and re-run ./setup.sh${NC}"
   exit 1
 fi
