@@ -72,7 +72,7 @@ Before you start, make sure you have **all of these** ready:
 |---|-----------|---------|-----------------|--------------|
 | 1 | **Dynatrace Tenant** | Sprint or Managed | Receives all telemetry | You should have a `*.sprint.dynatracelabs.com` or `*.live.dynatrace.com` URL |
 | 2 | **Dynatrace API Token** | — | Engine sends events to DT | Create in DT: Settings → Access Tokens → Generate. Scopes: `events.ingest`, `metrics.ingest`, `openTelemetryTrace.ingest`, `entities.read` |
-| 3 | **OAuth Client** | — | EdgeConnect authenticates to DT | Create in DT: Account Management → Identity & Access → OAuth Clients. Scope: `app-engine:edge-connects:connect` |
+| 3 | **OAuth Client** | — | EdgeConnect authenticates to DT | Create in DT: Settings → General → External Requests → Add EdgeConnect. It generates the OAuth creds and lets you **download the edgeConnect.yaml** |
 | 4 | **EC2 / VM / Host** | Linux recommended | Runs the Engine server | SSH access, ports 8080–8200 open in Security Group (inbound not strictly required — EdgeConnect tunnels inbound) |
 | 5 | **Node.js** | v22+ | Server runtime | `node --version` → should show v22.x+ |
 | 6 | **Docker** | Latest | Runs EdgeConnect | `docker --version` |
@@ -119,12 +119,12 @@ You need **2 credentials you create manually**, plus a 3rd that's handled automa
 | # | Credential | Type | Where To Create | What Uses It |
 |---|-----------|------|----------------|--------------|
 | A | **API Token** | `dt0c01.*` | Dynatrace tenant → Settings → Access Tokens | The **Engine server** uses this to send events/metrics to Dynatrace |
-| B | **OAuth Client** | `dt0s10.*` | Account Management → OAuth Clients | The **EdgeConnect binary** uses this to establish its tunnel |
+| B | **OAuth Client** | `dt0s10.*` | Dynatrace tenant → Settings → General → External Requests → EdgeConnect | The **EdgeConnect binary** uses this to establish its tunnel |
 | C | **Deploy Token** | `dt0s08.*` (SSO) | **Automatic** — `dt-app deploy` opens a browser login | `dt-app deploy` uses this to push the app to AppEngine |
 
 > **Why 3 credentials?**
 > - **A (API Token)** — tenant-level REST API key. Created in your DT tenant's Settings.
-> - **B (OAuth Client)** — account-level credential for platform services. Created in Account Management.
+> - **B (OAuth Client)** — created in your DT tenant under Settings → General → External Requests when you configure an EdgeConnect.
 > - **C (Deploy Token)** — you don't create this manually. When you run `npx dt-app deploy`, it opens a browser for you to log in with SSO. The token is cached in `.dt-app/.tokens.json` and automatically refreshed on subsequent deploys.
 >
 > The **Forge UI** (AppEngine app) doesn't need any manual credentials at runtime — its permissions are declared in `app.config.json` and granted automatically when you deploy.
@@ -169,21 +169,22 @@ export DT_PLATFORM_TOKEN="dt0c01.XXXX..."
 
 #### Credential B: OAuth Client (for EdgeConnect)
 
+This is created directly in your Dynatrace tenant when you set up an EdgeConnect — **not** in Account Management.
+
 **Create it in Dynatrace:**
-1. Go to **Account Management** (top-right user menu → Account Settings)
-2. Identity & Access Management → **OAuth Clients**
-3. Click **Create client**
-4. Name: `BizObs EdgeConnect`
-5. Scope: `app-engine:edge-connects:connect`
-6. Click **Create** → **copy the Client ID and Client Secret immediately**
+1. Go to your Dynatrace tenant
+2. **Settings → General → External Requests**
+3. Click **Add EdgeConnect** (or select an existing one)
+4. Name it (e.g. `bizobs-forge`)
+5. DT will generate the OAuth credentials for you and show:
+   - **OAuth client ID**: `dt0s10.XXXXX`
+   - **OAuth client secret**: `dt0s10.XXXXX.YYYYY...` (shown only once!)
+   - **OAuth client resource**: `urn:dtenvironment:YOUR_TENANT_ID`
+6. **Click "Download edgeConnect.yaml"** — this gives you a pre-filled YAML with all the values
 
-You'll get values like:
-- Client ID: `dt0s10.XXXXX`
-- Client Secret: `dt0s10.XXXXX.YYYYY...`
+> **Important:** The client secret is only shown once. Copy it or download the YAML immediately.
 
-**Also note your tenant/environment ID** — it's the subdomain of your tenant URL. For `https://abc12345.sprint.dynatracelabs.com`, the ID is `abc12345`.
-
-> **Hold on to these values.** You'll need them in the next step (EdgeConnect config).
+**Save these values.** You'll use them in the next step.
 
 ---
 
@@ -191,9 +192,17 @@ You'll get values like:
 
 EdgeConnect is a lightweight binary (runs in Docker) that creates a **secure tunnel** from Dynatrace to your server. Without it, the Forge UI has no way to reach the Engine.
 
-**3a. Edit the config file:**
+**3a. Get the config file:**
 
-Open `edgeconnect/edgeConnect.yaml` and fill in your values:
+You have two options:
+
+**Option 1 (easiest):** Use the YAML you downloaded from Dynatrace in Step 2B:
+```bash
+# Copy the downloaded YAML into the project
+cp ~/Downloads/edgeConnect.yaml edgeconnect/edgeConnect.yaml
+```
+
+**Option 2:** Edit `edgeconnect/edgeConnect.yaml` manually with the values from Step 2B:
 
 ```yaml
 name: bizobs-generator

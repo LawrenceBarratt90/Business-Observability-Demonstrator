@@ -46,7 +46,7 @@ You need **2 manual credentials** + 1 automatic:
 | # | Credential | Type | Where To Create | What Uses It |
 |---|-----------|------|----------------|--------------|
 | A | **API Token** | `dt0c01.*` | DT tenant → Settings → Access Tokens | Engine server (events/metrics) |
-| B | **OAuth Client** | `dt0s10.*` | Account Management → OAuth Clients | EdgeConnect (tunnel auth) |
+| B | **OAuth Client** | `dt0s10.*` | DT tenant → Settings → General → External Requests → EdgeConnect | EdgeConnect (tunnel auth) |
 | C | **Deploy Token** | `dt0s08.*` | **Automatic** — SSO browser login | `dt-app deploy` (push app to AppEngine) |
 
 > See [TECHNICAL-GUIDE.md](TECHNICAL-GUIDE.md) for detailed step-by-step instructions on creating each credential.
@@ -66,9 +66,9 @@ npm install
 ### Phase 2 — Deploy
 
 ```bash
-# 1. Edit EdgeConnect config with your OAuth Client credentials (Credential B)
-#    Fill in client_id, client_secret, resource, api_endpoint_host
-nano edgeconnect/edgeConnect.yaml
+# 1. Copy your EdgeConnect YAML (downloaded from DT External Requests page in Step 2B)
+#    Or edit edgeconnect/edgeConnect.yaml manually with your OAuth Client values
+cp ~/Downloads/edgeConnect.yaml edgeconnect/edgeConnect.yaml
 
 # 2. Start EdgeConnect tunnel
 bash edgeconnect/run-edgeconnect.sh
