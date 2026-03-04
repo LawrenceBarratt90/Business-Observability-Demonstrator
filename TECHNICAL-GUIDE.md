@@ -66,19 +66,40 @@ The Engine runs on your host (EC2, VM, Codespace). The Forge UI runs inside Dyna
 
 ## Prerequisites
 
-| Component | Version | Purpose |
-|-----------|---------|---------|
-| **Node.js** | v22+ | Server runtime |
-| **Dynatrace OneAgent** | Latest | Auto-instruments every child service |
-| **Dynatrace Tenant** | Sprint or Managed | Receives bizevents, traces, events |
-| **EdgeConnect** | Latest | Tunnels AppEngine UI → your server |
-| **Ollama** (optional) | Latest | Powers AI agents (Nemesis, Fix-It, Librarian) |
+Before you start, make sure you have **all of these** ready:
+
+| # | Component | Version | Why You Need It | How To Check |
+|---|-----------|---------|-----------------|--------------|
+| 1 | **Dynatrace Tenant** | Sprint or Managed | Receives all telemetry | You should have a `*.sprint.dynatracelabs.com` or `*.live.dynatrace.com` URL |
+| 2 | **Dynatrace API Token** | — | Engine sends events to DT | Create in DT: Settings → Access Tokens → Generate. Scopes: `events.ingest`, `metrics.ingest`, `openTelemetryTrace.ingest`, `entities.read` |
+| 3 | **OAuth Client** | — | EdgeConnect authenticates to DT | Create in DT: Account Management → Identity & Access → OAuth Clients. Scope: `app-engine:edge-connects:connect` |
+| 4 | **EC2 / VM / Host** | Linux recommended | Runs the Engine server | SSH access, ports 8080–8200 open in Security Group (inbound not strictly required — EdgeConnect tunnels inbound) |
+| 5 | **Node.js** | v22+ | Server runtime | `node --version` → should show v22.x+ |
+| 6 | **Docker** | Latest | Runs EdgeConnect | `docker --version` |
+| 7 | **Dynatrace OneAgent** | Latest | Auto-instruments every child service | `sudo systemctl status oneagent` or check Hosts in DT UI |
+| 8 | **Ollama** (optional) | Latest | Powers AI agents (Nemesis, Fix-It, Librarian) | `ollama list` → should show `llama3.2` |
+
+> **Don't have a Dynatrace API Token yet?** Stop here and create one. Nothing will work without it.
 
 ---
 
 ## Getting Started
 
-### 1. Clone & Install
+Follow these steps **in order**. Each step depends on the one before it.
+
+```
+Step 1: Clone & Install          ← Get the code
+Step 2: Create DT Credentials    ← So the Engine can talk to Dynatrace
+Step 3: Create OAuth Client      ← So EdgeConnect can authenticate
+Step 4: Deploy EdgeConnect       ← So the Forge UI can reach your server
+Step 5: Deploy the AppEngine UI  ← Install the Forge app in Dynatrace
+Step 6: Start the Engine Server  ← The server that does the work
+Step 7: Configure from Forge UI  ← Wire everything together
+```
+
+---
+
+### Step 1: Clone & Install the Engine
 
 ```bash
 git clone https://github.com/lawrobar90/Dynatrace-AI-Business-Observability-Engine.git
@@ -86,9 +107,22 @@ cd Dynatrace-AI-Business-Observability-Engine
 npm install
 ```
 
-### 2. Configure Dynatrace Credentials
+**Verify:** You should see `node_modules/` and no npm errors.
 
-Create `.dt-credentials.json` in the project root:
+---
+
+### Step 2: Create Dynatrace Credentials
+
+You need a **Dynatrace API Token**. This is how the Engine sends business events, deployment events, and metrics to your tenant.
+
+**Create the token in Dynatrace:**
+1. Go to your Dynatrace tenant
+2. Settings → Access Tokens → Generate new token
+3. Name it something like `BizObs Engine`
+4. Add these scopes: `events.ingest`, `metrics.ingest`, `openTelemetryTrace.ingest`, `entities.read`
+5. Click Generate → **copy the token immediately** (you can't see it again)
+
+**Save it on your host** — create `.dt-credentials.json` in the Engine project root:
 
 ```json
 {
@@ -98,75 +132,190 @@ Create `.dt-credentials.json` in the project root:
 }
 ```
 
-Or set environment variables:
+Or set environment variables instead:
 
 ```bash
 export DT_ENVIRONMENT="https://YOUR_TENANT.sprint.dynatracelabs.com"
 export DT_PLATFORM_TOKEN="dt0c01.XXXX..."
 ```
 
-### 3. Start the Server
+**Verify:** `cat .dt-credentials.json` shows your tenant URL and token (not placeholder text).
 
-```bash
-npm start
-# Server starts on port 8080
-# Health check: http://localhost:8080/api/health
-```
+> **Common mistake:** Copying the tenant URL with a trailing `/` — don't include it. Use `https://abc12345.sprint.dynatracelabs.com` not `https://abc12345.sprint.dynatracelabs.com/`.
 
-The server will:
-- Start Express on port 8080
-- Initialize route modules and AI agents (if Ollama is available)
-- Wait for journeys to be launched from the Forge UI
-- **No services are spawned by default** — the server starts clean
+---
 
-### 4. Deploy EdgeConnect
+### Step 3: Create an OAuth Client for EdgeConnect
 
-EdgeConnect creates a secure tunnel from Dynatrace to your server. Edit `edgeconnect/edgeConnect.yaml`:
+EdgeConnect needs its own OAuth credentials to connect to Dynatrace. This is a **different credential** from the API Token above.
+
+**Create in Dynatrace:**
+1. Go to **Account Management** (top-right user menu → Account Settings)
+2. Identity & Access Management → **OAuth Clients**
+3. Click **Create client**
+4. Name: `BizObs EdgeConnect`
+5. Scope: `app-engine:edge-connects:connect`
+6. Click Create → **copy the Client ID and Client Secret immediately**
+
+You'll get values like:
+- Client ID: `dt0s10.XXXXX`
+- Client Secret: `dt0s10.XXXXX.YYYYY...`
+
+**Also note your tenant/environment ID** — it's the subdomain of your tenant URL. For `https://abc12345.sprint.dynatracelabs.com`, the ID is `abc12345`.
+
+> **Hold on to these values.** You'll need them in the next step.
+
+---
+
+### Step 4: Deploy EdgeConnect
+
+EdgeConnect is a lightweight binary (runs in Docker) that creates a **secure tunnel** from Dynatrace to your server. Without it, the Forge UI has no way to reach the Engine.
+
+**4a. Edit the config file:**
+
+Open `edgeconnect/edgeConnect.yaml` and fill in your values:
 
 ```yaml
 name: bizobs-generator
 api_endpoint_host: YOUR_TENANT.sprint.apps.dynatracelabs.com
 oauth:
-  client_id: dt0s10.XXXXX
-  client_secret: dt0s10.XXXXX.YYYYY...
-  resource: urn:dtenvironment:YOUR_TENANT_ID
+  client_id: dt0s10.XXXXX          # ← from Step 3
+  client_secret: dt0s10.XXXXX.YYYYY...  # ← from Step 3
+  resource: urn:dtenvironment:YOUR_TENANT_ID  # ← e.g. urn:dtenvironment:abc12345
   endpoint: https://sso-sprint.dynatracelabs.com/sso/oauth2/token
 ```
 
-Run it:
+> **Watch the `api_endpoint_host`!** It uses `.apps.dynatracelabs.com` (with `.apps.`), not just `.dynatracelabs.com`. This is the AppEngine URL, not your regular tenant URL.
+
+**4b. Start EdgeConnect:**
 
 ```bash
 cd edgeconnect
 ./run-edgeconnect.sh
 ```
 
-### 5. Deploy the AppEngine UI
+This runs a Docker container with `--network host` so it shares your server's network.
+
+**4c. Verify EdgeConnect is connected:**
 
 ```bash
-# From the Dynatrace-Business-Observability-Forge repo
+docker logs edgeconnect-bizobs 2>&1 | tail -5
+```
+
+You should see:
+```
+Connection established.
+Connection verified.
+```
+
+If you see OAuth errors, double-check your `client_id`, `client_secret`, and `resource` values.
+
+> **Critical — use the PRIVATE IP, not the public IP:**
+>
+> When the Forge UI in Dynatrace sends a request to your server, the traffic flows:
+> ```
+> Forge UI → Dynatrace Platform → EdgeConnect tunnel → EdgeConnect on your host → localhost:8080
+> ```
+> EdgeConnect receives the request **on the same machine** as your server and connects locally. If you tell it to route to the **public/Elastic IP** (e.g. `35.95.28.64`), it will fail because **AWS does not support NAT hairpin** — an EC2 instance cannot reach its own public IP from inside itself.
+>
+> **Always use the private IP** (e.g. `172.31.x.x`). Find it with: `hostname -I | awk '{print $1}'`
+
+---
+
+### Step 5: Deploy the AppEngine UI (Forge)
+
+This deploys the Forge UI as a Dynatrace App.
+
+```bash
+# You need the Forge repo (separate from the Engine repo)
+git clone https://github.com/lawrobar90/Dynatrace-Business-Observability-Forge.git
+cd Dynatrace-Business-Observability-Forge
+npm install
 npx dt-app deploy
 ```
 
-This deploys the Forge UI to your Dynatrace tenant. Open it from **Apps → Business Observability Forge**.
+The deploy command will ask you to authenticate with your Dynatrace tenant (SSO browser flow).
 
-### 6. Configure from the Forge UI
+**Verify:** Go to your Dynatrace tenant → **Apps** → you should see **Business Observability Forge** in the list. Click it to open.
 
-The **Get Started** tab in the Forge UI walks you through:
+> **Common mistake:** Running `npx dt-app deploy` from the Engine repo instead of the Forge repo. The Engine is the server. The Forge is the UI. You deploy the **Forge**.
 
-| Step | What It Does |
-|------|-------------|
-| Configure Server IP | Set the IP/hostname of your engine server |
-| Create EdgeConnect | Auto-creates EdgeConnect config in Dynatrace |
-| Deploy EdgeConnect | Instructions for running EdgeConnect on your host |
-| Verify EdgeConnect Online | Polls DT to confirm tunnel is up |
-| OneAgent Installed | Verifies OneAgent is reporting from your host |
-| Test Connection | Pings the engine through the EdgeConnect tunnel |
-| OpenPipeline Pipeline | Creates the BizEvents processing pipeline |
-| OpenPipeline Routing | Configures routing rules for business events |
-| Business Event Capture Rule | Deploys capture rules for OneAgent |
-| OneAgent Feature Flags | Enables required OneAgent feature flags |
+---
 
-Each step has a **Deploy** button that auto-configures the Dynatrace settings via the Settings API — no manual configuration needed.
+### Step 6: Start the Engine Server
+
+```bash
+cd Dynatrace-AI-Business-Observability-Engine
+npm start
+```
+
+**Verify:**
+```bash
+curl http://localhost:8080/api/health
+```
+
+You should get:
+```json
+{"status":"ok","timestamp":"...","mainProcess":{"pid":...,"uptime":...,"port":8080},"childServices":[]}
+```
+
+The `childServices` array is empty — that's correct. **No services are spawned by default.** The server sits idle until you launch a journey from the Forge UI.
+
+> **Want it to run in the background?** Use:
+> ```bash
+> nohup npm start > server.log 2>&1 &
+> echo $! > server.pid
+> ```
+> Or set it up as a systemd service for auto-restart on reboot.
+
+---
+
+### Step 7: Configure from the Forge UI
+
+Open the Forge app in Dynatrace (**Apps → Business Observability Forge**).
+
+**7a. Go to Settings (gear icon) → Config tab:**
+
+| Field | Value | Example |
+|-------|-------|---------|
+| Protocol | `HTTP` | (not HTTPS — the server runs plain HTTP) |
+| Host / IP Address | Your **private IP** | `172.31.37.182` |
+| Port | `8080` | |
+
+Click **Save**, then click **Test**.
+
+> **If the test fails:**
+> - Make sure the Engine server is running (Step 6)
+> - Make sure EdgeConnect is running and connected (Step 4c)
+> - Make sure you're using the **private IP**, not the public Elastic IP
+> - Wait 15 seconds and try again (EdgeConnect routing can take a moment to propagate)
+
+**7b. Go to Settings → EdgeConnect tab:**
+
+If EdgeConnect is already running (Step 4), you should see a green "EdgeConnect Connected" status. The host pattern should show your **private IP**.
+
+If it shows your public IP, click the EdgeConnect tab and update the **Host Pattern / Server IP** to your private IP.
+
+**7c. Go to Settings → Get Started tab:**
+
+This is a checklist that auto-detects your setup and lets you deploy Dynatrace configuration with one click per step:
+
+| Step | What It Does | What To Do |
+|------|-------------|------------|
+| **Configure Server IP** | Set the IP/hostname of your engine server | Should be green if you did 7a |
+| **Create EdgeConnect** | Registers EdgeConnect config in Dynatrace | Should be green if you did Step 4 |
+| **Deploy EdgeConnect** | Instructions for running EdgeConnect on your host | Should be green if EdgeConnect is up |
+| **Verify EdgeConnect Online** | Polls DT to confirm tunnel is active | Should be green if Step 4c passed |
+| **OneAgent Installed** | Verifies OneAgent is reporting from your host | Green if OneAgent is running |
+| **Test Connection** | Pings the engine through the EdgeConnect tunnel | Click to test — should go green |
+| **OpenPipeline Pipeline** | Creates the BizEvents processing pipeline | Click **Deploy** |
+| **OpenPipeline Routing** | Configures routing rules for business events | Click **Deploy** |
+| **Business Event Capture Rule** | Deploys capture rules for OneAgent | Click **Deploy** |
+| **OneAgent Feature Flags** | Enables required OneAgent feature flags | Click **Deploy** |
+
+Work through from top to bottom. Each green checkmark means that step is configured correctly.
+
+**Once all steps are green, you're ready.** Go to the **Home** tab, pick a template from the Template Library, and click **Run** to launch your first journey simulation.
 
 ---
 
@@ -359,12 +508,16 @@ Welcome Tab → Step 1: Company Details → Step 2: Generate Prompts → Step 3:
 
 | Symptom | Cause | Fix |
 |---------|-------|-----|
-| No services in Dynatrace | OneAgent not installed or feature flags not enabled | Run Get Started checklist in Forge UI |
-| EdgeConnect shows offline | OAuth creds expired or EdgeConnect not running | Re-run `./run-edgeconnect.sh`, check creds |
-| Forge UI shows "Connection failed" | Server IP not configured or EdgeConnect down | Settings → Server IP, verify EdgeConnect |
-| Chaos injection sends 200+ events | entitySelector too broad | Fixed in v2.9.10+ — now scoped to target service |
-| AI agents don't respond | Ollama not running or model not pulled | `ollama pull llama3.2` and ensure port 11434 is up |
-| Auto-load not generating journeys | No journey simulations started | Launch a template from the Template Library |
+| **"Cannot reach X.X.X.X:8080"** on Config tab | You're using the **public** Elastic IP | Change to your **private IP** (`hostname -I \| awk '{print $1}'`). AWS doesn't support NAT hairpin — see Step 7a |
+| **EdgeConnect shows offline** | OAuth creds expired, wrong, or EdgeConnect not running | Check `docker logs edgeconnect-bizobs`. Re-run `./run-edgeconnect.sh`. Double-check `client_id`, `client_secret`, `resource` in YAML |
+| **Test connection fails but EdgeConnect is green** | Server not running, or host pattern not registered | 1) Verify server: `curl http://localhost:8080/api/health` 2) Wait 15s and retry (propagation delay) 3) Ensure private IP is the host pattern |
+| **No services in Dynatrace** | OneAgent not installed or feature flags not enabled | Run Get Started checklist in Forge UI — deploy OneAgent Feature Flags step |
+| **Forge UI shows "Connection failed"** | Server IP not configured or EdgeConnect not tunneling | Settings → Config tab → set private IP + Test. Settings → EdgeConnect tab → verify green |
+| **Chaos injection sends 200+ events** | `entitySelector` too broad (old bug) | Fixed in v2.9.10+ — now scoped to target service name |
+| **AI agents don't respond** | Ollama not running or model not pulled | `ollama pull llama3.2` and `curl http://localhost:11434/api/tags` to verify |
+| **`npx dt-app deploy` fails** | Wrong directory, or SSO token expired | Make sure you're in the **Forge** repo (not Engine). Re-authenticate if prompted |
+| **Settings won't save (400 error)** | Sprint environment app-settings API limitation | App falls back to localStorage automatically — safe to ignore |
+| **`api_endpoint_host` rejected** | Using tenant URL instead of AppEngine URL | Use `YOUR_TENANT.sprint.apps.dynatracelabs.com` (with `.apps.`), not `YOUR_TENANT.sprint.dynatracelabs.com` |
 
 ---
 
