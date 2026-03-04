@@ -119,14 +119,18 @@ step "Step 1/6: Checking prerequisites"
 
 install_node22() {
   echo "  Installing Node.js v22..."
-  if command -v dnf &>/dev/null || command -v yum &>/dev/null; then
-    # Amazon Linux / RHEL / CentOS
+  if command -v dnf &>/dev/null; then
+    # Amazon Linux 2023 / Fedora / RHEL 9+
     curl -fsSL https://rpm.nodesource.com/setup_22.x | sudo bash - 2>&1 | tail -1
-    sudo yum install -y nodejs 2>&1 | tail -1
+    sudo dnf install -y nodejs 2>&1 | tail -3
+  elif command -v yum &>/dev/null; then
+    # Amazon Linux 2 / RHEL 7-8 / CentOS
+    curl -fsSL https://rpm.nodesource.com/setup_22.x | sudo bash - 2>&1 | tail -1
+    sudo yum install -y nodejs 2>&1 | tail -3
   elif command -v apt-get &>/dev/null; then
     # Ubuntu / Debian
     curl -fsSL https://deb.nodesource.com/setup_22.x | sudo bash - 2>&1 | tail -1
-    sudo apt-get install -y nodejs 2>&1 | tail -1
+    sudo apt-get install -y nodejs 2>&1 | tail -3
   else
     fail "Cannot auto-install Node.js — install v22+ manually: https://nodejs.org"
   fi
