@@ -158,6 +158,51 @@ Show the Dynatrace dashboard with:
 
 ---
 
+## How It Works: From Idea to Running Services
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                                                                 │
+│   1. DEFINE YOUR JOURNEY                                        │
+│   ┌───────────────────────────────────────────────────────┐     │
+│   │  Option A: Pick from 24 industry templates            │     │
+│   │  Option B: Describe your customer's real journey      │     │
+│   │            → AI generates the full configuration      │     │
+│   │  Option C: Import a JSON journey definition           │     │
+│   └───────────────────┬───────────────────────────────────┘     │
+│                       │                                         │
+│                       ▼                                         │
+│   2. GENERATE SERVICES                                          │
+│   ┌───────────────────────────────────────────────────────┐     │
+│   │  The Forge creates a real microservice for each step  │     │
+│   │  in the journey — each with its own:                  │     │
+│   │  • Express server + health endpoint                   │     │
+│   │  • Dynatrace OneAgent identity                        │     │
+│   │  • Business metadata (revenue, category, KPIs)        │     │
+│   └───────────────────┬───────────────────────────────────┘     │
+│                       │                                         │
+│                       ▼                                         │
+│   3. AUTO-LOAD TRAFFIC                                          │
+│   ┌───────────────────────────────────────────────────────┐     │
+│   │  30–60 journeys/minute auto-generated                 │     │
+│   │  Realistic customer profiles, timing, and patterns    │     │
+│   │  Every request flows through the full service chain   │     │
+│   └───────────────────┬───────────────────────────────────┘     │
+│                       │                                         │
+│                       ▼                                         │
+│   4. OBSERVE IN DYNATRACE                                       │
+│   ┌───────────────────────────────────────────────────────┐     │
+│   │  Services appear in Smartscape topology               │     │
+│   │  Business events flow into BizEvents                  │     │
+│   │  Distributed traces with full context                 │     │
+│   │  Revenue, conversion, and churn KPIs — all live       │     │
+│   └───────────────────────────────────────────────────────┘     │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## Getting Started
 
 The Forge runs as a Dynatrace App inside your tenant. Your SE or partner can have it deployed in under 30 minutes.
@@ -169,6 +214,7 @@ The Forge runs as a Dynatrace App inside your tenant. Your SE or partner can hav
 
 **What you get:**
 - 24 industry journey templates ready to go
+- Fully customizable journeys tailored to any customer
 - Real microservices generating real Dynatrace data
 - AI-powered chaos and remediation demo
 - Executive dashboards deployable in one click
@@ -182,17 +228,20 @@ The full technical setup guide is in [TECHNICAL-GUIDE.md](TECHNICAL-GUIDE.md).
 **Q: Is this real data or synthetic?**
 A: The services are real Node.js microservices instrumented by Dynatrace OneAgent. The business events, traces, and metrics are real — generated with realistic profiles, randomized timing, and actual HTTP calls between services. It's the same data shape your production systems would produce.
 
+**Q: Can I tailor this to a specific customer's journey?**
+A: Absolutely — and this is the real power. You're not limited to the 24 built-in templates. You can describe any customer's real-world flow in plain language, and the AI will generate the full journey configuration — every step, every substep, with appropriate business metadata. Alternatively, you can research the customer's publicly documented processes, import industry knowledge from any AI assistant (Copilot, Gemini, etc.), and use that as input. The result is a bespoke demo that mirrors *that customer's* exact business — not a generic vertical template.
+
 **Q: Can I model my own customer journeys?**
-A: Yes. You can create custom journeys through the UI or import a JSON configuration. The Forge supports any multi-step journey with custom business metadata.
+A: Yes. Three ways: (1) Use AI-assisted generation — describe the journey and let the Forge build it. (2) Create manually through the UI with full control over steps, substeps, and business metadata. (3) Import a JSON journey definition for repeatable, shareable configurations.
 
 **Q: Does this require Dynatrace?**
 A: The engine can run standalone, but the full value — business events, Davis AI correlation, executive dashboards, EdgeConnect tunnel — requires a Dynatrace tenant.
 
 **Q: How long does the demo take to set up?**
-A: About 30 minutes for first-time setup. After that, launching a demo is one click from the Template Library.
+A: About 30 minutes for first-time setup. After that, launching a demo is one click from the Template Library — or a few minutes to generate a custom journey for a specific customer.
 
 **Q: Can I use this for a customer demo?**
-A: Absolutely. Pick the industry templates that match your customer's vertical, run the 10-minute demo story above, and you'll have the most compelling business observability conversation they've ever seen.
+A: That's exactly what it's built for. Pick a matching industry template to get started fast, or generate a custom journey tailored to *their* specific business flow. Walk through the 10-minute demo story above and you'll have the most compelling business observability conversation they've ever seen. The fact that it mirrors their own journey — not some generic example — is what makes it land.
 
 ---
 
