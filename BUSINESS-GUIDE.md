@@ -1,6 +1,23 @@
-# Business Guide — Business Observability Forge
+# Business Observability Forge
 
-> A guide for business stakeholders, executives, and non-technical audiences. Lead with the *why*, show the value, tell the story.
+### Turn Customer Journeys Into Business Intelligence — Powered by Dynatrace
+
+> **Model any customer journey. Simulate real traffic at scale. Connect every technical failure to its revenue impact. Prove resilience with AI-powered chaos engineering and self-healing — all inside Dynatrace.**
+
+---
+
+| | |
+|---|---|
+| **Revenue Protection** | See the dollar impact of every outage in real time — not in next month's report |
+| **Time to Value** | Go from zero to a fully instrumented, multi-service demo in under 30 minutes |
+| **Any Industry, Any Journey** | 24 built-in templates across 8 verticals — or generate a bespoke journey for any customer using AI |
+| **AI-Driven Resilience** | Inject chaos, detect with Davis AI, remediate autonomously, learn from every incident |
+| **Board-Ready Storytelling** | Turn a technical monitoring conversation into a business value conversation in 3 minutes |
+| **Dynatrace-Native** | Built on OneAgent, BizEvents, Davis AI, EdgeConnect, and AppEngine — not bolted on, built in |
+
+---
+
+> *A guide for business stakeholders, executives, and non-technical audiences. Lead with the why, show the value, tell the story.*
 
 ---
 
