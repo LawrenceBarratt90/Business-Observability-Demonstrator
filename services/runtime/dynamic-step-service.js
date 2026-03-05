@@ -26,14 +26,14 @@ let lastRegenerationCount = 0;
 
 // Default error rate configuration (can be overridden via payload or global API)
 const DEFAULT_ERROR_CONFIG = {
-  errors_per_transaction: 0,    // No errors by default — Gremlin sets per-service overrides
+  errors_per_transaction: 0,    // No errors by default — Nemesis sets per-service overrides
   errors_per_visit: 0,          // No errors by default
   errors_per_minute: 0,         // No errors by default
   regenerate_every_n_transactions: 100  // Regenerate flags every 100 transactions
 };
 
 // Fetch error config from main server — passes service name for per-service targeting
-// If this service has a targeted override (from Gremlin chaos), only IT gets the elevated rate
+// If this service has a targeted override (from Nemesis chaos), only IT gets the elevated rate
 // Checks BOTH compound name (e.g., "PaymentService-SmythcsShoes") AND base name (e.g., "PaymentService")
 async function fetchGlobalErrorConfig(myFullServiceName, myBaseServiceName) {
   return new Promise((resolve) => {
@@ -582,7 +582,7 @@ function createStepService(serviceName, stepName) {
       // 🚦 Feature Flag Error Injection with Auto-Regeneration
       let errorInjected = null;
       
-      // Fetch error config for THIS service (per-service targeting from Gremlin)
+      // Fetch error config for THIS service (per-service targeting from Nemesis)
       // Check BOTH full service name (compound) AND base service name (clean)
       const fullServiceName = process.env.FULL_SERVICE_NAME || properServiceName;
       const baseServiceName = process.env.SERVICE_NAME || process.env.DT_SERVICE_NAME || properServiceName;
@@ -624,7 +624,7 @@ function createStepService(serviceName, stepName) {
         // If pattern-based flag generation produced no flags (e.g. no steps array in payload,
         // or step name doesn't match any pattern), inject errors directly based on
         // errors_per_transaction rate. This ensures chaos injection ALWAYS works when
-        // the Gremlin/Nemesis agent targets a specific service, regardless of step patterns.
+        // the Nemesis/Nemesis agent targets a specific service, regardless of step patterns.
         if (!featureFlags || Object.keys(featureFlags).length === 0) {
           const shouldError = Math.random() < errorConfig.errors_per_transaction;
           if (shouldError) {

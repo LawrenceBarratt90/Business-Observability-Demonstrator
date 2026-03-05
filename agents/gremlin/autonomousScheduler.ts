@@ -1,5 +1,5 @@
 /**
- * Autonomous Gremlin Scheduler — random chaos injection using AI.
+ * Autonomous Nemesis Scheduler — random chaos injection using AI.
  * Runs on a configurable interval, selecting random services and chaos
  * types using LLM reasoning. Sends Dynatrace custom events for correlation.
  */
@@ -10,7 +10,7 @@ import { config } from '../../utils/config.js';
 import { createLogger } from '../../utils/logger.js';
 import { ChaosType } from '../../tools/chaos/chaosRecipes.js';
 
-const log = createLogger('gremlin-scheduler');
+const log = createLogger('nemesis-scheduler');
 
 // ─── Configuration ────────────────────────────────────────────
 
@@ -67,7 +67,7 @@ export function startScheduler(customConfig?: Partial<SchedulerConfig>): void {
 
   const warmupMinutes = Math.round(schedulerConfig.warmupMs / 60_000);
   
-  log.info('🤖 Autonomous Gremlin Scheduler starting', {
+  log.info('🤖 Autonomous Nemesis Scheduler starting', {
     intervalMs: schedulerConfig.intervalMs,
     maxFaults: schedulerConfig.maxConcurrentFaults,
     useAI: schedulerConfig.useAI,

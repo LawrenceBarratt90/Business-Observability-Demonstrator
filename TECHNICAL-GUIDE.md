@@ -347,7 +347,7 @@ Chaos is injected through **feature flags**, not by killing processes:
 └──────────────────────┘
 ```
 
-The Gremlin agent (Nemesis) sets error rates on specific services. Each service polls its own flags from the main server. Only the targeted service sees elevated errors — everything else stays healthy.
+The Nemesis agent (Nemesis) sets error rates on specific services. Each service polls its own flags from the main server. Only the targeted service sees elevated errors — everything else stays healthy.
 
 7 chaos recipes:
 - `enable_errors` — Set error rate (10%–100%)
@@ -397,7 +397,7 @@ Every chaos injection and remediation action sends a `CUSTOM_DEPLOYMENT` event t
     "chaos.id": "chaos-1772608582260-3",
     "chaos.type": "enable_errors",
     "chaos.target": "CheckInAndRegistrationService",
-    "deployment.source": "gremlin-agent",
+    "deployment.source": "nemesis-agent",
     "dt.event.is_rootcause_relevant": "true"
   }
 }

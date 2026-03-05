@@ -1,5 +1,5 @@
 /**
- * Gremlin Agent routes — chaos injection via feature flags.
+ * Nemesis Agent routes — chaos injection via feature flags.
  */
 
 import { Router, Request, Response } from 'express';

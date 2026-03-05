@@ -283,7 +283,7 @@ export const dynatraceToolDefs = [
     type: 'function' as const,
     function: {
       name: 'getEvents',
-      description: 'Get recent Dynatrace events (custom configuration, deployment, info events). Useful for seeing what the Gremlin agent injected.',
+      description: 'Get recent Dynatrace events (custom configuration, deployment, info events). Useful for seeing what the Nemesis agent injected.',
       parameters: {
         type: 'object',
         properties: {

@@ -1,5 +1,5 @@
 /**
- * Gremlin Agent — controlled chaos via feature flag manipulation.
+ * Nemesis Agent — controlled chaos via feature flag manipulation.
  * Wraps the EXISTING feature flag system to inject errors, enable slow
  * responses, disable circuit breakers, and target specific companies.
  * Uses LLM reasoning to choose the best chaos recipe for a scenario.
@@ -13,7 +13,7 @@ import { config } from '../../utils/config.js';
 import { createLogger } from '../../utils/logger.js';
 import { sendChaosEvent, sendChaosRevertEvent } from '../../utils/dtEventHelper.js';
 
-const log = createLogger('gremlin');
+const log = createLogger('nemesis');
 
 // ─── State ────────────────────────────────────────────────────
 
@@ -247,7 +247,7 @@ export async function smartChaos(description: string): Promise<ChaosResult> {
   }>([
     {
       role: 'system',
-      content: `You are the Gremlin Agent for the BizObs app. Given a natural language description, produce a chaos plan using the app's feature flags.
+      content: `You are the Nemesis Agent for the BizObs app. Given a natural language description, produce a chaos plan using the app's feature flags.
 Available types: ${recipes.map(r => r.type).join(', ')}
 - enable_errors: turn on error injection globally
 - increase_error_rate: raise errors_per_transaction (intensity 1=10%, 10=100%)

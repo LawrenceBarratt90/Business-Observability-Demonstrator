@@ -11,7 +11,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
-export type AgentName = 'gremlin' | 'fixit' | 'librarian' | 'system' | 'otel' | 'gremlin-scheduler' | 'problem-detector' | 'dt-events' | 'workflow-webhook';
+export type AgentName = 'nemesis' | 'fixit' | 'librarian' | 'system' | 'otel' | 'nemesis-scheduler' | 'problem-detector' | 'dt-events' | 'workflow-webhook';
 
 interface LogEntry {
   timestamp: string;
@@ -42,12 +42,12 @@ const COLORS: Record<LogLevel, string> = {
 };
 const RESET = '\x1b[0m';
 const AGENT_ICONS: Record<AgentName, string> = {
-  gremlin: '👹',
+  nemesis: '👹',,
   fixit: '🔧',
   librarian: '📚',
   system: '⚙️',
   otel: '📡',
-  'gremlin-scheduler': '🤖',
+  'nemesis-scheduler': '🤖',
   'problem-detector': '🔍',
   'dt-events': '📊',
   'workflow-webhook': '🔗',

@@ -35,7 +35,7 @@ export async function recordChaosEvent(data: {
   const event: HistoryEvent = {
     id,
     timestamp: data.injectedAt,
-    agent: 'gremlin',
+    agent: 'nemesis',
     kind: 'chaos_injected',
     summary,
     details: { ...data.details, type: data.type, target: data.target },
@@ -55,7 +55,7 @@ export async function recordChaosRevert(chaosId: string): Promise<void> {
   const event: HistoryEvent = {
     id: `revert-${chaosId}`,
     timestamp: new Date().toISOString(),
-    agent: 'gremlin',
+    agent: 'nemesis',
     kind: 'chaos_reverted',
     summary: `Feature flag chaos ${chaosId} reverted`,
     details: {},
@@ -168,7 +168,7 @@ export async function recordFlagChange(data: {
   const event: HistoryEvent = {
     id,
     timestamp: new Date().toISOString(),
-    agent: data.changedBy === 'gremlin-agent' ? 'gremlin' : data.changedBy === 'fixit-agent' ? 'fixit' : 'librarian',
+    agent: data.changedBy === 'nemesis-agent' ? 'nemesis' : data.changedBy === 'fixit-agent' ? 'fixit' : 'librarian',
     kind: data.changedBy.includes('fixit') ? 'fix_executed' : 'chaos_injected',
     summary,
     details: { flag: data.flag, previousValue: data.previousValue, newValue: data.newValue, reason: data.reason },

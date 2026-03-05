@@ -192,7 +192,7 @@ const sendFeatureFlagCustomEvent = async (details = {}) => {
       'journey.domain': domain,
       'journey.industryType': industryType,
       'journey.company': companyName,
-      'triggered.by': 'gremlin-agent',
+      'triggered.by': 'nemesis-agent',
       'event.source': 'bizobs-feature-flag',
       'dt.event.description': `Feature flag "${featureFlag}" injected ${errorType} error (HTTP ${httpStatus}) on ${serviceName} / ${stepName}`
     }

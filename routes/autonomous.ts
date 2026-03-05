@@ -12,42 +12,42 @@ import {
 
 const router = Router();
 
-// ─── Gremlin Scheduler ────────────────────────────────────────
+// ─── Nemesis Scheduler ────────────────────────────────────────
 
 /**
- * POST /autonomous/gremlin/start — Start autonomous chaos scheduler
+ * POST /autonomous/nemesis/start — Start autonomous chaos scheduler
  */
 router.post('/gremlin/start', (req: Request, res: Response): void => {
   try {
     const config = req.body.config || {};
     startScheduler(config);
-    res.json({ success: true, message: 'Gremlin scheduler started', status: getSchedulerStatus() });
+    res.json({ success: true, message: 'Nemesis scheduler started', status: getSchedulerStatus() });
   } catch (err) {
     res.status(500).json({ error: String(err) });
   }
 });
 
 /**
- * POST /autonomous/gremlin/stop — Stop autonomous chaos scheduler
+ * POST /autonomous/nemesis/stop — Stop autonomous chaos scheduler
  */
 router.post('/gremlin/stop', (_req: Request, res: Response): void => {
   try {
     stopScheduler();
-    res.json({ success: true, message: 'Gremlin scheduler stopped', status: getSchedulerStatus() });
+    res.json({ success: true, message: 'Nemesis scheduler stopped', status: getSchedulerStatus() });
   } catch (err) {
     res.status(500).json({ error: String(err) });
   }
 });
 
 /**
- * GET /autonomous/gremlin/status — Get scheduler status
+ * GET /autonomous/nemesis/status — Get scheduler status
  */
 router.get('/gremlin/status', (_req: Request, res: Response): void => {
   res.json(getSchedulerStatus());
 });
 
 /**
- * PUT /autonomous/gremlin/config — Update scheduler configuration
+ * PUT /autonomous/nemesis/config — Update scheduler configuration
  */
 router.put('/gremlin/config', (req: Request, res: Response): void => {
   try {
@@ -125,7 +125,7 @@ router.post('/fixit/clear-cache', (_req: Request, res: Response): void => {
  */
 router.get('/status', (_req: Request, res: Response): void => {
   res.json({
-    gremlin: getSchedulerStatus(),
+    nemesis: getSchedulerStatus(),
     fixit: getDetectorStatus(),
     timestamp: new Date().toISOString(),
   });
@@ -136,16 +136,16 @@ router.get('/status', (_req: Request, res: Response): void => {
  */
 router.post('/start-all', (req: Request, res: Response): void => {
   try {
-    const gremlinConfig = req.body.gremlinConfig || { enabled: true };
+    const nemesisConfig = req.body.nemesisConfig || { enabled: true };
     const fixitConfig = req.body.fixitConfig || { enabled: true };
 
-    startScheduler(gremlinConfig);
+    startScheduler(nemesisConfig);
     startDetector(fixitConfig);
 
     res.json({
       success: true,
       message: 'All autonomous agents started',
-      gremlin: getSchedulerStatus(),
+      nemesis: getSchedulerStatus(),
       fixit: getDetectorStatus(),
     });
   } catch (err) {
@@ -164,7 +164,7 @@ router.post('/stop-all', (_req: Request, res: Response): void => {
     res.json({
       success: true,
       message: 'All autonomous agents stopped',
-      gremlin: getSchedulerStatus(),
+      nemesis: getSchedulerStatus(),
       fixit: getDetectorStatus(),
     });
   } catch (err) {

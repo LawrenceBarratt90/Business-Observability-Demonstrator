@@ -100,7 +100,7 @@ export const ChaosControl = () => {
     <Page>
       <Page.Header>
         <TitleBar>
-          <TitleBar.Title>👹 Chaos Control - Gremlin Agent</TitleBar.Title>
+          <TitleBar.Title>👹 Chaos Control - Nemesis Agent</TitleBar.Title>
           <TitleBar.Subtitle>Inject controlled chaos into your services for testing resilience</TitleBar.Subtitle>
         </TitleBar>
       </Page.Header>

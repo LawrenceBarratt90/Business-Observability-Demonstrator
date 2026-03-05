@@ -10,7 +10,7 @@
 
 import { createLogger } from '../../utils/logger.js';
 
-const log = createLogger('gremlin');
+const log = createLogger('nemesis');
 
 // ─── Types ────────────────────────────────────────────────────
 
@@ -86,7 +86,7 @@ async function callRemediationAPI(
     flag,
     value,
     reason,
-    triggeredBy: 'gremlin-agent',
+    triggeredBy: 'nemesis-agent',
   };
   if (targetService) {
     body.targetService = targetService;
@@ -112,17 +112,17 @@ const enableErrorsRecipe: ChaosRecipe = {
       await callFeatureFlagAPI('POST', '/api/feature_flag', {
         flags: { errors_per_transaction: errorRate },
         targetService: targetService,
-        triggeredBy: 'gremlin-agent'
+        triggeredBy: 'nemesis-agent'
       });
     } else {
       await callFeatureFlagAPI('POST', '/api/feature_flag', {
         flags: { errors_per_transaction: errorRate },
-        triggeredBy: 'gremlin-agent'
+        triggeredBy: 'nemesis-agent'
       });
     }
 
     // Also set the legacy remediation flag for DT event tracking
-    await callRemediationAPI('errorInjectionEnabled', true, `Gremlin: enabling error injection (rate=${errorRate})${targetService ? ` on ${targetService}` : ''}`, targetService);
+    await callRemediationAPI('errorInjectionEnabled', true, `Nemesis: enabling error injection (rate=${errorRate})${targetService ? ` on ${targetService}` : ''}`, targetService);
 
     return {
       chaosId: id, type: 'enable_errors', target: targetService || 'all',
@@ -140,10 +140,10 @@ const enableErrorsRecipe: ChaosRecipe = {
       // Reset global errors_per_transaction to 0
       await callFeatureFlagAPI('POST', '/api/feature_flag', {
         flags: { errors_per_transaction: 0 },
-        triggeredBy: 'gremlin-agent'
+        triggeredBy: 'nemesis-agent'
       });
     }
-    await callRemediationAPI('errorInjectionEnabled', false, 'Gremlin revert: error injection', targetService);
+    await callRemediationAPI('errorInjectionEnabled', false, 'Nemesis revert: error injection', targetService);
     log.info(`Reverted error injection`, { chaosId: ctx.chaosId });
   },
 };
@@ -163,9 +163,9 @@ const increaseErrorRateRecipe: ChaosRecipe = {
     await callFeatureFlagAPI('POST', '/api/feature_flag', {
       flags: { errors_per_transaction: newRate },
       targetService: targetService,
-      triggeredBy: 'gremlin-agent'
+      triggeredBy: 'nemesis-agent'
     });
-    await callRemediationAPI('errorInjectionEnabled', true, `Gremlin: error rate → ${newRate} on ${targetService}`, targetService);
+    await callRemediationAPI('errorInjectionEnabled', true, `Nemesis: error rate → ${newRate} on ${targetService}`, targetService);
 
     return {
       chaosId: id, type: 'increase_error_rate', target: targetService,
@@ -190,7 +190,7 @@ const slowResponsesRecipe: ChaosRecipe = {
     const id = nextChaosId();
     const targetService = params.target && params.target !== 'default' ? params.target : undefined;
     log.info(`👹 Enabling slow responses`, { id, targetService: targetService || 'all' });
-    const before = await callRemediationAPI('slowResponsesEnabled', true, `Gremlin: enabling slow responses${targetService ? ` on ${targetService}` : ''}`, targetService);
+    const before = await callRemediationAPI('slowResponsesEnabled', true, `Nemesis: enabling slow responses${targetService ? ` on ${targetService}` : ''}`, targetService);
     return {
       chaosId: id, type: 'slow_responses', target: targetService || 'slowResponsesEnabled',
       injectedAt: new Date().toISOString(),
@@ -200,7 +200,7 @@ const slowResponsesRecipe: ChaosRecipe = {
   },
   async revert(ctx) {
     const targetService = ctx.revertInfo.targetService as string | undefined;
-    await callRemediationAPI('slowResponsesEnabled', ctx.revertInfo.previousValue ?? false, 'Gremlin revert: slow responses', targetService);
+    await callRemediationAPI('slowResponsesEnabled', ctx.revertInfo.previousValue ?? false, 'Nemesis revert: slow responses', targetService);
     log.info(`Reverted slow responses`, { chaosId: ctx.chaosId });
   },
 };
@@ -213,7 +213,7 @@ const disableCircuitBreakerRecipe: ChaosRecipe = {
     const id = nextChaosId();
     const targetService = params.target && params.target !== 'default' ? params.target : undefined;
     log.info(`👹 Disabling circuit breaker`, { id, targetService: targetService || 'all' });
-    const before = await callRemediationAPI('circuitBreakerEnabled', false, `Gremlin: disabling circuit breaker${targetService ? ` on ${targetService}` : ''}`, targetService);
+    const before = await callRemediationAPI('circuitBreakerEnabled', false, `Nemesis: disabling circuit breaker${targetService ? ` on ${targetService}` : ''}`, targetService);
     return {
       chaosId: id, type: 'disable_circuit_breaker', target: targetService || 'circuitBreakerEnabled',
       injectedAt: new Date().toISOString(),
@@ -223,7 +223,7 @@ const disableCircuitBreakerRecipe: ChaosRecipe = {
   },
   async revert(ctx) {
     const targetService = ctx.revertInfo.targetService as string | undefined;
-    await callRemediationAPI('circuitBreakerEnabled', ctx.revertInfo.previousValue ?? false, 'Gremlin revert: circuit breaker', targetService);
+    await callRemediationAPI('circuitBreakerEnabled', ctx.revertInfo.previousValue ?? false, 'Nemesis revert: circuit breaker', targetService);
     log.info(`Reverted circuit breaker`, { chaosId: ctx.chaosId });
   },
 };
@@ -236,7 +236,7 @@ const disableCacheRecipe: ChaosRecipe = {
     const id = nextChaosId();
     const targetService = params.target && params.target !== 'default' ? params.target : undefined;
     log.info(`👹 Disabling cache`, { id, targetService: targetService || 'all' });
-    const before = await callRemediationAPI('cacheEnabled', false, `Gremlin: disabling cache${targetService ? ` on ${targetService}` : ''}`, targetService);
+    const before = await callRemediationAPI('cacheEnabled', false, `Nemesis: disabling cache${targetService ? ` on ${targetService}` : ''}`, targetService);
     return {
       chaosId: id, type: 'disable_cache', target: targetService || 'cacheEnabled',
       injectedAt: new Date().toISOString(),
@@ -246,7 +246,7 @@ const disableCacheRecipe: ChaosRecipe = {
   },
   async revert(ctx) {
     const targetService = ctx.revertInfo.targetService as string | undefined;
-    await callRemediationAPI('cacheEnabled', ctx.revertInfo.previousValue ?? true, 'Gremlin revert: cache', targetService);
+    await callRemediationAPI('cacheEnabled', ctx.revertInfo.previousValue ?? true, 'Nemesis revert: cache', targetService);
     log.info(`Reverted cache disable`, { chaosId: ctx.chaosId });
   },
 };
@@ -268,9 +268,9 @@ const targetCompanyRecipe: ChaosRecipe = {
       flags: { errors_per_transaction: newRate },
       targetService: targetService,
       companyName: company,
-      triggeredBy: 'gremlin-agent'
+      triggeredBy: 'nemesis-agent'
     });
-    await callRemediationAPI('errorInjectionEnabled', true, `Gremlin: targeting ${targetService} at ${newRate}`, targetService);
+    await callRemediationAPI('errorInjectionEnabled', true, `Nemesis: targeting ${targetService} at ${newRate}`, targetService);
 
     return {
       chaosId: id, type: 'target_company', target: targetService,
@@ -299,7 +299,7 @@ const customFlagRecipe: ChaosRecipe = {
 
     // Try remediation API first (System A — sends DT events)
     const targetService = params.details?.targetService as string | undefined;
-    const before = await callRemediationAPI(flagName, newValue, `Gremlin: ${flagName} → ${newValue}`, targetService);
+    const before = await callRemediationAPI(flagName, newValue, `Nemesis: ${flagName} → ${newValue}`, targetService);
     if ((before as any).ok) {
       return {
         chaosId: id, type: 'custom_flag', target: flagName,
@@ -323,7 +323,7 @@ const customFlagRecipe: ChaosRecipe = {
   async revert(ctx) {
     if (ctx.revertInfo.system === 'remediation') {
       const targetService = ctx.revertInfo.targetService as string | undefined;
-      await callRemediationAPI(ctx.target, ctx.revertInfo.previousValue, `Gremlin revert: ${ctx.target}`, targetService);
+      await callRemediationAPI(ctx.target, ctx.revertInfo.previousValue, `Nemesis revert: ${ctx.target}`, targetService);
     } else {
       await callFeatureFlagAPI('POST', '/api/feature_flag', { flags: { [ctx.target]: ctx.revertInfo.previousValue } });
     }

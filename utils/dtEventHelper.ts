@@ -165,8 +165,8 @@ export async function sendChaosEvent(
   return sendDynatraceEvent({
     eventType: 'CUSTOM_DEPLOYMENT',
     title: `💥 Chaos Injection: ${chaosType} on ${target}`,
-    description: `Autonomous Gremlin Agent injected ${chaosType} on ${target}. Chaos ID: ${chaosId}. This event will stay open until chaos is reverted.`,
-    source: 'gremlin-agent',
+    description: `Autonomous Nemesis Agent injected ${chaosType} on ${target}. Chaos ID: ${chaosId}. This event will stay open until chaos is reverted.`,
+    source: 'nemesis-agent',
     entitySelector: `type(SERVICE),entityName.contains("${target}")`,
     keepOpen: true,  // CRITICAL: keeps event open for problem correlation
     properties: {
@@ -174,7 +174,7 @@ export async function sendChaosEvent(
       'chaos.id': chaosId,
       'chaos.type': chaosType,
       'chaos.target': target,
-      'triggered.by': 'gremlin-agent',
+      'triggered.by': 'nemesis-agent',
       ...details,
     },
   });
@@ -191,8 +191,8 @@ export async function sendChaosRevertEvent(
   return sendDynatraceEvent({
     eventType: 'CUSTOM_DEPLOYMENT',
     title: `✅ Chaos Reverted: ${chaosType} on ${target}`,
-    description: `Gremlin Agent reverted ${chaosType} on ${target}. Chaos ID: ${chaosId}.`,
-    source: 'gremlin-agent',
+    description: `Nemesis Agent reverted ${chaosType} on ${target}. Chaos ID: ${chaosId}.`,
+    source: 'nemesis-agent',
     entitySelector: `type(SERVICE),entityName.contains("${target}")`,
     keepOpen: false,
     properties: {
@@ -200,7 +200,7 @@ export async function sendChaosRevertEvent(
       'chaos.id': chaosId,
       'chaos.type': chaosType,
       'chaos.target': target,
-      'triggered.by': 'gremlin-agent',
+      'triggered.by': 'nemesis-agent',
     },
   });
 }

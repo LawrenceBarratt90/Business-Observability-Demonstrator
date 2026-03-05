@@ -37,13 +37,13 @@ import oauthRouter from './routes/oauth.js';
 import aiDashboardRouter from './routes/ai-dashboard.js';
 import businessFlowRouter from './routes/business-flow.js';
 // AI Agent Routes (compiled from TypeScript in dist/)
-import gremlinRouter from './dist/routes/gremlin.js';
+import nemesisRouter from './dist/routes/gremlin.js';
 import fixitRouter from './dist/routes/fixit.js';
 import librarianRouter from './dist/routes/librarian.js';
 import autonomousRouter from './dist/routes/autonomous.js';
 import workflowWebhookRouter from './dist/routes/workflow-webhook.js';
 // Autonomous Agent Control Functions
-import { startScheduler as startGremlinScheduler } from './dist/agents/gremlin/autonomousScheduler.js';
+import { startScheduler as startNemesisScheduler } from './dist/agents/gremlin/autonomousScheduler.js';
 import { startDetector as startFixitDetector } from './dist/agents/fixit/problemDetector.js';
 // MCP integration removed - not needed for core functionality
 import { injectDynatraceMetadata, injectErrorMetadata, propagateMetadata, validateMetadata } from './middleware/dynatrace-metadata.js';
@@ -97,7 +97,7 @@ process.env.DT_CUSTOM_PROP = 'role=main-server;type=api-gateway';
 // Feature Flags for Self-Healing
 // ============================================
 const featureFlags = {
-  errorInjectionEnabled: false,   // DISABLED — errors are now controlled per-service via serviceFeatureFlags/Gremlin chaos
+  errorInjectionEnabled: false,   // DISABLED — errors are now controlled per-service via serviceFeatureFlags/Nemesis chaos
   slowResponsesEnabled: true,
   circuitBreakerEnabled: false,
   rateLimitingEnabled: false,
@@ -653,7 +653,7 @@ app.use('/api/oauth', oauthRouter);
 app.use('/api/ai-dashboard', aiDashboardRouter);
 app.use('/api/business-flow', businessFlowRouter);
 // AI Agent Routes
-app.use('/api/gremlin', gremlinRouter.default || gremlinRouter);
+app.use('/api/gremlin', nemesisRouter.default || nemesisRouter);
 app.use('/api/fixit', fixitRouter.default || fixitRouter);
 app.use('/api/librarian', librarianRouter.default || librarianRouter);
 app.use('/api/autonomous', autonomousRouter.default || autonomousRouter);
@@ -883,14 +883,14 @@ app.post('/api/feature_flag', async (req, res) => {
           title: `Chaos Injection: ${targetService}`,
           entitySelector: buildEntitySelector([targetService]),
           properties: {
-            'dt.event.description': `[ROOT CAUSE] Deliberate chaos/error injection on service ${targetService}. ${chaosChangeSummary}. This configuration change directly causes increased failure rates and error responses on this service. Triggered by ${body.triggeredBy || 'gremlin-agent'} via BizObs Chaos Engineering.`,
+            'dt.event.description': `[ROOT CAUSE] Deliberate chaos/error injection on service ${targetService}. ${chaosChangeSummary}. This configuration change directly causes increased failure rates and error responses on this service. Triggered by ${body.triggeredBy || 'nemesis-agent'} via BizObs Chaos Engineering.`,
             'deployment.name': `Chaos Injection: ${targetService}`,
             'deployment.project': 'BizObs Chaos Engineering',
             'deployment.version': `chaos-${Date.now()}`,
             'feature.flag.scope': 'per-service',
             'feature.flag.targetService': targetService,
             'feature.flag.changes': JSON.stringify(changes),
-            'triggered.by': body.triggeredBy || 'gremlin-agent',
+            'triggered.by': body.triggeredBy || 'nemesis-agent',
             'application': 'BizObs',
             'change.type': 'chaos-injection',
             'change.impact': 'Increased error rates and service failures'
@@ -1178,7 +1178,7 @@ app.delete('/api/feature_flag/service/:serviceName', (req, res) => {
       'feature.flag.scope': 'per-service-revert',
       'feature.flag.targetService': serviceName,
       'feature.flag.previous': previousFlags ? JSON.stringify(previousFlags) : 'none',
-      'triggered.by': 'gremlin-agent',
+      'triggered.by': 'nemesis-agent',
       'application': 'BizObs',
       'change.type': 'chaos-revert',
       'change.impact': 'Restored normal operation - errors should decrease'
@@ -2468,13 +2468,13 @@ app.post('/api/remediation/feature-flag', async (req, res) => {
       entitySelectorForEvent = allSelectors.length > 0 ? allSelectors : undefined;
     }
     
-    // Keep event open if triggered by gremlin-agent (chaos injection)
-    const isGremlinTriggered = triggeredBy === 'gremlin-agent';
+    // Keep event open if triggered by nemesis-agent (chaos injection)
+    const isNemesisTriggered = triggeredBy === 'nemesis-agent';
     
     const eventResult = await sendDynatraceEvent('CUSTOM_CONFIGURATION', {
       title: `Remediation: ${flag} ${value ? 'enabled' : 'disabled'}`,
       entitySelector: entitySelectorForEvent,
-      keepOpen: isGremlinTriggered, // Keep open for chaos injection events
+      keepOpen: isNemesisTriggered, // Keep open for chaos injection events
       properties: {
         'dt.event.description': `[REMEDIATION] Feature flag '${flag}' changed from ${previousValue} to ${value} as remediation action. Reason: ${reason || 'Not specified'}. This configuration change was triggered by ${triggeredBy} to address problem ${problemId || 'N/A'}. The flag change directly affects service behavior and error rates.`,
         'deployment.name': `Remediation: ${flag}`,
@@ -2488,7 +2488,7 @@ app.post('/api/remediation/feature-flag', async (req, res) => {
         'problem.id': problemId || 'N/A',
         'remediation.type': 'feature_flag_toggle',
         'application': 'BizObs',
-        'change.type': isGremlinTriggered ? 'chaos-injection' : 'remediation',
+        'change.type': isNemesisTriggered ? 'chaos-injection' : 'remediation',
         'change.impact': value ? 'Error injection enabled' : 'Error injection disabled - service should recover'
       }
     }, dtEnvironment, dtToken);
@@ -2545,13 +2545,13 @@ app.post('/api/remediation/feature-flags/bulk', async (req, res) => {
           bulkEntitySelector = allSelectors.length > 0 ? allSelectors : undefined;
         }
         
-        // Keep event open if triggered by gremlin-agent (chaos injection)
-        const isGremlinTriggered = triggeredBy === 'gremlin-agent';
+        // Keep event open if triggered by nemesis-agent (chaos injection)
+        const isNemesisTriggered = triggeredBy === 'nemesis-agent';
         
         const eventResult = await sendDynatraceEvent('CUSTOM_CONFIGURATION', {
           title: `Bulk Remediation: ${flag} ${value ? 'enabled' : 'disabled'}`,
           entitySelector: bulkEntitySelector,
-          keepOpen: isGremlinTriggered, // Keep open for chaos injection events
+          keepOpen: isNemesisTriggered, // Keep open for chaos injection events
           properties: {
             'dt.event.description': `[REMEDIATION] Bulk remediation: '${flag}' changed from ${previousValue} to ${value}. Reason: ${reason || 'Bulk update'}. Triggered by: ${triggeredBy}. This bulk configuration change directly affects error rates across targeted services.`,
             'deployment.name': `Bulk Remediation: ${flag}`,
@@ -2565,7 +2565,7 @@ app.post('/api/remediation/feature-flags/bulk', async (req, res) => {
             'problem.id': problemId || 'N/A',
             'remediation.type': 'bulk_feature_flag_toggle',
             'application': 'BizObs',
-            'change.type': isGremlinTriggered ? 'chaos-injection' : 'bulk-remediation',
+            'change.type': isNemesisTriggered ? 'chaos-injection' : 'bulk-remediation',
             'change.impact': value ? 'Error injection enabled across services' : 'Error injection disabled - services should recover'
           }
         }, dtEnvironment, dtToken);
@@ -4722,9 +4722,9 @@ app.use((err, req, res, next) => {
   // --- Auto-start AI Agents ---
   console.log('🤖 Starting autonomous AI agents...');
   try {
-    // Start Gremlin Chaos Scheduler (auto-enabled, 2-hour warmup, volume-based triggering)
-    startGremlinScheduler();
-    console.log('✅ Gremlin AI Agent: Started (warmup: 2 hours, volume-based triggering)');
+    // Start Nemesis Chaos Scheduler (auto-enabled, 2-hour warmup, volume-based triggering)
+    startNemesisScheduler();
+    console.log('✅ Nemesis AI Agent: Started (warmup: 2 hours, volume-based triggering)');
     
     // Start Fix-It Problem Detector (auto-enabled, continuous monitoring)
     startFixitDetector();

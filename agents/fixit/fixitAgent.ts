@@ -264,7 +264,7 @@ Available fix types:
 - disable_slow_responses: Turn off latency simulation
 - send_dt_event: Send a custom event to Dynatrace
 
-Analyze the problem AND feature flag state. If the Gremlin Agent changed flags, the fix is to restore them.
+Analyze the problem AND feature flag state. If the Nemesis Agent changed flags, the fix is to restore them.
 Respond with JSON:
 {
   "summary": "one-line summary",
@@ -319,7 +319,7 @@ function ruleDiagnose(
   if (errorRate > 0.3) {
     fixes.push({
       fixType: 'reduce_error_rate', target: 'errors_per_transaction',
-      reasoning: `Error rate is ${errorRate} (>0.3) — likely Gremlin injection. Reducing to 0.01.`,
+      reasoning: `Error rate is ${errorRate} (>0.3) — likely Nemesis injection. Reducing to 0.01.`,
       risk: 'low', details: { rate: 0.01 },
     });
   }
