@@ -963,8 +963,8 @@ export default async function (payload: ProxyPayload) {
           },
         },
         tasks: {
-          analyze_data_1: {
-            name: 'analyze_data_1',
+          invoke_dynatrace_intelligence: {
+            name: 'invoke_dynatrace_intelligence',
             action: 'dynatrace.davis.copilot.workflow.actions:davis-copilot',
             input: {
               config: 'dynatrace',
@@ -988,9 +988,9 @@ export default async function (payload: ProxyPayload) {
               failOnResponseCodes: '400-599',
             },
             position: { x: 0, y: 2 },
-            conditions: { states: { analyze_data_1: 'OK' } },
+            conditions: { states: { invoke_dynatrace_intelligence: 'OK' } },
             description: 'Issue an HTTP request to any API.',
-            predecessors: ['analyze_data_1'],
+            predecessors: ['invoke_dynatrace_intelligence'],
           },
         },
         input: {},
