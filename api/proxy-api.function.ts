@@ -321,29 +321,29 @@ export default async function (payload: ProxyPayload) {
       const detected: Record<string, boolean> = {};
       const hostIp = (body as any)?.hostIp as string | undefined;
 
-      // 1. BizEvents HTTP incoming capture rule named "BizObs App2"
+      // 1. BizEvents HTTP incoming capture rule named "BizObs App"
       try {
         const result = await settingsObjectsClient.getSettingsObjects({
           schemaIds: 'builtin:bizevents.http.incoming',
           fields: 'objectId,value',
-          filter: "value.ruleName = 'BizObs App2'",
+          filter: "value.ruleName = 'BizObs App'",
           pageSize: 1,
         });
         detected['biz-events'] = result.totalCount > 0;
       } catch { detected['biz-events'] = false; }
 
-      // 2. OpenPipeline bizevents pipeline named "BizObs Template Pipeline2"
+      // 2. OpenPipeline bizevents pipeline named "BizObs Template Pipeline"
       try {
         const result = await settingsObjectsClient.getSettingsObjects({
           schemaIds: 'builtin:openpipeline.bizevents.pipelines',
           fields: 'objectId,value',
-          filter: "value.displayName = 'BizObs Template Pipeline2'",
+          filter: "value.displayName = 'BizObs Template Pipeline'",
           pageSize: 1,
         });
         detected['openpipeline'] = result.totalCount > 0;
       } catch { detected['openpipeline'] = false; }
 
-      // 3. OpenPipeline bizevents routing — check routingEntries[] for description "BizObs App2"
+      // 3. OpenPipeline bizevents routing — check routingEntries[] for description "BizObs App"
       try {
         const result = await settingsObjectsClient.getSettingsObjects({
           schemaIds: 'builtin:openpipeline.bizevents.routing',
@@ -352,7 +352,7 @@ export default async function (payload: ProxyPayload) {
         let routingFound = false;
         for (const item of result.items || []) {
           const val = item.value as { routingEntries?: Array<{ description?: string }> };
-          if (val.routingEntries?.some(e => e.description === 'BizObs App2')) {
+          if (val.routingEntries?.some(e => e.description === 'BizObs App')) {
             routingFound = true;
             break;
           }
@@ -484,105 +484,127 @@ export default async function (payload: ProxyPayload) {
       for (const configKey of configs) {
         try {
           if (configKey === 'biz-events') {
-            // Fetch the existing "BizObs App" capture rule to get exact schema structure
+            // Check if "BizObs App" capture rule already exists — skip if found
             const existing = await settingsObjectsClient.getSettingsObjects({
               schemaIds: 'builtin:bizevents.http.incoming',
               filter: "value.ruleName = 'BizObs App'",
               pageSize: 1,
             });
-            
-            if (existing.totalCount > 0 && existing.items?.[0]) {
-              // Clone the existing value and rename
-              const clonedValue = JSON.parse(JSON.stringify(existing.items[0].value));
-              clonedValue.ruleName = 'BizObs App2';
-              
-              await settingsObjectsClient.postSettingsObjects({
-                body: [{
-                  schemaId: 'builtin:bizevents.http.incoming',
-                  scope: 'environment',
-                  schemaVersion: existing.items[0].schemaVersion,
-                  value: clonedValue,
-                }],
-              });
-              results['biz-events'] = { success: true };
+
+            if (existing.totalCount > 0) {
+              results['biz-events'] = { success: true, error: 'Already exists — no changes needed' };
             } else {
-              // No existing config to clone — create from scratch with minimal fields
+              // Create from scratch with the exact known-good schema
               await settingsObjectsClient.postSettingsObjects({
                 body: [{
                   schemaId: 'builtin:bizevents.http.incoming',
                   scope: 'environment',
                   value: {
                     enabled: true,
-                    ruleName: 'BizObs App2',
-                    triggers: { trigger: [{ source: { dataSource: 'request.path' }, type: 'CONTAINS', value: '/api/', caseSensitive: false }] },
+                    ruleName: 'BizObs App',
+                    triggers: [{
+                      caseSensitive: false,
+                      source: { dataSource: 'request.path' },
+                      type: 'STARTS_WITH',
+                      value: '/process',
+                    }],
                     event: {
-                      provider: { sourceType: 'constant', source: 'bizobs-generator' },
-                      type: { sourceType: 'constant', source: 'com.bizobs.http.request' },
-                      category: { sourceType: 'constant', source: '' },
+                      category: { sourceType: 'request.path' },
+                      provider: { sourceType: 'request.body', path: 'companyName' },
+                      type: { sourceType: 'request.body', path: 'stepName' },
+                      data: [
+                        { name: 'HasError', source: { sourceType: 'request.body', path: 'json.hasError' } },
+                        { name: 'rsBody', source: { sourceType: 'response.body', path: '*' } },
+                        { name: 'rqBody', source: { sourceType: 'request.body', path: '*' } },
+                      ],
                     },
                   },
                 }],
               });
-              results['biz-events'] = { success: true, error: 'Created from scratch (no existing BizObs App config found to clone)' };
+              results['biz-events'] = { success: true };
             }
+
           } else if (configKey === 'openpipeline') {
-            // Clone existing "BizObs Template Pipeline" → create "BizObs Template Pipeline2"
-            // Then immediately create routing entry pointing to the new pipeline
+            // Check if "BizObs Template Pipeline" already exists — skip if found
             const existingPipeline = await settingsObjectsClient.getSettingsObjects({
               schemaIds: 'builtin:openpipeline.bizevents.pipelines',
               filter: "value.displayName = 'BizObs Template Pipeline'",
               pageSize: 1,
             });
 
-            if (existingPipeline.totalCount > 0 && existingPipeline.items?.[0]) {
-              const clonedValue = JSON.parse(JSON.stringify(existingPipeline.items[0].value));
-              clonedValue.displayName = 'BizObs Template Pipeline2';
-              clonedValue.customId = 'pipeline_BizObs_Template_Pipeline2_' + Math.floor(Math.random() * 10000);
-              
+            if (existingPipeline.totalCount > 0) {
+              const existingObjectId = existingPipeline.items?.[0]?.objectId;
+              results['openpipeline'] = { success: true, error: 'Already exists — no changes needed' };
+
+              // If routing is also requested, chain it now using the existing pipeline objectId
+              if (configs.includes('openpipeline-routing') && existingObjectId) {
+                // Will be handled by the openpipeline-routing block below
+              }
+            } else {
+              // Create from scratch with known-good schema
               const pipelineResponse = await settingsObjectsClient.postSettingsObjects({
                 body: [{
                   schemaId: 'builtin:openpipeline.bizevents.pipelines',
                   scope: 'environment',
-                  value: clonedValue,
+                  value: {
+                    displayName: 'BizObs Template Pipeline',
+                    enabled: true,
+                    processors: [
+                      {
+                        id: 'bizobs-json-parser',
+                        displayName: 'JSON Parser',
+                        enabled: true,
+                        type: 'dql',
+                        matcher: 'true',
+                        dqlScript: 'parse rqBody, "JSON:json" | fieldsFlatten json | parse json.additionalFields, "JSON:additionalFields" | fieldsFlatten json.additionalFields, prefix:"additionalfields."',
+                      },
+                      {
+                        id: 'bizobs-error-field',
+                        displayName: 'Error Field',
+                        enabled: true,
+                        type: 'dql',
+                        matcher: 'true',
+                        dqlScript: 'fieldsAdd event.type = if(json.hasError == true, concat(event.type, ``, " - Exception"), else:{`event.type`})',
+                      },
+                    ],
+                  },
                 }],
               });
-              
-              const newPipelineObjectId = pipelineResponse?.[0]?.objectId;
               results['openpipeline'] = { success: true };
 
-              // If routing is also requested, chain it now with the correct pipelineId
+              // If routing is also requested, chain it now with the new pipeline objectId
+              const newPipelineObjectId = pipelineResponse?.[0]?.objectId;
               if (configs.includes('openpipeline-routing') && newPipelineObjectId) {
                 try {
+                  // Get existing routing config to append our entry
                   const existingRouting = await settingsObjectsClient.getSettingsObjects({
                     schemaIds: 'builtin:openpipeline.bizevents.routing',
                     pageSize: 5,
                   });
 
-                  let routingItem = existingRouting.items?.[0];
-                  let bizObsEntry: Record<string, unknown> | undefined;
-                  for (const item of existingRouting.items || []) {
-                    const val = item.value as { routingEntries?: Array<Record<string, unknown>> };
-                    const entry = val.routingEntries?.find(e => e.description === 'BizObs App');
-                    if (entry) { bizObsEntry = entry; routingItem = item; break; }
-                  }
-
-                  if (bizObsEntry && routingItem) {
+                  const routingItem = existingRouting.items?.[0];
+                  if (routingItem) {
                     const routingValue = JSON.parse(JSON.stringify(routingItem.value)) as { routingEntries: Array<Record<string, unknown>> };
-                    const newEntry = JSON.parse(JSON.stringify(bizObsEntry));
-                    newEntry.description = 'BizObs App2';
-                    newEntry.pipelineId = newPipelineObjectId;  // Point to the newly created pipeline
-                    routingValue.routingEntries.push(newEntry);
-
-                    await settingsObjectsClient.postSettingsObjects({
-                      body: [{
-                        schemaId: 'builtin:openpipeline.bizevents.routing',
-                        scope: 'environment',
-                        value: routingValue,
-                      }],
-                    });
-                    results['openpipeline-routing'] = { success: true };
+                    // Check if "BizObs App" routing entry already exists
+                    const alreadyExists = routingValue.routingEntries?.some(e => e.description === 'BizObs App');
+                    if (alreadyExists) {
+                      results['openpipeline-routing'] = { success: true, error: 'Already exists — no changes needed' };
+                    } else {
+                      routingValue.routingEntries.push({
+                        description: 'BizObs App',
+                        enabled: true,
+                        matcher: 'isNotNull(event.provider)',
+                        pipelineId: newPipelineObjectId,
+                        pipelineType: 'custom',
+                      });
+                      await settingsObjectsClient.putSettingsObjectByObjectId({
+                        objectId: routingItem.objectId,
+                        body: { value: routingValue },
+                      });
+                      results['openpipeline-routing'] = { success: true };
+                    }
                   } else {
-                    results['openpipeline-routing'] = { success: false, error: 'No existing routing entry with description "BizObs App" found to clone' };
+                    results['openpipeline-routing'] = { success: false, error: 'No routing settings object found — configure routing manually in OpenPipeline' };
                   }
                 } catch (routeErr: any) {
                   const detail = routeErr?.body?.error?.constraintViolations
@@ -591,56 +613,52 @@ export default async function (payload: ProxyPayload) {
                   results['openpipeline-routing'] = { success: false, error: detail };
                 }
               }
-            } else {
-              results['openpipeline'] = { success: false, error: 'No existing "BizObs Template Pipeline" found to clone' };
             }
 
           } else if (configKey === 'openpipeline-routing') {
             // Skip if already handled by the openpipeline block above
             if (results['openpipeline-routing']) continue;
-            
-            // Routing requested alone — find existing BizObs Template Pipeline2 objectId
-            const existingRouting = await settingsObjectsClient.getSettingsObjects({
-              schemaIds: 'builtin:openpipeline.bizevents.routing',
-              pageSize: 5,
-            });
 
-            // Find the routing object with "BizObs App" entry to clone
-            let routingItem = existingRouting.items?.[0];
-            let bizObsEntry: Record<string, unknown> | undefined;
-            for (const item of existingRouting.items || []) {
-              const val = item.value as { routingEntries?: Array<Record<string, unknown>> };
-              const entry = val.routingEntries?.find(e => e.description === 'BizObs App');
-              if (entry) { bizObsEntry = entry; routingItem = item; break; }
-            }
-
-            // Find existing Pipeline2 to get its objectId for the routing entry
-            const existingPipeline2 = await settingsObjectsClient.getSettingsObjects({
+            // Routing requested alone — find existing "BizObs Template Pipeline" objectId
+            const existingPipeline = await settingsObjectsClient.getSettingsObjects({
               schemaIds: 'builtin:openpipeline.bizevents.pipelines',
-              filter: "value.displayName = 'BizObs Template Pipeline2'",
+              filter: "value.displayName = 'BizObs Template Pipeline'",
               pageSize: 1,
             });
-            const pipeline2ObjectId = existingPipeline2.items?.[0]?.objectId;
+            const pipelineObjectId = existingPipeline.items?.[0]?.objectId;
 
-            if (bizObsEntry && routingItem && pipeline2ObjectId) {
-              const routingValue = JSON.parse(JSON.stringify(routingItem.value)) as { routingEntries: Array<Record<string, unknown>> };
-              const newEntry = JSON.parse(JSON.stringify(bizObsEntry));
-              newEntry.description = 'BizObs App2';
-              newEntry.pipelineId = pipeline2ObjectId;
-              routingValue.routingEntries.push(newEntry);
-
-              await settingsObjectsClient.postSettingsObjects({
-                body: [{
-                  schemaId: 'builtin:openpipeline.bizevents.routing',
-                  scope: 'environment',
-                  value: routingValue,
-                }],
-              });
-              results['openpipeline-routing'] = { success: true };
-            } else if (!pipeline2ObjectId) {
-              results['openpipeline-routing'] = { success: false, error: 'Pipeline "BizObs Template Pipeline2" must be created first' };
+            if (!pipelineObjectId) {
+              results['openpipeline-routing'] = { success: false, error: 'Pipeline "BizObs Template Pipeline" must be created first — deploy the Pipeline step before Routing' };
             } else {
-              results['openpipeline-routing'] = { success: false, error: 'No existing routing entry with description "BizObs App" found to clone' };
+              // Get existing routing config and append our entry
+              const existingRouting = await settingsObjectsClient.getSettingsObjects({
+                schemaIds: 'builtin:openpipeline.bizevents.routing',
+                pageSize: 5,
+              });
+
+              const routingItem = existingRouting.items?.[0];
+              if (routingItem) {
+                const routingValue = JSON.parse(JSON.stringify(routingItem.value)) as { routingEntries: Array<Record<string, unknown>> };
+                const alreadyExists = routingValue.routingEntries?.some(e => e.description === 'BizObs App');
+                if (alreadyExists) {
+                  results['openpipeline-routing'] = { success: true, error: 'Already exists — no changes needed' };
+                } else {
+                  routingValue.routingEntries.push({
+                    description: 'BizObs App',
+                    enabled: true,
+                    matcher: 'isNotNull(event.provider)',
+                    pipelineId: pipelineObjectId,
+                    pipelineType: 'custom',
+                  });
+                  await settingsObjectsClient.putSettingsObjectByObjectId({
+                    objectId: routingItem.objectId,
+                    body: { value: routingValue },
+                  });
+                  results['openpipeline-routing'] = { success: true };
+                }
+              } else {
+                results['openpipeline-routing'] = { success: false, error: 'No routing settings object found — configure routing manually in OpenPipeline' };
+              }
             }
 
           } else if (configKey === 'feature-flags') {
