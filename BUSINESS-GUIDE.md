@@ -166,10 +166,22 @@ Show the Dynatrace dashboard with:
 │   1. DEFINE YOUR JOURNEY                                        │
 │   ┌───────────────────────────────────────────────────────┐     │
 │   │  Option A: Pick from 24 industry templates            │     │
-│   │  Option B: Describe your customer's real journey      │     │
-│   │            → AI generates the full configuration      │     │
+│   │  Option B: Describe the journey in plain language     │     │
 │   │  Option C: Import a JSON journey definition           │     │
-│   └───────────────────┬───────────────────────────────────┘     │
+│   └──────────┬──────────────────┬─────────────────────────┘     │
+│              │                  │                                │
+│              │    ┌─────────────▼─────────────────────┐         │
+│              │    │  🤖 AI-Assisted Research           │         │
+│              │    │                                    │         │
+│              │    │  Use Copilot, Gemini, or any AI    │         │
+│              │    │  to research a customer's real     │         │
+│              │    │  business flow, then paste the     │         │
+│              │    │  output into the Forge. The AI     │         │
+│              │    │  generates the full journey config │         │
+│              │    │  — steps, substeps, metadata.      │         │
+│              │    └─────────────┬─────────────────────┘         │
+│              │                  │                                │
+│              └────────┬─────────┘                                │
 │                       │                                         │
 │                       ▼                                         │
 │   2. GENERATE SERVICES                                          │
