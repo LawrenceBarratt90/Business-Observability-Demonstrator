@@ -1378,7 +1378,7 @@ function generateCoreTileTemplates(company, journeyType, steps, dynatraceUrl) {
     exception_analysis_table: {
       name: '💥 Top Exceptions',
       query: `fetch dt.davis.events, from:now()-24h
-| filter event.kind == "ERROR_EVENT"
+| filter isnotnull(dt.entity.service)
 | summarize occurrences = count(), lastSeen = takeLast(timestamp), by: {event.name, dt.entity.service}
 | fieldsAdd serviceName = entityName(dt.entity.service)
 | sort occurrences desc
