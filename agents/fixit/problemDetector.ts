@@ -23,9 +23,9 @@ export interface DetectorConfig {
 }
 
 const defaultConfig: DetectorConfig = {
-  enabled: true,   // AUTO-START: Enabled by default
-  pollIntervalMs: 120_000,        // Check every 2 minutes
-  autoRemediateEnabled: true,     // Auto-fix detected problems
+  enabled: false,  // DISABLED: Fix-It is triggered by Dynatrace workflow webhook, not polling
+  pollIntervalMs: 120_000,        // Check every 2 minutes (if manually enabled)
+  autoRemediateEnabled: false,    // Remediation triggered by workflow webhook
   problemLookbackWindow: '30m',
   ignoredProblemIds: new Set(),
   maxConcurrentFixes: 2,

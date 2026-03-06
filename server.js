@@ -44,7 +44,8 @@ import autonomousRouter from './dist/routes/autonomous.js';
 import workflowWebhookRouter from './dist/routes/workflow-webhook.js';
 // Autonomous Agent Control Functions
 import { startScheduler as startNemesisScheduler } from './dist/agents/gremlin/autonomousScheduler.js';
-import { startDetector as startFixitDetector } from './dist/agents/fixit/problemDetector.js';
+// Fix-It detector available but not auto-started (triggered via workflow webhook instead)
+// import { startDetector as startFixitDetector } from './dist/agents/fixit/problemDetector.js';
 // MCP integration removed - not needed for core functionality
 import { injectDynatraceMetadata, injectErrorMetadata, propagateMetadata, validateMetadata } from './middleware/dynatrace-metadata.js';
 import { performComprehensiveHealthCheck } from './middleware/observability-hygiene.js';
@@ -4726,9 +4727,9 @@ app.use((err, req, res, next) => {
     startNemesisScheduler();
     console.log('✅ Nemesis AI Agent: Started (warmup: 2 hours, volume-based triggering)');
     
-    // Start Fix-It Problem Detector (auto-enabled, continuous monitoring)
-    startFixitDetector();
-    console.log('✅ Fix-It AI Agent: Started (continuous problem detection)');
+    // Fix-It Agent: triggered by Dynatrace workflow webhook (POST /api/workflow-webhook/problem)
+    // No auto-polling — Dynatrace detects problems and calls the webhook (~5-10 min after problem opens)
+    console.log('✅ Fix-It AI Agent: Ready (workflow webhook mode — waiting for Dynatrace problem notifications)');
   } catch (agentError) {
     console.error('⚠️  AI Agents startup error (non-fatal):', agentError.message);
   }
