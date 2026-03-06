@@ -4,8 +4,6 @@
 
 > Model any customer journey. See the revenue impact when things break. Watch AI fix it in seconds — all inside Dynatrace.
 
-![Step 2 – Access Tokens](Screenshots/Business_Observability_Forge.png)
-
 ---
 
 The observability market is undergoing a seismic shift. Cloud adoption, architectural complexity, and AI-driven automation are rewriting how organisations deliver and operate digital experiences. Every vendor promises "AI-led causality," yet only a few deliver anything meaningful — and none match the depth, precision, and proven outcomes of Dynatrace.
