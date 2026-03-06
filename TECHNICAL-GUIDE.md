@@ -58,8 +58,8 @@ The Engine runs on your host (EC2, VM, Codespace). The Forge UI runs inside Dyna
 │  └──────────────────────────────────────────────────────────┘    │
 │                                                                  │
 │  ┌────────────────┐  ┌───────────┐  ┌────────────────────┐       │
-│  │  EdgeConnect    │  │  OneAgent  │  │  Ollama (LLM)     │      │
-│  │  (tunnel)       │  │           │  │  llama3.2          │      │
+│  │  EdgeConnect   │  │  OneAgent │  │  Ollama (LLM)      │       │
+│  │  (tunnel)      │  │           │  │  llama3.2          │       │
 │  └────────────────┘  └───────────┘  └────────────────────┘       │
 └──────────────────────────────────────────────────────────────────┘
 ```
@@ -79,7 +79,7 @@ Before you start, make sure you have **all of these** ready:
 | 5 | **Node.js** | v22+ | Server runtime | `node --version` → should show v22.x+ |
 | 6 | **Docker** | Latest | Runs EdgeConnect | `docker --version` |
 | 7 | **Dynatrace OneAgent** | Latest | Auto-instruments every child service | `sudo systemctl status oneagent` or check Hosts in DT UI |
-| 8 | **Ollama** (optional) | Latest | Powers AI agents (Nemesis, Fix-It, Librarian) | `ollama list` → should show `llama3.2` |
+| 8 | **Ollama** | Latest | Powers AI agents (Nemesis, Fix-It, Librarian) | `ollama list` → should show `llama3.2` |
 
 > **Don't have a Dynatrace API Token yet?** Stop here and create one. Nothing will work without it.
 
