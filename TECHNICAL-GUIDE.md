@@ -169,11 +169,15 @@ This client is used for the EdgeConnect tunnel. Depending on your tenant, it may
 
 **Optionally, make this same client work for deploy too:**
 1. Go to **Account Management** → **Identity & Access Management** → **OAuth clients**
-2. Find the client you just created
-3. Edit it and **add these scopes**:
+2. Click **Create Client**
+3. Input your **email address** and the description **Business Observability Forge App Install**
+4. **Add these scopes**:
    - `app-engine:apps:install` (required to deploy the app)
    - `app-engine:apps:run` (required to run the app)
-4. Save
+5. Save
+![Step 6 – AppEngine](Screenshots/oAuth-appengine.png)
+![Step 6 – AppEngine](Screenshots/oAuth-appengine-final.png)
+
 
 > **If you can't add deploy scopes** (e.g. the client type doesn't allow it), use a separate account-level OAuth client for deploy. `setup.sh` will ask at prompt 6/6.
 
