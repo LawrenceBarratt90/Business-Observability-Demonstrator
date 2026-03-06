@@ -161,7 +161,9 @@ This client is used for the EdgeConnect tunnel. Depending on your tenant, it may
    - **OAuth client resource**: `urn:dtenvironment:YOUR_TENANT_ID`
 6. **Click "Download edgeConnect.yaml"** — this gives you a pre-filled YAML with all the values
 
-> 📸 **Screenshot: EdgeConnect Setup Page** — *Dynatrace Settings → General → External Requests showing the EdgeConnect entry named "bizobs-forge" with status indicator. Below it, the OAuth credentials panel showing client_id (dt0s10.* or dt0s02.*), the resource URN, and the "Download edgeConnect.yaml" button.*
+![Step 6 – EdgeConnect](Screenshots/edgeconnect-setup.png)
+![Step 6 – EdgeConnect](Screenshots/edgeconnect-secure.png)
+
 
 > **Important:** The client secret is only shown once. Copy it or download the YAML immediately.
 
