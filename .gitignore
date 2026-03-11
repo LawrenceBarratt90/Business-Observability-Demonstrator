@@ -18,6 +18,7 @@ setup.conf
 
 # Logs, PIDs, and runtime files
 *.log
+*.log.*.gz
 logs/
 server.pid
 nohup.out

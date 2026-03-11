@@ -396,7 +396,17 @@ if [ -f "$SCRIPT_DIR/server.pid" ]; then
 fi
 
 echo "  Starting server in background..."
-nohup npm start > "$SCRIPT_DIR/server.log" 2>&1 &
+mkdir -p "$SCRIPT_DIR/logs"
+# Rotate log if it already exists and is large (>50MB)
+if [ -f "$SCRIPT_DIR/logs/server.log" ]; then
+  LOG_SIZE=$(stat -c%s "$SCRIPT_DIR/logs/server.log" 2>/dev/null || echo 0)
+  if [ "$LOG_SIZE" -gt 52428800 ]; then
+    gzip -c "$SCRIPT_DIR/logs/server.log" > "$SCRIPT_DIR/logs/server.log.1.gz"
+    truncate -s 0 "$SCRIPT_DIR/logs/server.log"
+    ok "Rotated previous server.log ($(( LOG_SIZE / 1048576 ))MB)"
+  fi
+fi
+nohup npm start >> "$SCRIPT_DIR/logs/server.log" 2>&1 &
 SERVER_PID=$!
 echo "$SERVER_PID" > "$SCRIPT_DIR/server.pid"
 
@@ -409,7 +419,7 @@ for i in {1..20}; do
 done
 
 if ! curl -s http://localhost:8080/api/health > /dev/null 2>&1; then
-  warn "Server still starting — check: tail -f server.log"
+  warn "Server still starting — check: tail -f logs/server.log"
 fi
 
 # ── Done ────────────────────────────────────────────────────
@@ -428,7 +438,7 @@ echo ""
 echo -e "  ${YELLOW}Click Save → Test → then work through the Get Started checklist.${NC}"
 echo ""
 echo -e "  Commands:"
-echo -e "    tail -f server.log                    # Server logs"
+echo -e "    tail -f logs/server.log               # Server logs"
 echo -e "    docker logs -f edgeconnect-bizobs     # EdgeConnect logs"
 echo -e "    curl localhost:8080/api/health        # Health check"
 echo -e "    kill \$(cat server.pid)                # Stop server"
