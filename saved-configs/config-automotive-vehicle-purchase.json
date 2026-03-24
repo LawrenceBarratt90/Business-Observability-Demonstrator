@@ -1,0 +1,292 @@
+{
+    "companyName": "Automotive",
+    "domain": "https://www.automotive.com",
+    "industryType": "Automotive & Mobility",
+    "journeyType": "Vehicle Purchase",
+    "journeyDetail": "Vehicle Configuration and Purchase Journey",
+    "journeyId": "journey_auto_purchase_2026",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "VehicleConfiguration",
+            "serviceName": "VehicleConfigurationService",
+            "description": "Customer configures vehicle online: selects model, trim level, engine/powertrain (ICE, hybrid, BEV), exterior colour, interior materials, and optional packages (technology, safety, towing). Real-time pricing and delivery estimate updated with each selection.",
+            "category": "Configuration",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 25,
+            "businessRationale": "Online configuration captures purchase intent before dealership visit. Average configured vehicle value exceeds walk-in purchases by 15-20%. Configuration data feeds demand forecasting and production planning.",
+            "substeps": [
+                {
+                    "substepName": "ModelAndPowertrainSelection",
+                    "duration": 10
+                },
+                {
+                    "substepName": "ColourTrimsAndPackages",
+                    "duration": 10
+                },
+                {
+                    "substepName": "PricingSummaryAndDeliveryEstimate",
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "TradeInValuation",
+            "serviceName": "TradeInValuationService",
+            "description": "Customer submits current vehicle details (VIN, mileage, condition) for instant trade-in estimate. AI-powered valuation engine uses market data, auction prices, and vehicle history. Guaranteed offer valid for 7 days.",
+            "category": "Valuation",
+            "estimatedDuration": 8,
+            "businessRationale": "Transparent trade-in valuation builds trust and reduces negotiation friction. Guaranteed offers capture customers who would otherwise sell privately. Trade-in vehicles feed certified pre-owned inventory pipeline.",
+            "substeps": [
+                {
+                    "substepName": "VehicleDetailsAndVINDecode",
+                    "duration": 3
+                },
+                {
+                    "substepName": "MarketValuationAndOffer",
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "FinanceAndInsurance",
+            "serviceName": "FinanceAndInsuranceService",
+            "description": "Customer applies for vehicle finance: lease, PCP, hire purchase, or outright purchase. Credit check and affordability assessment performed. Insurance quote generated. Extended warranty and GAP insurance options presented.",
+            "category": "Finance",
+            "estimatedDuration": 20,
+            "businessRationale": "F&I products generate 30-40% of dealer gross profit. Digital pre-approval speeds the dealership visit and increases conversion. Competitive finance rates prevent customer defection to bank financing.",
+            "substeps": [
+                {
+                    "substepName": "CreditCheckAndPreApproval",
+                    "duration": 8
+                },
+                {
+                    "substepName": "FinanceProductSelection",
+                    "duration": 7
+                },
+                {
+                    "substepName": "InsuranceAndWarrantyOptions",
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "OrderSubmission",
+            "serviceName": "OrderSubmissionService",
+            "description": "Customer confirms configuration, finance terms, and trade-in. Deposit collected to secure order. Order submitted to manufacturer or allocated from dealer stock. Build slot assigned or stock unit reserved. Order confirmation with delivery timeline sent.",
+            "category": "Purchase",
+            "estimatedDuration": 15,
+            "businessRationale": "Order deposit converts intent to commitment. Factory order ensures exact specification delivery, reducing dealer inventory risk. Stock allocation speed affects customer satisfaction and competitive loss.",
+            "substeps": [
+                {
+                    "substepName": "OrderReviewAndDepositCollection",
+                    "duration": 5
+                },
+                {
+                    "substepName": "FactoryAllocationOrStockReservation",
+                    "duration": 5
+                },
+                {
+                    "substepName": "ConfirmationAndTimeline",
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "PreDeliveryPreparation",
+            "serviceName": "PreDeliveryPreparationService",
+            "description": "Vehicle arrives at dealer. Pre-delivery inspection (PDI) performed: fluid levels, tyre pressures, software updates, cosmetic check. Accessories fitted. Registration and tax processed. Finance documents finalised.",
+            "category": "Preparation",
+            "estimatedDuration": 480,
+            "businessRationale": "Thorough PDI prevents delivery-day issues that create negative first impressions. Registration delays are the top complaint in vehicle purchase surveys. Accessory fitting adds average $800-1,200 revenue per unit.",
+            "substeps": [
+                {
+                    "substepName": "VehicleInspectionAndAccessoryFit",
+                    "duration": 240
+                },
+                {
+                    "substepName": "RegistrationTaxAndDocumentation",
+                    "duration": 240
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "HandoverAndOnboarding",
+            "serviceName": "HandoverAndOnboardingService",
+            "description": "Customer attends dealership for vehicle handover. Technology walkthrough covering infotainment, ADAS features, and connected services. Digital key setup. First service booking scheduled. Satisfaction survey sent within 48 hours.",
+            "category": "Delivery",
+            "estimatedDuration": 60,
+            "businessRationale": "Quality handover drives customer satisfaction scores that affect manufacturer incentive payments. Connected services activation generates recurring subscription revenue. First service booking ensures aftersales retention.",
+            "substeps": [
+                {
+                    "substepName": "VehicleTourAndTechSetup",
+                    "duration": 30
+                },
+                {
+                    "substepName": "DigitalKeyAndConnectedServices",
+                    "duration": 15
+                },
+                {
+                    "substepName": "FirstServiceBookingAndSurvey",
+                    "duration": 15
+                }
+            ]
+        }
+    ],
+    "id": "a1b2c3d4-3333-4aaa-b333-000000000001",
+    "name": "Automotive - Vehicle Purchase",
+    "timestamp": "2026-01-09T15:12:43.556Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 35000,
+        "transactionValue": 35000,
+        "averageOrderValue": 32000,
+        "contractValue": 42000,
+        "annualRevenue": 42000,
+        "revenuePerCustomer": 42000,
+        "profitMargin": 12.5,
+        "customerLifetimeValue": 120000,
+        "lifetimeValue": 120000,
+        "acquisitionCost": 1200,
+        "costPerAcquisition": 1200,
+        "conversionProbability": 0.18,
+        "conversionRate": 18,
+        "engagementScore": 82,
+        "timeToConversion": 43200,
+        "sessionDuration": 1200,
+        "pageViews": 35,
+        "netPromoterScore": 52,
+        "satisfactionRating": 4.3,
+        "retentionProbability": 0.68,
+        "processingTime": 7200,
+        "operationalCost": 2500,
+        "efficiencyRating": 65,
+        "complianceScore": 92,
+        "discountApplied": 3500,
+        "channel": [
+            "dealership_showroom",
+            "online_configurator",
+            "mobile_app",
+            "fleet_manager",
+            "referral"
+        ],
+        "deviceType": [
+            "desktop",
+            "mobile",
+            "tablet",
+            "desktop",
+            "mobile"
+        ],
+        "region": [
+            "Southeast",
+            "Northeast",
+            "West Coast",
+            "Midwest",
+            "Southwest"
+        ],
+        "customerSegmentValue": [
+            "premium_buyer",
+            "value_seeker",
+            "first_car_buyer",
+            "fleet_purchase",
+            "trade_in"
+        ],
+        "loyaltyTier": [
+            "Platinum Owner",
+            "Silver",
+            "Bronze",
+            "Fleet Partner",
+            "Gold"
+        ],
+        "segment": [
+            "new_vehicle",
+            "certified_preowned",
+            "lease_deal",
+            "fleet_order",
+            "custom_build"
+        ],
+        "Productname": [
+            "SUV Premium 4WD",
+            "Electric Sedan LR",
+            "Compact Hatchback",
+            "Commercial Van Fleet",
+            "Sports Coupe GT"
+        ],
+        "ProductId": [
+            "AUTO-SUV-001",
+            "AUTO-EV-002",
+            "AUTO-HB-003",
+            "AUTO-VN-004",
+            "AUTO-SC-005"
+        ],
+        "ProductType": [
+            "suv",
+            "electric_sedan",
+            "hatchback",
+            "commercial_van",
+            "sports_coupe"
+        ],
+        "Price": [
+            45000,
+            52000,
+            22000,
+            38000,
+            65000
+        ],
+        "financeType": [
+            "pcp",
+            "hp",
+            "cash",
+            "lease",
+            "pcp"
+        ],
+        "tradeInValue": [
+            12000,
+            8000,
+            0,
+            0,
+            18000
+        ],
+        "monthlyPayment": [
+            450,
+            520,
+            0,
+            680,
+            750
+        ],
+        "fuelType": [
+            "petrol",
+            "electric",
+            "hybrid",
+            "diesel",
+            "petrol"
+        ],
+        "co2Emissions": [
+            185,
+            0,
+            95,
+            210,
+            245
+        ],
+        "testDriveBooked": [
+            true,
+            true,
+            false,
+            false,
+            true
+        ],
+        "marketTrend": [
+            "ev_transition",
+            "suv_dominance",
+            "subscription_model",
+            "fleet_electrification",
+            "autonomous_features"
+        ]
+    }
+}

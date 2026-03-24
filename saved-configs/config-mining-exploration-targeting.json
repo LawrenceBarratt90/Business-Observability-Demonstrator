@@ -1,0 +1,273 @@
+{
+    "companyName": "MineralTech Resources",
+    "domain": "https://www.mineraltech-resources.com",
+    "industryType": "Mining & Resources",
+    "journeyType": "Exploration Targeting",
+    "journeyDetail": "AI-Powered Mineral Exploration & Target Generation",
+    "journeyId": "journey_exploration_targeting_350acc6f",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "GeologicalDataIntegration",
+            "serviceName": "GeoDataService",
+            "description": "AI integrates geological surveys, remote sensing, geochemical sampling, geophysical data, and historical drill results. Multi-source fusion creates unified geological model.",
+            "category": "Data",
+            "estimatedDuration": 720,
+            "businessRationale": "Exploration success rate is 1-3%. AI-integrated data analysis increases discovery probability to 5-10% by eliminating human bias in target selection.",
+            "substeps": [
+                {
+                    "substepName": "RemoteSensing",
+                    "duration": 240
+                },
+                {
+                    "substepName": "GeochemicalAnalysis",
+                    "duration": 240
+                },
+                {
+                    "substepName": "GeophysicalModelling",
+                    "duration": 240
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "TargetGeneration",
+            "serviceName": "TargetGenService",
+            "description": "AI generates exploration targets from geological signatures, mineral system models, and analogues from known deposits. Prospectivity mapping with probability and tonnage estimates.",
+            "category": "Analysis",
+            "estimatedDuration": 168,
+            "businessRationale": "Traditional targeting misses 60% of viable deposits. AI target generation has found deposits that geologists overlooked for decades.",
+            "substeps": [
+                {
+                    "substepName": "ProspectivityMapping",
+                    "duration": 56
+                },
+                {
+                    "substepName": "AnalogueMatching",
+                    "duration": 56
+                },
+                {
+                    "substepName": "TonnageEstimation",
+                    "duration": 56
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "DrillProgramDesign",
+            "serviceName": "DrillDesignService",
+            "description": "AI optimises drill hole placement, depth, and orientation to maximise geological information per metre drilled. Budget allocation across targets ranked by expected value.",
+            "category": "Planning",
+            "estimatedDuration": 48,
+            "businessRationale": "Drilling is the most expensive exploration activity ($200-500/metre). Optimised drill programmes achieve 30% more information per dollar spent.",
+            "substeps": [
+                {
+                    "substepName": "HolePlacement",
+                    "duration": 16
+                },
+                {
+                    "substepName": "DepthOptimization",
+                    "duration": 16
+                },
+                {
+                    "substepName": "BudgetAllocation",
+                    "duration": 16
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "SampleAnalysis",
+            "serviceName": "SampleAnalysisService",
+            "description": "AI analyses drill core and chip samples: mineralogy, grade, geological structure, and alteration patterns. Real-time grade estimation guides ongoing drill decisions.",
+            "category": "Assessment",
+            "estimatedDuration": 336,
+            "businessRationale": "Rapid sample analysis enables adaptive drilling: modifying the programme based on results to follow mineralisation rather than rigid pre-planned patterns.",
+            "substeps": [
+                {
+                    "substepName": "MineralogyAnalysis",
+                    "duration": 112
+                },
+                {
+                    "substepName": "GradeEstimation",
+                    "duration": 112
+                },
+                {
+                    "substepName": "AlterationMapping",
+                    "duration": 112
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "ResourceEstimation",
+            "serviceName": "ResourceEstService",
+            "description": "AI generates JORC/NI43-101 compliant resource estimates. Geostatistical modelling, grade interpolation, and geological domaining. Sensitivity analysis for cut-off grades.",
+            "category": "Valuation",
+            "estimatedDuration": 720,
+            "businessRationale": "Resource estimates drive company valuation and investment decisions. A 10% increase in resource confidence can double market capitalisation.",
+            "substeps": [
+                {
+                    "substepName": "GeostatModelling",
+                    "duration": 240
+                },
+                {
+                    "substepName": "GradeInterpolation",
+                    "duration": 240
+                },
+                {
+                    "substepName": "SensitivityAnalysis",
+                    "duration": 240
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "PortfolioOptimization",
+            "serviceName": "PortfolioOptService",
+            "description": "AI optimises exploration portfolio across multiple projects: risk diversification, budget allocation by expected NPV, and stage-gate decision support.",
+            "category": "Strategy",
+            "estimatedDuration": 168,
+            "businessRationale": "Exploration companies must balance high-risk/high-reward greenfield with lower-risk brownfield. AI portfolio optimisation improves capital allocation ROI by 25-40%.",
+            "substeps": [
+                {
+                    "substepName": "RiskDiversification",
+                    "duration": 56
+                },
+                {
+                    "substepName": "NPVRanking",
+                    "duration": 56
+                },
+                {
+                    "substepName": "StageGateAnalysis",
+                    "duration": 56
+                }
+            ]
+        }
+    ],
+    "id": "a4b625ab-8797-4bd0-81d9-2acee3a6c0e7",
+    "name": "Mining & Resources - Exploration Targeting",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 50000000,
+        "annualRevenue": 2500000000,
+        "revenuePerCustomer": 500000000,
+        "profitMargin": 25.0,
+        "customerLifetimeValue": 5000000000,
+        "lifetimeValue": 5000000000,
+        "acquisitionCost": 5000000,
+        "costPerAcquisition": 5000000,
+        "conversionProbability": 0.08,
+        "conversionRate": 8,
+        "engagementScore": 60,
+        "timeToConversion": 43200,
+        "sessionDuration": 7200,
+        "pageViews": 20,
+        "purchaseFrequency": 1,
+        "netPromoterScore": 35,
+        "satisfactionRating": 3.8,
+        "retentionProbability": 0.85,
+        "processingTime": 10080,
+        "operationalCost": 2000000,
+        "efficiencyRating": 65,
+        "discoveryRate": 5.2,
+        "drillCostPerMetre": 350,
+        "channel": [
+            "field_survey",
+            "satellite_remote_sensing",
+            "engineering_portal",
+            "GIS_platform",
+            "boardroom_presentation"
+        ],
+        "deviceType": [
+            "ruggedised_tablet",
+            "desktop",
+            "desktop",
+            "desktop",
+            "desktop"
+        ],
+        "region": [
+            "Western Australia",
+            "Ontario CA",
+            "Chile",
+            "DRC Congo",
+            "Nevada US"
+        ],
+        "customerSegmentValue": [
+            "gold",
+            "copper",
+            "lithium",
+            "iron_ore",
+            "rare_earth"
+        ],
+        "loyaltyTier": [
+            "Major Miner",
+            "Mid-Tier",
+            "Junior Explorer",
+            "Prospect Generator",
+            "Royalty Co"
+        ],
+        "segment": [
+            "greenfield_exploration",
+            "brownfield_expansion",
+            "near_mine",
+            "regional_targeting",
+            "grassroots"
+        ],
+        "Productname": [
+            "AI Target Generator Pro",
+            "Drill Optimiser Suite",
+            "Resource Estimation Engine",
+            "Remote Sensing Package",
+            "Portfolio Optimizer"
+        ],
+        "ProductId": [
+            "MIN-TG-001",
+            "MIN-DO-002",
+            "MIN-RE-003",
+            "MIN-RS-004",
+            "MIN-PO-005"
+        ],
+        "ProductType": [
+            "target_generation",
+            "drill_optimization",
+            "resource_estimation",
+            "remote_sensing",
+            "portfolio"
+        ],
+        "Price": [
+            5000000,
+            2000000,
+            3000000,
+            1500000,
+            1000000
+        ],
+        "drillMetres": [
+            50000,
+            25000,
+            100000,
+            0,
+            0
+        ],
+        "resourceCategory": [
+            "indicated",
+            "inferred",
+            "measured",
+            "exploration_target",
+            "prospective"
+        ],
+        "marketTrend": [
+            "battery_metals_rush",
+            "AI_exploration",
+            "ESG_permitting",
+            "deep_learning_geophysics",
+            "autonomous_drilling"
+        ]
+    }
+}

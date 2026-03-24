@@ -164,17 +164,17 @@ export async function sendChaosEvent(
 ): Promise<DynatraceEventResult> {
   return sendDynatraceEvent({
     eventType: 'CUSTOM_DEPLOYMENT',
-    title: `💥 Chaos Injection: ${chaosType} on ${target}`,
-    description: `Autonomous Nemesis Agent injected ${chaosType} on ${target}. Chaos ID: ${chaosId}. This event will stay open until chaos is reverted.`,
-    source: 'nemesis-agent',
+    title: `Configuration Change: ${chaosType} on ${target}`,
+    description: `Feature flag configuration updated for ${target}. Change ID: ${chaosId}.`,
+    source: 'config-manager',
     entitySelector: `type(SERVICE),entityName.contains("${target}")`,
-    keepOpen: true,  // CRITICAL: keeps event open for problem correlation
+    keepOpen: true,
     properties: {
-      'change.type': 'chaos-injection',
-      'chaos.id': chaosId,
-      'chaos.type': chaosType,
-      'chaos.target': target,
-      'triggered.by': 'nemesis-agent',
+      'change.type': 'configuration-change',
+      'change.id': chaosId,
+      'config.type': chaosType,
+      'config.target': target,
+      'triggered.by': 'config-manager',
       ...details,
     },
   });
@@ -190,17 +190,17 @@ export async function sendChaosRevertEvent(
 ): Promise<DynatraceEventResult> {
   return sendDynatraceEvent({
     eventType: 'CUSTOM_DEPLOYMENT',
-    title: `✅ Chaos Reverted: ${chaosType} on ${target}`,
-    description: `Nemesis Agent reverted ${chaosType} on ${target}. Chaos ID: ${chaosId}.`,
-    source: 'nemesis-agent',
+    title: `Configuration Rollback: ${chaosType} on ${target}`,
+    description: `Feature flag configuration rolled back for ${target}. Change ID: ${chaosId}.`,
+    source: 'config-manager',
     entitySelector: `type(SERVICE),entityName.contains("${target}")`,
     keepOpen: false,
     properties: {
-      'change.type': 'chaos-revert',
-      'chaos.id': chaosId,
-      'chaos.type': chaosType,
-      'chaos.target': target,
-      'triggered.by': 'nemesis-agent',
+      'change.type': 'configuration-rollback',
+      'change.id': chaosId,
+      'config.type': chaosType,
+      'config.target': target,
+      'triggered.by': 'config-manager',
     },
   });
 }

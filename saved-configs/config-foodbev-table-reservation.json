@@ -1,0 +1,265 @@
+{
+    "companyName": "Food & Beverage Co",
+    "domain": "https://www.foodbev-co.com",
+    "industryType": "Food & Beverage",
+    "source": "sector-demo",
+    "timestamp": "2026-01-09T15:45:00.000Z",
+    "journeyType": "Table Reservation",
+    "journeyDetail": "Table Reservation Journey",
+    "journeyId": "journey_fnb_reservation_2026",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "id": "a1b2c3d4-9999-4aaa-b999-000000000002",
+    "name": "Food & Beverage - Table Reservation",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "AvailabilitySearch",
+            "serviceName": "AvailabilitySearchService",
+            "description": "Guest searches for available tables by date, time, party size, and seating preference (indoor, outdoor, private dining). Restaurant capacity system shows real-time availability. Waitlist option offered for fully booked slots with estimated wait time.",
+            "category": "Search",
+            "estimatedDuration": 5,
+            "businessRationale": "Real-time availability prevents overbooking that leads to walk-aways and negative reviews. Waitlist functionality captures 20% of demand that would go to competitors. Each empty table costs $150-300 in lost revenue.",
+            "substeps": [
+                {
+                    "substepName": "DateTimeAndPartySearch",
+                    "duration": 3
+                },
+                {
+                    "substepName": "SeatingAndWaitlistOptions",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "ReservationBooking",
+            "serviceName": "ReservationBookingService",
+            "description": "Guest confirms reservation with contact details. Special requests captured: high chair, wheelchair access, birthday celebration, dietary requirements. Deposit required for large parties or special events. Confirmation sent via SMS and email with calendar invite.",
+            "category": "Booking",
+            "estimatedDuration": 5,
+            "businessRationale": "Special request pre-capture improves guest experience and reduces on-arrival surprises. Deposits for 6+ guests reduce no-shows from 20% to 5%. Calendar invites reduce forgotten reservations by 30%.",
+            "substeps": [
+                {
+                    "substepName": "DetailsCaptureAndSpecialRequests",
+                    "duration": 3
+                },
+                {
+                    "substepName": "DepositAndConfirmation",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "PreArrivalCommunication",
+            "serviceName": "PreArrivalCommunicationService",
+            "description": "Automated reminder sent 24 hours before reservation with confirmation request. Menu preview and wine list shared for pre-selection. Pre-order option for tasting menus or special dishes with lead time. Parking and directions information provided.",
+            "category": "Communication",
+            "estimatedDuration": 3,
+            "businessRationale": "24-hour reminders reduce no-shows by 35%. Menu pre-selection reduces table turn time by 15 minutes, increasing covers per service. Pre-orders enable kitchen planning that reduces food waste by 10%.",
+            "substeps": [
+                {
+                    "substepName": "ReminderAndConfirmationRequest",
+                    "duration": 2
+                },
+                {
+                    "substepName": "MenuPreviewAndPreOrder",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "ArrivalAndSeating",
+            "serviceName": "ArrivalAndSeatingService",
+            "description": "Guest checks in at host stand via name, QR code, or app. Table assignment optimised by party size and server section balance. Wait time communicated for early arrivals. VIP guests flagged with preference notes visible to serving staff.",
+            "category": "Arrival",
+            "estimatedDuration": 5,
+            "businessRationale": "QR check-in reduces host stand queue time from 3 minutes to 30 seconds. Server section balancing ensures equitable tip distribution and prevents service quality variation. VIP recognition drives loyalty.",
+            "substeps": [
+                {
+                    "substepName": "CheckInAndTableAssignment",
+                    "duration": 3
+                },
+                {
+                    "substepName": "VIPRecognitionAndServerBalance",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "DiningExperience",
+            "serviceName": "DiningExperienceService",
+            "description": "Server manages table through POS system: drinks order, starters, mains, desserts. Course timing managed by kitchen communication. Special dietary requirements flagged on order. Mid-meal check-in and satisfaction captured. Bill split options managed.",
+            "category": "Service",
+            "estimatedDuration": 90,
+            "businessRationale": "POS course management reduces average meal time from 95 to 80 minutes during peak, increasing covers by 15%. Dietary flag compliance prevents allergen incidents. Bill splitting reduces payment friction.",
+            "substeps": [
+                {
+                    "substepName": "OrderManagementAndCourseTiming",
+                    "duration": 75
+                },
+                {
+                    "substepName": "SatisfactionCheckAndBillSplit",
+                    "duration": 15
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "PostDiningFeedback",
+            "serviceName": "PostDiningFeedbackService",
+            "description": "Automated feedback request sent 2 hours after dining. Star rating and specific category feedback (food, service, ambience, value). Negative feedback triggers manager follow-up within 24 hours. Positive feedback channelled to review platforms with opt-in.",
+            "category": "Feedback",
+            "estimatedDuration": 5,
+            "businessRationale": "Post-dining feedback captures sentiment from 25% of guests. Rapid response to negative feedback converts 60% of complainers to repeat visitors. Channelling positive reviews increases online rating by 0.3 stars on average.",
+            "substeps": [
+                {
+                    "substepName": "FeedbackCollectionAndRouting",
+                    "duration": 3
+                },
+                {
+                    "substepName": "ManagerFollowUpAndReviewChannel",
+                    "duration": 2
+                }
+            ]
+        }
+    ],
+    "additionalFields": {
+        "orderTotal": 85,
+        "transactionValue": 85,
+        "averageOrderValue": 72,
+        "contractValue": 0,
+        "annualRevenue": 510,
+        "revenuePerCustomer": 680,
+        "profitMargin": 22.0,
+        "customerLifetimeValue": 4200,
+        "lifetimeValue": 4200,
+        "acquisitionCost": 8,
+        "conversionProbability": 0.75,
+        "conversionRate": 75,
+        "engagementScore": 65,
+        "timeToConversion": 4320,
+        "sessionDuration": 240,
+        "netPromoterScore": 52,
+        "satisfactionRating": 4.3,
+        "retentionProbability": 0.62,
+        "processingTime": 30,
+        "operationalCost": 12,
+        "efficiencyRating": 88,
+        "complianceScore": 92,
+        "channel": [
+            "booking_platform",
+            "restaurant_website",
+            "phone",
+            "walk_in",
+            "social_media"
+        ],
+        "deviceType": [
+            "mobile",
+            "desktop",
+            "mobile",
+            "mobile",
+            "mobile"
+        ],
+        "region": [
+            "London",
+            "Manchester",
+            "Edinburgh",
+            "Birmingham",
+            "Bristol"
+        ],
+        "customerSegmentValue": [
+            "fine_dining",
+            "casual_diner",
+            "date_night",
+            "business_lunch",
+            "celebration"
+        ],
+        "loyaltyTier": [
+            "VIP Diner",
+            "Regular",
+            "Newcomer",
+            "Business Account",
+            "Celebration Club"
+        ],
+        "segment": [
+            "dinner_reservation",
+            "lunch_booking",
+            "brunch_table",
+            "private_dining",
+            "tasting_menu"
+        ],
+        "Productname": [
+            "Saturday Dinner for 2",
+            "Business Lunch Table",
+            "Sunday Brunch Group",
+            "Private Dining Room",
+            "Chef's Tasting Experience"
+        ],
+        "ProductId": [
+            "FB-TR-101",
+            "FB-TR-102",
+            "FB-TR-103",
+            "FB-TR-104",
+            "FB-TR-105"
+        ],
+        "ProductType": [
+            "dinner",
+            "lunch",
+            "brunch",
+            "private_dining",
+            "tasting_menu"
+        ],
+        "Price": [
+            85,
+            45,
+            35,
+            250,
+            120
+        ],
+        "partySize": [
+            2,
+            4,
+            6,
+            12,
+            2
+        ],
+        "specialRequirements": [
+            "window_seat",
+            "none",
+            "high_chair",
+            "av_equipment",
+            "wine_pairing"
+        ],
+        "dietaryRestrictions": [
+            "none",
+            "vegetarian",
+            "gluten_free",
+            "vegan_options",
+            "none"
+        ],
+        "depositPaid": [
+            0,
+            0,
+            0,
+            50,
+            25
+        ],
+        "noShowRate": [
+            "low",
+            "low",
+            "medium",
+            "low",
+            "low"
+        ],
+        "marketTrend": [
+            "dynamic_pricing",
+            "experiential_dining",
+            "no_show_prevention",
+            "pre_ordering",
+            "virtual_queuing"
+        ]
+    }
+}

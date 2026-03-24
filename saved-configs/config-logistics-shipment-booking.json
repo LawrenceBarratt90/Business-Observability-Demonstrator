@@ -1,0 +1,265 @@
+{
+    "companyName": "Logistics Corp",
+    "domain": "https://www.logistics-corp.com",
+    "industryType": "Logistics & Supply Chain",
+    "source": "sector-demo",
+    "timestamp": "2026-01-09T15:30:00.000Z",
+    "journeyType": "Shipment Booking",
+    "journeyDetail": "Shipment Booking Journey",
+    "journeyId": "journey_logistics_shipment_2026",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "id": "a1b2c3d4-6666-4aaa-b666-000000000001",
+    "name": "Logistics - Shipment Booking",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "QuoteRequest",
+            "serviceName": "QuoteRequestService",
+            "description": "Shipper enters origin, destination, cargo dimensions, weight, commodity type, and required delivery date. Routing engine calculates available modes (road, rail, ocean, air) with transit times and rates. Hazmat and temperature-controlled surcharges applied if applicable.",
+            "category": "Quote",
+            "estimatedDuration": 10,
+            "businessRationale": "Instant quoting converts 3x more enquiries than manual quotes. Each minute of quote delay reduces conversion by 1%. Average shipment margin is 15-25% \u2014 competitive pricing wins volume.",
+            "substeps": [
+                {
+                    "substepName": "CargoDetailsAndRouteCalculation",
+                    "duration": 5
+                },
+                {
+                    "substepName": "RateAndSurchargeComputation",
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "BookingConfirmation",
+            "serviceName": "BookingConfirmationService",
+            "description": "Shipper selects preferred service level and confirms booking. Carrier capacity checked in real-time. Booking reference generated with estimated pickup and delivery windows. Carrier assignment based on performance scores and lane coverage.",
+            "category": "Booking",
+            "estimatedDuration": 5,
+            "businessRationale": "Real-time capacity check prevents overbooking that causes service failures. Carrier performance-based assignment reduces damage claims by 30% and improves on-time delivery from 85% to 94%.",
+            "substeps": [
+                {
+                    "substepName": "ServiceLevelSelectionAndCapacityCheck",
+                    "duration": 3
+                },
+                {
+                    "substepName": "CarrierAssignmentAndBookingRef",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "DocumentationGeneration",
+            "serviceName": "DocumentationGenerationService",
+            "description": "Shipping documents auto-generated: bill of lading, commercial invoice, packing list, customs declaration (for international). Incoterms applied per trade agreement. Electronic documents transmitted to carrier and customs broker.",
+            "category": "Documentation",
+            "estimatedDuration": 15,
+            "businessRationale": "Documentation errors cause 20% of shipment delays. Automated generation reduces errors from 12% to 1.5%. International shipments require 10-15 documents \u2014 manual preparation takes 2 hours per shipment.",
+            "substeps": [
+                {
+                    "substepName": "BillOfLadingAndInvoiceGeneration",
+                    "duration": 8
+                },
+                {
+                    "substepName": "CustomsDeclarationAndTransmission",
+                    "duration": 7
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "PickupScheduling",
+            "serviceName": "PickupSchedulingService",
+            "description": "Pickup appointment scheduled with origin warehouse. Driver assigned with vehicle matching cargo requirements (flatbed, reefer, curtain-side). Loading instructions and dock assignment communicated. GPS tracking activated on assigned vehicle.",
+            "category": "Pickup",
+            "estimatedDuration": 120,
+            "businessRationale": "Missed pickups cost $200-500 in rebooking fees and delay supply chains. Driver-to-dock matching reduces loading time by 25%. GPS activation enables real-time visibility from first mile.",
+            "substeps": [
+                {
+                    "substepName": "WarehouseAppointmentAndDriverAssign",
+                    "duration": 60
+                },
+                {
+                    "substepName": "VehicleMatchAndGPSActivation",
+                    "duration": 60
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "CargoPickupAndScan",
+            "serviceName": "CargoPickupAndScanService",
+            "description": "Driver arrives at origin, scans cargo barcodes confirming piece count and condition. Weight verified against booking. Photos captured for condition documentation. Digital proof of pickup (ePOP) signed by shipper and transmitted in real-time.",
+            "category": "Pickup",
+            "estimatedDuration": 30,
+            "businessRationale": "ePOP eliminates disputes over pickup condition \u2014 reducing claims by 45%. Barcode scan verification catches misloads before departure. Real-time ePOP gives shippers immediate confirmation.",
+            "substeps": [
+                {
+                    "substepName": "BarcodeScanAndWeightVerify",
+                    "duration": 15
+                },
+                {
+                    "substepName": "ConditionPhotosAndEPOP",
+                    "duration": 15
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "InTransitMonitoring",
+            "serviceName": "InTransitMonitoringService",
+            "description": "Shipment tracked via GPS, IoT sensors (temperature, humidity, shock), and carrier milestone updates. ETA recalculated based on real-time traffic and weather. Exception alerts triggered for delays, route deviations, or sensor threshold breaches.",
+            "category": "Tracking",
+            "estimatedDuration": 2880,
+            "businessRationale": "Proactive exception management allows mitigation before delivery impact. IoT monitoring prevents $50K+ cargo spoilage for temperature-sensitive goods. Accurate ETA enables receiver warehouse planning.",
+            "substeps": [
+                {
+                    "substepName": "GPSAndIoTSensorTracking",
+                    "duration": 1440
+                },
+                {
+                    "substepName": "ETARecalculationAndExceptionAlerts",
+                    "duration": 1440
+                }
+            ]
+        }
+    ],
+    "additionalFields": {
+        "orderTotal": 2500,
+        "transactionValue": 2500,
+        "averageOrderValue": 1800,
+        "contractValue": 120000,
+        "annualRevenue": 120000,
+        "revenuePerCustomer": 120000,
+        "profitMargin": 15.0,
+        "customerLifetimeValue": 450000,
+        "lifetimeValue": 450000,
+        "acquisitionCost": 3500,
+        "costPerAcquisition": 3500,
+        "conversionProbability": 0.65,
+        "conversionRate": 65,
+        "engagementScore": 68,
+        "timeToConversion": 1440,
+        "netPromoterScore": 40,
+        "satisfactionRating": 4.0,
+        "retentionProbability": 0.82,
+        "processingTime": 900,
+        "operationalCost": 1200,
+        "efficiencyRating": 72,
+        "complianceScore": 94,
+        "channel": [
+            "shipping_portal",
+            "api_integration",
+            "phone",
+            "freight_broker",
+            "mobile_app"
+        ],
+        "deviceType": [
+            "desktop",
+            "api",
+            "mobile",
+            "desktop",
+            "mobile"
+        ],
+        "region": [
+            "EMEA",
+            "North America",
+            "APAC",
+            "LATAM",
+            "Africa"
+        ],
+        "customerSegmentValue": [
+            "enterprise_shipper",
+            "sme_occasional",
+            "ecommerce_high_volume",
+            "manufacturer",
+            "freight_forwarder"
+        ],
+        "loyaltyTier": [
+            "Diamond Shipper",
+            "Gold",
+            "Silver",
+            "Bronze",
+            "Partner"
+        ],
+        "segment": [
+            "air_freight",
+            "ocean_container",
+            "road_haulage",
+            "express_parcel",
+            "multimodal"
+        ],
+        "Productname": [
+            "Air Freight Priority 500kg",
+            "40ft Container FCL Shanghai-London",
+            "FTL Road Haulage UK",
+            "Express Parcel Next Day",
+            "Multimodal Rail-Road-Sea"
+        ],
+        "ProductId": [
+            "LOG-SB-001",
+            "LOG-SB-002",
+            "LOG-SB-003",
+            "LOG-SB-004",
+            "LOG-SB-005"
+        ],
+        "ProductType": [
+            "air_freight",
+            "ocean_fcl",
+            "road_ftl",
+            "express_parcel",
+            "multimodal"
+        ],
+        "Price": [
+            4500,
+            3200,
+            1800,
+            25,
+            2800
+        ],
+        "weightKg": [
+            500,
+            22000,
+            18000,
+            5,
+            12000
+        ],
+        "transitDays": [
+            3,
+            35,
+            1,
+            1,
+            18
+        ],
+        "incoterms": [
+            "DAP",
+            "CIF",
+            "FCA",
+            "DDP",
+            "FOB"
+        ],
+        "customsClearance": [
+            true,
+            true,
+            false,
+            true,
+            true
+        ],
+        "carbonOffsetIncluded": [
+            true,
+            false,
+            false,
+            true,
+            true
+        ],
+        "marketTrend": [
+            "green_logistics",
+            "digital_freight",
+            "near_shoring",
+            "last_mile_innovation",
+            "supply_chain_visibility"
+        ]
+    }
+}

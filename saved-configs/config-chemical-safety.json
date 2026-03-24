@@ -1,0 +1,257 @@
+{
+  "companyName": "ChemTech Industries",
+  "domain": "https://www.chemical-demo.com",
+  "industryType": "Chemical & Process Industries",
+  "journeyType": "Safety Monitoring",
+  "journeyDetail": "Safety Monitoring",
+  "journeyId": "journey_chemical_safety_monitoring",
+  "journeyStartTime": "2025-11-21T00:00:00.000Z",
+  "steps": [
+    {
+      "stepIndex": 1,
+      "stepName": "HazardIdentification",
+      "serviceName": "HazardIdentificationService",
+      "description": "AI analyses chemical inventories, SDSs, and process conditions to identify workplace hazards: exposure risks, incompatible storage, reaction hazards, and regulatory non-compliance. Continuous monitoring of 5,000+ chemicals.",
+      "category": "Assessment",
+      "timestamp": "2025-11-21T00:00:00.000Z",
+      "estimatedDuration": 30,
+      "businessRationale": "AI hazard identification catches 25% more risks than manual assessments. Proactive identification prevents incidents that average \u00a32M in direct costs and \u00a38M in consequential losses.",
+      "substeps": [
+        {
+          "substepName": "ChemicalInventoryAnalysis",
+          "duration": 15
+        },
+        {
+          "substepName": "RiskScoring",
+          "duration": 15
+        }
+      ]
+    },
+    {
+      "stepIndex": 2,
+      "stepName": "ExposureMonitoring",
+      "serviceName": "ExposureMonitoringService",
+      "description": "AI processes real-time data from personal exposure monitors, area detectors, and environmental sensors. Predicts exposure levels based on process conditions, ventilation, and worker proximity to sources.",
+      "category": "Monitoring",
+      "estimatedDuration": 480,
+      "businessRationale": "Real-time exposure monitoring reduces occupational illness by 40%. Predictive alerts enable intervention before exposure limits are reached, protecting workers and preventing regulatory action.",
+      "substeps": [
+        {
+          "substepName": "SensorDataProcessing",
+          "duration": 240
+        },
+        {
+          "substepName": "ExposurePrediction",
+          "duration": 240
+        }
+      ]
+    },
+    {
+      "stepIndex": 3,
+      "stepName": "IncidentPrevention",
+      "serviceName": "IncidentPreventionService",
+      "description": "AI analyses near-miss data, maintenance records, and process deviations to predict incident probabilities. Generates safety recommendations, automates permit-to-work processes, and manages lockout/tagout procedures.",
+      "category": "Prevention",
+      "estimatedDuration": 60,
+      "businessRationale": "Predictive safety analytics reduce lost-time injuries by 35%. Automated permit systems prevent 80% of procedural safety breaches that lead to serious incidents.",
+      "substeps": [
+        {
+          "substepName": "PredictiveAnalysis",
+          "duration": 30
+        },
+        {
+          "substepName": "SafetyAutomation",
+          "duration": 30
+        }
+      ]
+    },
+    {
+      "stepIndex": 4,
+      "stepName": "EmergencyResponse",
+      "serviceName": "EmergencyResponseService",
+      "description": "AI manages emergency response: chemical spill modelling, plume dispersion prediction, evacuation route optimization, and decontamination protocol selection. Provides first responder briefing with chemical hazard data.",
+      "category": "Response",
+      "estimatedDuration": 30,
+      "businessRationale": "AI emergency response reduces containment time by 50%. Accurate plume modelling protects surrounding communities and prevents evacuations costing \u00a3500K per incident.",
+      "substeps": [
+        {
+          "substepName": "SpillModeling",
+          "duration": 10
+        },
+        {
+          "substepName": "ResponseCoordination",
+          "duration": 20
+        }
+      ]
+    },
+    {
+      "stepIndex": 5,
+      "stepName": "RegulatoryCompliance",
+      "serviceName": "RegulatoryComplianceService",
+      "description": "AI manages REACH, CLP, COMAH, and COSHH compliance: tracks regulatory changes, maintains SDS databases, generates COSHH assessments, and monitors reportable quantities. Automated regulatory reporting.",
+      "category": "Compliance",
+      "estimatedDuration": 120,
+      "businessRationale": "Automated compliance management prevents \u00a35M+ in regulatory fines. Proactive REACH tracking avoids supply chain disruption from substance restrictions worth \u00a320M annually.",
+      "substeps": [
+        {
+          "substepName": "RegulatoryTracking",
+          "duration": 60
+        },
+        {
+          "substepName": "ComplianceDocumentation",
+          "duration": 60
+        }
+      ]
+    },
+    {
+      "stepIndex": 6,
+      "stepName": "SafetyReporting",
+      "serviceName": "SafetyReportingService",
+      "description": "AI generates safety performance reports: incident rates, near-miss trends, exposure statistics, compliance status, training completion, and safety culture metrics. Benchmarks against industry standards.",
+      "category": "Reporting",
+      "estimatedDuration": 60,
+      "businessRationale": "Safety reporting drives continuous improvement and regulatory confidence. Best-in-class safety performance reduces insurance premiums by 20% and attracts talent in competitive markets.",
+      "substeps": [
+        {
+          "substepName": "PerformanceMetrics",
+          "duration": 30
+        },
+        {
+          "substepName": "BenchmarkAnalysis",
+          "duration": 30
+        }
+      ]
+    }
+  ],
+  "id": "1729060b-24c5-48ed-a51b-8b4fd22471b0",
+  "name": "Chemical & Petrochemical - Safety Monitoring",
+  "timestamp": "2026-03-18T21:35:20.000Z",
+  "source": "sector-demo",
+  "additionalFields": {
+    "orderTotal": 0,
+    "transactionValue": 0,
+    "averageOrderValue": 0,
+    "contractValue": 2000000,
+    "annualRevenue": 0,
+    "revenuePerCustomer": 0,
+    "profitMargin": 0,
+    "customerLifetimeValue": 0,
+    "lifetimeValue": 0,
+    "acquisitionCost": 0,
+    "costPerAcquisition": 0,
+    "conversionProbability": 0.99,
+    "conversionRate": 99,
+    "engagementScore": 92,
+    "timeToConversion": 0,
+    "sessionDuration": 480,
+    "pageViews": 0,
+    "purchaseFrequency": 365,
+    "netPromoterScore": 0,
+    "satisfactionRating": 0,
+    "retentionProbability": 0.98,
+    "processingTime": 30,
+    "operationalCost": 500000,
+    "efficiencyRating": 88,
+    "discountApplied": 0,
+    "taxAmount": 0,
+    "shippingCost": 0,
+    "channel": [
+      "scada_system",
+      "mobile_app",
+      "desktop_portal",
+      "wearable_sensor",
+      "emergency_system"
+    ],
+    "deviceType": [
+      "plc_controller",
+      "mobile",
+      "desktop",
+      "wearable",
+      "fixed_detector"
+    ],
+    "region": [
+      "Production Area A",
+      "Storage Facility B",
+      "Laboratory C",
+      "Warehouse D",
+      "Loading Bay E"
+    ],
+    "customerSegmentValue": [
+      "petrochemical",
+      "pharmaceutical",
+      "agrochemical",
+      "specialty_chemical",
+      "paint_coating"
+    ],
+    "loyaltyTier": [
+      "n/a",
+      "n/a",
+      "n/a",
+      "n/a",
+      "n/a"
+    ],
+    "segment": [
+      "process_safety",
+      "occupational_health",
+      "environmental",
+      "transport_safety",
+      "storage_safety"
+    ],
+    "Productname": [
+      "ExposureMonitor_System",
+      "SpillResponse_Suite",
+      "COSHH_Manager",
+      "PermitToWork_Platform",
+      "ChemicalInventory_DB"
+    ],
+    "ProductId": [
+      "CHM-EXP-001",
+      "CHM-SPL-002",
+      "CHM-CSH-003",
+      "CHM-PTW-004",
+      "CHM-INV-005"
+    ],
+    "ProductType": [
+      "monitoring",
+      "emergency",
+      "compliance",
+      "workflow",
+      "database"
+    ],
+    "Price": [
+      250000,
+      150000,
+      80000,
+      120000,
+      60000
+    ],
+    "hazardClass": [
+      "flammable",
+      "toxic",
+      "corrosive",
+      "oxidising",
+      "explosive"
+    ],
+    "exposureLimitPPM": [
+      50,
+      10,
+      5,
+      25,
+      1
+    ],
+    "incidentRate": [
+      0.5,
+      1.2,
+      0.3,
+      0.8,
+      0.1
+    ],
+    "marketTrend": [
+      "digital_twin_safety",
+      "ai_exposure_prediction",
+      "autonomous_response",
+      "green_chemistry",
+      "process_intensification"
+    ]
+  }
+}

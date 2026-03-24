@@ -4,7 +4,7 @@
   "app": {
     "id": "my.bizobs.generator.master",
     "name": "Business Observability Forge",
-    "version": "1.4.0",
+    "version": "2.22.1",
     "description": "AI-powered Business Observability — generate and observe journeys",
     "scopes": [
       {
@@ -18,6 +18,22 @@
       {
         "name": "storage:events:read",
         "comment": "Read Dynatrace events"
+      },
+      {
+        "name": "storage:bizevents:read",
+        "comment": "Read business events for Forge Dashboards live DQL tiles"
+      },
+      {
+        "name": "storage:metrics:read",
+        "comment": "Read metrics for Developer Self-Service dashboard (service request timeseries)"
+      },
+      {
+        "name": "storage:spans:read",
+        "comment": "Read spans/traces for Developer Self-Service dashboard (distributed tracing)"
+      },
+      {
+        "name": "storage:buckets:read",
+        "comment": "Read Grail storage buckets (required for DQL queries against bizevents table)"
       },
       {
         "name": "app-settings:objects:read",
@@ -92,7 +108,9 @@
       "apiConfig": {
         "name": "API Configuration",
         "description": "Configure the connection to the BizObs Generator service",
-        "schemaIds": ["app:my.bizobs.generator.master:api-config"]
+        "schemaIds": [
+          "app:my.bizobs.generator.master:api-config"
+        ]
       }
     }
   }

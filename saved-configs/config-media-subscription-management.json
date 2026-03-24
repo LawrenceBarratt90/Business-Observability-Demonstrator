@@ -1,0 +1,273 @@
+{
+    "companyName": "MediaStream Global",
+    "domain": "https://www.mediastream-global.com",
+    "industryType": "Media & Entertainment",
+    "journeyType": "Subscription Management",
+    "journeyDetail": "AI-Optimised Subscription Lifecycle & Retention",
+    "journeyId": "journey_subscription_management_089177a6",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "TrialConversion",
+            "serviceName": "TrialService",
+            "description": "AI optimises free trial: personalised content push during trial, engagement milestones, and conversion triggers. Trial extension for high-potential users. Paywall timing.",
+            "category": "Acquisition",
+            "estimatedDuration": 336,
+            "businessRationale": "Trial-to-paid conversion averages 60%. AI-optimised trials improve this to 75%. Each 1% improvement = millions in annual revenue.",
+            "substeps": [
+                {
+                    "substepName": "ContentPush",
+                    "duration": 112
+                },
+                {
+                    "substepName": "EngagementMilestones",
+                    "duration": 112
+                },
+                {
+                    "substepName": "ConversionTrigger",
+                    "duration": 112
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "PlanOptimization",
+            "serviceName": "PlanService",
+            "description": "AI recommends optimal plan per subscriber: usage analysis, feature utilisation, and willingness-to-pay prediction. Upsell/cross-sell opportunities for add-ons.",
+            "category": "Revenue",
+            "estimatedDuration": 24,
+            "businessRationale": "30% of subscribers are on suboptimal plans. Right-sizing increases ARPU by 10-15% while improving satisfaction.",
+            "substeps": [
+                {
+                    "substepName": "UsageAnalysis",
+                    "duration": 8
+                },
+                {
+                    "substepName": "PlanRecommendation",
+                    "duration": 8
+                },
+                {
+                    "substepName": "UpsellTiming",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "ChurnPrediction",
+            "serviceName": "ChurnPredictService",
+            "description": "AI calculates churn probability from engagement decline, payment failures, competitive launches, and complaint history. 30/60/90-day churn forecasts per segment.",
+            "category": "Retention",
+            "estimatedDuration": 24,
+            "businessRationale": "Acquiring a new subscriber costs 5-7x more than retaining one. Identifying churn risk early enables targeted retention spend.",
+            "substeps": [
+                {
+                    "substepName": "EngagementDecline",
+                    "duration": 8
+                },
+                {
+                    "substepName": "PaymentRisk",
+                    "duration": 8
+                },
+                {
+                    "substepName": "CompetitiveThreats",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "RetentionIntervention",
+            "serviceName": "RetentionService",
+            "description": "AI triggers personalised retention offers: content highlights, plan discounts, feature unlocks, and exclusive previews. Intervention channel and timing optimised per user.",
+            "category": "Recovery",
+            "estimatedDuration": 48,
+            "businessRationale": "Targeted retention saves 15-25% of at-risk subscribers. Blanket discounts destroy margin; personalised offers preserve it.",
+            "substeps": [
+                {
+                    "substepName": "OfferPersonalisation",
+                    "duration": 16
+                },
+                {
+                    "substepName": "ChannelOptimization",
+                    "duration": 16
+                },
+                {
+                    "substepName": "ImpactMeasurement",
+                    "duration": 16
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "PaymentRecovery",
+            "serviceName": "PaymentRecoveryService",
+            "description": "AI manages involuntary churn: smart retry scheduling, card update reminders, and alternative payment methods. Grace periods personalised by subscriber value.",
+            "category": "Revenue Recovery",
+            "estimatedDuration": 168,
+            "businessRationale": "Involuntary churn (failed payments) accounts for 20-40% of all churn. Smart dunning recovers 40-60% of failed payments.",
+            "substeps": [
+                {
+                    "substepName": "SmartRetry",
+                    "duration": 56
+                },
+                {
+                    "substepName": "CardUpdatePrompts",
+                    "duration": 56
+                },
+                {
+                    "substepName": "GracePeriodManagement",
+                    "duration": 56
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "WinbackCampaigns",
+            "serviceName": "WinbackService",
+            "description": "AI targets churned subscribers with personalised winback campaigns at optimal timing. New content highlights, competitive pricing, and changed value proposition messaging.",
+            "category": "Re-acquisition",
+            "estimatedDuration": 720,
+            "businessRationale": "Winback converts 5-15% of churned subscribers at 50% lower CAC than new acquisition. Timing and content relevance are key.",
+            "substeps": [
+                {
+                    "substepName": "TimingOptimization",
+                    "duration": 240
+                },
+                {
+                    "substepName": "ContentHighlights",
+                    "duration": 240
+                },
+                {
+                    "substepName": "PersonalisedOffer",
+                    "duration": 240
+                }
+            ]
+        }
+    ],
+    "id": "749e2a92-27e1-41dd-bccb-83e0d963df9d",
+    "name": "Media & Entertainment - Subscription Management",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 14.99,
+        "transactionValue": 14.99,
+        "averageOrderValue": 16.5,
+        "contractValue": 0,
+        "annualRevenue": 8000000000,
+        "revenuePerCustomer": 180,
+        "profitMargin": 8.0,
+        "customerLifetimeValue": 780,
+        "lifetimeValue": 780,
+        "acquisitionCost": 50,
+        "costPerAcquisition": 50,
+        "conversionProbability": 0.62,
+        "conversionRate": 62,
+        "engagementScore": 65,
+        "timeToConversion": 336,
+        "sessionDuration": 120,
+        "pageViews": 3,
+        "purchaseFrequency": 12,
+        "netPromoterScore": 38,
+        "satisfactionRating": 3.9,
+        "retentionProbability": 0.92,
+        "processingTime": 5,
+        "operationalCost": 3,
+        "efficiencyRating": 88,
+        "monthlyChurn": 4.5,
+        "arpu": 14.2,
+        "channel": [
+            "in_app",
+            "email",
+            "push_notification",
+            "sms",
+            "customer_service"
+        ],
+        "deviceType": [
+            "smart_tv",
+            "mobile",
+            "desktop",
+            "mobile",
+            "phone"
+        ],
+        "region": [
+            "US",
+            "UK",
+            "Brazil",
+            "India",
+            "Japan"
+        ],
+        "customerSegmentValue": [
+            "premium_loyal",
+            "standard_engaged",
+            "basic_at_risk",
+            "ad_supported_convert",
+            "winback_target"
+        ],
+        "loyaltyTier": [
+            "Lifetime",
+            "Annual",
+            "Monthly",
+            "Trial",
+            "Churned"
+        ],
+        "segment": [
+            "retention",
+            "upsell",
+            "winback",
+            "trial_conversion",
+            "payment_recovery"
+        ],
+        "Productname": [
+            "Retention Analytics Engine",
+            "Smart Dunning System",
+            "Winback Campaign Manager",
+            "Trial Optimizer",
+            "ARPU Maximizer"
+        ],
+        "ProductId": [
+            "SUB-RA-001",
+            "SUB-SD-002",
+            "SUB-WC-003",
+            "SUB-TO-004",
+            "SUB-AM-005"
+        ],
+        "ProductType": [
+            "analytics",
+            "payment_recovery",
+            "marketing",
+            "conversion",
+            "revenue_optimization"
+        ],
+        "Price": [
+            150000,
+            80000,
+            120000,
+            100000,
+            200000
+        ],
+        "retentionSavings": [
+            0.18,
+            0.42,
+            0.1,
+            0.15,
+            0.12
+        ],
+        "revenueImpact": [
+            5000000,
+            12000000,
+            3000000,
+            8000000,
+            15000000
+        ],
+        "marketTrend": [
+            "bundled_subscriptions",
+            "ad_tier_monetization",
+            "family_plan_growth",
+            "annual_plan_incentives",
+            "content_cost_optimization"
+        ]
+    }
+}

@@ -1,0 +1,273 @@
+{
+    "companyName": "RideFlow Mobility",
+    "domain": "https://www.rideflow-mobility.com",
+    "industryType": "Ride-Hailing & Mobility",
+    "journeyType": "Dynamic Pricing",
+    "journeyDetail": "AI-Driven Surge Pricing & Revenue Optimisation",
+    "journeyId": "journey_dynamic_pricing_434bb201",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "DemandForecasting",
+            "serviceName": "DemandForecastService",
+            "description": "AI forecasts ride demand by zone: historical patterns, weather, events, transit disruptions, and social media signals. 15-minute granularity demand heatmaps.",
+            "category": "Forecasting",
+            "estimatedDuration": 5,
+            "businessRationale": "Accurate demand forecasting enables proactive driver positioning. Foreseeing a concert ending 30 minutes early = 1000 fewer unserved ride requests.",
+            "substeps": [
+                {
+                    "substepName": "HistoricPatterns",
+                    "duration": 2
+                },
+                {
+                    "substepName": "EventImpact",
+                    "duration": 1.5
+                },
+                {
+                    "substepName": "WeatherCorrelation",
+                    "duration": 1.5
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "SupplyForecasting",
+            "serviceName": "SupplyForecastService",
+            "description": "AI predicts driver supply by zone: active drivers, shift patterns, earnings targets, and competitor incentives. Supply gap identification triggers driver incentive campaigns.",
+            "category": "Forecasting",
+            "estimatedDuration": 5,
+            "businessRationale": "Supply/demand balance is the core marketplace challenge. Understanding driver behaviour enables proactive supply management.",
+            "substeps": [
+                {
+                    "substepName": "DriverAvailability",
+                    "duration": 2
+                },
+                {
+                    "substepName": "ShiftPrediction",
+                    "duration": 1.5
+                },
+                {
+                    "substepName": "CompetitorAnalysis",
+                    "duration": 1.5
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "SurgePricing",
+            "serviceName": "SurgePriceService",
+            "description": "AI calculates real-time surge multipliers: zone-level supply/demand ratio, price elasticity, and competitor pricing awareness. Surge smoothing to prevent price spikes. Maximum surge caps.",
+            "category": "Pricing",
+            "estimatedDuration": 0.01,
+            "businessRationale": "Surge pricing balances markets: incentivises drivers to high-demand areas and manages demand. Without surge, 30% of peak requests go unserved.",
+            "substeps": [
+                {
+                    "substepName": "MultiplierCalculation",
+                    "duration": 0.003
+                },
+                {
+                    "substepName": "ElasticityAdjustment",
+                    "duration": 0.003
+                },
+                {
+                    "substepName": "SurgeSmoothing",
+                    "duration": 0.004
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "DriverIncentives",
+            "serviceName": "IncentiveService",
+            "description": "AI designs driver incentive programmes: quest bonuses, consecutive trip rewards, and zone-based boost earnings. ROI-optimised to attract supply at minimum cost.",
+            "category": "Supply Management",
+            "estimatedDuration": 24,
+            "businessRationale": "Incentives cost $1-3B annually for major platforms. AI optimisation reduces incentive spend by 20% while maintaining supply levels.",
+            "substeps": [
+                {
+                    "substepName": "QuestDesign",
+                    "duration": 8
+                },
+                {
+                    "substepName": "BoostZoning",
+                    "duration": 8
+                },
+                {
+                    "substepName": "ROIOptimization",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "RiderPromotions",
+            "serviceName": "PromoService",
+            "description": "AI targets rider promotions: off-peak discounts, new rider coupons, lapsed rider winback, and loyalty rewards. Promotion ROI tracked by cohort and channel.",
+            "category": "Demand Management",
+            "estimatedDuration": 24,
+            "businessRationale": "Promotions drive 15-25% of rides but must be ROI-positive. AI targeting ensures discounts go to riders who will become retained customers.",
+            "substeps": [
+                {
+                    "substepName": "OffPeakDiscounting",
+                    "duration": 8
+                },
+                {
+                    "substepName": "WinbackCampaigns",
+                    "duration": 8
+                },
+                {
+                    "substepName": "LoyaltyRewards",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "PricingAnalytics",
+            "serviceName": "PricingAnalyticsService",
+            "description": "AI analyses pricing effectiveness: GMV impact, rider price sensitivity, driver earnings satisfaction, and market share vs competitors. Regulatory compliance reporting.",
+            "category": "Analytics",
+            "estimatedDuration": 168,
+            "businessRationale": "Pricing directly determines profitability, rider retention, and driver satisfaction. Wrong pricing loses riders or drivers to competitors.",
+            "substeps": [
+                {
+                    "substepName": "GMVAnalysis",
+                    "duration": 56
+                },
+                {
+                    "substepName": "PriceSensitivity",
+                    "duration": 56
+                },
+                {
+                    "substepName": "MarketShareTracking",
+                    "duration": 56
+                }
+            ]
+        }
+    ],
+    "id": "0ce3b225-d1d4-4923-ad49-0372cc1e908c",
+    "name": "Ride-Hailing & Mobility - Dynamic Pricing",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 22,
+        "transactionValue": 22,
+        "averageOrderValue": 18,
+        "contractValue": 0,
+        "annualRevenue": 30000000000,
+        "revenuePerCustomer": 1200,
+        "profitMargin": 3.0,
+        "customerLifetimeValue": 4800,
+        "lifetimeValue": 4800,
+        "acquisitionCost": 8,
+        "costPerAcquisition": 8,
+        "conversionProbability": 0.5,
+        "conversionRate": 50,
+        "engagementScore": 70,
+        "timeToConversion": 15,
+        "sessionDuration": 120,
+        "pageViews": 2,
+        "purchaseFrequency": 60,
+        "netPromoterScore": 32,
+        "satisfactionRating": 4.0,
+        "retentionProbability": 0.55,
+        "processingTime": 0.01,
+        "operationalCost": 2,
+        "efficiencyRating": 85,
+        "avgSurgeMultiplier": 1.3,
+        "driverEarningsPerHour": 28,
+        "channel": [
+            "mobile_app",
+            "web_app",
+            "corporate_API",
+            "transit_partner",
+            "event_prebook"
+        ],
+        "deviceType": [
+            "mobile",
+            "mobile",
+            "server",
+            "mobile",
+            "desktop"
+        ],
+        "region": [
+            "Manhattan US",
+            "Central London UK",
+            "Sao Paulo BR",
+            "Bangalore IN",
+            "Jakarta ID"
+        ],
+        "customerSegmentValue": [
+            "price_sensitive",
+            "convenience_first",
+            "premium_willing",
+            "corporate_account",
+            "event_goer"
+        ],
+        "loyaltyTier": [
+            "VIP",
+            "Frequent",
+            "Regular",
+            "Occasional",
+            "New"
+        ],
+        "segment": [
+            "peak_morning",
+            "peak_evening",
+            "weekend_night",
+            "airport",
+            "event_surge"
+        ],
+        "Productname": [
+            "Standard Rate",
+            "Surge Premium",
+            "Scheduled Ride",
+            "Flat Rate Airport",
+            "Event Pre-Book"
+        ],
+        "ProductId": [
+            "RP-SR-001",
+            "RP-SP-002",
+            "RP-SC-003",
+            "RP-FA-004",
+            "RP-EP-005"
+        ],
+        "ProductType": [
+            "standard",
+            "surge",
+            "scheduled",
+            "flat_rate",
+            "pre_book"
+        ],
+        "Price": [
+            18,
+            32,
+            20,
+            45,
+            22
+        ],
+        "surgeFrequency": [
+            0.25,
+            0.8,
+            0,
+            0,
+            0.6
+        ],
+        "driverAcceptanceRate": [
+            0.85,
+            0.95,
+            0.9,
+            0.92,
+            0.88
+        ],
+        "marketTrend": [
+            "subscription_pricing",
+            "upfront_pricing",
+            "dynamic_commission",
+            "carbon_pricing",
+            "multimodal_pricing"
+        ]
+    }
+}

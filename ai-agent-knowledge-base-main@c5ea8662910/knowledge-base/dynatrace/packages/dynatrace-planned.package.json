@@ -1,0 +1,16 @@
+{
+  "name": "dynatrace-planned",
+  "description": "Dynatrace planned knowledge-base resources from the public dynatrace channel",
+  "resources": [
+    "agent/dt-dt-main-agent",
+    "skill/dt-app-frontend",
+    "skill/dt-app-services",
+    "skill/dt-app-tracing",
+    "skill/dt-dql-essentials",
+    "skill/dt-infra-aws",
+    "skill/dt-infra-hosts",
+    "skill/dt-infra-kubernetes",
+    "skill/dt-log-analysis",
+    "skill/dt-problem-analysis"
+  ]
+}

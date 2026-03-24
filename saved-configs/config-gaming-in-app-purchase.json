@@ -1,0 +1,261 @@
+{
+    "companyName": "Gaming Entertainment",
+    "domain": "https://www.gaming-entertainment.com",
+    "industryType": "Gaming & Entertainment",
+    "source": "sector-demo",
+    "timestamp": "2026-01-09T15:40:00.000Z",
+    "journeyType": "In-App Purchase",
+    "journeyDetail": "In-App Purchase Journey",
+    "journeyId": "journey_gaming_iap_2026",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "id": "a1b2c3d4-8888-4aaa-b888-000000000002",
+    "name": "Gaming - In-App Purchase",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "StoreDiscovery",
+            "serviceName": "StoreDiscoveryService",
+            "description": "Player browses in-game store with items personalised by play style, progression level, and purchase history. Featured items, limited-time offers, and bundle deals highlighted. Dynamic pricing engine adjusts offers based on player segment and engagement patterns.",
+            "category": "Discovery",
+            "estimatedDuration": 10,
+            "businessRationale": "Personalised store layouts increase conversion by 45%. Limited-time offers create urgency driving 3x purchase rates. Average revenue per paying user (ARPPU) is $20-50/month \u2014 store optimisation is the primary revenue lever.",
+            "substeps": [
+                {
+                    "substepName": "PersonalisedItemDisplay",
+                    "duration": 5
+                },
+                {
+                    "substepName": "OfferAndBundleHighlighting",
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "ItemSelection",
+            "serviceName": "ItemSelectionService",
+            "description": "Player selects item(s) for purchase: virtual currency packs, cosmetic items (skins, emotes), battle passes, loot boxes (where legal), or expansion content. Item details show preview, stats impact, rarity, and tradability. Cart supports multiple items.",
+            "category": "Selection",
+            "estimatedDuration": 5,
+            "businessRationale": "Clear item previews reduce refund requests by 60%. Rarity and tradability information drives higher-tier purchases. Multi-item cart increases average transaction value from $5 to $12.",
+            "substeps": [
+                {
+                    "substepName": "ItemPreviewAndDetails",
+                    "duration": 3
+                },
+                {
+                    "substepName": "CartBuildingAndReview",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "PurchaseConfirmation",
+            "serviceName": "PurchaseConfirmationService",
+            "description": "Order summary displayed with total cost, applicable taxes, and discount codes. Virtual currency balance checked for partial payment. Age-gated items require re-verification. Double-confirmation for purchases above threshold amount.",
+            "category": "Checkout",
+            "estimatedDuration": 3,
+            "businessRationale": "Clear order summaries reduce chargebacks by 35%. Double-confirmation on high-value purchases prevents accidental spending and reduces support tickets. Tax compliance varies across 190+ countries.",
+            "substeps": [
+                {
+                    "substepName": "OrderSummaryAndTaxCalc",
+                    "duration": 2
+                },
+                {
+                    "substepName": "ConfirmationAndAgeGateCheck",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "PaymentProcessing",
+            "serviceName": "PaymentProcessingService",
+            "description": "Payment processed through integrated gateway supporting 50+ payment methods globally. Fraud detection engine scores transaction. 3D Secure authentication triggered for card payments where required. Failed payment retry with alternative methods offered.",
+            "category": "Payment",
+            "estimatedDuration": 5,
+            "businessRationale": "Payment success rate optimisation is worth $2M+ annually for mid-size games. Every 1% improvement in payment success = $50K revenue. Fraud detection prevents 2-5% of transactions that would result in chargebacks.",
+            "substeps": [
+                {
+                    "substepName": "GatewayProcessingAndFraudCheck",
+                    "duration": 3
+                },
+                {
+                    "substepName": "AuthenticationAndRetryLogic",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "ItemDelivery",
+            "serviceName": "ItemDeliveryService",
+            "description": "Purchased items instantly delivered to player inventory. Virtual currency credited to wallet. Battle pass or expansion unlocked with progress tracking activated. Push notification confirms delivery. Item available for immediate use in-game.",
+            "category": "Fulfilment",
+            "estimatedDuration": 2,
+            "businessRationale": "Instant delivery is expected \u2014 any delay over 30 seconds generates support tickets. Delivery confirmation prevents 'item not received' disputes. Immediate usability maximises satisfaction and likelihood of repeat purchase.",
+            "substeps": [
+                {
+                    "substepName": "InventoryCreditAndUnlock",
+                    "duration": 1
+                },
+                {
+                    "substepName": "DeliveryConfirmationNotify",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "PostPurchaseEngagement",
+            "serviceName": "PostPurchaseEngagementService",
+            "description": "Player receives contextual guidance on using purchased items. Social sharing prompts for rare items. Next purchase suggestions based on complementary items. Purchase history available in account with receipt download for accounting purposes.",
+            "category": "Retention",
+            "estimatedDuration": 5,
+            "businessRationale": "Post-purchase engagement increases repeat purchase rate from 25% to 55% within 7 days. Social sharing of rare items drives organic acquisition worth $0.50-2.00 per impression. Receipt transparency builds trust.",
+            "substeps": [
+                {
+                    "substepName": "UsageGuidanceAndSocialShare",
+                    "duration": 3
+                },
+                {
+                    "substepName": "PurchaseHistoryAndReceipts",
+                    "duration": 2
+                }
+            ]
+        }
+    ],
+    "additionalFields": {
+        "orderTotal": 4.99,
+        "transactionValue": 4.99,
+        "averageOrderValue": 8.5,
+        "contractValue": 0,
+        "annualRevenue": 120,
+        "revenuePerCustomer": 120,
+        "profitMargin": 82.0,
+        "customerLifetimeValue": 450,
+        "lifetimeValue": 450,
+        "acquisitionCost": 0,
+        "upsellPotential": 25,
+        "growthPotential": 50,
+        "conversionProbability": 0.08,
+        "conversionRate": 8,
+        "engagementScore": 88,
+        "timeToConversion": 15,
+        "sessionDuration": 1800,
+        "pageViews": 0,
+        "purchaseFrequency": 14.0,
+        "netPromoterScore": 48,
+        "satisfactionRating": 4.1,
+        "retentionProbability": 0.72,
+        "processingTime": 5,
+        "operationalCost": 0.15,
+        "complianceScore": 85,
+        "channel": [
+            "in_game_store",
+            "battle_pass_prompt",
+            "limited_time_offer",
+            "daily_deal",
+            "season_shop"
+        ],
+        "deviceType": [
+            "mobile",
+            "mobile",
+            "pc",
+            "console",
+            "mobile"
+        ],
+        "region": [
+            "North America",
+            "APAC",
+            "Europe",
+            "North America",
+            "LATAM"
+        ],
+        "customerSegmentValue": [
+            "whale",
+            "dolphin",
+            "minnow",
+            "battle_pass_buyer",
+            "cosmetic_collector"
+        ],
+        "loyaltyTier": [
+            "VIP Spender",
+            "Regular",
+            "Occasional",
+            "Pass Holder",
+            "Collector"
+        ],
+        "segment": [
+            "currency_pack",
+            "cosmetic_skin",
+            "battle_pass",
+            "loot_box",
+            "expansion_pack"
+        ],
+        "Productname": [
+            "1000 Gem Pack",
+            "Legendary Dragon Skin",
+            "Season 12 Battle Pass",
+            "Mystery Chest x10",
+            "World Expansion: Dark Realm"
+        ],
+        "ProductId": [
+            "GAM-IAP-101",
+            "GAM-IAP-102",
+            "GAM-IAP-103",
+            "GAM-IAP-104",
+            "GAM-IAP-105"
+        ],
+        "ProductType": [
+            "virtual_currency",
+            "cosmetic",
+            "battle_pass",
+            "loot_box",
+            "expansion"
+        ],
+        "Price": [
+            4.99,
+            19.99,
+            9.99,
+            14.99,
+            29.99
+        ],
+        "virtualCurrencyAmount": [
+            1000,
+            0,
+            0,
+            0,
+            0
+        ],
+        "rarityLevel": [
+            "common",
+            "legendary",
+            "epic",
+            "random",
+            "epic"
+        ],
+        "limitedTimeOffer": [
+            false,
+            true,
+            false,
+            true,
+            false
+        ],
+        "playerLevel": [
+            15,
+            45,
+            10,
+            30,
+            50
+        ],
+        "marketTrend": [
+            "season_pass_model",
+            "cosmetic_only",
+            "gacha_regulation",
+            "subscription_gaming",
+            "player_trading"
+        ]
+    }
+}

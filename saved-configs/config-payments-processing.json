@@ -1,0 +1,273 @@
+{
+    "companyName": "PaySecure Systems",
+    "domain": "https://www.paysecure-systems.com",
+    "industryType": "Payments & FinTech",
+    "journeyType": "Payment Processing",
+    "journeyDetail": "AI-Optimised Global Payment Processing",
+    "journeyId": "journey_payment_processing_80c99ed3",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "PaymentInitiation",
+            "serviceName": "PaymentInitService",
+            "description": "AI optimises checkout: smart payment method ranking, one-click tokenised payments, and local payment method detection by geography. Multi-currency with optimal FX routing.",
+            "category": "Initiation",
+            "estimatedDuration": 0.1,
+            "businessRationale": "Offering the right payment method at checkout increases conversion by 20-30%. Missing local methods (iDEAL, Pix, UPI) loses 40% of local customers.",
+            "substeps": [
+                {
+                    "substepName": "MethodRanking",
+                    "duration": 0.03
+                },
+                {
+                    "substepName": "TokenisedPayment",
+                    "duration": 0.03
+                },
+                {
+                    "substepName": "CurrencyDetection",
+                    "duration": 0.04
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "PaymentRouting",
+            "serviceName": "RoutingService",
+            "description": "AI routes each transaction through optimal acquirer/processor: success rate maximisation, cost minimisation, and latency optimisation. Cascading fallback for declined transactions.",
+            "category": "Processing",
+            "estimatedDuration": 0.05,
+            "businessRationale": "Smart routing improves authorisation rates by 3-8%. Each 1% auth rate improvement = millions in recovered revenue for large merchants.",
+            "substeps": [
+                {
+                    "substepName": "AcquirerSelection",
+                    "duration": 0.02
+                },
+                {
+                    "substepName": "CostOptimization",
+                    "duration": 0.015
+                },
+                {
+                    "substepName": "CascadeLogic",
+                    "duration": 0.015
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "AuthorisationOptimization",
+            "serviceName": "AuthService",
+            "description": "AI optimises authorisation: retry logic for soft declines, network token usage, SCA exemption request engine, and issuer-specific formatting for higher approval rates.",
+            "category": "Authorisation",
+            "estimatedDuration": 0.5,
+            "businessRationale": "15-25% of declined transactions are recoverable with smart retry and formatting. Network tokens improve auth rates by 5-10% vs raw PANs.",
+            "substeps": [
+                {
+                    "substepName": "RetryStrategy",
+                    "duration": 0.2
+                },
+                {
+                    "substepName": "NetworkTokens",
+                    "duration": 0.15
+                },
+                {
+                    "substepName": "SCAExemption",
+                    "duration": 0.15
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "SettlementAndReconciliation",
+            "serviceName": "SettlementService",
+            "description": "AI manages multi-acquirer settlement, cross-currency reconciliation, and fee validation. Automated matching of transactions to settlements. Exception handling for mismatches.",
+            "category": "Finance",
+            "estimatedDuration": 24,
+            "businessRationale": "Settlement errors cost merchants 0.5-1% of processed volume. Automated reconciliation reduces finance team effort by 80%.",
+            "substeps": [
+                {
+                    "substepName": "SettlementMatching",
+                    "duration": 8
+                },
+                {
+                    "substepName": "FeeValidation",
+                    "duration": 8
+                },
+                {
+                    "substepName": "ExceptionHandling",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "MerchantAnalytics",
+            "serviceName": "MerchantAnalyticsService",
+            "description": "AI provides merchant dashboard: authorisation rates by issuer/BIN, decline reason analysis, cost analysis by route, and conversion funnel by payment method and geography.",
+            "category": "Intelligence",
+            "estimatedDuration": 24,
+            "businessRationale": "Payment data is a goldmine of business intelligence. Merchants who act on payment analytics increase revenue by 5-15%.",
+            "substeps": [
+                {
+                    "substepName": "AuthRateAnalysis",
+                    "duration": 8
+                },
+                {
+                    "substepName": "DeclineReasons",
+                    "duration": 8
+                },
+                {
+                    "substepName": "CostBreakdown",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "ComplianceAndReporting",
+            "serviceName": "ComplianceService",
+            "description": "AI manages PCI-DSS compliance, PSD2/SCA reporting, scheme compliance (Visa/MC mandates), and tax withholding per jurisdiction. Audit trail generation.",
+            "category": "Compliance",
+            "estimatedDuration": 168,
+            "businessRationale": "PCI-DSS non-compliance can result in $5K-100K monthly fines. Scheme mandates change quarterly; automated compliance prevents costly violations.",
+            "substeps": [
+                {
+                    "substepName": "PCIDSSAudit",
+                    "duration": 56
+                },
+                {
+                    "substepName": "SchemeCompliance",
+                    "duration": 56
+                },
+                {
+                    "substepName": "TaxWithholding",
+                    "duration": 56
+                }
+            ]
+        }
+    ],
+    "id": "00355c82-2d12-4c21-b17b-ab6175ddb807",
+    "name": "Payments & FinTech - Payment Processing",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 85,
+        "transactionValue": 85,
+        "averageOrderValue": 120,
+        "contractValue": 500000,
+        "annualRevenue": 500000000,
+        "revenuePerCustomer": 500000,
+        "profitMargin": 25.0,
+        "customerLifetimeValue": 3000000,
+        "lifetimeValue": 3000000,
+        "acquisitionCost": 50000,
+        "costPerAcquisition": 50000,
+        "conversionProbability": 0.3,
+        "conversionRate": 30,
+        "engagementScore": 82,
+        "timeToConversion": 4320,
+        "sessionDuration": 900,
+        "pageViews": 8,
+        "purchaseFrequency": 365,
+        "netPromoterScore": 48,
+        "satisfactionRating": 4.2,
+        "retentionProbability": 0.88,
+        "processingTime": 0.05,
+        "operationalCost": 0.03,
+        "efficiencyRating": 95,
+        "authorizationRate": 92.5,
+        "processingVolume": 50000000000,
+        "channel": [
+            "ecommerce",
+            "in_store_POS",
+            "mobile_in_app",
+            "recurring_billing",
+            "marketplace"
+        ],
+        "deviceType": [
+            "desktop",
+            "POS_terminal",
+            "mobile",
+            "server",
+            "desktop"
+        ],
+        "region": [
+            "US",
+            "UK",
+            "EU",
+            "Latin America",
+            "APAC"
+        ],
+        "customerSegmentValue": [
+            "enterprise_merchant",
+            "mid_market",
+            "SMB",
+            "marketplace_platform",
+            "SaaS_subscription"
+        ],
+        "loyaltyTier": [
+            "Enterprise",
+            "Growth",
+            "Starter",
+            "Custom",
+            "Partner"
+        ],
+        "segment": [
+            "card_payments",
+            "bank_transfers",
+            "digital_wallets",
+            "BNPL",
+            "crypto"
+        ],
+        "Productname": [
+            "Global Payment Gateway",
+            "Smart Routing Engine",
+            "Tokenisation Vault",
+            "Recurring Billing Platform",
+            "Payout Service"
+        ],
+        "ProductId": [
+            "PAY-GP-001",
+            "PAY-SR-002",
+            "PAY-TV-003",
+            "PAY-RB-004",
+            "PAY-PO-005"
+        ],
+        "ProductType": [
+            "gateway",
+            "routing",
+            "security",
+            "billing",
+            "payout"
+        ],
+        "Price": [
+            0,
+            200000,
+            100000,
+            150000,
+            0
+        ],
+        "transactionsPerMonth": [
+            500000000,
+            500000000,
+            500000000,
+            50000000,
+            100000000
+        ],
+        "avgTransactionFee": [
+            0.029,
+            0.025,
+            0.01,
+            0.015,
+            0.005
+        ],
+        "marketTrend": [
+            "real_time_payments",
+            "embedded_finance",
+            "open_banking",
+            "cross_border_instant",
+            "account_to_account"
+        ]
+    }
+}

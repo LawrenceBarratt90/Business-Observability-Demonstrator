@@ -1,0 +1,15 @@
+# Runtime config contract file: runtime/<runtime>.yaml
+# Runtime identity comes from this filename: py-bash.yaml
+
+# Arbitrary aimgr resources to inject for this runtime.
+resources:
+  - skill/self-reflection
+
+# Runtime-specific configuration section (optional).
+# All string values support env interpolation:
+# - ${VAR_NAME}              required, fails if unset/missing
+# - ${VAR_NAME:-default}     optional with default fallback
+py-bash:
+  # Example: path to dt-mcp-servers checkout. Optional default keeps this
+  # placeholder file executable in local development.
+  repoPath: ${DT_MCP_SERVERS_PATH:-~/dev/dt-mcp-servers}

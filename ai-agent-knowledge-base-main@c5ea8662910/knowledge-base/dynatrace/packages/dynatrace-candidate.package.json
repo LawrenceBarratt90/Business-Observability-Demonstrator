@@ -1,0 +1,10 @@
+{
+  "name": "dynatrace-candidate",
+  "description": "Dynatrace candidate knowledge-base resources from the public dynatrace channel",
+  "resources": [
+    "agent/dt-app-dashboard-agent",
+    "skill/dt-app-dashboard",
+    "skill/dt-app-notebook",
+    "skill/dt-proc-critical-incident"
+  ]
+}

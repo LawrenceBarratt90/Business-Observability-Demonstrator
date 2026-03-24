@@ -1,0 +1,265 @@
+{
+    "companyName": "Energy & Utilities",
+    "domain": "https://www.energyutilities.com",
+    "industryType": "Energy & Utilities",
+    "journeyType": "Meter Reading & Billing",
+    "journeyDetail": "Meter Reading and Billing Cycle",
+    "journeyId": "journey_energy_billing_2026",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "MeterDataCollection",
+            "serviceName": "MeterDataCollectionService",
+            "description": "Smart meter transmits interval usage data (15-minute or hourly reads) via AMI network. Data validated for completeness, gaps, and anomalies. Manual reads captured via mobile app for non-smart meters.",
+            "category": "DataCollection",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 1440,
+            "businessRationale": "Accurate meter data is the foundation of revenue integrity. Data gaps require estimation, which reduces billing accuracy and increases customer disputes. Smart meter data enables time-of-use billing premiums.",
+            "substeps": [
+                {
+                    "substepName": "AMIDataTransmission",
+                    "duration": 720
+                },
+                {
+                    "substepName": "DataValidationAndGapFilling",
+                    "duration": 720
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "UsageCalculation",
+            "serviceName": "UsageCalculationService",
+            "description": "Raw meter data converted to billable consumption units (kWh, therms, gallons). Temperature normalization applied. Net metering credits calculated for solar customers. Demand charges computed for commercial accounts.",
+            "category": "Calculation",
+            "estimatedDuration": 30,
+            "businessRationale": "Accurate usage calculation directly determines revenue. Errors in demand charge calculation or net metering credits cause disputes, regulatory complaints, and potential penalties.",
+            "substeps": [
+                {
+                    "substepName": "ConsumptionUnitConversion",
+                    "duration": 10
+                },
+                {
+                    "substepName": "DemandAndNetMeteringCalculation",
+                    "duration": 20
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "RateApplication",
+            "serviceName": "RateApplicationService",
+            "description": "Applicable tariff rate schedule applied to calculated usage. Tiered rates, time-of-use differentials, seasonal adjustments, and regulatory surcharges computed. Taxes and fees added per jurisdiction.",
+            "category": "Pricing",
+            "estimatedDuration": 5,
+            "businessRationale": "Rate application accuracy ensures revenue capture and regulatory compliance. Utilities face penalties for misapplying rates. Complex rate structures require robust calculation engines to prevent systematic billing errors.",
+            "substeps": [
+                {
+                    "substepName": "TariffRateCalculation",
+                    "duration": 3
+                },
+                {
+                    "substepName": "TaxAndSurchargeApplication",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "BillGeneration",
+            "serviceName": "BillGenerationService",
+            "description": "Final bill rendered with usage summary, charges breakdown, payment due date, and comparison to prior period. Energy efficiency recommendations included. Bill distributed via customer's preferred channel (email, post, portal).",
+            "category": "BillPresentation",
+            "estimatedDuration": 60,
+            "businessRationale": "Clear, accurate bills reduce call centre inquiries and disputes. Bill presentment timing affects cash collection speed. Digital bill adoption saves $1-2 per bill in printing and postage costs.",
+            "substeps": [
+                {
+                    "substepName": "BillRenderingAndQualityCheck",
+                    "duration": 30
+                },
+                {
+                    "substepName": "DistributionViaPreferredChannel",
+                    "duration": 30
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "PaymentProcessing",
+            "serviceName": "PaymentProcessingService",
+            "description": "Payment received via direct debit, online portal, phone IVR, or mail. Payment matched to account and applied to outstanding balance. Partial payments allocated per regulatory rules. Late payment fees assessed where applicable.",
+            "category": "Payment",
+            "estimatedDuration": 720,
+            "businessRationale": "Payment processing speed impacts cash flow and days sales outstanding (DSO). Auto-pay reduces cost per payment from $3-5 (manual) to $0.30. Late fees are a revenue source but must comply with consumer protection regulations.",
+            "substeps": [
+                {
+                    "substepName": "PaymentReceiptAndMatching",
+                    "duration": 360
+                },
+                {
+                    "substepName": "BalanceApplicationAndFeeAssessment",
+                    "duration": 360
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "DisputeAndAdjustment",
+            "serviceName": "DisputeAndAdjustmentService",
+            "description": "Customer billing disputes investigated. Meter accuracy verified, usage recalculated if needed. Adjustments and credits applied. High-bill alerts proactively identify potential disputes before customer contact.",
+            "category": "Resolution",
+            "estimatedDuration": 480,
+            "businessRationale": "Proactive dispute prevention reduces call centre costs ($8-12 per call). Fast resolution improves customer satisfaction. Regulatory bodies track complaint rates and unresolved disputes affect utility's reputation and rate case outcomes.",
+            "substeps": [
+                {
+                    "substepName": "DisputeInvestigationAndMeterVerification",
+                    "duration": 240
+                },
+                {
+                    "substepName": "AdjustmentAndCreditApplication",
+                    "duration": 240
+                }
+            ]
+        }
+    ],
+    "id": "a1b2c3d4-2222-4aaa-b222-000000000002",
+    "name": "Energy & Utilities - Meter Reading & Billing",
+    "timestamp": "2026-01-09T15:12:43.556Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 145,
+        "transactionValue": 145,
+        "averageOrderValue": 132,
+        "contractValue": 1740,
+        "annualRevenue": 1740,
+        "revenuePerCustomer": 1740,
+        "profitMargin": 6.5,
+        "customerLifetimeValue": 10500,
+        "lifetimeValue": 10500,
+        "acquisitionCost": 0,
+        "conversionProbability": 0.98,
+        "conversionRate": 98,
+        "engagementScore": 42,
+        "timeToConversion": 5,
+        "netPromoterScore": 22,
+        "satisfactionRating": 3.4,
+        "retentionProbability": 0.72,
+        "processingTime": 7200,
+        "operationalCost": 8,
+        "efficiencyRating": 85,
+        "complianceScore": 96,
+        "channel": [
+            "smart_meter_auto",
+            "manual_read_submit",
+            "estimated_bill",
+            "mobile_app_read",
+            "engineer_visit"
+        ],
+        "deviceType": [
+            "iot_meter",
+            "mobile",
+            "automated",
+            "mobile",
+            "handheld_device"
+        ],
+        "region": [
+            "London",
+            "Northwest",
+            "Midlands",
+            "Southeast",
+            "Scotland"
+        ],
+        "customerSegmentValue": [
+            "average_consumer",
+            "high_usage",
+            "low_usage",
+            "vulnerable_customer",
+            "business_premises"
+        ],
+        "loyaltyTier": [
+            "Standard",
+            "Economy",
+            "Green",
+            "Warm Home",
+            "Business"
+        ],
+        "segment": [
+            "monthly_direct_debit",
+            "quarterly_bill",
+            "prepayment",
+            "budget_plan",
+            "variable_dd"
+        ],
+        "Productname": [
+            "Monthly Smart Bill",
+            "Quarterly Standard Bill",
+            "Prepayment Top-Up",
+            "Budget Payment Plan",
+            "Time-of-Use Bill"
+        ],
+        "ProductId": [
+            "ENG-BL-101",
+            "ENG-BL-102",
+            "ENG-BL-103",
+            "ENG-BL-104",
+            "ENG-BL-105"
+        ],
+        "ProductType": [
+            "smart_bill",
+            "standard_bill",
+            "prepayment",
+            "budget_plan",
+            "time_of_use"
+        ],
+        "Price": [
+            145,
+            420,
+            50,
+            145,
+            135
+        ],
+        "kwhConsumed": [
+            350,
+            1050,
+            120,
+            350,
+            320
+        ],
+        "standingChargePence": [
+            28.5,
+            28.5,
+            28.5,
+            28.5,
+            28.5
+        ],
+        "unitRatePence": [
+            28.0,
+            28.0,
+            28.0,
+            28.0,
+            24.5
+        ],
+        "meterReadType": [
+            "smart_automatic",
+            "customer_submitted",
+            "estimated",
+            "smart_automatic",
+            "smart_half_hourly"
+        ],
+        "paymentMethod": [
+            "direct_debit",
+            "quarterly_invoice",
+            "prepayment_key",
+            "direct_debit",
+            "direct_debit"
+        ],
+        "marketTrend": [
+            "half_hourly_settlement",
+            "dynamic_pricing",
+            "demand_response",
+            "energy_efficiency",
+            "battery_storage"
+        ]
+    }
+}

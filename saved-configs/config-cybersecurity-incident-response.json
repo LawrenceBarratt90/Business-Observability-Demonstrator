@@ -1,0 +1,273 @@
+{
+    "companyName": "CyberShield Security",
+    "domain": "https://www.cybershield-security.com",
+    "industryType": "Cybersecurity",
+    "journeyType": "Incident Response",
+    "journeyDetail": "AI-Automated Cybersecurity Incident Response",
+    "journeyId": "journey_incident_response_fab41249",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "ThreatDetection",
+            "serviceName": "ThreatDetectionService",
+            "description": "AI SIEM correlates log data from endpoints, network, cloud, and identity systems. ML models detect anomalous behavior, known attack signatures, and zero-day indicators.",
+            "category": "Detection",
+            "estimatedDuration": 0.05,
+            "businessRationale": "Mean time to detect (MTTD) is the #1 driver of breach cost. Reducing MTTD from 200 days to hours saves an average of $1.2M per breach.",
+            "substeps": [
+                {
+                    "substepName": "LogCorrelation",
+                    "duration": 0.02
+                },
+                {
+                    "substepName": "AnomalyDetection",
+                    "duration": 0.02
+                },
+                {
+                    "substepName": "AlertGeneration",
+                    "duration": 0.01
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "AlertTriage",
+            "serviceName": "TriageService",
+            "description": "AI enriches alerts with threat intelligence, asset criticality, and user context. Auto-classifies severity and assigns to appropriate response team. 95% of false positives filtered.",
+            "category": "Analysis",
+            "estimatedDuration": 0.5,
+            "businessRationale": "SOC analysts face 10,000+ alerts/day. AI triage reduces analyst fatigue and ensures critical alerts aren't buried in noise.",
+            "substeps": [
+                {
+                    "substepName": "ThreatEnrichment",
+                    "duration": 0.2
+                },
+                {
+                    "substepName": "SeverityClassification",
+                    "duration": 0.15
+                },
+                {
+                    "substepName": "TeamRouting",
+                    "duration": 0.15
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "ContainmentAction",
+            "serviceName": "ContainmentService",
+            "description": "Automated containment: isolate compromised endpoints, block malicious IPs, disable compromised accounts, and quarantine suspicious files. Human approval for high-impact actions.",
+            "category": "Response",
+            "estimatedDuration": 0.25,
+            "businessRationale": "Automated containment reduces mean time to respond (MTTR) from 72 hours to minutes. Each hour of uncontained breach costs $10K-100K.",
+            "substeps": [
+                {
+                    "substepName": "EndpointIsolation",
+                    "duration": 0.08
+                },
+                {
+                    "substepName": "NetworkBlocking",
+                    "duration": 0.08
+                },
+                {
+                    "substepName": "AccountLockdown",
+                    "duration": 0.09
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "ForensicInvestigation",
+            "serviceName": "ForensicsService",
+            "description": "AI-assisted forensic analysis: timeline reconstruction, lateral movement mapping, data exfiltration assessment, and attribution. Evidence preserved chain-of-custody compliant.",
+            "category": "Investigation",
+            "estimatedDuration": 48,
+            "businessRationale": "Thorough forensics determines breach scope, which drives notification requirements. Missing compromised systems means the attacker returns.",
+            "substeps": [
+                {
+                    "substepName": "TimelineReconstruction",
+                    "duration": 16
+                },
+                {
+                    "substepName": "LateralMovementMapping",
+                    "duration": 16
+                },
+                {
+                    "substepName": "ExfiltrationAssessment",
+                    "duration": 16
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "EradicationAndRecovery",
+            "serviceName": "RecoveryService",
+            "description": "Malware removal, system rebuilding, credential rotation, and vulnerability patching. AI validates eradication completeness before systems return to production.",
+            "category": "Remediation",
+            "estimatedDuration": 72,
+            "businessRationale": "Incomplete eradication means the attacker retains persistence. 25% of breaches see re-compromise within 90 days due to poor eradication.",
+            "substeps": [
+                {
+                    "substepName": "MalwareRemoval",
+                    "duration": 24
+                },
+                {
+                    "substepName": "SystemRebuilding",
+                    "duration": 24
+                },
+                {
+                    "substepName": "CredentialRotation",
+                    "duration": 24
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "PostIncidentReview",
+            "serviceName": "PIRService",
+            "description": "AI generates incident report, identifies root cause, and recommends security improvements. Detection rules updated. Tabletop exercises scheduled for similar scenarios.",
+            "category": "Learning",
+            "estimatedDuration": 24,
+            "businessRationale": "Post-incident improvements prevent 70% of similar future attacks. Regulatory and insurance reporting requires detailed incident documentation.",
+            "substeps": [
+                {
+                    "substepName": "RootCauseAnalysis",
+                    "duration": 8
+                },
+                {
+                    "substepName": "DetectionTuning",
+                    "duration": 8
+                },
+                {
+                    "substepName": "ReportGeneration",
+                    "duration": 8
+                }
+            ]
+        }
+    ],
+    "id": "703f98d3-6d5d-4777-b061-1c70ffc5ddfb",
+    "name": "Cybersecurity - Incident Response",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 150000,
+        "transactionValue": 150000,
+        "averageOrderValue": 120000,
+        "contractValue": 500000,
+        "annualRevenue": 35000000,
+        "revenuePerCustomer": 280000,
+        "profitMargin": 42.0,
+        "customerLifetimeValue": 2200000,
+        "lifetimeValue": 2200000,
+        "acquisitionCost": 25000,
+        "costPerAcquisition": 25000,
+        "conversionProbability": 0.52,
+        "conversionRate": 52,
+        "engagementScore": 90,
+        "timeToConversion": 720,
+        "sessionDuration": 1800,
+        "pageViews": 12,
+        "purchaseFrequency": 12,
+        "netPromoterScore": 55,
+        "satisfactionRating": 4.4,
+        "retentionProbability": 0.92,
+        "processingTime": 5,
+        "operationalCost": 35000,
+        "efficiencyRating": 90,
+        "mttd": 0.5,
+        "mttr": 4.2,
+        "channel": [
+            "SOC_console",
+            "SIEM_dashboard",
+            "mobile_alert",
+            "slack_integration",
+            "email_escalation"
+        ],
+        "deviceType": [
+            "desktop",
+            "desktop",
+            "mobile",
+            "desktop",
+            "mobile"
+        ],
+        "region": [
+            "US East",
+            "EU West",
+            "APAC",
+            "Middle East",
+            "LATAM"
+        ],
+        "customerSegmentValue": [
+            "enterprise",
+            "mid_market",
+            "government",
+            "financial_services",
+            "healthcare"
+        ],
+        "loyaltyTier": [
+            "Platinum MDR",
+            "Gold MDR",
+            "Silver MDR",
+            "Bronze",
+            "IR Retainer"
+        ],
+        "segment": [
+            "ransomware",
+            "APT",
+            "insider_threat",
+            "supply_chain",
+            "phishing"
+        ],
+        "Productname": [
+            "Ransomware Response Package",
+            "APT Hunt & Respond",
+            "Insider Threat Investigation",
+            "Supply Chain Breach",
+            "BEC Response"
+        ],
+        "ProductId": [
+            "CYB-RW-001",
+            "CYB-AP-002",
+            "CYB-IT-003",
+            "CYB-SC-004",
+            "CYB-BC-005"
+        ],
+        "ProductType": [
+            "incident_response",
+            "threat_hunting",
+            "investigation",
+            "breach_response",
+            "fraud_response"
+        ],
+        "Price": [
+            150000,
+            250000,
+            100000,
+            200000,
+            75000
+        ],
+        "threatSeverity": [
+            "critical",
+            "high",
+            "medium",
+            "critical",
+            "high"
+        ],
+        "attackVector": [
+            "email_phish",
+            "zero_day_exploit",
+            "credential_theft",
+            "supply_chain",
+            "social_engineering"
+        ],
+        "marketTrend": [
+            "AI_SOC_automation",
+            "XDR_convergence",
+            "zero_trust",
+            "cloud_native_security",
+            "attack_surface_management"
+        ]
+    }
+}

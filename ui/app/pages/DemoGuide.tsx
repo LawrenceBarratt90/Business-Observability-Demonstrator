@@ -5,6 +5,7 @@ import { Flex } from '@dynatrace/strato-components/layouts';
 import { Heading, Paragraph, Strong } from '@dynatrace/strato-components/typography';
 import { Button } from '@dynatrace/strato-components/buttons';
 import Colors from '@dynatrace/strato-design-tokens/colors';
+import { InfoButton } from '../components/InfoButton';
 import { getEnvironmentUrl } from '@dynatrace-sdk/app-environment';
 
 const TENANT_URL = (() => {
@@ -49,7 +50,7 @@ const DEMO_PATHS: DemoPath[] = [
     id: 'quick-start',
     icon: '🚀',
     title: 'Quick Start',
-    subtitle: 'Generate services, see them in Dynatrace, download a dashboard',
+    subtitle: 'Generate services, see them in Dynatrace, explore Forge Dashboards',
     color: '#3498db',
     steps: [
       {
@@ -81,10 +82,58 @@ const DEMO_PATHS: DemoPath[] = [
         dtLink: { label: 'Services', url: `${TENANT_URL}/ui/apps/dynatrace.services` },
       },
       {
-        title: 'Download a dashboard',
-        action: 'The app auto-generates a Dynatrace dashboard JSON after services are created. It downloads automatically. Go to Dynatrace → Dashboards → Upload to import it.',
-        where: 'This app (auto-download) → Dynatrace Dashboards',
-        dtLink: { label: 'Dashboards', url: `${TENANT_URL}/ui/apps/dynatrace.dashboards` },
+        title: 'Explore Forge Dashboards',
+        action: 'Navigate to this app\'s Forge Dashboards page. Choose from 4 persona-based presets — Developer, Operations, Executive, or Dynatrace Intelligence — each with comprehensive, filterable tiles powered by DQL. Select a company and journey to see live data.',
+        where: 'This app → Forge Dashboards',
+        tip: 'Each preset has 20-38 tiles covering heroes, timeseries, bar charts, donuts, tables, honeycomb, and more — all filterable by company, journey, service, and event type.',
+      },
+    ],
+  },
+  {
+    id: 'forge-dashboards',
+    icon: '📊',
+    title: 'Forge Dashboards Deep Dive',
+    subtitle: 'Four persona-based preset dashboards — Developer, Operations, Executive, Dynatrace Intelligence',
+    color: '#27ae60',
+    steps: [
+      {
+        title: 'Open Forge Dashboards',
+        action: 'Navigate to the Forge Dashboards page from the main nav. You\'ll see a preset selector at the top, company/journey/service filters, and a timeframe picker.',
+        where: 'This app → Forge Dashboards',
+      },
+      {
+        title: 'Developer Preset (~30 tiles)',
+        action: 'Select the Developer preset. This shows the RED metrics table (Requests, Errors, Duration per service), latency percentiles (p50/p90/p99), error timeseries, top endpoints, failed spans analyzer, exception breakdown, log analysis, and trace correlation.',
+        where: 'This app → Forge Dashboards → Developer',
+        tip: 'The RED metrics table is the centerpiece — it shows every service\'s golden signals at a glance. Great for identifying the trouble service during a chaos demo.',
+      },
+      {
+        title: 'Operations Preset (~27 tiles)',
+        action: 'Switch to Operations. This covers infrastructure health: host CPU/memory, process resource usage, network I/O, disk saturation, service availability %, and deployment events correlated with problems.',
+        where: 'This app → Forge Dashboards → Operations',
+      },
+      {
+        title: 'Executive Preset (~38 tiles)',
+        action: 'Switch to Executive for the business view: total revenue, order volume, bounce rate, customer churn %, SLA compliance, journey funnel (step-by-step conversion), IT impact on business KPIs, revenue by service and customer tier, and top customers.',
+        where: 'This app → Forge Dashboards → Executive',
+        tip: 'This is the money slide for execs. Show revenue trending down when you inject chaos on the payment service — it directly connects technical failures to business impact.',
+      },
+      {
+        title: 'Dynatrace Intelligence Preset (~19 tiles)',
+        action: 'Switch to Dynatrace Intelligence. This shows active problems, root cause analysis summaries, anomaly detection timeline, mean time to detect (MTTD), MTTR, problem resolution trends, and Impact analysis by service and business entity.',
+        where: 'This app → Forge Dashboards → Dynatrace Intelligence',
+      },
+      {
+        title: 'Filter by company and journey',
+        action: 'Use the filter dropdowns to scope the dashboard to a specific company or journey. All tiles update dynamically — every DQL query is parametrized with the selected filters.',
+        where: 'This app → Forge Dashboards',
+        tip: 'If you have multiple companies running, filtering to one company shows data isolation. Switch quickly between companies to show multi-tenancy.',
+      },
+      {
+        title: 'Compare before and after chaos',
+        action: 'Open the Developer preset with healthy services. Note the baseline metrics. Then inject chaos via Chaos Control, come back, and watch the error rates, latency spikes, and failed span counts climb in real time. Fix the problem with Fix-It, then watch recovery.',
+        where: 'This app → Forge Dashboards + Chaos Control + Fix-It',
+        tip: 'This is the complete observability loop in one view: healthy → degraded → detected → remediated → recovered — all visible on the dashboard tiles.',
       },
     ],
   },
@@ -97,8 +146,8 @@ const DEMO_PATHS: DemoPath[] = [
     steps: [
       {
         title: 'Make sure services are running',
-        action: 'Go to the Services page in this app. You should see active services with green status. If not, go back to Quick Start and generate some first.',
-        where: 'This app → Services',
+        action: 'On the Home page, check the Active Journeys panel. You should see running journeys with green status badges and service counts. If not, go back to Quick Start and generate some first.',
+        where: 'This app → Home → Active Journeys',
       },
       {
         title: 'Inject chaos',
@@ -130,9 +179,70 @@ const DEMO_PATHS: DemoPath[] = [
         dtLink: { label: 'Problems', url: `${TENANT_URL}/ui/apps/dynatrace.davis.problems/` },
       },
       {
+        title: 'Try Smart Chaos (LLM-powered)',
+        action: 'Instead of picking a fault manually, use Smart Chaos mode. Describe a goal in plain English — e.g. "Simulate a payment processing outage" — and the LLM picks the best chaos recipe, target service, and intensity automatically. This generates additional GenAI spans.',
+        where: 'This app → Chaos Control → Smart Chaos',
+        tip: 'Smart Chaos uses the Nemesis Agent under the hood. The LLM evaluates running services and picks the most impactful target. Great for showing AI-driven chaos engineering.',
+      },
+      {
+        title: 'Check Librarian memory',
+        action: 'After the fix, the Librarian agent has recorded the entire incident: chaos injection, problem detection, diagnosis, and remediation. This creates an operational memory that can be searched later.',
+        where: 'This app → Fix-It (Librarian tab)',
+        tip: 'The Librarian uses a vector store with Ollama embeddings. You can semantically search past incidents — e.g. "payment errors" finds all related past problems, even if the exact words differ.',
+      },
+      {
         title: 'Revert chaos (cleanup)',
         action: 'On the Chaos Control page, click "Revert All" to reset all faults. Services return to normal.',
         where: 'This app → Chaos Control',
+      },
+    ],
+  },
+  {
+    id: 'autonomous-ops',
+    icon: '⚡',
+    title: 'Autonomous Operations',
+    subtitle: 'Closed-loop autonomous chaos, AI diagnosis, auto-remediation, and operational memory',
+    color: '#e67e22',
+    steps: [
+      {
+        title: 'Ensure services are running with load',
+        action: 'Generate a journey (Quick Start steps 1-3) and make sure auto-load is active. You need continuous traffic flowing through services — the autonomous scheduler triggers on transaction volume thresholds.',
+        where: 'This app → Home',
+      },
+      {
+        title: 'Understand the autonomous loop',
+        action: 'The autonomous operations pipeline is a closed loop: (1) Nemesis Agent injects chaos based on conditions or schedules → (2) Dynatrace Intelligence detects the resulting problem → (3) Fix-It Agent diagnoses and remediates autonomously → (4) Librarian records the full incident for future learning. Every step generates GenAI spans in Dynatrace.',
+        where: 'Conceptual overview',
+      },
+      {
+        title: 'Let Nemesis inject chaos',
+        action: 'The Nemesis agent can inject chaos via Smart Chaos mode. Describe a scenario like "degrade the checkout experience" and the LLM selects the target service, fault type (errors, latency, circuit breaker), and intensity.',
+        where: 'This app → Chaos Control → Smart Chaos',
+        tip: 'Smart Chaos generates GenAI spans showing the LLM\'s reasoning — which service it chose and why. Check these in GenAI Observability.',
+      },
+      {
+        title: 'Watch Fix-It auto-diagnose',
+        action: 'When a problem appears, run Fix-It\'s auto-diagnosis. The agent queries Dynatrace for active problems, reads feature flag state, and uses the LLM to determine root cause and remediation. It then applies the fix automatically — toggling feature flags to disable the injected fault.',
+        where: 'This app → Fix-It → Auto Diagnose',
+        dtLink: { label: 'Problems', url: `${TENANT_URL}/ui/apps/dynatrace.davis.problems/` },
+      },
+      {
+        title: 'View the Librarian timeline',
+        action: 'After Fix-It resolves the problem, the Librarian agent records the full incident timeline: when chaos was injected, when the problem was detected, what diagnosis was made, what fix was applied, and whether it succeeded. This creates a searchable operational memory.',
+        where: 'This app → Fix-It (Librarian)',
+      },
+      {
+        title: 'Search past incidents semantically',
+        action: 'Use the Librarian\'s semantic search to find similar past incidents. Try searching "payment errors" or "high latency" — the vector store uses Ollama embeddings to find semantically related incidents, even if the exact wording is different.',
+        where: 'This app → Fix-It (Librarian)',
+        tip: 'The vector embedding calls are now fully instrumented with GenAI spans. You can see embedding operations in the GenAI Observability app alongside chat completions.',
+      },
+      {
+        title: 'See the full GenAI trace',
+        action: 'Open GenAI Observability to see all the AI calls that happened during the autonomous loop: Smart Chaos (Nemesis decision), Fix-It (diagnosis + remediation), and Librarian (embedding search). Each shows model, tokens, latency, and prompt/completion content.',
+        where: 'Dynatrace',
+        dtLink: { label: 'GenAI Observability', url: `${TENANT_URL}/ui/apps/dynatrace.genai.observability/overview` },
+        tip: 'This is the signature demo: a fully autonomous operations loop where every AI decision is observable. No black boxes — Dynatrace sees everything.',
       },
     ],
   },
@@ -204,6 +314,73 @@ const DEMO_PATHS: DemoPath[] = [
         action: 'Open Technologies to see all the processes running on the host — the main BizObs server, the dynamically generated services, and Ollama (if installed).',
         where: 'Dynatrace',
         dtLink: { label: 'Technologies', url: `${TENANT_URL}/ui/apps/dynatrace.technologies` },
+      },
+    ],
+  },
+  {
+    id: 'genai-observability',
+    icon: '🧠',
+    title: 'GenAI Observability',
+    subtitle: 'Monitor LLM calls, token usage, and AI agent decisions with Dynatrace GenAI Observability',
+    color: '#16a085',
+    steps: [
+      {
+        title: 'Verify Ollama is running',
+        action: 'Check that the local LLM is available. On the host, run: curl http://localhost:11434/api/tags — you should see the llama3.2 model listed. If Ollama is not running, start it with: sudo systemctl start ollama.',
+        where: 'Host terminal',
+        tip: 'The Forge auto-warms Ollama every 8 minutes to keep the model loaded in memory. If it\'s been idle for a while, the first call may be slower.',
+      },
+      {
+        title: 'Trigger AI agent calls',
+        action: 'Inject chaos on a service via Chaos Control (enable errors at 50% on a payment service), then go to Fix-It and click "Auto Diagnose". The Fix-It agent uses Ollama to analyze the problem and decide on a remediation. Also try Smart Chaos (LLM picks the chaos recipe) and Librarian semantic search (uses Ollama embeddings). Each generates GenAI spans.',
+        where: 'This app → Chaos Control → Fix-It',
+        tip: 'There are 3 types of GenAI spans you\'ll see: (1) Chat completions — Fix-It diagnosis, Smart Chaos planning, dashboard generation, (2) Embeddings — Librarian vector search, (3) Agent loops — multi-turn tool-using LLM conversations in Fix-It agentic mode.',
+      },
+      {
+        title: 'Open Dynatrace GenAI Observability',
+        action: 'Navigate to the GenAI Observability app in Dynatrace. This is a purpose-built app that aggregates all LLM/AI calls — showing models used, token consumption, latency, success rates, and cost estimates across all AI-powered features.',
+        where: 'Dynatrace',
+        dtLink: { label: 'GenAI Observability', url: `${TENANT_URL}/ui/apps/dynatrace.genai.observability/overview` },
+      },
+      {
+        title: 'Explore the Overview dashboard',
+        action: 'The Overview page shows a high-level summary: total LLM calls, average latency, token usage trends, and model distribution. You should see "ollama" as the AI system with the llama3.2 model. Click into any metric to drill down.',
+        where: 'Dynatrace → GenAI Observability → Overview',
+        dtLink: { label: 'GenAI Observability', url: `${TENANT_URL}/ui/apps/dynatrace.genai.observability/overview` },
+        tip: 'The data comes from OpenTelemetry GenAI semantic conventions (gen_ai.*) that the Forge instruments on every Ollama call.',
+      },
+      {
+        title: 'Drill into individual LLM calls',
+        action: 'Click on a specific LLM invocation to see the full span details: the prompt sent to the model, the completion returned, prompt token count, completion token count, response time, and the operation type. You\'ll see three types: "chat" (completions from Fix-It, Nemesis, dashboard AI), "embeddings" (Librarian vector search), and "agent_loop" (multi-step tool-using conversations).',
+        where: 'Dynatrace → GenAI Observability',
+        dtLink: { label: 'GenAI Observability', url: `${TENANT_URL}/ui/apps/dynatrace.genai.observability/overview` },
+        tip: 'Every Ollama call in the app is instrumented — there are no uninstrumented LLM calls. The OTel semantic conventions capture gen_ai.system, gen_ai.request.model, gen_ai.usage.*, and gen_ai.response.* on every span.',
+      },
+      {
+        title: 'View traces with GenAI spans',
+        action: 'Open Distributed Traces and filter for gen_ai.system == "ollama". Each trace shows the full request flow — from the Forge API call, through the AI agent decision logic, to the Ollama HTTP call and back. The GenAI span attributes show model, tokens, and timing.',
+        where: 'Dynatrace',
+        dtLink: { label: 'Distributed Traces', url: `${TENANT_URL}/ui/apps/dynatrace.distributedtracing/` },
+      },
+      {
+        title: 'Query GenAI data with DQL',
+        action: 'Open a Notebook and run custom queries against the GenAI spans:\n\n• Total tokens: fetch spans | filter gen_ai.system == "ollama" | summarize sum(gen_ai.usage.prompt_tokens), sum(gen_ai.usage.completion_tokens)\n• Latency by model: fetch spans | filter gen_ai.system == "ollama" | summarize avg(gen_ai.response.duration_ms) by gen_ai.request.model\n• Agent activity: fetch spans | filter gen_ai.system == "ollama" | summarize count() by span.name',
+        where: 'Dynatrace',
+        dtLink: { label: 'Notebooks', url: `${TENANT_URL}/ui/apps/dynatrace.notebooks` },
+        tip: 'DQL gives you full flexibility to build custom GenAI dashboards — token cost analysis, error rate by model, prompt/completion audit trails, and more.',
+      },
+      {
+        title: 'View embedding spans from Librarian',
+        action: 'Use the Librarian\'s search feature to find a past incident. This calls Ollama\'s embedding API (nomic-embed-text model) to vectorize the search query. In GenAI Observability, you\'ll see spans with operation "embeddings" alongside the chat completions — showing that ALL types of LLM calls are instrumented.',
+        where: 'This app → Fix-It (Librarian) + Dynatrace GenAI Observability',
+        dtLink: { label: 'GenAI Observability', url: `${TENANT_URL}/ui/apps/dynatrace.genai.observability/overview` },
+        tip: 'The embedding spans use the nomic-embed-text model, while chat completions use llama3.2. You can filter by model in DQL to see each type separately.',
+      },
+      {
+        title: 'Compare with and without AI (optional)',
+        action: 'Run Fix-It once with Ollama running (generates GenAI spans with full LLM reasoning), then stop Ollama and run Fix-It again (falls back to rule-based logic — no GenAI spans). Compare the two approaches in the traces to show the value of AI observability.',
+        where: 'This app → Fix-It + Dynatrace Traces',
+        tip: 'This demonstrates graceful degradation AND why monitoring AI decisions matters — with LLM observability you can audit every AI decision your system makes.',
       },
     ],
   },
@@ -309,12 +486,12 @@ const PERSONAS: Persona[] = [
     ],
     demoFlow: [
       { step: 'Generate a Retail journey (Quick Start)', detail: 'Show how fast you can model a business process end-to-end.' },
-      { step: 'Open the auto-generated dashboard', detail: 'Highlight business KPIs — conversion rates, error rates, latency by journey step.', dtLink: { label: 'Dashboards', url: `${TENANT_URL}/ui/apps/dynatrace.dashboards` } },
+      { step: 'Open Forge Dashboards — Executive preset', detail: 'Navigate to Forge Dashboards. Select the Executive preset to show business KPIs: revenue trends, SLA compliance, IT impact on business, journey flow funnel, and top customers.' },
       { step: 'Inject chaos and watch Dynatrace Intelligence', detail: 'Break something, then show Dynatrace Intelligence finding the root cause automatically.', dtLink: { label: 'Problems', url: `${TENANT_URL}/ui/apps/dynatrace.davis.problems/` } },
       { step: 'Auto-remediate with Fix-It', detail: 'Let AI fix the problem — emphasize speed and zero manual intervention.' },
       { step: 'Show the AppEngine app itself', detail: 'Point out this is a Dynatrace-native app — Strato components, EdgeConnect, serverless functions.' },
     ],
-    suggestedPaths: ['quick-start', 'chaos-and-fix'],
+    suggestedPaths: ['quick-start', 'forge-dashboards', 'chaos-and-fix'],
   },
   {
     id: 'sre',
@@ -333,7 +510,7 @@ const PERSONAS: Persona[] = [
       'Chaos Control lets you inject specific faults — error rates, latency spikes, timeouts — on individual services.',
       'Every chaos injection sends a CUSTOM_DEPLOYMENT event tagged [ROOT CAUSE] so Dynatrace Intelligence correlates it instantly.',
       'Fix-It reads feature flags, diagnoses the issue, and applies the fix automatically — simulating a real auto-remediation workflow.',
-      'The generated dashboard includes golden signals: traffic, latency, errors, and saturation — the four pillars of SRE.',
+      'The in-app Forge Dashboards include Developer and Operations presets with golden signals: traffic, latency, errors — filterable by company and service.',
     ],
     demoFlow: [
       { step: 'Show running services', detail: 'Open Services app, show healthy baselines and service flow.', dtLink: { label: 'Services', url: `${TENANT_URL}/ui/apps/dynatrace.services` } },
@@ -341,9 +518,9 @@ const PERSONAS: Persona[] = [
       { step: 'Watch Dynatrace Intelligence raise a problem', detail: 'Open Problems. Show the automatic root cause analysis and the correlated deployment event.', dtLink: { label: 'Problems', url: `${TENANT_URL}/ui/apps/dynatrace.davis.problems/` } },
       { step: 'Auto-remediate with Fix-It', detail: 'Run Fix-It auto-diagnose. Show it reading flags, finding the issue, and disabling the fault.' },
       { step: 'Verify in Dynatrace', detail: 'Show error rates dropping, problem closing. Highlight zero human intervention.', dtLink: { label: 'Services', url: `${TENANT_URL}/ui/apps/dynatrace.services` } },
-      { step: 'Show golden signals on dashboard', detail: 'Open the generated dashboard — traffic, latency, errors, saturation tiles.', dtLink: { label: 'Dashboards', url: `${TENANT_URL}/ui/apps/dynatrace.dashboards` } },
+      { step: 'Show golden signals on Forge Dashboards', detail: 'Open Forge Dashboards → Developer preset. Show traffic, latency (p50/p90/p99), errors, and service health tiles with RED metrics table.' },
     ],
-    suggestedPaths: ['chaos-and-fix', 'quick-start'],
+    suggestedPaths: ['chaos-and-fix', 'autonomous-ops', 'quick-start'],
   },
   {
     id: 'developer',
@@ -369,9 +546,10 @@ const PERSONAS: Persona[] = [
       { step: 'Open Distributed Traces', detail: 'Show the trace list — filter by service name to find journey transactions.', dtLink: { label: 'Distributed Traces', url: `${TENANT_URL}/ui/apps/dynatrace.distributedtracing/` } },
       { step: 'Drill into a trace waterfall', detail: 'Click a trace. Walk through the spans — show HTTP calls, durations, status codes.' },
       { step: 'Trigger a GenAI span', detail: 'Run Fix-It diagnosis or Smart Chaos. Then find the gen_ai spans in traces.' },
+      { step: 'Open GenAI Observability', detail: 'Navigate to the Dynatrace GenAI Observability app for an aggregated view of all LLM calls — models, tokens, latency, and success rates.', dtLink: { label: 'GenAI Observability', url: `${TENANT_URL}/ui/apps/dynatrace.genai.observability/overview` } },
       { step: 'Query with DQL in Notebooks', detail: 'Open a notebook. Run: fetch spans | filter gen_ai.system == "ollama" to show LLM observability.', dtLink: { label: 'Notebooks', url: `${TENANT_URL}/ui/apps/dynatrace.notebooks` } },
     ],
-    suggestedPaths: ['traces-and-otel', 'live-debugger', 'quick-start'],
+    suggestedPaths: ['traces-and-otel', 'genai-observability', 'live-debugger', 'autonomous-ops'],
   },
   {
     id: 'business-analyst',
@@ -382,24 +560,24 @@ const PERSONAS: Persona[] = [
     audience: 'Business analysts, product owners, and anyone focused on business metrics',
     focusAreas: [
       'Business journey modeling (industry templates)',
-      'Auto-generated dashboards with KPI tiles',
-      'Conversion funnel visibility',
+      'In-app Forge Dashboards with 4 persona presets',
+      'Conversion funnel and journey flow visibility',
       'Business impact of technical issues',
     ],
     talkingPoints: [
       'Choose from 10+ industry templates — Retail, Healthcare, Financial Services, Travel, etc. Each models a realistic business journey.',
-      'The app auto-generates a 46-tile dashboard covering journey overview, filtered views, performance, golden signals, and observability.',
-      'Dashboard tiles show business-relevant metrics: orders per minute, cart abandonment rates, payment success rates.',
-      'When chaos hits a service, you can show how a technical issue (e.g. payment errors) directly impacts business KPIs.',
+      'The in-app Forge Dashboards page has 4 persona presets: Developer (~30 tiles), Operations (~27 tiles), Executive (~38 tiles), and Dynatrace Intelligence (~19 tiles) — all filterable by company, journey, service, and event type.',
+      'Executive preset shows revenue trends, SLA compliance, journey funnel, IT impact on business, and top customers by revenue.',
+      'When chaos hits a service, you can show how a technical issue (e.g. payment errors) directly impacts business KPIs on the Executive preset.',
     ],
     demoFlow: [
       { step: 'Show industry templates', detail: 'Open Step 1 and scroll through the available industries. Point out the journey steps for each.' },
       { step: 'Generate a Retail journey', detail: 'Pick "Retail" with a custom company name. Show the JSON preview to demonstrate the data model.' },
-      { step: 'Open the auto-generated dashboard', detail: 'Import the downloaded JSON into Dashboards. Walk through each section.', dtLink: { label: 'Dashboards', url: `${TENANT_URL}/ui/apps/dynatrace.dashboards` } },
-      { step: 'Highlight business tiles', detail: 'Focus on Journey Overview and Filtered View sections — these show business-level metrics.' },
-      { step: 'Break something and show impact', detail: 'Inject chaos on a payment service. Switch to the dashboard and show error rates climbing on business tiles.' },
+      { step: 'Open Forge Dashboards — Executive preset', detail: 'Navigate to Forge Dashboards. Select Executive to show revenue, SLA, journey funnel, and IT impact tiles. Filter by the company you just generated.' },
+      { step: 'Switch to Developer preset', detail: 'Show the Developer view: service health RED table, latency percentiles, error trends, traces & exceptions, and log analysis.' },
+      { step: 'Break something and show impact', detail: 'Inject chaos on a payment service. Switch to the Executive preset and show revenue impact, error trends, and IT problems climbing.' },
     ],
-    suggestedPaths: ['quick-start', 'chaos-and-fix'],
+    suggestedPaths: ['quick-start', 'forge-dashboards', 'chaos-and-fix'],
   },
   {
     id: 'devops',
@@ -444,22 +622,24 @@ const PERSONAS: Persona[] = [
     ],
     talkingPoints: [
       'Start with the business angle: "In 30 seconds, we model a full customer journey with real services."',
-      'Show breadth: services auto-discovered, traces flowing, dashboard generated — all from one click.',
-      'The chaos → detect → fix loop is the "wow moment". Dynatrace Intelligence finds root cause without configuration. Fix-It heals it automatically.',
+      'Show breadth: services auto-discovered, traces flowing, 4 persona-based Forge Dashboards (Developer, Ops, Executive, Intelligence) — all from one click.',
+      'The chaos → detect → fix → learn loop is the "wow moment". Dynatrace Intelligence finds root cause. Fix-It heals. Librarian remembers for next time.',
+      'GenAI Observability is the differentiator: every LLM call — chat, embedding, agent loop — is fully observable with OTel semantic conventions.',
       'Close with the platform story: this entire app is a Dynatrace extension. Customers can build apps like this themselves.',
     ],
     demoFlow: [
       { step: '1. Hook: Generate a journey (2 min)', detail: 'Pick Retail + a customer\'s company name if possible. Click Generate. Wait for services to appear.' },
       { step: '2. Show services in Dynatrace (1 min)', detail: 'Open Services. Show the generated services, their dependencies, and the service flow.', dtLink: { label: 'Services', url: `${TENANT_URL}/ui/apps/dynatrace.services` } },
-      { step: '3. Open the dashboard (1 min)', detail: 'Import the auto-downloaded dashboard. Walk through 2-3 key tiles: journey overview, error rates, golden signals.', dtLink: { label: 'Dashboards', url: `${TENANT_URL}/ui/apps/dynatrace.dashboards` } },
+      { step: '3. Open Forge Dashboards (1 min)', detail: 'Navigate to Forge Dashboards. Show Executive preset (revenue, SLA, journey funnel). Switch to Developer preset (RED metrics, latency, traces). Filter by the company name.' },
       { step: '4. Break it — inject chaos (30 sec)', detail: 'Go to Chaos Control. Enable 50% errors on the payment service. Say: "Let\'s see what happens."' },
       { step: '5. Dynatrace Intelligence detects the problem (2 min)', detail: 'Open Problems. Dynatrace Intelligence finds the root cause → correlated deployment event → full impact analysis.', dtLink: { label: 'Problems', url: `${TENANT_URL}/ui/apps/dynatrace.davis.problems/` } },
       { step: '6. Auto-remediate with Fix-It (1 min)', detail: 'Run Fix-It. Watch it diagnose and fix. Switch to Problems — problem closing automatically.' },
-      { step: '7. Show traces (optional, 1 min)', detail: 'If time allows, show distributed traces and GenAI spans for the LLM calls.', dtLink: { label: 'Distributed Traces', url: `${TENANT_URL}/ui/apps/dynatrace.distributedtracing/` } },
-      { step: '8. LiveDebugger deep-dive (optional, 2 min)', detail: 'Open LiveDebugger on a service process. Set breakpoints on lines 697 (error injection), 708 (full error object), and 996 (service chain call) in dynamic-step-service.js. Capture snapshots showing injected errors, customer data, and trace context — three perspectives in one workflow.', dtLink: { label: 'LiveDebugger', url: `${TENANT_URL}/ui/apps/dynatrace.devobs.debugger/debugger` } },
-      { step: '9. Platform story close (30 sec)', detail: 'Remind them: this is an AppEngine app. Built with React + Strato. Deployed to Dynatrace. Customers can build their own.' },
+      { step: '7. Show GenAI Observability (1 min)', detail: 'Open the GenAI Observability app. Show Fix-It\'s LLM calls: model (llama3.2), token usage, latency. Point out: "Every AI decision is observable — chat completions, embeddings, and agent loops."', dtLink: { label: 'GenAI Observability', url: `${TENANT_URL}/ui/apps/dynatrace.genai.observability/overview` } },
+      { step: '8. Show Librarian memory (optional, 1 min)', detail: 'Open the Librarian. Search for the incident you just fixed. Show how it records chaos → problem → diagnosis → fix as a timeline. The semantic search uses Ollama embeddings — also visible as GenAI spans.' },
+      { step: '9. LiveDebugger deep-dive (optional, 2 min)', detail: 'Open LiveDebugger on a service process. Set breakpoints on lines 697 (error injection), 708 (full error object), and 996 (service chain call) in dynamic-step-service.js. Capture snapshots showing injected errors, customer data, and trace context.', dtLink: { label: 'LiveDebugger', url: `${TENANT_URL}/ui/apps/dynatrace.devobs.debugger/debugger` } },
+      { step: '10. Platform story close (30 sec)', detail: 'Remind them: this is an AppEngine app. Built with React + Strato. Deployed to Dynatrace. Customers can build their own.' },
     ],
-    suggestedPaths: ['quick-start', 'chaos-and-fix', 'traces-and-otel', 'live-debugger', 'platform'],
+    suggestedPaths: ['quick-start', 'chaos-and-fix', 'genai-observability', 'forge-dashboards', 'live-debugger'],
   },
   {
     id: 'ai-ml',
@@ -469,25 +649,30 @@ const PERSONAS: Persona[] = [
     color: '#16a085',
     audience: 'AI/ML engineers, data scientists, and anyone interested in LLM observability',
     focusAreas: [
-      'GenAI span instrumentation',
-      'Ollama local LLM monitoring',
-      'Token usage and latency tracking',
-      'AI agent decision tracing',
+      'Dynatrace GenAI Observability app',
+      'GenAI span instrumentation with OTel semantic conventions',
+      'Ollama local LLM monitoring (llama3.2)',
+      'Token usage, latency, and cost tracking',
+      'AI agent decision tracing and audit trail',
     ],
     talkingPoints: [
-      'The Fix-It and Smart Chaos features use a local LLM (Ollama) to make decisions. Every LLM call is instrumented as a GenAI span.',
-      'Spans capture: model name, prompt tokens, completion tokens, total tokens, response time, and the system (ollama).',
-      'You can query all LLM calls with DQL: fetch spans | filter gen_ai.system == "ollama" — giving you a full audit trail.',
-      'When Ollama isn\'t available, the app falls back to rule-based logic — showing graceful degradation in AI-powered features.',
+      'The Fix-It, Smart Chaos (Nemesis), Librarian, and AI Dashboard generator all use Ollama (llama3.2). Every single LLM call is instrumented with OpenTelemetry GenAI semantic conventions — zero blind spots.',
+      'Three types of GenAI spans are captured: (1) Chat completions — diagnosis, planning, generation, (2) Embeddings — Librarian vector search with nomic-embed-text, (3) Agent loops — multi-turn tool-using conversations in Fix-It agentic mode.',
+      'Dynatrace GenAI Observability aggregates all LLM calls — showing models, token consumption, latency distribution, success rates, and cost estimates. Filter by model to separate llama3.2 (chat) from nomic-embed-text (embeddings).',
+      'Spans capture: gen_ai.system (ollama), gen_ai.request.model, prompt/completion content, prompt_tokens, completion_tokens, response duration, and tool calls for agentic loops.',
+      'DQL queries give you a full audit trail: who called what model, with what prompt, and what it returned. Build custom GenAI dashboards for token cost analysis, error rates, and prompt/completion audit trails.',
+      'When Ollama isn\'t available, the app falls back to rule-based logic — showing graceful degradation. Compare both approaches in traces to highlight why AI observability matters.',
     ],
     demoFlow: [
       { step: 'Generate services (prerequisite)', detail: 'Create a journey first so there are services to diagnose.' },
       { step: 'Inject chaos', detail: 'Use Chaos Control to create a problem that Fix-It will need to analyze.' },
-      { step: 'Run Fix-It with AI diagnosis', detail: 'Click Auto Diagnose. The LLM analyzes the service state and decides on a fix.' },
-      { step: 'Find the GenAI spans', detail: 'Open Distributed Traces. Filter for gen_ai spans. Show model, tokens, latency.', dtLink: { label: 'Distributed Traces', url: `${TENANT_URL}/ui/apps/dynatrace.distributedtracing/` } },
-      { step: 'Query with DQL', detail: 'Open a Notebook. Run: fetch spans | filter gen_ai.system == "ollama" | fields model, prompt_tokens, completion_tokens, duration', dtLink: { label: 'Notebooks', url: `${TENANT_URL}/ui/apps/dynatrace.notebooks` } },
+      { step: 'Run Fix-It with AI diagnosis', detail: 'Click Auto Diagnose. The LLM analyzes the service state and decides on a fix. This generates chat completion GenAI spans.' },
+      { step: 'Search past incidents with Librarian', detail: 'Use the Librarian semantic search to find similar past incidents. This calls Ollama embeddings (nomic-embed-text) and generates embedding GenAI spans — different from the chat spans above.' },
+      { step: 'Open GenAI Observability app', detail: 'Navigate to the Dynatrace GenAI Observability app. You should see two model types: llama3.2 (chat completions from Fix-It/Nemesis) and nomic-embed-text (embeddings from Librarian). Every AI call is captured with zero blind spots.', dtLink: { label: 'GenAI Observability', url: `${TENANT_URL}/ui/apps/dynatrace.genai.observability/overview` } },
+      { step: 'Drill into GenAI spans in Traces', detail: 'Open Distributed Traces. Filter for gen_ai.system == "ollama". You\'ll see chat, embeddings, and agent_loop operations. Each span shows prompt content, completion, token counts, and timing.', dtLink: { label: 'Distributed Traces', url: `${TENANT_URL}/ui/apps/dynatrace.distributedtracing/` } },
+      { step: 'Query with DQL', detail: 'Open a Notebook. Run: fetch spans | filter gen_ai.system == "ollama" | summarize count(), avg(duration), sum(gen_ai.usage.prompt_tokens), sum(gen_ai.usage.completion_tokens) by gen_ai.request.model — this shows token usage and latency broken down by model (llama3.2 vs nomic-embed-text).', dtLink: { label: 'Notebooks', url: `${TENANT_URL}/ui/apps/dynatrace.notebooks` } },
     ],
-    suggestedPaths: ['traces-and-otel', 'chaos-and-fix'],
+    suggestedPaths: ['genai-observability', 'autonomous-ops', 'traces-and-otel', 'chaos-and-fix'],
   },
   {
     id: 'product-manager',
@@ -511,11 +696,11 @@ const PERSONAS: Persona[] = [
     demoFlow: [
       { step: 'Walk through industry templates', detail: 'Show the variety: Retail, Healthcare, Travel, etc. Each has different journey steps.' },
       { step: 'Generate a journey with your product name', detail: 'Use the customer\'s product or a relatable brand name for impact.' },
-      { step: 'Show the dashboard journey overview', detail: 'Focus on the funnel: which steps have the most traffic, where latency is highest.', dtLink: { label: 'Dashboards', url: `${TENANT_URL}/ui/apps/dynatrace.dashboards` } },
+      { step: 'Show Forge Dashboards — Executive preset', detail: 'Focus on the journey funnel: which steps have the most traffic, revenue by step, and where drop-off is highest.' },
       { step: 'Break a step and show business impact', detail: 'Inject errors on "Add to Cart". Show how downstream steps (Checkout, Payment) are affected.' },
       { step: 'Query journey data with DQL', detail: 'In a Notebook, show a custom query filtering by journey step and status.', dtLink: { label: 'Notebooks', url: `${TENANT_URL}/ui/apps/dynatrace.notebooks` } },
     ],
-    suggestedPaths: ['quick-start', 'chaos-and-fix'],
+    suggestedPaths: ['quick-start', 'forge-dashboards', 'chaos-and-fix'],
   },
 ];
 
@@ -601,6 +786,18 @@ export const DemoGuide = () => {
         }}>
           <Flex alignItems="center" gap={16}>
             <Heading level={4} style={{ margin: 0 }}>📖 Demo Guide</Heading>
+            <InfoButton
+              align="left"
+              title="📖 Demo Guide"
+              description="Interactive walkthrough for demoing the BizObs Forge to different audiences."
+              sections={[
+                { label: '🗺️ Guided Paths', detail: '8 step-by-step walkthroughs: Quick Start, Forge Dashboards, Chaos & Fix-It, Autonomous Ops, Traces, GenAI, LiveDebugger, Platform' },
+                { label: '👥 Persona Demos', detail: '8 persona-tailored demo flows with talking points, focus areas, and suggested paths' },
+                { label: '🔗 Dynatrace Links', detail: 'Quick links to Services, Problems, Traces, Dashboards, GenAI Observability, Notebooks, and LiveDebugger' },
+                { label: 'Expand steps', detail: 'Click any step to see detailed actions, tips, and direct links to Dynatrace apps' },
+              ]}
+              footer="Switch between Guided Paths and Persona Demos using the toggle in the header."
+            />
             {/* Mode toggle */}
             <div style={{
               display: 'flex', borderRadius: 8, overflow: 'hidden',
@@ -706,7 +903,8 @@ export const DemoGuide = () => {
                 { label: 'Problems', url: `${TENANT_URL}/ui/apps/dynatrace.davis.problems/` },
                 { label: 'Traces', url: `${TENANT_URL}/ui/apps/dynatrace.distributedtracing/` },
                 { label: 'Dashboards', url: `${TENANT_URL}/ui/apps/dynatrace.dashboards` },
-                { label: 'AI Observability', url: `${TENANT_URL}/ui/apps/dynatrace.dashboards/dashboard/bizobs-ai-observability-dashboard` },
+                { label: 'Forge Dashboards', url: `${TENANT_URL}/ui/apps/my.bizobs.generator.master/ui/forge-dashboards` },
+                { label: 'GenAI Observability', url: `${TENANT_URL}/ui/apps/dynatrace.genai.observability/overview` },
                 { label: 'Notebooks', url: `${TENANT_URL}/ui/apps/dynatrace.notebooks` },
                 { label: 'LiveDebugger', url: `${TENANT_URL}/ui/apps/dynatrace.devobs.debugger/debugger` },
               ].map((link, i) => (
@@ -751,11 +949,14 @@ export const DemoGuide = () => {
                   fontSize: 12, color: Colors.Text.Neutral.Subdued, lineHeight: 1.6,
                 }}>
                   <strong>What next?</strong> After completing {currentPath.title}, try the other paths.
-                  {selectedPath === 'quick-start' && ' "Chaos & Fix-It" is a good next step once your services are running.'}
-                  {selectedPath === 'chaos-and-fix' && ' "Traces & OpenTelemetry" shows what\'s happening under the hood.'}
-                  {selectedPath === 'traces-and-otel' && ' "LiveDebugger" lets you set breakpoints on running services to inspect errors at the code level.'}
+                  {selectedPath === 'quick-start' && ' "Forge Dashboards Deep Dive" explores all 4 preset dashboards, or try "Chaos & Fix-It" once your services are running.'}
+                  {selectedPath === 'forge-dashboards' && ' "Chaos & Fix-It" to break things and watch the dashboards react, or "GenAI Observability" to see AI-powered features.'}
+                  {selectedPath === 'chaos-and-fix' && ' "Autonomous Operations" shows the full closed loop with AI memory, or "Traces & OpenTelemetry" shows what\'s happening under the hood.'}
+                  {selectedPath === 'autonomous-ops' && ' "GenAI Observability" for a deep dive into all the AI spans generated during the autonomous loop.'}
+                  {selectedPath === 'traces-and-otel' && ' "GenAI Observability" shows how Dynatrace monitors LLM calls, or try "LiveDebugger" for code-level debugging.'}
+                  {selectedPath === 'genai-observability' && ' "Autonomous Operations" shows the full AI-powered closed loop, or try "Forge Dashboards Deep Dive" to see all 4 dashboard presets.'}
                   {selectedPath === 'live-debugger' && ' "Platform & Architecture" covers how the whole system connects — AppEngine, EdgeConnect, and OneAgent.'}
-                  {selectedPath === 'platform' && ' Try "LiveDebugger" for code-level debugging, or "Chaos & Fix-It" to see auto-remediation in action.'}
+                  {selectedPath === 'platform' && ' Try "LiveDebugger" for code-level debugging, or "Autonomous Operations" to see the full AI operations loop.'}
                 </div>
               </>
             ) : (

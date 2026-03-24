@@ -1,0 +1,273 @@
+{
+    "companyName": "BuildTech Group",
+    "domain": "https://www.buildtech-group.com",
+    "industryType": "Construction & Engineering",
+    "journeyType": "Site Safety Monitoring",
+    "journeyDetail": "AI-Driven Construction Site Safety",
+    "journeyId": "journey_site_safety_monitoring_03386ec0",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "SiteInduction",
+            "serviceName": "SiteInductionService",
+            "description": "Workers complete AI-verified safety induction. Facial recognition confirms identity, competency cards scanned, and site-specific hazard briefing delivered via tablet.",
+            "category": "Onboarding",
+            "estimatedDuration": 2,
+            "businessRationale": "Proper induction reduces first-week incidents by 60%. Competency verification prevents unqualified workers entering hazardous zones.",
+            "substeps": [
+                {
+                    "substepName": "IdentityVerification",
+                    "duration": 1
+                },
+                {
+                    "substepName": "CompetencyCheck",
+                    "duration": 0.5
+                },
+                {
+                    "substepName": "HazardBriefing",
+                    "duration": 0.5
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "RealTimeMonitoring",
+            "serviceName": "SafetyMonitoringService",
+            "description": "AI cameras and wearable sensors monitor PPE compliance, exclusion zone breaches, and unsafe behaviors. Real-time alerts sent to safety officers and site managers.",
+            "category": "Surveillance",
+            "estimatedDuration": 480,
+            "businessRationale": "AI monitoring detects 95% of PPE violations vs 30% for manual checks. Proactive intervention prevents incidents before they occur.",
+            "substeps": [
+                {
+                    "substepName": "PPEDetection",
+                    "duration": 160
+                },
+                {
+                    "substepName": "ExclusionZoneMonitoring",
+                    "duration": 160
+                },
+                {
+                    "substepName": "BehaviorAnalysis",
+                    "duration": 160
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "IncidentDetection",
+            "serviceName": "IncidentDetectionService",
+            "description": "AI detects safety incidents: falls, struck-by events, near-misses, and environmental hazards. Automatic emergency response triggered including first aid dispatch and site isolation.",
+            "category": "Alert",
+            "estimatedDuration": 1,
+            "businessRationale": "Reducing emergency response time from 8 minutes to 2 minutes dramatically improves outcomes for serious injuries.",
+            "substeps": [
+                {
+                    "substepName": "EventDetection",
+                    "duration": 0.25
+                },
+                {
+                    "substepName": "EmergencyAlert",
+                    "duration": 0.25
+                },
+                {
+                    "substepName": "ResponseDispatch",
+                    "duration": 0.5
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "InvestigationAndReporting",
+            "serviceName": "InvestigationService",
+            "description": "AI assists root cause analysis using video replay, sensor data, and similar incident pattern matching. Regulatory reports auto-generated for OSHA/HSE submission.",
+            "category": "Compliance",
+            "estimatedDuration": 24,
+            "businessRationale": "Thorough investigation and reporting prevents repeat incidents. Regulatory non-compliance fines average $15K-70K per violation.",
+            "substeps": [
+                {
+                    "substepName": "RootCauseAnalysis",
+                    "duration": 12
+                },
+                {
+                    "substepName": "RegulatoryReporting",
+                    "duration": 8
+                },
+                {
+                    "substepName": "CorrectiveActions",
+                    "duration": 4
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "SafetyScoreTracking",
+            "serviceName": "SafetyScoreService",
+            "description": "Site safety score calculated from incidents, near-misses, compliance checks, and training completion. Benchmarked against company average and industry standards.",
+            "category": "Analytics",
+            "estimatedDuration": 24,
+            "businessRationale": "Safety scores correlate with insurance premiums and client willingness to award future contracts. Top-quartile safety = 15% lower insurance costs.",
+            "substeps": [
+                {
+                    "substepName": "ScoreCalculation",
+                    "duration": 8
+                },
+                {
+                    "substepName": "TrendAnalysis",
+                    "duration": 8
+                },
+                {
+                    "substepName": "BenchmarkComparison",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "ContinuousImprovement",
+            "serviceName": "SafetyImprovementService",
+            "description": "AI identifies systemic safety patterns across projects. Training programmes adjusted, high-risk activities re-planned, and safety investment prioritised by impact.",
+            "category": "Optimization",
+            "estimatedDuration": 168,
+            "businessRationale": "Companies that invest in proactive safety improvement see 40% fewer lost-time injuries and 25% lower project insurance costs.",
+            "substeps": [
+                {
+                    "substepName": "PatternAnalysis",
+                    "duration": 48
+                },
+                {
+                    "substepName": "TrainingUpdates",
+                    "duration": 72
+                },
+                {
+                    "substepName": "ProcessRedesign",
+                    "duration": 48
+                }
+            ]
+        }
+    ],
+    "id": "18cc78fd-6226-40b7-9ab3-17b21056c97b",
+    "name": "Construction & Engineering - Site Safety Monitoring",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 85000,
+        "transactionValue": 85000,
+        "averageOrderValue": 65000,
+        "contractValue": 500000,
+        "annualRevenue": 180000000,
+        "revenuePerCustomer": 15000000,
+        "profitMargin": 6.5,
+        "customerLifetimeValue": 75000000,
+        "lifetimeValue": 75000000,
+        "acquisitionCost": 25000,
+        "costPerAcquisition": 25000,
+        "conversionProbability": 0.95,
+        "conversionRate": 95,
+        "engagementScore": 88,
+        "timeToConversion": 48,
+        "sessionDuration": 480,
+        "pageViews": 5,
+        "purchaseFrequency": 365,
+        "netPromoterScore": 55,
+        "satisfactionRating": 4.3,
+        "retentionProbability": 0.92,
+        "processingTime": 60,
+        "operationalCost": 12000,
+        "efficiencyRating": 85,
+        "incidentRate": 0.8,
+        "nearMissRate": 3.2,
+        "channel": [
+            "site_tablet",
+            "wearable_sensor",
+            "cctv_ai",
+            "mobile_app",
+            "safety_kiosk"
+        ],
+        "deviceType": [
+            "tablet",
+            "wearable",
+            "camera",
+            "mobile",
+            "kiosk"
+        ],
+        "region": [
+            "London",
+            "Dubai",
+            "Sydney",
+            "Texas",
+            "Singapore"
+        ],
+        "customerSegmentValue": [
+            "tier1_contractor",
+            "specialist_sub",
+            "self_employed",
+            "agency_worker",
+            "apprentice"
+        ],
+        "loyaltyTier": [
+            "Gold Card",
+            "Green Card",
+            "Inducted",
+            "Probation",
+            "New Starter"
+        ],
+        "segment": [
+            "high_rise",
+            "infrastructure",
+            "residential",
+            "demolition",
+            "tunnelling"
+        ],
+        "Productname": [
+            "Hard Hat with Sensor",
+            "Smart Safety Vest",
+            "Gas Detection Badge",
+            "Fall Arrest Monitor",
+            "Proximity Alert Band"
+        ],
+        "ProductId": [
+            "SAF-HH-001",
+            "SAF-SV-002",
+            "SAF-GD-003",
+            "SAF-FA-004",
+            "SAF-PA-005"
+        ],
+        "ProductType": [
+            "PPE_smart",
+            "PPE_smart",
+            "gas_detection",
+            "fall_protection",
+            "proximity"
+        ],
+        "Price": [
+            185,
+            120,
+            95,
+            250,
+            75
+        ],
+        "complianceRate": [
+            0.94,
+            0.91,
+            0.97,
+            0.88,
+            0.93
+        ],
+        "riskZone": [
+            "high",
+            "medium",
+            "confined_space",
+            "height",
+            "traffic"
+        ],
+        "marketTrend": [
+            "AI_safety_monitoring",
+            "wearable_PPE",
+            "digital_twin_safety",
+            "predictive_safety",
+            "autonomous_inspection"
+        ]
+    }
+}

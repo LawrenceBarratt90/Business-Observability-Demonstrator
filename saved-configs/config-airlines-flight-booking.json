@@ -1,0 +1,267 @@
+{
+    "companyName": "Airlines Group",
+    "domain": "https://www.airlines-group.com",
+    "industryType": "Airlines & Aviation",
+    "source": "sector-demo",
+    "timestamp": "2026-01-09T15:55:00.000Z",
+    "journeyType": "Flight Booking",
+    "journeyDetail": "Flight Booking Journey",
+    "journeyId": "journey_airlines_booking_2026",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "id": "a1b2c3d4-1111-4aaa-b111-000000000001",
+    "name": "Airlines - Flight Booking",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "FlightSearch",
+            "serviceName": "FlightSearchService",
+            "description": "Traveller searches flights by origin, destination, dates, passenger count, and cabin class. Fare calendar shows cheapest dates. Multi-city and flexible date searches available. Real-time inventory check against ATPCO fares and airline-specific offers.",
+            "category": "Search",
+            "estimatedDuration": 10,
+            "businessRationale": "Search-to-book conversion averages 2-3%. Speed and relevance of results are primary conversion drivers. Fare calendar increases booking by 15% by enabling price-sensitive travellers to shift dates.",
+            "substeps": [
+                {
+                    "substepName": "RouteAndDateSearch",
+                    "duration": 5
+                },
+                {
+                    "substepName": "FareCalendarAndFlexSearch",
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "FareSelectionAndAncillaries",
+            "serviceName": "FareSelectionAndAncillariesService",
+            "description": "Traveller compares fare families (Basic, Standard, Flex, Business) with bundled benefits. Ancillary add-ons offered: seat selection, extra baggage, lounge access, travel insurance, priority boarding. Dynamic pricing engine adjusts fares based on demand and remaining inventory.",
+            "category": "Selection",
+            "estimatedDuration": 10,
+            "businessRationale": "Ancillary revenue averages $22 per passenger and is the fastest-growing airline revenue stream. Fare family presentation increases upsell from Basic to Standard by 25%. Dynamic pricing maximises yield per seat.",
+            "substeps": [
+                {
+                    "substepName": "FareFamilyComparison",
+                    "duration": 5
+                },
+                {
+                    "substepName": "AncillaryUpsellAndSelection",
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "PassengerDetails",
+            "serviceName": "PassengerDetailsService",
+            "description": "Traveller enters passenger information: full name (matching passport), date of birth, nationality, loyalty number, and contact details. API Advance Passenger Information (API) collected for international flights as required by destination country. Frequent flyer tier benefits applied.",
+            "category": "DataEntry",
+            "estimatedDuration": 10,
+            "businessRationale": "Name accuracy prevents boarding denials costing $500+ per rebooking. Pre-populated profiles for logged-in users reduce form time from 5 minutes to 30 seconds. Loyalty recognition drives 3x higher conversion for premium fares.",
+            "substeps": [
+                {
+                    "substepName": "PassengerInfoAndAPIData",
+                    "duration": 7
+                },
+                {
+                    "substepName": "LoyaltyLinkAndTierBenefits",
+                    "duration": 3
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "PaymentAndTicketing",
+            "serviceName": "PaymentAndTicketingService",
+            "description": "Payment processed via card, bank transfer, loyalty miles, or corporate account. PCI-compliant payment gateway with 3D Secure. Upon payment confirmation, e-ticket issued with PNR (Passenger Name Record) and ticket number. Confirmation email with itinerary, receipt, and booking management link.",
+            "category": "Payment",
+            "estimatedDuration": 5,
+            "businessRationale": "Payment failure rate of 3-5% represents $500M+ in lost annual revenue industry-wide. Miles payment option increases loyalty programme engagement by 40%. Instant e-ticketing eliminates $8 per booking in manual ticketing costs.",
+            "substeps": [
+                {
+                    "substepName": "PaymentProcessingAnd3DSecure",
+                    "duration": 3
+                },
+                {
+                    "substepName": "ETicketIssuanceAndConfirmation",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "PreDepartureManagement",
+            "serviceName": "PreDepartureManagementService",
+            "description": "Traveller manages booking post-purchase: seat changes, meal preferences, special assistance requests. Flight status notifications enabled. Schedule change alerts with rebooking options. Travel document checker validates visa and passport requirements for destination.",
+            "category": "Management",
+            "estimatedDuration": 15,
+            "businessRationale": "Self-service booking management reduces call centre volume by 40% ($5-8 saved per interaction). Proactive schedule change handling prevents airport surprise that damages brand loyalty. Document checker prevents denied boarding.",
+            "substeps": [
+                {
+                    "substepName": "SeatMealAndAssistancePrefs",
+                    "duration": 8
+                },
+                {
+                    "substepName": "StatusAlertsAndDocChecker",
+                    "duration": 7
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "ItinerarySharingAndExpenseReport",
+            "serviceName": "ItinerarySharingAndExpenseReportService",
+            "description": "Traveller shares itinerary with fellow travellers, travel managers, or family. Calendar integration adds flight times. Corporate travellers link booking to expense report with automatic cost allocation. Trip briefing generated with destination weather, currency, and travel advisories.",
+            "category": "Sharing",
+            "estimatedDuration": 5,
+            "businessRationale": "Itinerary sharing drives group booking conversion for 15% of leisure travellers. Corporate expense integration reduces reconciliation time by 80%. Trip briefings increase app engagement and ancillary purchase opportunities.",
+            "substeps": [
+                {
+                    "substepName": "ShareAndCalendarSync",
+                    "duration": 3
+                },
+                {
+                    "substepName": "ExpenseAndTripBriefing",
+                    "duration": 2
+                }
+            ]
+        }
+    ],
+    "additionalFields": {
+        "orderTotal": 450,
+        "transactionValue": 450,
+        "averageOrderValue": 380,
+        "contractValue": 450,
+        "annualRevenue": 2700,
+        "revenuePerCustomer": 2700,
+        "profitMargin": 12.0,
+        "customerLifetimeValue": 18000,
+        "lifetimeValue": 18000,
+        "acquisitionCost": 35,
+        "costPerAcquisition": 35,
+        "conversionProbability": 0.18,
+        "conversionRate": 1.8,
+        "engagementScore": 78,
+        "timeToConversion": 7200,
+        "sessionDuration": 900,
+        "pageViews": 22,
+        "netPromoterScore": 38,
+        "satisfactionRating": 3.9,
+        "retentionProbability": 0.62,
+        "processingTime": 180,
+        "operationalCost": 18,
+        "efficiencyRating": 82,
+        "discountApplied": 0,
+        "channel": [
+            "airline_website",
+            "mobile_app",
+            "ota_booking",
+            "travel_agent",
+            "metasearch"
+        ],
+        "deviceType": [
+            "desktop",
+            "mobile",
+            "mobile",
+            "desktop",
+            "mobile"
+        ],
+        "region": [
+            "Europe",
+            "North America",
+            "Asia Pacific",
+            "Middle East",
+            "Africa"
+        ],
+        "customerSegmentValue": [
+            "frequent_flyer",
+            "leisure_traveller",
+            "business_traveller",
+            "budget_traveller",
+            "premium_leisure"
+        ],
+        "loyaltyTier": [
+            "Gold",
+            "Blue",
+            "Platinum",
+            "Basic",
+            "Silver"
+        ],
+        "segment": [
+            "economy",
+            "premium_economy",
+            "business_class",
+            "first_class",
+            "basic_economy"
+        ],
+        "Productname": [
+            "Economy Return LHR-JFK",
+            "Premium Economy LHR-SIN",
+            "Business Class LHR-DXB",
+            "First Class LHR-HKG",
+            "Basic Economy LGW-BCN"
+        ],
+        "ProductId": [
+            "AIR-FB-001",
+            "AIR-FB-002",
+            "AIR-FB-003",
+            "AIR-FB-004",
+            "AIR-FB-005"
+        ],
+        "ProductType": [
+            "economy",
+            "premium_economy",
+            "business",
+            "first",
+            "basic_economy"
+        ],
+        "Price": [
+            450,
+            1200,
+            3500,
+            8500,
+            120
+        ],
+        "flightDuration": [
+            480,
+            780,
+            420,
+            720,
+            150
+        ],
+        "baggageAllowance": [
+            "23kg",
+            "2x23kg",
+            "2x32kg",
+            "3x32kg",
+            "hand_only"
+        ],
+        "seatSelection": [
+            "paid",
+            "included",
+            "included",
+            "included",
+            "paid"
+        ],
+        "ancillaryRevenue": [
+            45,
+            0,
+            0,
+            0,
+            65
+        ],
+        "carbonOffset": [
+            12.5,
+            28.0,
+            18.0,
+            32.0,
+            5.0
+        ],
+        "marketTrend": [
+            "sustainable_aviation",
+            "premium_leisure",
+            "ancillary_revenue",
+            "ndc_distribution",
+            "dynamic_pricing"
+        ]
+    }
+}

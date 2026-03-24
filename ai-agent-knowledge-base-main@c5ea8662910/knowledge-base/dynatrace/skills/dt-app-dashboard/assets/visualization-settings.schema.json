@@ -1,0 +1,681 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dynatrace.com/schemas/visualization-settings.schema.json",
+  "title": "Dynatrace Visualization Settings",
+  "description": "Validate a { visualization, visualizationSettings } pair with visualization-discriminated settings.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["visualization", "visualizationSettings"],
+  "properties": {
+    "visualization": {
+      "type": "string",
+      "enum": [
+        "lineChart",
+        "areaChart",
+        "barChart",
+        "bandChart",
+        "categoricalBarChart",
+        "pieChart",
+        "donutChart",
+        "singleValue",
+        "meterBar",
+        "gauge",
+        "table",
+        "raw",
+        "recordView",
+        "recordList",
+        "histogram",
+        "honeycomb",
+        "choropleth",
+        "choroplethMap",
+        "dotMap",
+        "connectionMap",
+        "bubbleMap",
+        "heatmap",
+        "scatterplot"
+      ]
+    },
+    "visualizationSettings": {
+      "type": "object"
+    }
+  },
+  "oneOf": [
+    { "$ref": "#/$defs/LineSettingsCase" },
+    { "$ref": "#/$defs/AreaSettingsCase" },
+    { "$ref": "#/$defs/BarSettingsCase" },
+    { "$ref": "#/$defs/BandSettingsCase" },
+    { "$ref": "#/$defs/CategoricalSettingsCase" },
+    { "$ref": "#/$defs/PieSettingsCase" },
+    { "$ref": "#/$defs/DonutSettingsCase" },
+    { "$ref": "#/$defs/SingleValueSettingsCase" },
+    { "$ref": "#/$defs/HistogramSettingsCase" },
+    { "$ref": "#/$defs/HoneycombSettingsCase" },
+    { "$ref": "#/$defs/TableSettingsCase" },
+    { "$ref": "#/$defs/RecordViewSettingsCase" },
+    { "$ref": "#/$defs/RawSettingsCase" },
+    { "$ref": "#/$defs/ChoroplethSettingsCase" },
+    { "$ref": "#/$defs/DotMapSettingsCase" },
+    { "$ref": "#/$defs/ConnectionMapSettingsCase" },
+    { "$ref": "#/$defs/BubbleMapSettingsCase" },
+    { "$ref": "#/$defs/MeterBarSettingsCase" },
+    { "$ref": "#/$defs/GaugeSettingsCase" },
+    { "$ref": "#/$defs/HeatmapSettingsCase" },
+    { "$ref": "#/$defs/ScatterplotSettingsCase" }
+  ],
+  "$defs": {
+    "Boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mode": { "type": "string" },
+        "value": { "type": ["number", "null"] }
+      },
+      "required": ["mode"]
+    },
+    "Legend": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "showLegend": { "type": "boolean" },
+        "position": { "type": "string" },
+        "ratio": { "type": ["string", "number"] },
+        "textTruncationMode": { "type": "string" }
+      }
+    },
+    "Tooltip": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "showCustomFields": { "type": "boolean" },
+        "variant": { "type": "string" },
+        "seriesDisplayMode": { "type": "string" }
+      }
+    },
+    "Zoom": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "isActive": { "type": "boolean" },
+        "currentZoom": {},
+        "initialZoom": {},
+        "infiniteZoom": { "type": "boolean" },
+        "zoom": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": { "enabled": { "type": "boolean" } }
+        },
+        "pan": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": { "enabled": { "type": "boolean" } }
+        },
+        "zoomX": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": { "enabled": { "type": "boolean" } }
+        }
+      }
+    },
+    "ValueBoundaries": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "min": { "$ref": "#/$defs/Boundary" },
+        "max": { "$ref": "#/$defs/Boundary" }
+      }
+    },
+    "MapView": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "defaultZoom": { "type": "string", "enum": ["data", "world", "custom"] },
+        "longitude": { "type": "number" },
+        "latitude": { "type": "number" },
+        "zoom": { "type": "number" }
+      },
+      "required": ["defaultZoom", "longitude", "latitude", "zoom"]
+    },
+    "UnitsOverride": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "added": { "type": "number" },
+        "identifier": { "type": ["string", "null"] },
+        "unitCategory": { "type": ["string", "null"] },
+        "baseUnit": { "type": ["string", "null"] },
+        "displayUnit": { "type": ["string", "null"] },
+        "decimals": { "type": ["number", "null"] },
+        "suffix": { "type": "string" },
+        "delimiter": { "type": "boolean" }
+      },
+      "required": ["added", "identifier", "unitCategory", "baseUnit", "displayUnit", "decimals", "suffix", "delimiter"]
+    },
+    "Coloring": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "colorRules": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+        "thresholdRules": { "type": "array", "items": { "type": "object", "additionalProperties": true } }
+      }
+    },
+    "AxesXY": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "label": { "type": "string" },
+        "showLabel": { "type": "boolean" },
+        "reversed": { "type": "boolean" },
+        "position": { "type": "string" },
+        "tickLabelLayout": { "type": "string" },
+        "scale": { "type": "string" },
+        "displayTimeFrame": { "type": "string" },
+        "min": { "$ref": "#/$defs/Boundary" },
+        "max": { "$ref": "#/$defs/Boundary" }
+      }
+    },
+    "Axes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "xAxis": { "$ref": "#/$defs/AxesXY" },
+        "yAxis": { "$ref": "#/$defs/AxesXY" },
+        "rightYAxis": { "$ref": "#/$defs/AxesXY" }
+      }
+    },
+    "BaseTimeSeriesSettings": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "dataMapping": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "time": { "type": ["string", "null"] },
+            "displayedFields": { "type": "array", "items": { "type": "string" } },
+            "series": { "type": "array", "items": { "type": "string" } },
+            "interval": { "type": ["string", "null"] },
+            "min": { "type": ["string", "null"] },
+            "max": { "type": ["string", "null"] }
+          }
+        },
+        "axes": { "$ref": "#/$defs/Axes" },
+        "zoom": { "$ref": "#/$defs/Zoom" },
+        "legend": { "$ref": "#/$defs/Legend" },
+        "tooltip": { "$ref": "#/$defs/Tooltip" },
+        "valueSettings": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": { "valueRepresentation": { "type": "string" } }
+        },
+        "seriesOverrides": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+        "geometryType": { "type": "object", "additionalProperties": true },
+        "timeseries": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+        "thresholds": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+        "unitsOverrides": { "type": "array", "items": { "$ref": "#/$defs/UnitsOverride" } },
+        "coloring": { "$ref": "#/$defs/Coloring" },
+        "colorModeType": { "type": "object", "additionalProperties": true },
+        "seriesConfig": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "LineSettingsCase": {
+      "type": "object",
+      "properties": {
+        "visualization": { "const": "lineChart" },
+        "visualizationSettings": { "$ref": "#/$defs/BaseTimeSeriesSettings" }
+      }
+    },
+    "AreaSettingsCase": {
+      "type": "object",
+      "properties": {
+        "visualization": { "const": "areaChart" },
+        "visualizationSettings": { "$ref": "#/$defs/BaseTimeSeriesSettings" }
+      }
+    },
+    "BarSettingsCase": {
+      "type": "object",
+      "properties": {
+        "visualization": { "const": "barChart" },
+        "visualizationSettings": { "$ref": "#/$defs/BaseTimeSeriesSettings" }
+      }
+    },
+    "BandSettingsCase": {
+      "type": "object",
+      "properties": {
+        "visualization": { "const": "bandChart" },
+        "visualizationSettings": { "$ref": "#/$defs/BaseTimeSeriesSettings" }
+      }
+    },
+    "CategoricalSettingsCase": {
+      "type": "object",
+      "properties": {
+        "visualization": { "const": "categoricalBarChart" },
+        "visualizationSettings": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "categoryAxis": { "type": "object", "additionalProperties": true },
+            "numericAxis": { "type": "object", "additionalProperties": true },
+            "dataMapping": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "displayedFields": { "type": "array", "items": { "type": "string" } },
+                "values": { "type": "array", "items": { "type": "string" } }
+              }
+            },
+            "legend": { "$ref": "#/$defs/Legend" },
+            "valueBoundaries": { "$ref": "#/$defs/ValueBoundaries" },
+            "valueSettings": { "type": "object", "additionalProperties": true },
+            "tooltip": { "$ref": "#/$defs/Tooltip" },
+            "layout": { "type": "object", "additionalProperties": true },
+            "unitsOverrides": { "type": "array", "items": { "$ref": "#/$defs/UnitsOverride" } },
+            "thresholds": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+            "coloring": { "$ref": "#/$defs/Coloring" },
+            "colorModeType": { "type": "object", "additionalProperties": true }
+          }
+        }
+      }
+    },
+    "PieLikeSettings": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "dataMapping": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "value": { "type": "string" },
+            "displayedFields": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "labels": { "type": "object", "additionalProperties": true },
+        "legend": { "$ref": "#/$defs/Legend" },
+        "valueSettings": { "type": "object", "additionalProperties": true },
+        "groupingSettings": { "type": "object", "additionalProperties": true },
+        "unitsOverrides": { "type": "array", "items": { "$ref": "#/$defs/UnitsOverride" } },
+        "coloring": { "$ref": "#/$defs/Coloring" },
+        "colorModeType": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "PieSettingsCase": {
+      "type": "object",
+      "properties": {
+        "visualization": { "const": "pieChart" },
+        "visualizationSettings": { "$ref": "#/$defs/PieLikeSettings" }
+      }
+    },
+    "DonutSettingsCase": {
+      "type": "object",
+      "properties": {
+        "visualization": { "const": "donutChart" },
+        "visualizationSettings": { "$ref": "#/$defs/PieLikeSettings" }
+      }
+    },
+    "SingleValueSettingsCase": {
+      "type": "object",
+      "properties": {
+        "visualization": { "const": "singleValue" },
+        "visualizationSettings": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "alignment": { "type": "string" },
+            "colorThresholdTarget": { "type": "string" },
+            "dataMapping": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "record": { "type": ["string", "null"] },
+                "timeseries": { "type": ["string", "null"] },
+                "value": { "type": ["string", "null"] },
+                "label": { "type": ["string", "null"] }
+              }
+            },
+            "icon": { "type": ["string", "object"] },
+            "showIcon": { "type": "boolean" },
+            "label": { "type": "object", "additionalProperties": true },
+            "sparkline": { "type": "object", "additionalProperties": true },
+            "trend": { "type": "object", "additionalProperties": true },
+            "unitsOverrides": { "type": "array", "items": { "$ref": "#/$defs/UnitsOverride" } },
+            "valueBoundaries": { "$ref": "#/$defs/ValueBoundaries" },
+            "coloring": { "$ref": "#/$defs/Coloring" }
+          }
+        }
+      }
+    },
+    "HistogramSettingsCase": {
+      "type": "object",
+      "properties": {
+        "visualization": { "const": "histogram" },
+        "visualizationSettings": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "legend": { "$ref": "#/$defs/Legend" },
+            "axes": { "$ref": "#/$defs/Axes" },
+            "dataMapping": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "displayedFields": { "type": "array", "items": { "type": "string" } },
+                "value": { "type": "string" },
+                "range": { "type": "string" }
+              }
+            },
+            "tooltip": { "$ref": "#/$defs/Tooltip" },
+            "unitsOverrides": { "type": "array", "items": { "$ref": "#/$defs/UnitsOverride" } },
+            "thresholds": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+            "coloring": { "$ref": "#/$defs/Coloring" },
+            "zoom": { "$ref": "#/$defs/Zoom" },
+            "colorModeType": { "type": "object", "additionalProperties": true }
+          }
+        }
+      }
+    },
+    "HoneycombSettingsCase": {
+      "type": "object",
+      "properties": {
+        "visualization": { "const": "honeycomb" },
+        "visualizationSettings": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "shape": { "type": "string" },
+            "valueBoundaries": { "$ref": "#/$defs/ValueBoundaries" },
+            "legend": { "$ref": "#/$defs/Legend" },
+            "dataMapping": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "dimension": { "type": ["string", "null"] },
+                "displayedFields": { "type": "array", "items": { "type": "string" } }
+              }
+            },
+            "unitsOverrides": { "type": "array", "items": { "$ref": "#/$defs/UnitsOverride" } },
+            "labels": { "type": "object", "additionalProperties": true },
+            "colorModeType": { "type": "object", "additionalProperties": true },
+            "coloring": { "$ref": "#/$defs/Coloring" }
+          }
+        }
+      }
+    },
+    "TableSettingsCase": {
+      "type": "object",
+      "properties": {
+        "visualization": { "const": "table" },
+        "visualizationSettings": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "table": { "type": "object", "additionalProperties": true }
+          }
+        }
+      }
+    },
+    "RecordViewSettingsCase": {
+      "type": "object",
+      "properties": {
+        "visualization": { "enum": ["recordView", "recordList"] },
+        "visualizationSettings": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "recordView": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "fieldsWidth": { "type": "number" }
+              }
+            },
+            "unitsOverrides": { "type": "array", "items": { "$ref": "#/$defs/UnitsOverride" } }
+          }
+        }
+      }
+    },
+    "RawSettingsCase": {
+      "type": "object",
+      "properties": {
+        "visualization": { "const": "raw" },
+        "visualizationSettings": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {}
+        }
+      }
+    },
+    "MapSharedSettings": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "mapView": { "$ref": "#/$defs/MapView" },
+        "legend": { "$ref": "#/$defs/Legend" },
+        "tooltip": { "$ref": "#/$defs/Tooltip" },
+        "valueBoundaries": { "$ref": "#/$defs/ValueBoundaries" },
+        "unitsOverrides": { "type": "array", "items": { "$ref": "#/$defs/UnitsOverride" } },
+        "regions": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "showRegions": { "type": "boolean" },
+            "regions": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "colorModeType": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "ChoroplethSettingsCase": {
+      "type": "object",
+      "properties": {
+        "visualization": { "enum": ["choropleth", "choroplethMap"] },
+        "visualizationSettings": {
+          "allOf": [
+            { "$ref": "#/$defs/MapSharedSettings" },
+            {
+              "type": "object",
+              "properties": {
+                "dataMapping": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "countryCode": { "type": ["string", "null"] },
+                    "dimension": { "type": ["string", "null"] },
+                    "displayedFields": { "type": "array", "items": { "type": "string" } }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "DotMapSettingsCase": {
+      "type": "object",
+      "properties": {
+        "visualization": { "const": "dotMap" },
+        "visualizationSettings": {
+          "allOf": [
+            { "$ref": "#/$defs/MapSharedSettings" },
+            {
+              "type": "object",
+              "properties": {
+                "dataMapping": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "bearingValue": { "type": ["string", "null"] },
+                    "dimension": { "type": ["string", "null"] },
+                    "latitude": { "type": ["string", "null"] },
+                    "longitude": { "type": ["string", "null"] },
+                    "displayedFields": { "type": "array", "items": { "type": "string" } }
+                  }
+                },
+                "icon": { "type": ["string", "object"] },
+                "mapShape": { "type": "object", "additionalProperties": true },
+                "emoji": { "type": ["string", "null"] }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "ConnectionMapSettingsCase": {
+      "type": "object",
+      "properties": {
+        "visualization": { "const": "connectionMap" },
+        "visualizationSettings": {
+          "allOf": [
+            { "$ref": "#/$defs/MapSharedSettings" },
+            {
+              "type": "object",
+              "properties": {
+                "dataMapping": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "latitudeList": { "type": ["string", "null"] },
+                    "longitudeList": { "type": ["string", "null"] },
+                    "dimension": { "type": ["string", "null"] },
+                    "displayedFields": { "type": "array", "items": { "type": "string" } }
+                  }
+                },
+                "mapLine": { "type": "object", "additionalProperties": true }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "BubbleMapSettingsCase": {
+      "type": "object",
+      "properties": {
+        "visualization": { "const": "bubbleMap" },
+        "visualizationSettings": {
+          "allOf": [
+            { "$ref": "#/$defs/MapSharedSettings" },
+            {
+              "type": "object",
+              "properties": {
+                "dataMapping": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "latitude": { "type": ["string", "null"] },
+                    "longitude": { "type": ["string", "null"] },
+                    "radius": { "type": ["string", "null"] },
+                    "dimension": { "type": ["string", "null"] },
+                    "displayedFields": { "type": "array", "items": { "type": "string" } }
+                  }
+                },
+                "mapRadius": { "type": "object", "additionalProperties": true }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "ProgressSharedSettings": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "valueBoundaries": { "$ref": "#/$defs/ValueBoundaries" },
+        "icon": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "showIcon": { "type": "boolean" },
+            "icon": { "type": ["string", "null"] }
+          }
+        },
+        "label": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "showLabel": { "type": "boolean" },
+            "label": { "type": ["string", "null"] }
+          }
+        },
+        "dataMapping": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "value": { "type": ["string", "null"] },
+            "maxDataField": { "type": ["string", "null"] },
+            "minDataField": { "type": ["string", "null"] }
+          }
+        },
+        "unitsOverrides": { "type": "array", "items": { "$ref": "#/$defs/UnitsOverride" } },
+        "coloring": { "$ref": "#/$defs/Coloring" },
+        "colorModeType": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "MeterBarSettingsCase": {
+      "type": "object",
+      "properties": {
+        "visualization": { "const": "meterBar" },
+        "visualizationSettings": { "$ref": "#/$defs/ProgressSharedSettings" }
+      }
+    },
+    "GaugeSettingsCase": {
+      "type": "object",
+      "properties": {
+        "visualization": { "const": "gauge" },
+        "visualizationSettings": { "$ref": "#/$defs/ProgressSharedSettings" }
+      }
+    },
+    "HeatmapSettingsCase": {
+      "type": "object",
+      "properties": {
+        "visualization": { "const": "heatmap" },
+        "visualizationSettings": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "dataMapping": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "xAxis": { "type": ["string", "null"] },
+                "yAxis": { "type": ["string", "null"] },
+                "bucketValue": { "type": ["string", "null"] }
+              }
+            },
+            "axes": { "$ref": "#/$defs/Axes" },
+            "legend": { "$ref": "#/$defs/Legend" },
+            "unitsOverrides": { "type": "array", "items": { "$ref": "#/$defs/UnitsOverride" } },
+            "coloring": { "$ref": "#/$defs/Coloring" },
+            "zoom": { "$ref": "#/$defs/Zoom" },
+            "valueBoundaries": { "$ref": "#/$defs/ValueBoundaries" },
+            "colorModeType": { "type": "object", "additionalProperties": true }
+          }
+        }
+      }
+    },
+    "ScatterplotSettingsCase": {
+      "type": "object",
+      "properties": {
+        "visualization": { "const": "scatterplot" },
+        "visualizationSettings": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "dataMapping": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "xAxis": { "type": ["string", "null"] },
+                "yAxis": { "type": ["string", "null"] },
+                "displayedFields": { "type": "array", "items": { "type": "string" } }
+              }
+            },
+            "unitsOverrides": { "type": "array", "items": { "$ref": "#/$defs/UnitsOverride" } },
+            "legend": { "$ref": "#/$defs/Legend" },
+            "axes": { "$ref": "#/$defs/Axes" },
+            "zoom": { "$ref": "#/$defs/Zoom" },
+            "colorModeType": { "type": "object", "additionalProperties": true },
+            "coloring": { "$ref": "#/$defs/Coloring" }
+          }
+        }
+      }
+    }
+  }
+}

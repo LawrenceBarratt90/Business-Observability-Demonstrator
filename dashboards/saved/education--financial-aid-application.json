@@ -1,0 +1,478 @@
+{
+  "id": "education--financial-aid-application",
+  "dashboard": {
+    "name": "Education Financial Aid Application Dashboard [MCP Custom]",
+    "type": "dashboard",
+    "version": 1,
+    "content": {
+      "version": 21,
+      "variables": [
+        {
+          "key": "CompanyName",
+          "visible": true,
+          "type": "query",
+          "version": 2,
+          "editable": true,
+          "multiple": false,
+          "input": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == \"Education\" | fields json.companyName | dedup json.companyName"
+        },
+        {
+          "key": "JourneyType",
+          "visible": true,
+          "type": "query",
+          "version": 2,
+          "editable": true,
+          "multiple": true,
+          "defaultValue": "3420b2ac-f1cf-4b24-b62d-61ba1ba8ed05*",
+          "input": "fetch bizevents \n| filter json.companyName == $CompanyName\n| fields json.journeyType | dedup json.journeyType"
+        },
+        {
+          "key": "Step",
+          "visible": true,
+          "type": "query",
+          "version": 2,
+          "editable": true,
+          "multiple": true,
+          "defaultValue": "3420b2ac-f1cf-4b24-b62d-61ba1ba8ed05*",
+          "input": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter in(json.journeyType, $JourneyType) | filter json.companyName == \"Education\" | fields json.stepName | dedup json.stepName"
+        },
+        {
+          "key": "Service",
+          "visible": true,
+          "type": "query",
+          "version": 2,
+          "editable": true,
+          "multiple": true,
+          "defaultValue": "3420b2ac-f1cf-4b24-b62d-61ba1ba8ed05*",
+          "input": "fetch bizevents\n| fields json.serviceName, json.companyName, json.journeyType\n| summarize count(),by:{json.companyName, json.journeyType, json.serviceName}\n| filter json.companyName == $CompanyName \n| filter in(json.journeyType, $JourneyType)\n| dedup json.serviceName\n| fields json.serviceName = lower(json.serviceName)\n| filter isNotNull(json.serviceName)"
+        },
+        {
+          "key": "PGI",
+          "visible": true,
+          "type": "query",
+          "version": 2,
+          "editable": true,
+          "multiple": true,
+          "defaultValue": "3420b2ac-f1cf-4b24-b62d-61ba1ba8ed05*",
+          "input": "smartscapeNodes PROCESS\n| lookup [smartscapeNodes SERVICE | fields id, name], sourceField:name, lookupField:name, prefix:\"svc.\"\n| lookup [timeseries cpu = avg(dt.process.cpu.usage), by:{dt.smartscape.process}], sourceField:id, lookupField:dt.smartscape.process, fields:{cpu}\n| filter isNotNull(cpu)\n| fieldsAdd LowerService = lower(name)\n| filter in(LowerService, $Service)\n| fields id\n| dedup id"
+        }
+      ],
+      "tiles": {
+        "0": {
+          "title": "",
+          "type": "markdown",
+          "content": "# Education Financial Aid Application Dashboard\n## Education | Financial Aid Application Journey | Business Observability\n**Data Signals:** 🔧 Services\n---"
+        },
+        "1": {
+          "title": "",
+          "type": "markdown",
+          "content": "**Journey Flow:** `Step 1` → `Step 2` → `Step 3`"
+        },
+        "2": {
+          "title": "",
+          "type": "markdown",
+          "content": "### 📈 Analysis & Trends"
+        },
+        "3": {
+          "title": "Grants",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | filter isNotNull(additionalfields.grantType) | summarize count = count(), by: {additionalfields.grantType} | sort count desc | limit 10",
+          "visualization": "categoricalBarChart",
+          "visualizationSettings": {
+            "categoryAxis": {
+              "label": {
+                "showLabel": true
+              },
+              "tickLayout": "horizontal"
+            },
+            "numericAxis": {
+              "label": {
+                "showLabel": true
+              },
+              "scale": "linear"
+            },
+            "legend": {
+              "position": "auto",
+              "showLegend": true
+            },
+            "layout": {
+              "groupMode": "grouped",
+              "position": "horizontal"
+            }
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "4": {
+          "title": "Loans",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize value = sum(additionalfields.loanType)",
+          "visualization": "barChart",
+          "visualizationSettings": {
+            "categoryAxis": {
+              "label": {
+                "showLabel": true
+              },
+              "tickLayout": "horizontal"
+            },
+            "numericAxis": {
+              "label": {
+                "showLabel": true
+              },
+              "scale": "linear"
+            },
+            "legend": {
+              "position": "auto",
+              "showLegend": true
+            },
+            "layout": {
+              "groupMode": "grouped",
+              "position": "horizontal"
+            }
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "5": {
+          "title": "Scholarships",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | filter isNotNull(additionalfields.scholarshipType) | summarize count = count(), by: {additionalfields.scholarshipType} | sort count desc | limit 10",
+          "visualization": "pieChart",
+          "visualizationSettings": {
+            "legend": {
+              "position": "auto",
+              "showLegend": true
+            }
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "6": {
+          "title": "Funding Sources",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize value = sum(additionalfields.fundingSource)",
+          "visualization": "donutChart",
+          "visualizationSettings": {
+            "legend": {
+              "position": "auto",
+              "showLegend": true
+            }
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "7": {
+          "title": "",
+          "type": "markdown",
+          "content": "### 📊 Key Performance Indicators"
+        },
+        "8": {
+          "title": "Average Aid Award",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize value = avg(additionalfields.avgAidAward)",
+          "visualization": "singleValue",
+          "visualizationSettings": {},
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "9": {
+          "title": "",
+          "type": "markdown",
+          "content": "### 📈 Analysis & Trends"
+        },
+        "10": {
+          "title": "Total Aid Awarded",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | makeTimeseries value = sum(additionalfields.totalAidAwarded), bins:30",
+          "visualization": "lineChart",
+          "visualizationSettings": {
+            "chartSettings": {
+              "gapPolicy": "connect"
+            },
+            "thresholds": [],
+            "unitsOverrides": []
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "11": {
+          "title": "Application Success Rate",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | filter isNotNull(additionalfields.successRate) | summarize count = count(), by: {additionalfields.successRate} | sort count desc | limit 10",
+          "visualization": "pieChart",
+          "visualizationSettings": {
+            "legend": {
+              "position": "auto",
+              "showLegend": true
+            }
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "12": {
+          "title": "Financial Aid Trends",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | makeTimeseries value = avg(additionalfields.financialAidTrend), bins:30",
+          "visualization": "areaChart",
+          "visualizationSettings": {
+            "chartSettings": {
+              "gapPolicy": "connect"
+            },
+            "thresholds": [],
+            "unitsOverrides": []
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "13": {
+          "title": "",
+          "type": "markdown",
+          "content": "---\n🤖 *Dashboard generated by Bespoke Ollama (8 unique tiles) | 2026-03-18 | 13 tiles*"
+        },
+        "14": {
+          "title": "",
+          "type": "markdown",
+          "content": "## 🔗 Deep-Link Navigation\n\n| Resource | Link |\n|----------|------|\n| 🔍 **Distributed Traces** | [Open Trace Explorer →](https://your-environment.apps.dynatrace.com/ui/diagnostictools/purepaths?gtf=-24h+to+now&gf=all) |\n| 📊 **Service Overview** | [Open Services →](https://your-environment.apps.dynatrace.com/ui/services?gtf=-24h+to+now&gf=all) |\n| ❌ **Failure Analysis** | [Open Failure Analysis →](https://your-environment.apps.dynatrace.com/ui/diagnostictools/mda?gtf=-24h+to+now&gf=all&mdaId=failureAnalysis) |\n| 🐛 **Exception Analysis** | [Open Exception Analysis →](https://your-environment.apps.dynatrace.com/ui/diagnostictools/mda?gtf=-24h+to+now&gf=all&mdaId=exceptionAnalysis) |\n| 📈 **Dynatrace Intelligence Problems** | [Open Problems →](https://your-environment.apps.dynatrace.com/ui/problems?gtf=-24h+to+now) |\n| 📊 **Business Events** | [Open BizEvents →](https://your-environment.apps.dynatrace.com/ui/bizevents?gtf=-24h+to+now) |\n\n*Links open in your Dynatrace environment*"
+        }
+      },
+      "layouts": {
+        "0": {
+          "x": 0,
+          "y": 0,
+          "w": 24,
+          "h": 3
+        },
+        "1": {
+          "x": 0,
+          "y": 3,
+          "w": 24,
+          "h": 2
+        },
+        "2": {
+          "x": 0,
+          "y": 5,
+          "w": 24,
+          "h": 1
+        },
+        "3": {
+          "x": 0,
+          "y": 6,
+          "w": 12,
+          "h": 4
+        },
+        "4": {
+          "x": 12,
+          "y": 6,
+          "w": 12,
+          "h": 4
+        },
+        "5": {
+          "x": 0,
+          "y": 10,
+          "w": 12,
+          "h": 4
+        },
+        "6": {
+          "x": 12,
+          "y": 10,
+          "w": 12,
+          "h": 4
+        },
+        "7": {
+          "x": 0,
+          "y": 14,
+          "w": 24,
+          "h": 1
+        },
+        "8": {
+          "x": 0,
+          "y": 15,
+          "w": 6,
+          "h": 3
+        },
+        "9": {
+          "x": 0,
+          "y": 18,
+          "w": 24,
+          "h": 1
+        },
+        "10": {
+          "x": 0,
+          "y": 19,
+          "w": 12,
+          "h": 4
+        },
+        "11": {
+          "x": 12,
+          "y": 19,
+          "w": 12,
+          "h": 4
+        },
+        "12": {
+          "x": 0,
+          "y": 23,
+          "w": 12,
+          "h": 4
+        },
+        "13": {
+          "x": 0,
+          "y": 27,
+          "w": 24,
+          "h": 1
+        },
+        "14": {
+          "x": 0,
+          "y": 28,
+          "w": 24,
+          "h": 5
+        }
+      },
+      "importedWithCode": false,
+      "settings": {
+        "defaultTimeframe": {
+          "value": {
+            "from": "now()-24h",
+            "to": "now()"
+          },
+          "enabled": true
+        }
+      },
+      "annotations": []
+    },
+    "metadata": {
+      "generatedBy": "ai-dashboard-generator",
+      "generationMethod": "mcp-prompt-driven",
+      "model": "llama3.2",
+      "company": "Education",
+      "journeyType": "Financial Aid Application",
+      "dashboardSlug": "financial-aid-dashboard",
+      "totalTiles": 15,
+      "dynamicFieldTiles": 0,
+      "detectedFields": {
+        "additionalFields": [],
+        "customerProfile": [],
+        "flags": {
+          "revenue": false,
+          "loyalty": false,
+          "ltv": false,
+          "segments": false,
+          "devices": false,
+          "channel": false,
+          "nps": false,
+          "churnRisk": false,
+          "conversion": false,
+          "pricing": false,
+          "risk": false,
+          "fraud": false,
+          "compliance": false,
+          "engagement": false,
+          "satisfaction": false,
+          "retention": false,
+          "product": false,
+          "operational": false,
+          "forecast": false,
+          "acquisition": false,
+          "upsell": false,
+          "browser": false,
+          "subscription": false,
+          "membership": false,
+          "services": false
+        }
+      },
+      "generatedAt": "2026-03-18T16:41:26.620Z"
+    }
+  },
+  "generationMethod": "mcp-prompt-driven",
+  "company": "Education",
+  "journeyType": "Financial Aid Application",
+  "tileCount": 15,
+  "savedAt": "2026-03-18T16:41:26.621Z"
+}

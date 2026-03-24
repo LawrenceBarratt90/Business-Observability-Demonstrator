@@ -1,0 +1,273 @@
+{
+    "companyName": "ImpactTech Foundation",
+    "domain": "https://www.impacttech-foundation.org",
+    "industryType": "Nonprofit & NGO",
+    "journeyType": "Disease Surveillance",
+    "journeyDetail": "AI-Powered Global Disease Surveillance & Response",
+    "journeyId": "journey_disease_surveillance_fa796069",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "DataCollection",
+            "serviceName": "DataCollectService",
+            "description": "AI ingests multi-source health data: hospital reports, lab results, pharmacy sales, social media sentiment, news feeds, and environmental sensors. Real-time global coverage.",
+            "category": "Ingestion",
+            "estimatedDuration": 0.1,
+            "businessRationale": "Early detection saves lives. Every day of delay in outbreak detection doubles the potential impact. Multi-source data catches signals that single-source misses.",
+            "substeps": [
+                {
+                    "substepName": "HospitalReports",
+                    "duration": 0.03
+                },
+                {
+                    "substepName": "SocialMediaSignals",
+                    "duration": 0.03
+                },
+                {
+                    "substepName": "EnvironmentalSensors",
+                    "duration": 0.04
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "AnomalyDetection",
+            "serviceName": "EpiAnomalyService",
+            "description": "AI detects disease anomalies: unusual case clusters, unexpected pathogens, geographic spread patterns, and syndromic surveillance signals. Multi-language processing for global signals.",
+            "category": "Detection",
+            "estimatedDuration": 1,
+            "businessRationale": "AI detected COVID-19 signals 9 days before WHO announcement. Anomaly detection is the first line of defence against pandemics.",
+            "substeps": [
+                {
+                    "substepName": "ClusterDetection",
+                    "duration": 0.3
+                },
+                {
+                    "substepName": "SyndromicSurveillance",
+                    "duration": 0.3
+                },
+                {
+                    "substepName": "GeospatialAlerts",
+                    "duration": 0.4
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "RiskAssessment",
+            "serviceName": "RiskAssessService",
+            "description": "AI assesses outbreak risk: pathogen characteristics, population vulnerability, healthcare capacity, and transmission modelling. R-number estimation and doubling time projection.",
+            "category": "Analysis",
+            "estimatedDuration": 4,
+            "businessRationale": "Rapid risk assessment enables proportionate response. Over-reaction wastes resources; under-reaction costs lives.",
+            "substeps": [
+                {
+                    "substepName": "PathogenProfiling",
+                    "duration": 1.5
+                },
+                {
+                    "substepName": "VulnerabilityMapping",
+                    "duration": 1.5
+                },
+                {
+                    "substepName": "TransmissionModelling",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "ResponseCoordination",
+            "serviceName": "ResponseCoordService",
+            "description": "AI coordinates response: resource deployment recommendations, contact tracing optimisation, vaccination campaign targeting, and supply chain logistics for medical supplies.",
+            "category": "Response",
+            "estimatedDuration": 48,
+            "businessRationale": "Coordinated response reduces outbreak impact by 40-60%. AI optimises resource allocation when every hour counts.",
+            "substeps": [
+                {
+                    "substepName": "ResourceDeployment",
+                    "duration": 16
+                },
+                {
+                    "substepName": "ContactTracingOptimization",
+                    "duration": 16
+                },
+                {
+                    "substepName": "SupplyChainLogistics",
+                    "duration": 16
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "CommunityAlert",
+            "serviceName": "CommunityAlertService",
+            "description": "AI generates public health alerts: multi-language, culturally appropriate messaging via appropriate channels. Misinformation detection and counter-messaging. Travel advisory automation.",
+            "category": "Communication",
+            "estimatedDuration": 2,
+            "businessRationale": "Clear, timely communication prevents panic and enables protective behaviour. Misinformation during outbreaks is as dangerous as the disease itself.",
+            "substeps": [
+                {
+                    "substepName": "AlertGeneration",
+                    "duration": 0.5
+                },
+                {
+                    "substepName": "MisinformationDetection",
+                    "duration": 0.5
+                },
+                {
+                    "substepName": "TravelAdvisory",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "EpidemiologicalAnalytics",
+            "serviceName": "EpiAnalyticsService",
+            "description": "AI generates epidemiological reports: case fatality rates, attack rates, genomic sequencing analysis, and vaccine effectiveness monitoring. Lessons learned for future outbreaks.",
+            "category": "Analytics",
+            "estimatedDuration": 720,
+            "businessRationale": "Post-outbreak analysis informs future preparedness. Genomic surveillance tracks variant evolution and predicts next threats.",
+            "substeps": [
+                {
+                    "substepName": "CaseFatalityAnalysis",
+                    "duration": 240
+                },
+                {
+                    "substepName": "GenomicSurveillance",
+                    "duration": 240
+                },
+                {
+                    "substepName": "VaccineEffectiveness",
+                    "duration": 240
+                }
+            ]
+        }
+    ],
+    "id": "57bc7863-e241-45b0-8d7e-ccb4352c691f",
+    "name": "Nonprofit & NGO - Disease Surveillance",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 25000000,
+        "annualRevenue": 50000000,
+        "revenuePerCustomer": 5000000,
+        "profitMargin": 0,
+        "customerLifetimeValue": 50000000,
+        "lifetimeValue": 50000000,
+        "acquisitionCost": 0,
+        "costPerAcquisition": 0,
+        "conversionProbability": 1.0,
+        "conversionRate": 100,
+        "engagementScore": 90,
+        "timeToConversion": 0,
+        "sessionDuration": 3600,
+        "pageViews": 25,
+        "purchaseFrequency": 365,
+        "netPromoterScore": 60,
+        "satisfactionRating": 4.5,
+        "retentionProbability": 0.95,
+        "processingTime": 0.1,
+        "operationalCost": 500000,
+        "efficiencyRating": 88,
+        "detectionLeadTime": 9,
+        "countryMonitored": 195,
+        "channel": [
+            "API_feed",
+            "dashboard",
+            "email_alert",
+            "mobile_app",
+            "WHO_integration"
+        ],
+        "deviceType": [
+            "server",
+            "desktop",
+            "mobile",
+            "mobile",
+            "server"
+        ],
+        "region": [
+            "Sub-Saharan Africa",
+            "South-East Asia",
+            "Latin America",
+            "Middle East",
+            "Pacific Islands"
+        ],
+        "customerSegmentValue": [
+            "WHO",
+            "CDC",
+            "national_health_ministry",
+            "NGO_partner",
+            "research_institute"
+        ],
+        "loyaltyTier": [
+            "Global Partner",
+            "Regional Partner",
+            "National Partner",
+            "Research Partner",
+            "Data Contributor"
+        ],
+        "segment": [
+            "respiratory",
+            "vector_borne",
+            "waterborne",
+            "zoonotic",
+            "antimicrobial_resistance"
+        ],
+        "Productname": [
+            "Global Surveillance Platform",
+            "Outbreak Response Engine",
+            "Genomic Tracking Suite",
+            "Contact Tracing Module",
+            "Vaccine Monitoring Dashboard"
+        ],
+        "ProductId": [
+            "EPI-GS-001",
+            "EPI-OR-002",
+            "EPI-GT-003",
+            "EPI-CT-004",
+            "EPI-VM-005"
+        ],
+        "ProductType": [
+            "surveillance",
+            "response",
+            "genomic",
+            "contact_tracing",
+            "vaccine"
+        ],
+        "Price": [
+            5000000,
+            3000000,
+            2000000,
+            1500000,
+            1000000
+        ],
+        "alertsPerDay": [
+            150,
+            45,
+            200,
+            80,
+            30
+        ],
+        "outbreakDetectionAccuracy": [
+            0.94,
+            0.91,
+            0.96,
+            0.89,
+            0.92
+        ],
+        "marketTrend": [
+            "wastewater_surveillance",
+            "genomic_real_time",
+            "one_health",
+            "pandemic_preparedness",
+            "AI_epidemiology"
+        ]
+    }
+}

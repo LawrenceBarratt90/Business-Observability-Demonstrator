@@ -1,0 +1,257 @@
+{
+    "companyName": "Advertising",
+    "domain": "https://www.advertising-demo.com",
+    "industryType": "Advertising & MarTech",
+    "journeyType": "Marketing Automation",
+    "journeyDetail": "Marketing Automation",
+    "journeyId": "journey_advertising_marketing_automation",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "CampaignSetup",
+            "serviceName": "CampaignSetupService",
+            "description": "AI streamlines campaign setup: auto-generates media plans from briefs, sets up tracking pixels, configures conversion events, and provisions creative assets across channels. Reduces setup from days to hours.",
+            "category": "Setup",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 30,
+            "businessRationale": "Automated campaign setup reduces time-to-launch by 75%. Eliminating manual configuration errors prevents 15% of campaigns from launching with incorrect targeting or tracking.",
+            "substeps": [
+                {
+                    "substepName": "MediaPlanGeneration",
+                    "duration": 10
+                },
+                {
+                    "substepName": "TechnicalProvisioning",
+                    "duration": 20
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "BudgetAllocation",
+            "serviceName": "BudgetAllocationService",
+            "description": "AI allocates budgets across channels, audiences, and time periods using predictive performance models. Dynamic rebalancing shifts spend to high-performing segments in real-time while maintaining reach targets.",
+            "category": "Optimization",
+            "estimatedDuration": 10,
+            "businessRationale": "AI budget allocation improves ROAS by 25% vs manual planning. Dynamic rebalancing captures emerging performance trends within hours instead of weekly review cycles.",
+            "substeps": [
+                {
+                    "substepName": "PerformancePrediction",
+                    "duration": 5
+                },
+                {
+                    "substepName": "BudgetRebalancing",
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "CrossChannelOrchestration",
+            "serviceName": "CrossChannelOrchestrationService",
+            "description": "AI orchestrates messaging across search, social, display, email, and CTV: manages frequency across channels, sequences messages through the funnel, and coordinates timing for maximum impact.",
+            "category": "Orchestration",
+            "estimatedDuration": 1440,
+            "businessRationale": "Cross-channel orchestration reduces wasted frequency by 30% and improves conversion by 22%. Sequenced messaging moves consumers through the funnel 40% faster.",
+            "substeps": [
+                {
+                    "substepName": "FrequencyManagement",
+                    "duration": 720
+                },
+                {
+                    "substepName": "MessageSequencing",
+                    "duration": 720
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "PerformanceMonitoring",
+            "serviceName": "PerformanceMonitoringService",
+            "description": "AI monitors campaign KPIs in real-time: alerts on anomalies, detects creative fatigue, identifies pacing issues, and flags brand safety violations. Automatic remediation for common issues.",
+            "category": "Monitoring",
+            "estimatedDuration": 1440,
+            "businessRationale": "Real-time monitoring catches underperformance within hours vs days. Automatic remediation resolves 60% of issues without human intervention, preventing \u00a350K in wasted spend per incident.",
+            "substeps": [
+                {
+                    "substepName": "AnomalyDetection",
+                    "duration": 720
+                },
+                {
+                    "substepName": "AutoRemediation",
+                    "duration": 720
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "AttributionAnalysis",
+            "serviceName": "AttributionAnalysisService",
+            "description": "AI analyses multi-touch attribution: measures contribution of each channel, creative, and audience segment. Provides incrementality testing, media mix modelling, and unified measurement across online and offline.",
+            "category": "Measurement",
+            "estimatedDuration": 60,
+            "businessRationale": "Accurate attribution redirects 20% of budget from underperforming to high-impact channels. Incrementality testing validates true ad impact vs organic behaviour.",
+            "substeps": [
+                {
+                    "substepName": "TouchpointMapping",
+                    "duration": 30
+                },
+                {
+                    "substepName": "IncrementalityAnalysis",
+                    "duration": 30
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "ClientReporting",
+            "serviceName": "ClientReportingService",
+            "description": "AI generates client-ready dashboards and reports: campaign performance, competitive benchmarks, audience insights, creative performance, and strategic recommendations for next flight planning.",
+            "category": "Reporting",
+            "estimatedDuration": 120,
+            "businessRationale": "Automated reporting saves 20 hours per campaign per month. Competitive benchmarking and proactive recommendations differentiate the agency and drive 85% client retention.",
+            "substeps": [
+                {
+                    "substepName": "DashboardGeneration",
+                    "duration": 60
+                },
+                {
+                    "substepName": "StrategicRecommendations",
+                    "duration": 60
+                }
+            ]
+        }
+    ],
+    "id": "b21ae7e6-f511-46d2-8062-bca5cbfff08e",
+    "name": "Advertising & MarTech - Marketing Automation",
+    "timestamp": "2026-03-18T21:35:20.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 2000000,
+        "annualRevenue": 0,
+        "revenuePerCustomer": 0,
+        "profitMargin": 22,
+        "customerLifetimeValue": 12000000,
+        "lifetimeValue": 12000000,
+        "acquisitionCost": 100000,
+        "costPerAcquisition": 0,
+        "conversionProbability": 0.035,
+        "conversionRate": 3.5,
+        "engagementScore": 6.8,
+        "timeToConversion": 21,
+        "sessionDuration": 0,
+        "pageViews": 0,
+        "purchaseFrequency": 0,
+        "netPromoterScore": 45,
+        "satisfactionRating": 4.1,
+        "retentionProbability": 0.85,
+        "processingTime": 30,
+        "operationalCost": 150000,
+        "efficiencyRating": 82,
+        "discountApplied": 0,
+        "taxAmount": 0,
+        "shippingCost": 0,
+        "channel": [
+            "search",
+            "social",
+            "display",
+            "ctv",
+            "email"
+        ],
+        "deviceType": [
+            "desktop",
+            "mobile",
+            "tablet",
+            "connected_tv",
+            "mobile"
+        ],
+        "region": [
+            "UK",
+            "US",
+            "Europe",
+            "APAC",
+            "Global"
+        ],
+        "customerSegmentValue": [
+            "enterprise_brand",
+            "mid_market",
+            "dtc_brand",
+            "agency_client",
+            "startup"
+        ],
+        "loyaltyTier": [
+            "trial",
+            "standard",
+            "premium",
+            "enterprise",
+            "strategic_partner"
+        ],
+        "segment": [
+            "performance_marketing",
+            "brand_awareness",
+            "lead_generation",
+            "ecommerce",
+            "app_install"
+        ],
+        "Productname": [
+            "SearchAutomation",
+            "SocialAutomation",
+            "DisplayProgram",
+            "CTV_Management",
+            "CrossChannel_Suite"
+        ],
+        "ProductId": [
+            "AUT-SRC-001",
+            "AUT-SOC-002",
+            "AUT-DSP-003",
+            "AUT-CTV-004",
+            "AUT-XCH-005"
+        ],
+        "ProductType": [
+            "search_automation",
+            "social_automation",
+            "display_automation",
+            "ctv_automation",
+            "omnichannel"
+        ],
+        "Price": [
+            5000,
+            8000,
+            12000,
+            15000,
+            35000
+        ],
+        "managedSpend": [
+            250000,
+            500000,
+            300000,
+            200000,
+            1500000
+        ],
+        "roasTarget": [
+            4.5,
+            3.2,
+            2.8,
+            1.5,
+            3.5
+        ],
+        "campaignsActive": [
+            25,
+            15,
+            10,
+            5,
+            40
+        ],
+        "marketTrend": [
+            "ai_creative_generation",
+            "measurement_consolidation",
+            "retail_media",
+            "privacy_sandbox",
+            "attention_economy"
+        ]
+    }
+}

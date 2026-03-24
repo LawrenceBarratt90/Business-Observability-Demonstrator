@@ -1,0 +1,257 @@
+{
+    "companyName": "Water",
+    "domain": "https://www.water-demo.com",
+    "industryType": "Water & Wastewater",
+    "journeyType": "Treatment Optimization",
+    "journeyDetail": "Treatment Optimization",
+    "journeyId": "journey_water_treatment_optimization",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "RawWaterMonitoring",
+            "serviceName": "RawWaterMonitoringService",
+            "description": "AI continuously monitors raw water quality from reservoirs and rivers: turbidity, pH, dissolved oxygen, contaminants, algae levels, and flow rates. Predicts quality changes from weather and upstream activity.",
+            "category": "Monitoring",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 1,
+            "businessRationale": "Proactive water quality monitoring prevents treatment plant upsets. Predicting quality changes 6-12 hours ahead enables optimized chemical dosing and reduces emergency interventions by 60%.",
+            "substeps": [
+                {
+                    "substepName": "SensorDataCollection",
+                    "duration": 0
+                },
+                {
+                    "substepName": "QualityPrediction",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "ChemicalDosing",
+            "serviceName": "ChemicalDosingService",
+            "description": "AI optimizes coagulant, flocculant, and disinfectant dosing in real-time based on incoming water quality, flow rates, and regulatory requirements. Minimizes chemical usage while maintaining treatment standards.",
+            "category": "Treatment",
+            "estimatedDuration": 5,
+            "businessRationale": "AI dosing optimization reduces chemical costs by 15-25% (\u00a3200K annually). Precise dosing maintains compliance margins and reduces disinfection by-product formation.",
+            "substeps": [
+                {
+                    "substepName": "DoseCalculation",
+                    "duration": 2
+                },
+                {
+                    "substepName": "DosingControl",
+                    "duration": 3
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "FiltrationOptimization",
+            "serviceName": "FiltrationOptimizationService",
+            "description": "AI manages filter beds: optimizes backwash timing based on head loss and turbidity trends, balances flow across filters, and predicts media replacement needs. Maximises run times while ensuring water quality.",
+            "category": "Filtration",
+            "estimatedDuration": 720,
+            "businessRationale": "Optimized backwash scheduling extends filter runs by 20%, increasing plant capacity. Predictive media management prevents unexpected failures that could compromise supply.",
+            "substeps": [
+                {
+                    "substepName": "FilterMonitoring",
+                    "duration": 360
+                },
+                {
+                    "substepName": "BackwashScheduling",
+                    "duration": 360
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "DisinfectionControl",
+            "serviceName": "DisinfectionControlService",
+            "description": "AI manages chlorination/UV disinfection: maintains residual targets through the distribution network, accounts for temperature, demand patterns, and network residence time. Ensures microbiological safety.",
+            "category": "Disinfection",
+            "estimatedDuration": 10,
+            "businessRationale": "AI disinfection control maintains compliant residuals with 30% less chlorine. Reduced disinfectant usage improves taste/odour while maintaining public health protection.",
+            "substeps": [
+                {
+                    "substepName": "ResidualModeling",
+                    "duration": 5
+                },
+                {
+                    "substepName": "DoseAdjustment",
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "SludgeManagement",
+            "serviceName": "SludgeManagementService",
+            "description": "AI optimizes sludge handling: thickening, dewatering, and disposal scheduling. Predicts sludge production volumes, optimizes polymer dosing, and coordinates tanker logistics for off-site disposal or recycling.",
+            "category": "WasteManagement",
+            "estimatedDuration": 1440,
+            "businessRationale": "Optimized sludge management reduces disposal costs by 20% (\u00a3150K annually). Improved dewatering reduces transport volumes and enables beneficial reuse as agricultural fertiliser.",
+            "substeps": [
+                {
+                    "substepName": "DewateringOptimization",
+                    "duration": 720
+                },
+                {
+                    "substepName": "DisposalLogistics",
+                    "duration": 720
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "ComplianceReporting",
+            "serviceName": "ComplianceReportingService",
+            "description": "AI generates regulatory compliance reports: water quality parameters, treatment performance, chemical usage, energy consumption, and environmental discharge monitoring. Automated submission to regulators.",
+            "category": "Reporting",
+            "estimatedDuration": 60,
+            "businessRationale": "Automated compliance reduces reporting effort by 80% and eliminates human error. Proactive compliance monitoring prevents \u00a31M+ regulatory fines and protects public trust.",
+            "substeps": [
+                {
+                    "substepName": "DataCompilation",
+                    "duration": 30
+                },
+                {
+                    "substepName": "RegulatorySubmission",
+                    "duration": 30
+                }
+            ]
+        }
+    ],
+    "id": "5cdf2d96-81de-4d21-9da7-e8780b40f3f2",
+    "name": "Water & Wastewater - Treatment Optimization",
+    "timestamp": "2026-03-18T21:35:20.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 12000000,
+        "annualRevenue": 0,
+        "revenuePerCustomer": 0,
+        "profitMargin": 8,
+        "customerLifetimeValue": 0,
+        "lifetimeValue": 0,
+        "acquisitionCost": 0,
+        "costPerAcquisition": 0,
+        "conversionProbability": 0.99,
+        "conversionRate": 99,
+        "engagementScore": 85,
+        "timeToConversion": 0,
+        "sessionDuration": 1440,
+        "pageViews": 0,
+        "purchaseFrequency": 365,
+        "netPromoterScore": 0,
+        "satisfactionRating": 0,
+        "retentionProbability": 0.98,
+        "processingTime": 720,
+        "operationalCost": 850,
+        "efficiencyRating": 92,
+        "discountApplied": 0,
+        "taxAmount": 0,
+        "shippingCost": 0,
+        "channel": [
+            "scada_system",
+            "operations_console",
+            "mobile_ops",
+            "regulatory_portal",
+            "customer_portal"
+        ],
+        "deviceType": [
+            "plc_controller",
+            "desktop",
+            "mobile",
+            "server",
+            "tablet"
+        ],
+        "region": [
+            "Treatment Works A",
+            "Treatment Works B",
+            "Pumping Station C",
+            "Reservoir D",
+            "Distribution Zone E"
+        ],
+        "customerSegmentValue": [
+            "residential",
+            "commercial",
+            "industrial",
+            "agricultural",
+            "wholesale"
+        ],
+        "loyaltyTier": [
+            "n/a",
+            "n/a",
+            "n/a",
+            "n/a",
+            "n/a"
+        ],
+        "segment": [
+            "potable_water",
+            "raw_water",
+            "recycled_water",
+            "industrial_water",
+            "desalinated_water"
+        ],
+        "Productname": [
+            "Potable_Supply",
+            "Raw_Water_Abstraction",
+            "Recycled_Water",
+            "Industrial_Grade",
+            "Desalinated_Water"
+        ],
+        "ProductId": [
+            "WTR-POT-001",
+            "WTR-RAW-002",
+            "WTR-RCY-003",
+            "WTR-IND-004",
+            "WTR-DES-005"
+        ],
+        "ProductType": [
+            "treated_water",
+            "raw_water",
+            "recycled_water",
+            "industrial_water",
+            "desalinated_water"
+        ],
+        "Price": [
+            1.8,
+            0.5,
+            0.9,
+            1.2,
+            3.5
+        ],
+        "turbidityNTU": [
+            0.1,
+            5.2,
+            0.5,
+            0.3,
+            0.05
+        ],
+        "chlorineResidual": [
+            0.5,
+            0,
+            0,
+            0,
+            0.5
+        ],
+        "flowRateMLD": [
+            120,
+            150,
+            30,
+            45,
+            20
+        ],
+        "marketTrend": [
+            "digital_twin",
+            "smart_metering",
+            "water_reuse",
+            "leak_reduction",
+            "nature_based_solutions"
+        ]
+    }
+}

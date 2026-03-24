@@ -1,0 +1,273 @@
+{
+    "companyName": "StyleAI Fashion",
+    "domain": "https://www.styleai-fashion.com",
+    "industryType": "Fashion & Apparel",
+    "journeyType": "Personal Styling",
+    "journeyDetail": "AI-Powered Personal Fashion Styling",
+    "journeyId": "journey_personal_styling_c633c40c",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "StyleProfiling",
+            "serviceName": "StyleProfileService",
+            "description": "AI builds style profile from quiz, body measurements, colour analysis, lifestyle, and budget preferences. Computer vision analyses wardrobe photos to understand existing style.",
+            "category": "Onboarding",
+            "estimatedDuration": 5,
+            "businessRationale": "Accurate style profiling improves first-box satisfaction from 40% to 75%. Poor profiling causes returns and churn.",
+            "substeps": [
+                {
+                    "substepName": "QuizAnalysis",
+                    "duration": 2
+                },
+                {
+                    "substepName": "BodyAnalysis",
+                    "duration": 1.5
+                },
+                {
+                    "substepName": "WardrobeScanning",
+                    "duration": 1.5
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "TrendMatching",
+            "serviceName": "TrendMatchService",
+            "description": "AI matches client profile to current trends, seasonal collections, and curated looks. Personal stylist preferences layered on top of algorithmic suggestions.",
+            "category": "Curation",
+            "estimatedDuration": 2,
+            "businessRationale": "Trend-aligned suggestions drive 30% higher keep rates. Clients want to feel current but within their comfort zone.",
+            "substeps": [
+                {
+                    "substepName": "TrendAnalysis",
+                    "duration": 0.8
+                },
+                {
+                    "substepName": "CollectionMatching",
+                    "duration": 0.6
+                },
+                {
+                    "substepName": "StylistOverlay",
+                    "duration": 0.6
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "OutfitAssembly",
+            "serviceName": "OutfitService",
+            "description": "AI assembles complete outfits considering colour theory, pattern mixing, proportion, and occasion. Mix-and-match compatibility with existing wardrobe items.",
+            "category": "Styling",
+            "estimatedDuration": 3,
+            "businessRationale": "Complete outfit suggestions generate 50% higher basket value than item-by-item browsing. Cross-selling through outfit assembly drives $25-40 incremental AOV.",
+            "substeps": [
+                {
+                    "substepName": "OutfitGeneration",
+                    "duration": 1
+                },
+                {
+                    "substepName": "ColourHarmony",
+                    "duration": 1
+                },
+                {
+                    "substepName": "WardrobeIntegration",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "VirtualFitting",
+            "serviceName": "VirtualFitService",
+            "description": "AI virtual try-on with body-accurate avatar. Size recommendation using brand-specific fit models. Fabric drape simulation for visual confidence.",
+            "category": "Experience",
+            "estimatedDuration": 1,
+            "businessRationale": "Virtual fitting reduces returns by 25-40%. Size recommendation accuracy above 85% is the industry threshold for profitability.",
+            "substeps": [
+                {
+                    "substepName": "AvatarRendering",
+                    "duration": 0.4
+                },
+                {
+                    "substepName": "SizeRecommendation",
+                    "duration": 0.3
+                },
+                {
+                    "substepName": "FabricSimulation",
+                    "duration": 0.3
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "BoxFulfilment",
+            "serviceName": "BoxFulfilmentService",
+            "description": "Curated styling box picked, packed, and shipped. Personal note from stylist included. Easy return process for items that don't work.",
+            "category": "Delivery",
+            "estimatedDuration": 48,
+            "businessRationale": "Speed to delivery after order is a satisfaction driver. Styling box customers have 3x higher LTV than browse-and-buy customers.",
+            "substeps": [
+                {
+                    "substepName": "Picking",
+                    "duration": 16
+                },
+                {
+                    "substepName": "PersonalTouch",
+                    "duration": 8
+                },
+                {
+                    "substepName": "Shipping",
+                    "duration": 24
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "FeedbackLoop",
+            "serviceName": "FeedbackService",
+            "description": "AI captures keep/return decisions, fit feedback, and style preference updates. Each interaction improves future recommendations. Stylist notes incorporated.",
+            "category": "Learning",
+            "estimatedDuration": 5,
+            "businessRationale": "The feedback loop is the moat. Each cycle improves keep rate by 2-3%. After 5 boxes, keep rate reaches 70%+, making unit economics highly profitable.",
+            "substeps": [
+                {
+                    "substepName": "KeepReturnCapture",
+                    "duration": 1
+                },
+                {
+                    "substepName": "FitFeedbackAnalysis",
+                    "duration": 2
+                },
+                {
+                    "substepName": "ProfileRefinement",
+                    "duration": 2
+                }
+            ]
+        }
+    ],
+    "id": "7db964fc-22cf-46af-a13d-1794373b9b5f",
+    "name": "Fashion & Apparel - Personal Styling",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 285,
+        "transactionValue": 285,
+        "averageOrderValue": 250,
+        "contractValue": 0,
+        "annualRevenue": 120000000,
+        "revenuePerCustomer": 1200,
+        "profitMargin": 45.0,
+        "customerLifetimeValue": 4800,
+        "lifetimeValue": 4800,
+        "acquisitionCost": 65,
+        "costPerAcquisition": 65,
+        "conversionProbability": 0.18,
+        "conversionRate": 18,
+        "engagementScore": 85,
+        "timeToConversion": 720,
+        "sessionDuration": 900,
+        "pageViews": 15,
+        "purchaseFrequency": 8,
+        "netPromoterScore": 58,
+        "satisfactionRating": 4.4,
+        "retentionProbability": 0.68,
+        "processingTime": 2880,
+        "operationalCost": 45,
+        "efficiencyRating": 78,
+        "keepRate": 62,
+        "returnRate": 38,
+        "channel": [
+            "mobile_app",
+            "website",
+            "instagram_shop",
+            "stylist_chat",
+            "subscription_box"
+        ],
+        "deviceType": [
+            "mobile",
+            "desktop",
+            "mobile",
+            "mobile",
+            "desktop"
+        ],
+        "region": [
+            "US",
+            "UK",
+            "France",
+            "Japan",
+            "Australia"
+        ],
+        "customerSegmentValue": [
+            "professional_woman",
+            "casual_dresser",
+            "trend_seeker",
+            "minimalist",
+            "occasion_shopper"
+        ],
+        "loyaltyTier": [
+            "Style VIP",
+            "Insider",
+            "Explorer",
+            "Basic",
+            "Trial"
+        ],
+        "segment": [
+            "workwear",
+            "casual",
+            "evening",
+            "activewear",
+            "accessories"
+        ],
+        "Productname": [
+            "Tailored Blazer",
+            "Silk Midi Dress",
+            "Cashmere Knit",
+            "Leather Ankle Boot",
+            "Statement Earrings"
+        ],
+        "ProductId": [
+            "FSH-BL-001",
+            "FSH-DR-002",
+            "FSH-KN-003",
+            "FSH-BT-004",
+            "FSH-AC-005"
+        ],
+        "ProductType": [
+            "jacket",
+            "dress",
+            "knitwear",
+            "footwear",
+            "accessory"
+        ],
+        "Price": [
+            195,
+            165,
+            145,
+            225,
+            85
+        ],
+        "sizeAccuracy": [
+            0.88,
+            0.85,
+            0.82,
+            0.9,
+            0.95
+        ],
+        "fabricComposition": [
+            "wool_blend",
+            "100%_silk",
+            "cashmere_blend",
+            "leather",
+            "gold_plate"
+        ],
+        "marketTrend": [
+            "AI_styling",
+            "rental_fashion",
+            "capsule_wardrobe",
+            "sustainable_fashion",
+            "resale_integration"
+        ]
+    }
+}

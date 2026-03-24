@@ -1,0 +1,264 @@
+{
+    "companyName": "Government Services",
+    "domain": "https://www.gov-services.gov",
+    "industryType": "Government & Public Sector",
+    "source": "sector-demo",
+    "timestamp": "2026-01-09T15:35:00.000Z",
+    "journeyType": "Tax Filing",
+    "journeyDetail": "Tax Filing Journey",
+    "journeyId": "journey_gov_tax_2026",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "id": "a1b2c3d4-7777-4aaa-b777-000000000002",
+    "name": "Government - Tax Filing",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "TaxProfileSetup",
+            "serviceName": "TaxProfileSetupService",
+            "description": "Taxpayer accesses online tax portal with government digital ID. Pre-populated profile shows employment income, investment income, and deduction history from previous years. Filing status and dependents confirmed or updated.",
+            "category": "Setup",
+            "estimatedDuration": 10,
+            "businessRationale": "Pre-populated returns reduce errors by 60% and completion time from 4 hours to 45 minutes. Digital ID authentication prevents identity theft filings that cost agencies $2B annually.",
+            "substeps": [
+                {
+                    "substepName": "DigitalIDAuthAndProfileLoad",
+                    "duration": 5
+                },
+                {
+                    "substepName": "FilingStatusAndDependentUpdate",
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "IncomeAndDeductionEntry",
+            "serviceName": "IncomeAndDeductionEntryService",
+            "description": "Income sources entered: employment (pre-filled from employer reports), self-employment, investments, rental, and other income. Deductions and credits applied: mortgage interest, charitable donations, education expenses, child care. AI assistant suggests overlooked deductions based on profile.",
+            "category": "DataEntry",
+            "estimatedDuration": 40,
+            "businessRationale": "AI-assisted deduction discovery recovers an average of $800 per return in missed deductions. Employer pre-fill eliminates 85% of income entry errors. Each error costs $50-200 in processing and correspondence.",
+            "substeps": [
+                {
+                    "substepName": "IncomeSourceEntryAndPreFill",
+                    "duration": 20
+                },
+                {
+                    "substepName": "DeductionAndCreditOptimisation",
+                    "duration": 20
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "ReturnCalculation",
+            "serviceName": "ReturnCalculationService",
+            "description": "Tax engine calculates liability or refund across federal and state/regional tax schedules. Marginal rates applied, alternative minimum tax checked, estimated payment credits applied. Summary shows effective tax rate and year-over-year comparison.",
+            "category": "Calculation",
+            "estimatedDuration": 5,
+            "businessRationale": "Real-time calculation with scenario modelling (e.g., itemised vs standard deduction) helps taxpayers optimise their filing position. Accurate engine reduces amended returns that cost $100+ each to process.",
+            "substeps": [
+                {
+                    "substepName": "TaxScheduleAndLiabilityCalc",
+                    "duration": 3
+                },
+                {
+                    "substepName": "ScenarioComparisonAndSummary",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "ReviewAndSubmission",
+            "serviceName": "ReviewAndSubmissionService",
+            "description": "Taxpayer reviews completed return with error-checking validation. Common error flags: missing schedules, math errors, inconsistent data. E-signature applied and return submitted electronically. Confirmation receipt with timestamp generated.",
+            "category": "Submission",
+            "estimatedDuration": 15,
+            "businessRationale": "E-filed returns process 10x faster than paper. Error checking reduces rejection rate from 5% to 0.5%. Electronic submission saves taxpayers $10-15 in postage and $50-100 in processing time compared to paper.",
+            "substeps": [
+                {
+                    "substepName": "ErrorCheckAndValidation",
+                    "duration": 10
+                },
+                {
+                    "substepName": "ESignatureAndEFileSubmission",
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "ProcessingAndAssessment",
+            "serviceName": "ProcessingAndAssessmentService",
+            "description": "Tax authority processes return through automated audit scoring. Returns selected for review based on risk indicators: unusual deductions, income discrepancies, high-risk categories. Standard returns processed within 21 days.",
+            "category": "Processing",
+            "estimatedDuration": 2880,
+            "businessRationale": "Automated audit scoring processes 100M+ returns annually. Risk-based selection focuses limited auditor resources on highest-value cases. Processing efficiency directly impacts taxpayer satisfaction and compliance rates.",
+            "substeps": [
+                {
+                    "substepName": "AutomatedAuditScoring",
+                    "duration": 1440
+                },
+                {
+                    "substepName": "StandardProcessingPipeline",
+                    "duration": 1440
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "RefundOrPayment",
+            "serviceName": "RefundOrPaymentService",
+            "description": "Refunds issued via direct deposit within 7-21 days of processing. Tax owed can be paid immediately or via instalment plan. Payment options: bank transfer, credit card (2.5% convenience fee), or monthly direct debit plan. Late payment penalties and interest calculated automatically.",
+            "category": "Financial",
+            "estimatedDuration": 20,
+            "businessRationale": "Direct deposit refunds cost $0.10 vs $1.50 for cheques. Instalment plans recover 85% of owed taxes vs 45% for lump-sum demands. Average refund is $2,800 \u2014 timely disbursement is critical to taxpayer trust.",
+            "substeps": [
+                {
+                    "substepName": "RefundDisbursementOrPaymentPlan",
+                    "duration": 10
+                },
+                {
+                    "substepName": "PenaltyAndInterestCalculation",
+                    "duration": 10
+                }
+            ]
+        }
+    ],
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 0,
+        "annualRevenue": 0,
+        "revenuePerCustomer": 0,
+        "profitMargin": 0,
+        "customerLifetimeValue": 0,
+        "lifetimeValue": 0,
+        "acquisitionCost": 0,
+        "conversionProbability": 0.92,
+        "conversionRate": 92,
+        "engagementScore": 45,
+        "timeToConversion": 43200,
+        "netPromoterScore": 15,
+        "satisfactionRating": 2.8,
+        "retentionProbability": 0.99,
+        "processingTime": 1209600,
+        "operationalCost": 35,
+        "efficiencyRating": 68,
+        "complianceScore": 99,
+        "channel": [
+            "hmrc_online",
+            "commercial_software",
+            "accountant_submission",
+            "paper_return",
+            "mobile_app"
+        ],
+        "deviceType": [
+            "desktop",
+            "desktop",
+            "desktop",
+            "paper",
+            "mobile"
+        ],
+        "region": [
+            "England",
+            "Scotland",
+            "Wales",
+            "Northern Ireland",
+            "London"
+        ],
+        "customerSegmentValue": [
+            "paye_employee",
+            "self_employed",
+            "company_director",
+            "landlord",
+            "investor"
+        ],
+        "loyaltyTier": [
+            "Standard",
+            "Agent Access",
+            "Business Premium",
+            "Making Tax Digital",
+            "Standard"
+        ],
+        "segment": [
+            "self_assessment",
+            "corporation_tax",
+            "vat_return",
+            "paye_real_time",
+            "capital_gains"
+        ],
+        "Productname": [
+            "Self Assessment Tax Return",
+            "Corporation Tax CT600",
+            "VAT Return Quarterly",
+            "PAYE RTI Submission",
+            "Capital Gains Report"
+        ],
+        "ProductId": [
+            "GOV-TX-101",
+            "GOV-TX-102",
+            "GOV-TX-103",
+            "GOV-TX-104",
+            "GOV-TX-105"
+        ],
+        "ProductType": [
+            "self_assessment",
+            "corporation_tax",
+            "vat_return",
+            "paye",
+            "capital_gains"
+        ],
+        "Price": [
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "taxOwed": [
+            2450,
+            18500,
+            8200,
+            0,
+            5600
+        ],
+        "taxYear": [
+            "2025-26",
+            "2025-26",
+            "Q4_2025",
+            "Month_12",
+            "2025-26"
+        ],
+        "filingDeadline": [
+            "31_January",
+            "31_December",
+            "7_May",
+            "19_Monthly",
+            "31_January"
+        ],
+        "penaltyRisk": [
+            "none",
+            "low",
+            "none",
+            "none",
+            "medium"
+        ],
+        "submissionMethod": [
+            "online_direct",
+            "commercial_software",
+            "agent_filed",
+            "paper_scanned",
+            "mtd_api"
+        ],
+        "marketTrend": [
+            "making_tax_digital",
+            "real_time_reporting",
+            "tax_gap_reduction",
+            "ai_compliance",
+            "digital_records"
+        ]
+    }
+}

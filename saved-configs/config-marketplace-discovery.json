@@ -1,0 +1,273 @@
+{
+    "companyName": "MarketplaceX",
+    "domain": "https://www.marketplacex.com",
+    "industryType": "Marketplace & Platform",
+    "journeyType": "Product Discovery",
+    "journeyDetail": "AI-Powered Marketplace Product Discovery",
+    "journeyId": "journey_product_discovery_508d5066",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "SearchAndBrowse",
+            "serviceName": "SearchService",
+            "description": "AI-powered search with natural language understanding, visual search, and faceted navigation. Personalised ranking blends relevance, seller performance, and buyer preference.",
+            "category": "Discovery",
+            "estimatedDuration": 0.3,
+            "businessRationale": "Search is the #1 conversion driver. Improving search relevance by 10% increases GMV by 5-8%.",
+            "substeps": [
+                {
+                    "substepName": "NLPSearch",
+                    "duration": 0.1
+                },
+                {
+                    "substepName": "VisualSearch",
+                    "duration": 0.1
+                },
+                {
+                    "substepName": "PersonalisedRanking",
+                    "duration": 0.1
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "ProductRecommendation",
+            "serviceName": "RecommendationService",
+            "description": "AI recommends products from collaborative filtering, content similarity, and purchase graph analysis. Cross-seller bundling and 'frequently bought together' suggestions.",
+            "category": "Personalisation",
+            "estimatedDuration": 0.2,
+            "businessRationale": "Recommendations drive 35% of marketplace GMV. Cross-seller bundling increases basket size by 25%.",
+            "substeps": [
+                {
+                    "substepName": "CollaborativeFiltering",
+                    "duration": 0.07
+                },
+                {
+                    "substepName": "ContentSimilarity",
+                    "duration": 0.07
+                },
+                {
+                    "substepName": "CrossSellerBundle",
+                    "duration": 0.06
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "SellerMatching",
+            "serviceName": "SellerMatchService",
+            "description": "AI selects optimal seller/offer for buy box: price, shipping speed, seller rating, fulfilment method, and return policy. A/B testing rotates seller exposure fairly.",
+            "category": "Matching",
+            "estimatedDuration": 0.3,
+            "businessRationale": "Buy box allocation drives 80% of purchases. Fair and transparent seller matching maintains marketplace trust.",
+            "substeps": [
+                {
+                    "substepName": "PriceComparison",
+                    "duration": 0.1
+                },
+                {
+                    "substepName": "QualityScoring",
+                    "duration": 0.1
+                },
+                {
+                    "substepName": "BuyBoxAllocation",
+                    "duration": 0.1
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "TrustAndReview",
+            "serviceName": "TrustService",
+            "description": "AI authenticates reviews, detects fake ratings, and generates review summaries. Buyer protection and dispute resolution insights. Seller trust scores visible to buyers.",
+            "category": "Trust",
+            "estimatedDuration": 1,
+            "businessRationale": "Trust is the oxygen of marketplaces. A 0.1 average rating increase = 5% more sales. Fake reviews destroy the ecosystem.",
+            "substeps": [
+                {
+                    "substepName": "ReviewAuthentication",
+                    "duration": 0.3
+                },
+                {
+                    "substepName": "SentimentSummary",
+                    "duration": 0.3
+                },
+                {
+                    "substepName": "TrustScoring",
+                    "duration": 0.4
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "CheckoutOptimization",
+            "serviceName": "CheckoutService",
+            "description": "AI optimises checkout: payment method recommendation, shipping option personalisation, tax calculation, and abandoned cart recovery. Multi-seller cart aggregation.",
+            "category": "Conversion",
+            "estimatedDuration": 0.5,
+            "businessRationale": "Checkout abandonment is 65-75% on marketplaces. Each 1% improvement in completion = millions in recovered GMV.",
+            "substeps": [
+                {
+                    "substepName": "PaymentOptimization",
+                    "duration": 0.2
+                },
+                {
+                    "substepName": "ShippingSelection",
+                    "duration": 0.15
+                },
+                {
+                    "substepName": "CartRecovery",
+                    "duration": 0.15
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "PostPurchaseExperience",
+            "serviceName": "PostPurchaseService",
+            "description": "AI tracks multi-seller fulfilment, predicts delivery issues, and proactively communicates. Return prediction and prevention. Repurchase prompts timed by consumption cycle.",
+            "category": "Retention",
+            "estimatedDuration": 168,
+            "businessRationale": "Post-purchase experience determines retention. Customers who have a bad delivery experience have 40% lower repeat rate.",
+            "substeps": [
+                {
+                    "substepName": "FulfilmentTracking",
+                    "duration": 56
+                },
+                {
+                    "substepName": "ReturnPrevention",
+                    "duration": 56
+                },
+                {
+                    "substepName": "RepurchasePrompting",
+                    "duration": 56
+                }
+            ]
+        }
+    ],
+    "id": "d8516e24-a649-4b4b-a507-135aef748203",
+    "name": "Marketplace & Platform - Product Discovery",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 65,
+        "transactionValue": 65,
+        "averageOrderValue": 55,
+        "contractValue": 0,
+        "annualRevenue": 15000000000,
+        "revenuePerCustomer": 850,
+        "profitMargin": 12.0,
+        "customerLifetimeValue": 4200,
+        "lifetimeValue": 4200,
+        "acquisitionCost": 18,
+        "costPerAcquisition": 18,
+        "conversionProbability": 0.04,
+        "conversionRate": 4,
+        "engagementScore": 72,
+        "timeToConversion": 720,
+        "sessionDuration": 480,
+        "pageViews": 14,
+        "purchaseFrequency": 18,
+        "netPromoterScore": 38,
+        "satisfactionRating": 4.0,
+        "retentionProbability": 0.55,
+        "processingTime": 5,
+        "operationalCost": 8,
+        "efficiencyRating": 82,
+        "gmv": 45000000000,
+        "takeRate": 12.5,
+        "channel": [
+            "web_marketplace",
+            "mobile_app",
+            "social_commerce",
+            "voice_assistant",
+            "partner_site"
+        ],
+        "deviceType": [
+            "desktop",
+            "mobile",
+            "mobile",
+            "voice",
+            "desktop"
+        ],
+        "region": [
+            "US",
+            "UK",
+            "Germany",
+            "Japan",
+            "India"
+        ],
+        "customerSegmentValue": [
+            "power_buyer",
+            "bargain_hunter",
+            "brand_loyalist",
+            "impulse_buyer",
+            "researcher"
+        ],
+        "loyaltyTier": [
+            "Prime",
+            "Plus",
+            "Standard",
+            "New",
+            "Guest"
+        ],
+        "segment": [
+            "electronics",
+            "fashion",
+            "home_garden",
+            "beauty",
+            "sports"
+        ],
+        "Productname": [
+            "Wireless Headphones Pro",
+            "Organic Cotton T-Shirt",
+            "Smart Garden Kit",
+            "Vitamin C Serum",
+            "Running Shoes Ultra"
+        ],
+        "ProductId": [
+            "MKT-WH-001",
+            "MKT-OC-002",
+            "MKT-SG-003",
+            "MKT-VC-004",
+            "MKT-RS-005"
+        ],
+        "ProductType": [
+            "electronics",
+            "apparel",
+            "home",
+            "beauty",
+            "footwear"
+        ],
+        "Price": [
+            79,
+            35,
+            120,
+            28,
+            145
+        ],
+        "sellerRating": [
+            4.7,
+            4.5,
+            4.8,
+            4.3,
+            4.6
+        ],
+        "fulfilmentMethod": [
+            "marketplace_fulfilled",
+            "seller_shipped",
+            "marketplace_fulfilled",
+            "seller_shipped",
+            "marketplace_fulfilled"
+        ],
+        "marketTrend": [
+            "social_commerce",
+            "live_shopping",
+            "AI_curation",
+            "sustainability_marketplace",
+            "cross_border_trade"
+        ]
+    }
+}

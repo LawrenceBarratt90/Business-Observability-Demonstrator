@@ -7,22 +7,14 @@ import { Button } from '@dynatrace/strato-components/buttons';
 import { TextInput } from '@dynatrace/strato-components-preview/forms';
 import { TitleBar } from '@dynatrace/strato-components-preview/layouts';
 import Colors from '@dynatrace/strato-design-tokens/colors';
-import { useSettings, useSettingsObjects, useUpdateSettings, useCreateSettings } from '@dynatrace-sdk/react-hooks';
+import { InfoButton } from '../components/InfoButton';
 import { functions } from '@dynatrace-sdk/app-utils';
-
-const SCHEMA_ID = 'app:my.bizobs.generator.master:api-config';
+import { loadAppSettings, saveAppSettings, type AppSettings } from '../services/app-settings';
 
 // localStorage fallback key (for when app-settings is unavailable)
 const LOCAL_STORAGE_KEY = 'bizobs_api_settings';
 
-interface ApiSettings {
-  apiHost: string;
-  apiPort: string;
-  apiProtocol: string;
-  enableAutoGeneration: boolean;
-}
-
-const DEFAULT_SETTINGS: ApiSettings = {
+const DEFAULT_SETTINGS: AppSettings = {
   apiHost: 'localhost',
   apiPort: '8080',
   apiProtocol: 'http',
@@ -31,116 +23,59 @@ const DEFAULT_SETTINGS: ApiSettings = {
 
 export const SettingsPage = () => {
   const navigate = useNavigate();
-  const [settings, setSettings] = useState<ApiSettings>(DEFAULT_SETTINGS);
+  const [settings, setSettings] = useState<AppSettings>(() => {
+    // Immediate render from localStorage while Document Service loads async
+    try {
+      const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (stored) {
+        const p = JSON.parse(stored);
+        return { ...DEFAULT_SETTINGS, ...p };
+      }
+    } catch { /* ignore */ }
+    return DEFAULT_SETTINGS;
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isTesting, setIsTesting] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
+  const [settingsSource, setSettingsSource] = useState<'document' | 'localStorage' | 'defaults'>('defaults');
 
-  // ── Settings SDK hooks ──────────────────────────────────
-  const settingsEffective = useSettings({ schemaId: SCHEMA_ID, addFields: 'value' });
-  const settingsObjects = useSettingsObjects(
-    { schemaId: SCHEMA_ID, addFields: 'value,objectId,version' },
-    { autoFetch: true, autoFetchOnUpdate: true },
-  );
-  const updateSettings = useUpdateSettings();
-  const createSettings = useCreateSettings();
-
-  // Track whether the app-settings API is available (some environments don't support it)
-  const settingsAvailableRef = useRef<boolean | null>(null);
-
-  // Sync settings from SDK hooks → local state
+  // Load settings from shared Document Service on mount
   const settingsLoadedRef = useRef(false);
   useEffect(() => {
     if (settingsLoadedRef.current) return;
-    if (settingsEffective.isLoading) return;
+    settingsLoadedRef.current = true;
 
-    if (settingsEffective.data?.items && settingsEffective.data.items.length > 0) {
-      settingsAvailableRef.current = true;
-      const value = settingsEffective.data.items[0].value as any;
-      setSettings({
-        apiHost: value?.apiHost || DEFAULT_SETTINGS.apiHost,
-        apiPort: value?.apiPort || DEFAULT_SETTINGS.apiPort,
-        apiProtocol: value?.apiProtocol || DEFAULT_SETTINGS.apiProtocol,
-        enableAutoGeneration: value?.enableAutoGeneration || DEFAULT_SETTINGS.enableAutoGeneration,
-      });
-      setStatusMessage('✅ Settings loaded from Dynatrace');
-      settingsLoadedRef.current = true;
-    } else if (settingsEffective.isError || settingsEffective.isSuccess) {
-      // Settings API not available or empty — use localStorage
-      if (settingsEffective.isError) settingsAvailableRef.current = false;
-      else settingsAvailableRef.current = true; // empty but working
-      loadFromLocalStorage();
-      setStatusMessage(settingsEffective.isError
-        ? '💾 Using local storage for settings'
-        : 'ℹ️ No saved settings found. Using defaults.');
-      settingsLoadedRef.current = true;
-    }
-    setIsLoading(false);
-  }, [settingsEffective.isLoading, settingsEffective.data, settingsEffective.isError, settingsEffective.isSuccess]);
-
-  const loadFromLocalStorage = () => {
-    try {
-      const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        setSettings({
-          apiHost: parsed.apiHost || DEFAULT_SETTINGS.apiHost,
-          apiPort: parsed.apiPort || DEFAULT_SETTINGS.apiPort,
-          apiProtocol: parsed.apiProtocol || DEFAULT_SETTINGS.apiProtocol,
-          enableAutoGeneration: parsed.enableAutoGeneration || DEFAULT_SETTINGS.enableAutoGeneration,
-        });
-        // Also migrate legacy keys
+    loadAppSettings().then(({ settings: loaded, source }) => {
+      setSettingsSource(source);
+      if (source === 'document' && loaded.apiHost !== 'localhost') {
+        setSettings(loaded);
+        setStatusMessage('✅ Settings loaded from shared app config');
+      } else if (source === 'localStorage') {
+        setSettings(loaded);
+        setStatusMessage('💾 Settings loaded from local cache');
       } else {
-        // Check for legacy keys from the old inline config
-        const legacyHost = localStorage.getItem('bizobs_api_host');
-        const legacyPort = localStorage.getItem('bizobs_api_port');
-        if (legacyHost || legacyPort) {
-          setSettings(prev => ({
-            ...prev,
-            apiHost: legacyHost || prev.apiHost,
-            apiPort: legacyPort || prev.apiPort,
-          }));
-        }
+        setStatusMessage('ℹ️ No saved settings found. Using defaults.');
       }
-    } catch (e) {
-      console.error('Error loading from localStorage:', e);
-    }
-  };
+      setIsLoading(false);
+    }).catch(() => {
+      setStatusMessage('⚠️ Could not load settings — using local cache');
+      setIsLoading(false);
+    });
+  }, []);
 
   const saveSettings = async () => {
     setIsSaving(true);
-    setStatusMessage('💾 Saving...');
+    setStatusMessage('💾 Saving to shared app config...');
 
-    // Always save to localStorage
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(settings));
-    localStorage.setItem('bizobs_api_host', settings.apiHost);
-    localStorage.setItem('bizobs_api_port', settings.apiPort);
+    // Save to Document Service (also writes localStorage as fallback)
+    const docSaved = await saveAppSettings(settings);
 
-    // Only attempt tenant save if the API is available
-    if (settingsAvailableRef.current === true) {
-      try {
-        const existingObj = settingsObjects.data?.items?.[0];
-        if (existingObj?.objectId && existingObj?.version) {
-          await updateSettings.execute({
-            objectId: existingObj.objectId,
-            optimisticLockingVersion: existingObj.version,
-            body: { value: settings },
-          });
-        } else {
-          await createSettings.execute({
-            body: { schemaId: SCHEMA_ID, value: settings },
-          });
-        }
-        settingsObjects.refetch();
-        settingsEffective.refetch();
-      } catch {
-        // Tenant save failed — mark as unavailable so we don't retry
-        settingsAvailableRef.current = false;
-      }
+    if (docSaved) {
+      setStatusMessage('✅ Settings saved to shared app config (all users will see these)');
+    } else {
+      setStatusMessage('⚠️ Saved locally only — shared document write failed');
     }
-
-    setStatusMessage('✅ Settings saved!');
 
     // Auto-register host pattern with EdgeConnect
     const host = settings.apiHost.trim();
@@ -220,7 +155,24 @@ export const SettingsPage = () => {
     <Page>
       <Page.Header>
         <TitleBar>
-          <TitleBar.Title>⚙️ Settings</TitleBar.Title>
+          <TitleBar.Title>
+            <Flex alignItems="center" gap={8}>
+              ⚙️ Settings
+              <InfoButton
+                title="⚙️ Settings"
+                description="Configure the connection between this AppEngine app and your BizObs backend server."
+                sections={[
+                  { label: 'Protocol', detail: 'Choose HTTP or HTTPS for the API connection' },
+                  { label: 'Host / IP', detail: 'Enter the IP address or hostname of your BizObs server' },
+                  { label: 'Port', detail: 'The port your server listens on (default: 8080)' },
+                  { label: '🧪 Test Connection', detail: 'Verify the server is reachable before saving' },
+                  { label: '💾 Save Settings', detail: 'Persist settings via Dynatrace Document Service (shared across all users)' },
+                  { label: '🔄 Reset to Defaults', detail: 'Revert to localhost:8080 defaults' },
+                ]}
+                footer="Settings are stored in Dynatrace Document Service (cloud) with localStorage fallback."
+              />
+            </Flex>
+          </TitleBar.Title>
           <TitleBar.Subtitle>Configure your BizObs Generator API connection</TitleBar.Subtitle>
         </TitleBar>
       </Page.Header>
@@ -263,15 +215,15 @@ export const SettingsPage = () => {
             gap: 8,
             padding: '6px 14px',
             borderRadius: 20,
-            background: settingsEffective.isError
-              ? 'rgba(255, 210, 63, 0.15)'
-              : 'rgba(115, 190, 40, 0.15)',
-            border: `1px solid ${settingsEffective.isError ? 'rgba(255, 210, 63, 0.6)' : Colors.Theme.Success['70']}`,
+            background: settingsSource === 'document'
+              ? 'rgba(115, 190, 40, 0.15)'
+              : 'rgba(255, 210, 63, 0.15)',
+            border: `1px solid ${settingsSource === 'document' ? Colors.Theme.Success['70'] : 'rgba(255, 210, 63, 0.6)'}`,
             fontSize: 12,
             marginBottom: 24,
           }}>
-            <span>{settingsEffective.isError ? '💾' : '☁️'}</span>
-            <span>{settingsEffective.isError ? 'Local Storage' : 'Dynatrace App Settings'}</span>
+            <span>{settingsSource === 'document' ? '☁️' : '💾'}</span>
+            <span>{settingsSource === 'document' ? 'Shared App Config (all users)' : 'Local Storage'}</span>
           </div>
 
           {/* API Connection Settings Card */}

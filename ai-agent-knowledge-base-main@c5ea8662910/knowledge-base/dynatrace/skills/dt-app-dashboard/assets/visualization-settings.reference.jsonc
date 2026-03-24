@@ -1,0 +1,354 @@
+{
+  // Reference examples for validating visualizationSettings by visualization.
+  // Source: extracted from data-exploration defaults/getters/types.
+  // Note: "required" here means required by this reference/schema pair (not always required by Dynatrace backend).
+
+  "lineChart": {
+    "visualization": "lineChart", // Required: discriminator
+    "visualizationSettings": {
+      "dataMapping": {
+        "time": null, // Optional: time field id
+        "displayedFields": [], // Optional
+        "series": [], // Optional
+        "interval": null // Optional
+      },
+      "axes": {
+        "xAxis": { "label": "", "showLabel": false, "displayTimeFrame": "auto" }, // Optional
+        "yAxis": { "label": "", "min": { "mode": "auto" }, "max": { "mode": "auto" }, "scale": "linear", "showLabel": false }, // Optional
+        "rightYAxis": { "label": "", "min": { "mode": "auto" }, "max": { "mode": "auto" }, "scale": "linear", "showLabel": false } // Optional
+      },
+      "zoom": {
+        "isActive": true, // Optional
+        "currentZoom": null, // Optional
+        "initialZoom": null, // Optional
+        "zoom": { "enabled": true }, // Optional
+        "pan": { "enabled": true }, // Optional
+        "zoomX": { "enabled": true }, // Optional
+        "infiniteZoom": false // Optional
+      },
+      "legend": { "position": "auto", "showLegend": true, "textTruncationMode": "end", "ratio": "auto" }, // Optional
+      "tooltip": { "variant": "single", "seriesDisplayMode": "single-line" }, // Optional
+      "valueSettings": { "valueRepresentation": "absolute" }, // Optional
+      "seriesOverrides": [], // Optional
+      "geometryType": { "customGeometries": [] }, // Optional
+      "timeseries": [], // Optional
+      "thresholds": [], // Optional
+      "unitsOverrides": [], // Optional
+      "coloring": { "colorRules": [], "thresholdRules": [] }, // Optional
+      "colorModeType": { "colorPalette": "categorical", "seriesCustomColors": [] }, // Optional (legacy compatibility)
+      "seriesConfig": { "curve": "linear", "pointsDisplay": "auto", "gapPolicy": "gap" } // Optional
+    }
+  },
+
+  "areaChart": {
+    "visualization": "areaChart", // Required
+    "visualizationSettings": {
+      "$refLike": "Same structure as lineChart" // Info only
+    }
+  },
+
+  "barChart": {
+    "visualization": "barChart", // Required
+    "visualizationSettings": {
+      "$refLike": "Same as lineChart; seriesConfig may be omitted" // Info only
+    }
+  },
+
+  "bandChart": {
+    "visualization": "bandChart", // Required
+    "visualizationSettings": {
+      "dataMapping": {
+        "time": null, // Optional
+        "displayedFields": [], // Optional
+        "series": [], // Optional
+        "interval": null, // Optional
+        "max": null, // Optional: upper band field
+        "min": null // Optional: lower band field
+      }
+    }
+  },
+
+  "categoricalBarChart": {
+    "visualization": "categoricalBarChart", // Required
+    "visualizationSettings": {
+      "categoryAxis": { "label": { "label": "", "showLabel": true }, "tickLayout": "horizontal" }, // Optional
+      "numericAxis": { "label": { "showLabel": true, "label": "" }, "scale": "linear" }, // Optional
+      "dataMapping": { "displayedFields": [], "values": [] }, // Optional
+      "legend": { "position": "auto", "showLegend": true, "textTruncationMode": "end", "ratio": "auto" }, // Optional
+      "valueBoundaries": { "max": { "mode": "auto" }, "min": { "mode": "auto" } }, // Optional
+      "valueSettings": { "valueRepresentation": "absolute" }, // Optional
+      "tooltip": { "variant": "single" }, // Optional
+      "layout": { "groupMode": "stacked", "position": "horizontal" }, // Optional
+      "unitsOverrides": [], // Optional
+      "thresholds": [], // Optional
+      "coloring": { "thresholdRules": [], "colorRules": [] }, // Optional
+      "colorModeType": { "colorCategoryMode": "multi-color", "colorPalette": "categorical", "customCategoryColors": {} } // Optional
+    }
+  },
+
+  "pieChart": {
+    "visualization": "pieChart", // Required
+    "visualizationSettings": {
+      "dataMapping": { "value": "", "displayedFields": [] }, // Optional
+      "labels": { "showLabels": true }, // Optional
+      "legend": { "ratio": "auto", "position": "auto", "showLegend": true, "textTruncationMode": "end" }, // Optional
+      "valueSettings": { "valueRepresentation": "absolute" }, // Optional
+      "groupingSettings": { "groupingStrategy": "absolute", "limit": 0, "label": "" }, // Optional
+      "unitsOverrides": [], // Optional
+      "coloring": {
+        "colorRules": [
+          {
+            "colorMode": "color-palette", // Optional
+            "colorPalette": "categorical", // Optional
+            "comparator": "= *value*", // Optional
+            "field": "__DYNATRACE_NAME__", // Optional
+            "type": "string", // Optional
+            "value": "" // Optional
+          }
+        ]
+      },
+      "colorModeType": { "colorPalette": "categorical", "customCategoryColors": {} } // Optional
+    }
+  },
+
+  "donutChart": {
+    "visualization": "donutChart", // Required
+    "visualizationSettings": {
+      "dataMapping": { "value": "", "displayedFields": [] }, // Optional
+      "labels": { "showLabels": true, "totalLabel": "" }, // Optional (totalLabel is donut-only)
+      "legend": { "ratio": "auto", "position": "auto", "showLegend": true, "textTruncationMode": "end" }, // Optional
+      "valueSettings": { "valueRepresentation": "absolute", "showTotals": false }, // Optional (showTotals is donut-only)
+      "groupingSettings": { "groupingStrategy": "absolute", "limit": 0, "label": "" }, // Optional
+      "unitsOverrides": [],
+      "coloring": { "colorRules": [] },
+      "colorModeType": { "colorPalette": "categorical", "customCategoryColors": {} }
+    }
+  },
+
+  "singleValue": {
+    "visualization": "singleValue", // Required
+    "visualizationSettings": {
+      "alignment": "center", // Optional
+      "colorThresholdTarget": "value", // Optional
+      "dataMapping": { "record": null, "timeseries": null, "value": null, "label": null }, // Optional
+      "icon": "AnalyticsIcon", // Optional
+      "showIcon": false, // Optional
+      "label": { "label": "", "mode": "custom" }, // Optional
+      "sparkline": {
+        "color": "#3f8cff", // Optional
+        "isVisible": true, // Optional
+        "lineType": "linear", // Optional
+        "showTicks": false, // Optional
+        "showContextValues": false, // Optional
+        "variant": "line", // Optional
+        "gapPolicy": "connect", // Optional
+        "scale": "linear" // Optional
+      },
+      "trend": {
+        "isVisible": null, // Optional
+        "valueRepresentation": "relative", // Optional
+        "showLabel": false, // Optional
+        "label": "", // Optional
+        "trendType": "auto" // Optional
+      },
+      "unitsOverrides": [], // Optional
+      "valueBoundaries": { "min": { "mode": "auto" }, "max": { "mode": "auto" } }, // Optional
+      "coloring": { "colorRules": [] } // Optional
+    }
+  },
+
+  "meterBar": {
+    "visualization": "meterBar", // Required
+    "visualizationSettings": {
+      "valueBoundaries": { "min": { "mode": "auto" }, "max": { "mode": "auto" } }, // Optional
+      "icon": { "showIcon": true, "icon": "MeterbarIcon" }, // Optional
+      "label": { "showLabel": true, "label": "" }, // Optional
+      "dataMapping": { "value": null, "maxDataField": null, "minDataField": null }, // Optional
+      "unitsOverrides": [], // Optional
+      "coloring": { "colorRules": [] }, // Optional
+      "colorModeType": { "customNumericColors": [] } // Optional
+    }
+  },
+
+  "gauge": {
+    "visualization": "gauge", // Required
+    "visualizationSettings": {
+      "valueBoundaries": { "min": { "mode": "auto" }, "max": { "mode": "auto" } },
+      "icon": { "showIcon": true, "icon": "ResourceContentionIcon" },
+      "label": { "showLabel": true, "label": "" },
+      "dataMapping": { "value": null, "maxDataField": null, "minDataField": null },
+      "unitsOverrides": [],
+      "coloring": { "colorRules": [] },
+      "colorModeType": { "customNumericColors": [] }
+    }
+  },
+
+  "table": {
+    "visualization": "table", // Required
+    "visualizationSettings": {
+      "table": {
+        "colorThresholdTarget": "value", // Optional
+        "columnOrder": [], // Optional
+        "columnTypeOverrides": [], // Optional
+        "columnWidths": {}, // Optional
+        "contained": true, // Optional
+        "enableSparklines": false, // Optional
+        "enableThresholdInRow": false, // Optional
+        "hiddenColumns": [], // Optional
+        "hideColumnsForLargeResults": null, // Optional
+        "linewrapEnabled": false, // Optional
+        "monospacedFontColumns": [], // Optional
+        "monospacedFontEnabled": false, // Optional
+        "rowDensity": "condensed", // Optional
+        "lineWrapIds": [], // Optional
+        "firstVisibleRowIndex": 0, // Optional
+        "sortBy": [], // Optional
+        "selectedColumnForRowThreshold": "", // Optional
+        "columnWidthStrategy": "content", // Optional
+        "showSparklineContextValues": false, // Optional
+        "activeRowIndex": null, // Optional
+        "pinnedColumns": null // Optional
+      }
+    }
+  },
+
+  "recordView": {
+    "visualization": "recordView", // Required
+    "visualizationSettings": {
+      "recordView": {
+        "fieldsWidth": 320 // Optional
+      },
+      "unitsOverrides": [] // Optional
+    }
+  },
+
+  "raw": {
+    "visualization": "raw", // Required
+    "visualizationSettings": {} // Required object, no known properties
+  },
+
+  "histogram": {
+    "visualization": "histogram", // Required
+    "visualizationSettings": {
+      "legend": { "position": "auto", "showLegend": true, "textTruncationMode": "end", "ratio": "auto" },
+      "axes": {
+        "xAxis": { "label": "", "showLabel": false, "scale": "linear", "min": { "mode": "auto" }, "max": { "mode": "auto" } },
+        "yAxis": { "label": "Frequency", "showLabel": true, "scale": "linear", "min": { "mode": "auto" }, "max": { "mode": "auto" } }
+      },
+      "dataMapping": { "displayedFields": [], "value": "", "range": "" },
+      "tooltip": { "variant": "single" },
+      "unitsOverrides": [],
+      "thresholds": [],
+      "coloring": { "thresholdRules": [], "colorRules": [] },
+      "zoom": { "isActive": true, "currentZoom": null, "initialZoom": null, "zoom": { "enabled": true }, "pan": { "enabled": true }, "zoomX": { "enabled": true }, "infiniteZoom": false },
+      "colorModeType": { "colorPalette": "categorical", "customCategoryColors": {} }
+    }
+  },
+
+  "honeycomb": {
+    "visualization": "honeycomb", // Required
+    "visualizationSettings": {
+      "shape": "hexagon", // Optional
+      "valueBoundaries": { "min": { "mode": "auto" }, "max": { "mode": "auto" } }, // Optional
+      "legend": { "ratio": "auto", "position": "auto", "showLegend": true, "textTruncationMode": "end" }, // Optional
+      "dataMapping": { "dimension": null, "displayedFields": [] }, // Optional
+      "unitsOverrides": [], // Optional
+      "labels": { "showLabels": false }, // Optional
+      "colorModeType": { "colorMode": "color-palette", "colorPalette": "categorical", "numericColorPalette": "blue", "customNumericColors": [], "categoricalCustomColors": [], "sequentialCustomColors": [] }, // Optional
+      "coloring": { "colorRules": [] } // Optional
+    }
+  },
+
+  "choropleth": {
+    "visualization": "choropleth", // Required (alias "choroplethMap" is also accepted by schema)
+    "visualizationSettings": {
+      "dataMapping": { "countryCode": null, "dimension": null, "displayedFields": [] }, // Optional
+      "tooltip": { "showCustomFields": false }, // Optional
+      "colorModeType": { "colorMode": "color-palette", "colorPalette": "categorical", "numericColorPalette": "blue", "customNumericColors": [], "categoricalCustomColors": [], "sequentialCustomColors": [] }, // Optional
+      "legend": { "ratio": "auto", "showLegend": true, "position": "auto", "textTruncationMode": "end" }, // Optional
+      "mapView": { "defaultZoom": "data", "longitude": 0, "latitude": 0, "zoom": 0 }, // Optional
+      "valueBoundaries": { "min": { "mode": "auto" }, "max": { "mode": "auto" } }, // Optional
+      "unitsOverrides": [] // Optional
+    }
+  },
+
+  "dotMap": {
+    "visualization": "dotMap", // Required
+    "visualizationSettings": {
+      "dataMapping": { "bearingValue": null, "dimension": null, "latitude": null, "longitude": null, "displayedFields": [] }, // Optional
+      "icon": { "icon": "AccountFilledIcon" }, // Optional
+      "mapShape": { "bearing": 0, "shape": "pin", "shapeSize": 32, "shapeStyle": "shape" }, // Optional
+      "emoji": null, // Optional
+      "tooltip": { "showCustomFields": false }, // Optional
+      "mapView": { "defaultZoom": "data", "longitude": 0, "latitude": 0, "zoom": 0 }, // Optional
+      "colorModeType": { "colorMode": "color-palette", "colorPalette": "categorical", "numericColorPalette": "blue", "customNumericColors": [], "categoricalCustomColors": [], "sequentialCustomColors": [] }, // Optional
+      "legend": { "ratio": "auto", "showLegend": true, "position": "auto", "textTruncationMode": "end" }, // Optional
+      "valueBoundaries": { "min": { "mode": "auto" }, "max": { "mode": "auto" } }, // Optional
+      "unitsOverrides": [], // Optional
+      "regions": { "showRegions": false, "regions": [] } // Optional
+    }
+  },
+
+  "connectionMap": {
+    "visualization": "connectionMap", // Required
+    "visualizationSettings": {
+      "dataMapping": { "latitudeList": null, "longitudeList": null, "dimension": null, "displayedFields": [] },
+      "mapLine": { "curve": "smooth", "directionIndicator": "start", "line": "solid", "thickness": 2 },
+      "tooltip": { "showCustomFields": false },
+      "colorModeType": { "colorMode": "color-palette", "colorPalette": "categorical", "numericColorPalette": "blue", "customNumericColors": [], "categoricalCustomColors": [], "sequentialCustomColors": [] },
+      "mapView": { "defaultZoom": "data", "longitude": 0, "latitude": 0, "zoom": 0 },
+      "legend": { "ratio": "auto", "showLegend": true, "position": "auto", "textTruncationMode": "end" },
+      "valueBoundaries": { "min": { "mode": "auto" }, "max": { "mode": "auto" } },
+      "regions": { "showRegions": false, "regions": [] },
+      "unitsOverrides": []
+    }
+  },
+
+  "bubbleMap": {
+    "visualization": "bubbleMap", // Required
+    "visualizationSettings": {
+      "mapView": { "defaultZoom": "data", "longitude": 0, "latitude": 0, "zoom": 0 },
+      "dataMapping": { "latitude": null, "longitude": null, "radius": null, "dimension": null, "displayedFields": [] },
+      "legend": { "ratio": "auto", "showLegend": true, "position": "auto", "textTruncationMode": "end" },
+      "mapRadius": { "sizeInterpolation": "zoom", "scale": "linear", "radius": 12, "radiusRange": [10, 100] },
+      "colorModeType": { "colorMode": "color-palette", "colorPalette": "categorical", "numericColorPalette": "blue", "customNumericColors": [], "categoricalCustomColors": [], "sequentialCustomColors": [] },
+      "tooltip": { "showCustomFields": false },
+      "valueBoundaries": { "min": { "mode": "auto" }, "max": { "mode": "auto" } },
+      "regions": { "showRegions": false, "regions": [] },
+      "unitsOverrides": []
+    }
+  },
+
+  "heatmap": {
+    "visualization": "heatmap", // Required
+    "visualizationSettings": {
+      "dataMapping": { "xAxis": null, "yAxis": null, "bucketValue": null }, // Optional
+      "axes": {
+        "xAxis": { "label": "", "showLabel": false, "position": "bottom", "min": { "mode": "data-min" }, "max": { "mode": "data-max" }, "reversed": false, "tickLabelLayout": "horizontal" },
+        "yAxis": { "label": "", "showLabel": false, "position": "left", "min": { "mode": "data-min" }, "max": { "mode": "data-max" }, "reversed": false }
+      },
+      "legend": { "position": "auto", "showLegend": true, "textTruncationMode": "end", "ratio": "auto" },
+      "unitsOverrides": [],
+      "coloring": { "thresholdRules": [], "colorRules": [] },
+      "zoom": { "isActive": true, "currentZoom": null, "initialZoom": null, "zoom": { "enabled": true }, "pan": { "enabled": true }, "zoomX": { "enabled": true }, "infiniteZoom": false },
+      "valueBoundaries": { "min": { "mode": "auto" }, "max": { "mode": "auto" } },
+      "colorModeType": { "colorMode": "color-palette", "colorPalette": "categorical", "numericColorPalette": "blue", "customNumericColors": [], "categoricalCustomColors": [], "sequentialCustomColors": [] }
+    }
+  },
+
+  "scatterplot": {
+    "visualization": "scatterplot", // Required
+    "visualizationSettings": {
+      "dataMapping": { "xAxis": null, "yAxis": null, "displayedFields": [] },
+      "unitsOverrides": [],
+      "legend": { "position": "auto", "showLegend": true, "textTruncationMode": "end", "ratio": "auto" },
+      "axes": {
+        "xAxis": { "label": "", "showLabel": false, "reversed": false, "position": "bottom", "min": { "mode": "auto" }, "max": { "mode": "auto" }, "tickLabelLayout": "horizontal" },
+        "yAxis": { "label": "", "showLabel": false, "reversed": false, "position": "left", "min": { "mode": "auto" }, "max": { "mode": "auto" } }
+      },
+      "zoom": { "isActive": true, "currentZoom": null, "initialZoom": null, "zoom": { "enabled": true }, "pan": { "enabled": true }, "zoomX": { "enabled": true }, "infiniteZoom": false },
+      "colorModeType": { "colorMode": "color-palette", "colorPalette": "categorical", "numericColorPalette": "blue", "customNumericColors": [], "categoricalCustomColors": [], "sequentialCustomColors": [] },
+      "coloring": { "colorRules": [], "thresholdRules": [] }
+    }
+  }
+}

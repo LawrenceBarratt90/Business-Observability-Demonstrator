@@ -1,0 +1,78 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dt-app-dashboard-agent
+  namespace: default
+  title: Dynatrace Dashboard Agent
+  description: >
+    Specialized agent for Dynatrace dashboard operations — creating, editing,
+    querying, and analyzing dashboards with deep domain expertise.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace/agents/dt-app-dashboard-agent
+spec:
+  type: ai-agent
+  lifecycle: experimental
+  owner: capability/platform-apps
+  system: default/data-exploration
+  product-architect: user:default/blai.samitier
+  product-manager: user:default/holger.weissboeck
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dt-app-notebook-agent
+  namespace: default
+  title: Dynatrace Notebook Agent
+  description: >
+    Specialized agent for Dynatrace notebook operations — creating and editing
+    interactive analysis notebooks with DQL queries and visualizations.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace/agents/dt-app-notebook-agent
+spec:
+  type: ai-agent
+  lifecycle: experimental
+  owner: capability/platform-apps
+  system: default/data-exploration
+  product-architect: user:default/blai.samitier
+  product-manager: user:default/holger.weissboeck
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dt-app-problems-agent
+  namespace: default
+  title: Dynatrace Problems Agent
+  description: >
+    Specialized agent for Dynatrace problem investigation — RCA workflows,
+    Davis AI insights, event correlation, and incident escalation.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace/agents/dt-app-problems-agent
+spec:
+  type: ai-agent
+  lifecycle: experimental
+  owner: capability/data-intelligence
+  system: default/anomaly-detection
+  product-architect: user:default/hans.kohlreiter
+  product-manager: user:default/wolfgang.beer
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dt-generic-agent
+  namespace: default
+  title: Dynatrace Platform Orchestrator Agent
+  description: >
+    Cross-domain orchestrating agent for the Dynatrace platform. Triages
+    requests, delegates to specialized domain agents, and coordinates
+    multi-domain investigations across monitoring, dashboards, notebooks,
+    problems, logs, traces, and infrastructure.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace/agents/dt-generic-agent
+spec:
+  type: ai-agent
+  lifecycle: experimental
+  owner: capability/data-intelligence
+  system: default/ai-agent-knowledge-base
+  product-architect: user:default/hans.kohlreiter
+  product-manager: user:default/wolfgang.beer

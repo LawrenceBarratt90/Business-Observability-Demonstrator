@@ -1,0 +1,273 @@
+{
+    "companyName": "ChipVision Semiconductor",
+    "domain": "https://www.chipvision-semi.com",
+    "industryType": "Semiconductor & Chip",
+    "journeyType": "Defect Detection",
+    "journeyDetail": "AI-Powered Semiconductor Defect Detection & Yield",
+    "journeyId": "journey_defect_detection_71b6baee",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "WaferInspection",
+            "serviceName": "WaferInspectService",
+            "description": "AI performs high-resolution wafer inspection: optical, SEM, and e-beam imaging. Sub-10nm defect detection with classification into killer vs nuisance defects.",
+            "category": "Inspection",
+            "estimatedDuration": 0.5,
+            "businessRationale": "A single killer defect renders a $500-50000 chip worthless. At 3nm node, defect density directly determines yield and profitability.",
+            "substeps": [
+                {
+                    "substepName": "OpticalInspection",
+                    "duration": 0.15
+                },
+                {
+                    "substepName": "SEMImaging",
+                    "duration": 0.2
+                },
+                {
+                    "substepName": "DefectClassification",
+                    "duration": 0.15
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "RootCauseAnalysis",
+            "serviceName": "RootCauseService",
+            "description": "AI correlates defects with process parameters: tool-by-tool contribution, wafer-level patterns, and temporal trends. Pareto analysis of defect sources with automated tool fingerprinting.",
+            "category": "Analysis",
+            "estimatedDuration": 4,
+            "businessRationale": "Identifying root cause in hours vs days saves millions per day in scrap. Tool fingerprinting links defects to specific equipment needing maintenance.",
+            "substeps": [
+                {
+                    "substepName": "ParetoAnalysis",
+                    "duration": 1.5
+                },
+                {
+                    "substepName": "ToolFingerprinting",
+                    "duration": 1.5
+                },
+                {
+                    "substepName": "TemporalCorrelation",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "YieldPrediction",
+            "serviceName": "YieldPredictService",
+            "description": "AI predicts lot-level and wafer-level yield: defect density integration, parametric test correlation, and historical yield modelling. Early yield excursion detection.",
+            "category": "Prediction",
+            "estimatedDuration": 1,
+            "businessRationale": "1% yield improvement at a leading-edge fab = $100M+ annual profit. Early excursion detection prevents days of yield loss.",
+            "substeps": [
+                {
+                    "substepName": "DefectDensityModel",
+                    "duration": 0.3
+                },
+                {
+                    "substepName": "ParametricCorrelation",
+                    "duration": 0.3
+                },
+                {
+                    "substepName": "ExcursionDetection",
+                    "duration": 0.4
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "InlineDisposition",
+            "serviceName": "DispositionService",
+            "description": "AI makes real-time disposition decisions: pass, rework, or scrap based on defect criticality, downstream impact prediction, and customer spec compliance.",
+            "category": "Decision",
+            "estimatedDuration": 0.1,
+            "businessRationale": "Over-scrapping wastes $1000s per wafer. Under-scrapping sends defective products to customers. AI balances these risks optimally.",
+            "substeps": [
+                {
+                    "substepName": "CriticalityAssessment",
+                    "duration": 0.03
+                },
+                {
+                    "substepName": "DownstreamImpact",
+                    "duration": 0.04
+                },
+                {
+                    "substepName": "DispositionDecision",
+                    "duration": 0.03
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "ProcessControl",
+            "serviceName": "ProcessControlService",
+            "description": "AI manages statistical process control (SPC), run-to-run control, and advanced process control (APC). Automatic recipe adjustments to maintain process within spec.",
+            "category": "Control",
+            "estimatedDuration": 0.5,
+            "businessRationale": "APC keeps processes centered on target despite tool drift and incoming variation. Without it, process variation consumes 30% of the process window.",
+            "substeps": [
+                {
+                    "substepName": "SPCMonitoring",
+                    "duration": 0.15
+                },
+                {
+                    "substepName": "RunToRunControl",
+                    "duration": 0.15
+                },
+                {
+                    "substepName": "RecipeAdjustment",
+                    "duration": 0.2
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "YieldAnalytics",
+            "serviceName": "YieldAnalyticsService",
+            "description": "AI generates yield reports: wafer maps, defect Pareto, yield trends by technology node, and competitive benchmarking. Fab-wide defect reduction roadmap.",
+            "category": "Analytics",
+            "estimatedDuration": 168,
+            "businessRationale": "Yield analytics drive fab continuous improvement. Leading fabs achieve 95%+ yield through systematic AI-driven defect reduction.",
+            "substeps": [
+                {
+                    "substepName": "WaferMapAnalysis",
+                    "duration": 56
+                },
+                {
+                    "substepName": "DefectTrending",
+                    "duration": 56
+                },
+                {
+                    "substepName": "BenchmarkComparison",
+                    "duration": 56
+                }
+            ]
+        }
+    ],
+    "id": "3c07b84c-f585-4e4d-8998-9ff2b1ac8247",
+    "name": "Semiconductor & Chip - Defect Detection",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 50000000,
+        "annualRevenue": 40000000000,
+        "revenuePerCustomer": 0,
+        "profitMargin": 45.0,
+        "customerLifetimeValue": 0,
+        "lifetimeValue": 0,
+        "acquisitionCost": 0,
+        "costPerAcquisition": 0,
+        "conversionProbability": 1.0,
+        "conversionRate": 100,
+        "engagementScore": 92,
+        "timeToConversion": 0,
+        "sessionDuration": 28800,
+        "pageViews": 50,
+        "purchaseFrequency": 365,
+        "netPromoterScore": 0,
+        "satisfactionRating": 0,
+        "retentionProbability": 1.0,
+        "processingTime": 0.5,
+        "operationalCost": 15000000000,
+        "efficiencyRating": 88,
+        "yieldRate": 92.5,
+        "defectDensity": 0.08,
+        "channel": [
+            "fab_automation",
+            "engineering_workstation",
+            "mobile_fab_app",
+            "executive_dashboard",
+            "customer_portal"
+        ],
+        "deviceType": [
+            "SCADA",
+            "desktop",
+            "cleanroom_tablet",
+            "desktop",
+            "desktop"
+        ],
+        "region": [
+            "Taiwan TSMC",
+            "South Korea Samsung",
+            "US Intel",
+            "Japan",
+            "EU ASML"
+        ],
+        "customerSegmentValue": [
+            "logic_7nm",
+            "logic_3nm",
+            "memory_DRAM",
+            "memory_NAND",
+            "analog_power"
+        ],
+        "loyaltyTier": [
+            "Leading Edge",
+            "Mature Node",
+            "Specialty",
+            "R&D",
+            "Foundry"
+        ],
+        "segment": [
+            "front_end_litho",
+            "front_end_etch",
+            "front_end_deposition",
+            "back_end_packaging",
+            "metrology"
+        ],
+        "Productname": [
+            "Optical Defect Inspector",
+            "e-Beam Review System",
+            "Yield Management Suite",
+            "APC Controller",
+            "Wafer Map Analytics"
+        ],
+        "ProductId": [
+            "SEM-OI-001",
+            "SEM-EB-002",
+            "SEM-YM-003",
+            "SEM-AP-004",
+            "SEM-WA-005"
+        ],
+        "ProductType": [
+            "inspection",
+            "review",
+            "yield_management",
+            "process_control",
+            "analytics"
+        ],
+        "Price": [
+            25000000,
+            40000000,
+            10000000,
+            5000000,
+            3000000
+        ],
+        "wafersPerDay": [
+            3000,
+            500,
+            3000,
+            3000,
+            3000
+        ],
+        "killerDefectCapture": [
+            0.95,
+            0.99,
+            0,
+            0,
+            0
+        ],
+        "marketTrend": [
+            "3nm_yield_challenge",
+            "EUV_defect_control",
+            "AI_defect_classification",
+            "chiplet_integration",
+            "heterogeneous_packaging"
+        ]
+    }
+}

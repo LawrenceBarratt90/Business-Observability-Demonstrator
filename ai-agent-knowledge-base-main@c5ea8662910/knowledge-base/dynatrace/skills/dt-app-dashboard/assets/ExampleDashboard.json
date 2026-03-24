@@ -1,0 +1,361 @@
+{
+  "name": "Example Dashboard",
+  "type": "dashboard",
+  "content": {
+    "version": 21,
+    "variables": [],
+    "tiles": {
+      "0": {
+        "type": "data",
+        "title": "Line visualization",
+        "query": "timeseries avg(dt.service.request.response_time), by:{dt.entity.service, endpoint.name}",
+        "davis": {
+          "enabled": false,
+          "davisVisualization": {
+            "isAvailable": true
+          }
+        },
+        "visualizationSettings": {
+          "autoSelectVisualization": true,
+          "table": {
+            "hideColumnsForLargeResults": true
+          },
+          "chartSettings": {
+            "xAxisScaling": "analyzedTimeframe"
+          }
+        },
+        "visualization": "lineChart",
+        "querySettings": {
+          "maxResultRecords": 1000,
+          "defaultScanLimitGbytes": 500,
+          "maxResultMegaBytes": 1,
+          "defaultSamplingRatio": 10,
+          "enableSampling": false
+        }
+      },
+      "1": {
+        "title": "Area visualization",
+        "type": "data",
+        "query": "timeseries avg(dt.service.request.response_time), by:{dt.entity.service, endpoint.name}",
+        "visualization": "areaChart",
+        "visualizationSettings": {
+          "autoSelectVisualization": false,
+          "table": {
+            "hideColumnsForLargeResults": true
+          },
+          "chartSettings": {
+            "xAxisScaling": "analyzedTimeframe",
+            "xAxisIsLabelVisible": false,
+            "leftYAxisSettings": {
+              "min": {
+                "mode": "data-min"
+              },
+              "max": {
+                "mode": "data-max"
+              },
+              "scale": "linear"
+            },
+            "legend": {
+              "position": "right"
+            },
+            "truncationMode": "middle",
+            "tooltip": {
+              "variant": "single"
+            }
+          },
+          "unitsOverrides": [
+            {
+              "identifier": "avg(dt.service.request.response_time)",
+              "unitCategory": "time",
+              "baseUnit": "microsecond",
+              "displayUnit": null,
+              "decimals": null,
+              "suffix": "",
+              "delimiter": false,
+              "added": 1770204632795
+            }
+          ],
+          "thresholds": [
+            {
+              "id": 1,
+              "field": "",
+              "title": "",
+              "isEnabled": true,
+              "rules": [
+                {
+                  "id": 0,
+                  "color": {
+                    "Default": "var(--dt-colors-charts-status-ideal-default, #2f6862)"
+                  },
+                  "comparator": "≥",
+                  "label": "OK",
+                  "value": 0
+                },
+                {
+                  "id": 1,
+                  "color": {
+                    "Default": "var(--dt-colors-charts-status-warning-default, #eea53c)"
+                  },
+                  "comparator": "≥",
+                  "label": "WARN",
+                  "value": 4000000
+                },
+                {
+                  "id": 2,
+                  "color": {
+                    "Default": "var(--dt-colors-charts-status-critical-default, #c62239)"
+                  },
+                  "comparator": "≥",
+                  "label": "CRITICAL",
+                  "value": 8000000
+                }
+              ]
+            }
+          ]
+        },
+        "querySettings": {
+          "maxResultRecords": 1000,
+          "defaultScanLimitGbytes": 500,
+          "maxResultMegaBytes": 1,
+          "defaultSamplingRatio": 10,
+          "enableSampling": false
+        },
+        "davis": {
+          "enabled": false,
+          "davisVisualization": {
+            "isAvailable": true
+          }
+        }
+      },
+      "2": {
+        "title": "Donut visualization",
+        "type": "data",
+        "query": "fetch dt.davis.events\n| summarize count(), by:{event.category}",
+        "visualization": "donutChart",
+        "visualizationSettings": {
+          "autoSelectVisualization": false,
+          "table": {
+            "hideColumnsForLargeResults": true
+          },
+          "chartSettings": {
+            "xAxisScaling": "analyzedTimeframe",
+            "xAxisIsLabelVisible": false,
+            "leftYAxisSettings": {
+              "min": {
+                "mode": "data-min"
+              },
+              "max": {
+                "mode": "data-max"
+              },
+              "scale": "linear"
+            },
+            "legend": {
+              "position": "right"
+            },
+            "truncationMode": "middle",
+            "tooltip": {
+              "variant": "single"
+            },
+            "circleChartSettings": {
+              "valueType": "relative"
+            }
+          },
+          "unitsOverrides": [
+            {
+              "identifier": "avg(dt.service.request.response_time)",
+              "unitCategory": "time",
+              "baseUnit": "microsecond",
+              "displayUnit": null,
+              "decimals": null,
+              "suffix": "",
+              "delimiter": false,
+              "added": 1770204632795
+            }
+          ],
+          "thresholds": [
+            {
+              "id": 1,
+              "field": "",
+              "title": "",
+              "isEnabled": true,
+              "rules": [
+                {
+                  "id": 0,
+                  "color": {
+                    "Default": "var(--dt-colors-charts-status-ideal-default, #2f6862)"
+                  },
+                  "comparator": "≥",
+                  "label": "OK",
+                  "value": 0
+                },
+                {
+                  "id": 1,
+                  "color": {
+                    "Default": "var(--dt-colors-charts-status-warning-default, #eea53c)"
+                  },
+                  "comparator": "≥",
+                  "label": "WARN",
+                  "value": 4000000
+                },
+                {
+                  "id": 2,
+                  "color": {
+                    "Default": "var(--dt-colors-charts-status-critical-default, #c62239)"
+                  },
+                  "comparator": "≥",
+                  "label": "CRITICAL",
+                  "value": 8000000
+                }
+              ]
+            }
+          ]
+        },
+        "querySettings": {
+          "maxResultRecords": 1000,
+          "defaultScanLimitGbytes": 500,
+          "maxResultMegaBytes": 1,
+          "defaultSamplingRatio": 10,
+          "enableSampling": false
+        },
+        "davis": {
+          "enabled": false,
+          "davisVisualization": {
+            "isAvailable": true
+          }
+        }
+      },
+      "3": {
+        "title": "Donut visualization",
+        "type": "data",
+        "query": "fetch dt.davis.events\n| summarize count=count()\n",
+        "visualization": "singleValue",
+        "visualizationSettings": {
+          "autoSelectVisualization": false,
+          "table": {
+            "hideColumnsForLargeResults": true
+          },
+          "chartSettings": {
+            "xAxisScaling": "analyzedTimeframe",
+            "xAxisIsLabelVisible": false,
+            "leftYAxisSettings": {
+              "min": {
+                "mode": "data-min"
+              },
+              "max": {
+                "mode": "data-max"
+              },
+              "scale": "linear"
+            },
+            "legend": {
+              "position": "right"
+            },
+            "truncationMode": "middle",
+            "tooltip": {
+              "variant": "single"
+            },
+            "circleChartSettings": {
+              "valueType": "relative"
+            }
+          },
+          "unitsOverrides": [
+            {
+              "identifier": "count",
+              "unitCategory": "unspecified",
+              "baseUnit": "count",
+              "displayUnit": null,
+              "decimals": null,
+              "suffix": "",
+              "delimiter": false,
+              "added": 1770205033513
+            }
+          ],
+          "thresholds": [
+            {
+              "id": 1,
+              "field": "",
+              "title": "",
+              "isEnabled": true,
+              "rules": [
+                {
+                  "id": 0,
+                  "color": {
+                    "Default": "var(--dt-colors-charts-status-ideal-default, #2f6862)"
+                  },
+                  "comparator": "≥",
+                  "label": "OK",
+                  "value": 0
+                },
+                {
+                  "id": 1,
+                  "color": {
+                    "Default": "var(--dt-colors-charts-status-warning-default, #eea53c)"
+                  },
+                  "comparator": "≥",
+                  "label": "WARN",
+                  "value": 4000000
+                },
+                {
+                  "id": 2,
+                  "color": {
+                    "Default": "var(--dt-colors-charts-status-critical-default, #c62239)"
+                  },
+                  "comparator": "≥",
+                  "label": "CRITICAL",
+                  "value": 8000000
+                }
+              ]
+            }
+          ],
+          "singleValue": {
+            "colorThresholdTarget": "value",
+            "recordField": "count",
+            "label": "Number Events",
+            "isIconVisible": true
+          }
+        },
+        "querySettings": {
+          "maxResultRecords": 1000,
+          "defaultScanLimitGbytes": 500,
+          "maxResultMegaBytes": 1,
+          "defaultSamplingRatio": 10,
+          "enableSampling": false
+        },
+        "davis": {
+          "enabled": false,
+          "davisVisualization": {
+            "isAvailable": true
+          }
+        }
+      }
+    },
+    "layouts": {
+      "0": {
+        "x": 0,
+        "y": 0,
+        "w": 13,
+        "h": 7
+      },
+      "1": {
+        "x": 0,
+        "y": 7,
+        "w": 13,
+        "h": 7
+      },
+      "2": {
+        "x": 13,
+        "y": 0,
+        "w": 11,
+        "h": 7
+      },
+      "3": {
+        "x": 13,
+        "y": 7,
+        "w": 11,
+        "h": 7
+      }
+    },
+    "importedWithCode": false,
+    "settings": {},
+    "annotations": []
+  }
+}

@@ -1,0 +1,284 @@
+{
+    "companyName": "Healthcare",
+    "domain": "https://www.healthcare.com",
+    "industryType": "Healthcare & Life Sciences",
+    "journeyType": "Patient Registration",
+    "journeyDetail": "Patient Registration Journey",
+    "journeyId": "journey_healthcare_reg_2026",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "PatientIdentification",
+            "serviceName": "PatientIdentificationService",
+            "description": "Patient provides personal details, insurance information, and medical ID. System verifies identity against national health registry, checks existing patient records, and creates or links to a master patient index (MPI) record.",
+            "category": "Intake",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 8,
+            "businessRationale": "Accurate patient identification prevents duplicate records and billing errors. Fast ID verification reduces waiting room time and improves patient satisfaction scores.",
+            "substeps": [
+                {
+                    "substepName": "PersonalDetailsCapture",
+                    "duration": 4
+                },
+                {
+                    "substepName": "InsuranceVerification",
+                    "duration": 2
+                },
+                {
+                    "substepName": "MPILookupAndLink",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "InsuranceEligibility",
+            "serviceName": "InsuranceEligibilityService",
+            "description": "Real-time eligibility check with insurance provider via EDI 270/271 transaction. Validates coverage type, co-pay amount, deductible status, and pre-authorisation requirements for the scheduled procedure or visit type.",
+            "category": "Verification",
+            "estimatedDuration": 3,
+            "businessRationale": "Upfront eligibility verification reduces claim denials by 30-40%. Confirming co-pay and deductible at registration enables point-of-service collection, improving revenue cycle performance.",
+            "substeps": [
+                {
+                    "substepName": "EDIEligibilityRequest",
+                    "duration": 1
+                },
+                {
+                    "substepName": "CoverageAndCopayConfirmation",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "MedicalHistoryCapture",
+            "serviceName": "MedicalHistoryCaptureService",
+            "description": "Patient completes medical history questionnaire covering allergies, current medications, prior surgeries, chronic conditions, and family history. Data is validated and mapped to ICD-10 codes where applicable.",
+            "category": "ClinicalIntake",
+            "estimatedDuration": 12,
+            "businessRationale": "Complete medical history reduces adverse drug events and enables clinical decision support. Digital capture eliminates paper transcription errors and speeds clinician preparation time.",
+            "substeps": [
+                {
+                    "substepName": "AllergyAndMedicationEntry",
+                    "duration": 5
+                },
+                {
+                    "substepName": "SurgicalAndChronicHistory",
+                    "duration": 4
+                },
+                {
+                    "substepName": "ICD10MappingAndValidation",
+                    "duration": 3
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "ConsentAndCompliance",
+            "serviceName": "ConsentAndComplianceService",
+            "description": "Patient signs HIPAA consent, treatment consent, financial responsibility agreement, and any study-specific consent forms. Digital signatures captured and stored in compliance archive with audit trail.",
+            "category": "Compliance",
+            "estimatedDuration": 5,
+            "businessRationale": "Digital consent reduces legal exposure and ensures regulatory compliance. Missing consents block treatment and cause costly rescheduling. Audit trails satisfy HIPAA and Joint Commission requirements.",
+            "substeps": [
+                {
+                    "substepName": "HIPAAAndTreatmentConsent",
+                    "duration": 3
+                },
+                {
+                    "substepName": "FinancialResponsibilityAgreement",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "AppointmentScheduling",
+            "serviceName": "AppointmentSchedulingService",
+            "description": "Patient is scheduled for consultation, procedure, or follow-up. System checks provider availability, room/equipment resources, and applies scheduling rules (urgency, speciality, insurance network). Confirmation sent via SMS/email.",
+            "category": "Scheduling",
+            "estimatedDuration": 4,
+            "businessRationale": "Optimised scheduling maximises provider utilisation and reduces no-show rates. Confirmation messaging reduces no-shows by 20-30%, directly impacting revenue and operational efficiency.",
+            "substeps": [
+                {
+                    "substepName": "ProviderAndResourceMatching",
+                    "duration": 2
+                },
+                {
+                    "substepName": "ConfirmationAndReminders",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "CheckInAndTriageHandoff",
+            "serviceName": "CheckInAndTriageHandoffService",
+            "description": "Patient arrives and checks in via kiosk or reception. Vitals captured (BP, heart rate, temperature, weight). Triage nurse reviews medical history and assigns acuity level. Patient routed to appropriate care area.",
+            "category": "ClinicalHandoff",
+            "estimatedDuration": 15,
+            "businessRationale": "Efficient check-in reduces door-to-provider time, a key patient satisfaction metric. Accurate triage ensures appropriate resource allocation and clinical safety prioritisation.",
+            "substeps": [
+                {
+                    "substepName": "ArrivalAndKioskCheckIn",
+                    "duration": 3
+                },
+                {
+                    "substepName": "VitalsCapture",
+                    "duration": 5
+                },
+                {
+                    "substepName": "TriageAssessmentAndRouting",
+                    "duration": 7
+                }
+            ]
+        }
+    ],
+    "id": "a1b2c3d4-1111-4aaa-b111-000000000001",
+    "name": "Healthcare - Patient Registration",
+    "timestamp": "2026-01-09T15:12:43.556Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 250,
+        "transactionValue": 250,
+        "averageOrderValue": 185,
+        "contractValue": 0,
+        "annualRevenue": 2400,
+        "revenuePerCustomer": 2400,
+        "profitMargin": 12.0,
+        "customerLifetimeValue": 35000,
+        "lifetimeValue": 35000,
+        "acquisitionCost": 150,
+        "conversionProbability": 0.88,
+        "conversionRate": 88,
+        "engagementScore": 65,
+        "timeToConversion": 1440,
+        "netPromoterScore": 38,
+        "satisfactionRating": 3.9,
+        "retentionProbability": 0.82,
+        "processingTime": 1200,
+        "operationalCost": 45,
+        "efficiencyRating": 68,
+        "complianceScore": 98,
+        "fraudRisk": [
+            "low",
+            "low",
+            "low",
+            "medium",
+            "low"
+        ],
+        "riskLevel": [
+            "standard",
+            "low",
+            "standard",
+            "elevated",
+            "low"
+        ],
+        "channel": [
+            "patient_portal",
+            "reception_desk",
+            "mobile_app",
+            "phone",
+            "referral_system"
+        ],
+        "deviceType": [
+            "desktop",
+            "desktop",
+            "mobile",
+            "mobile",
+            "desktop"
+        ],
+        "region": [
+            "Northeast",
+            "Southeast",
+            "Midwest",
+            "West Coast",
+            "Southwest"
+        ],
+        "customerSegmentValue": [
+            "insured_patient",
+            "self_pay",
+            "medicare",
+            "medicaid",
+            "employer_sponsored"
+        ],
+        "loyaltyTier": [
+            "Premium Care",
+            "Standard",
+            "Senior Plus",
+            "Essential",
+            "Corporate Wellness"
+        ],
+        "segment": [
+            "new_patient",
+            "transfer_patient",
+            "returning_patient",
+            "emergency_registration",
+            "telehealth_first"
+        ],
+        "Productname": [
+            "New Patient Registration Package",
+            "Transfer Records Service",
+            "Annual Wellness Visit",
+            "Urgent Care Registration",
+            "Telehealth Onboarding"
+        ],
+        "ProductId": [
+            "HC-REG-001",
+            "HC-REG-002",
+            "HC-REG-003",
+            "HC-REG-004",
+            "HC-REG-005"
+        ],
+        "ProductType": [
+            "new_patient",
+            "records_transfer",
+            "wellness_visit",
+            "urgent_care",
+            "telehealth"
+        ],
+        "Price": [
+            250,
+            75,
+            0,
+            350,
+            85
+        ],
+        "insuranceVerified": [
+            true,
+            true,
+            true,
+            false,
+            true
+        ],
+        "copayAmount": [
+            25,
+            40,
+            0,
+            75,
+            15
+        ],
+        "hipaaConsentSigned": [
+            true,
+            true,
+            true,
+            true,
+            true
+        ],
+        "primaryCareAssigned": [
+            true,
+            true,
+            true,
+            false,
+            true
+        ],
+        "marketTrend": [
+            "digital_front_door",
+            "patient_portal_adoption",
+            "interoperability",
+            "price_transparency",
+            "virtual_health"
+        ]
+    }
+}

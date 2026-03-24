@@ -1,0 +1,279 @@
+{
+    "companyName": "Defence Systems",
+    "domain": "https://www.defence-systems.gov",
+    "industryType": "Defence & Aerospace",
+    "journeyType": "Mission Planning",
+    "journeyDetail": "AI-Assisted Mission Planning & Execution",
+    "journeyId": "journey_mission_planning_af60a6ff",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "IntelligenceGathering",
+            "serviceName": "IntelligenceService",
+            "description": "Multi-source intelligence fusion from SIGINT, HUMINT, OSINT, and satellite imagery. AI pattern recognition identifies threats, force dispositions, and environmental factors.",
+            "category": "Assessment",
+            "estimatedDuration": 48,
+            "businessRationale": "Comprehensive intelligence reduces mission risk by 40%. AI fusion processes data 100x faster than manual analysis.",
+            "substeps": [
+                {
+                    "substepName": "MultisourceFusion",
+                    "duration": 24
+                },
+                {
+                    "substepName": "ThreatAssessment",
+                    "duration": 12
+                },
+                {
+                    "substepName": "EnvironmentalAnalysis",
+                    "duration": 12
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "CourseOfAction",
+            "serviceName": "COAService",
+            "description": "AI generates multiple courses of action with risk/benefit analysis. Wargaming simulations test each option against adversary responses. Commander selects preferred COA.",
+            "category": "Planning",
+            "estimatedDuration": 24,
+            "businessRationale": "AI wargaming evaluates 1000x more scenarios than manual planning. Better COA selection reduces casualties and mission failure risk.",
+            "substeps": [
+                {
+                    "substepName": "COAGeneration",
+                    "duration": 8
+                },
+                {
+                    "substepName": "WargameSimulation",
+                    "duration": 10
+                },
+                {
+                    "substepName": "RiskBenefitAnalysis",
+                    "duration": 6
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "ResourceAllocation",
+            "serviceName": "ForceAllocationService",
+            "description": "Personnel, equipment, air assets, and logistics allocated to mission. AI optimises force structure against threat assessment and mission objectives.",
+            "category": "Logistics",
+            "estimatedDuration": 12,
+            "businessRationale": "Optimal force allocation achieves mission success with minimum resource expenditure. Over-allocation wastes scarce assets, under-allocation risks failure.",
+            "substeps": [
+                {
+                    "substepName": "ForceStructuring",
+                    "duration": 4
+                },
+                {
+                    "substepName": "EquipmentAssignment",
+                    "duration": 4
+                },
+                {
+                    "substepName": "LogisticsPlanning",
+                    "duration": 4
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "MissionBriefing",
+            "serviceName": "BriefingService",
+            "description": "AI generates mission briefing packages with maps, timelines, contingencies, and communications plans. Distributed securely to all participating units.",
+            "category": "Communication",
+            "estimatedDuration": 4,
+            "businessRationale": "Clear briefings reduce friendly fire incidents by 60% and improve coordination. Digital briefings reach all units instantly vs hours for paper.",
+            "substeps": [
+                {
+                    "substepName": "BriefingGeneration",
+                    "duration": 2
+                },
+                {
+                    "substepName": "SecureDistribution",
+                    "duration": 1
+                },
+                {
+                    "substepName": "AcknowledgementTracking",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "MissionExecution",
+            "serviceName": "ExecutionMonitoringService",
+            "description": "Real-time situational awareness with AI tracking friendly forces, threats, and objectives. Automated re-planning when conditions change. Battle damage assessment.",
+            "category": "Operations",
+            "estimatedDuration": 72,
+            "businessRationale": "Real-time AI monitoring reduces decision latency from hours to minutes. Automatic threat detection saves lives.",
+            "substeps": [
+                {
+                    "substepName": "SituationalAwareness",
+                    "duration": 24
+                },
+                {
+                    "substepName": "DynamicReplanning",
+                    "duration": 24
+                },
+                {
+                    "substepName": "BattleDamageAssessment",
+                    "duration": 24
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "AfterActionReview",
+            "serviceName": "AARService",
+            "description": "AI analyses mission execution vs plan. Identifies lessons learned, tactical innovations, and areas for improvement. Feeds into doctrine and training updates.",
+            "category": "Analytics",
+            "estimatedDuration": 48,
+            "businessRationale": "Systematic after-action analysis improves future mission success rates by 15-25%. AI finds patterns humans miss across hundreds of operations.",
+            "substeps": [
+                {
+                    "substepName": "ExecutionAnalysis",
+                    "duration": 16
+                },
+                {
+                    "substepName": "LessonsExtraction",
+                    "duration": 16
+                },
+                {
+                    "substepName": "DoctrineUpdate",
+                    "duration": 16
+                }
+            ]
+        }
+    ],
+    "id": "c1996a28-a2b3-4e5d-8f69-40c86aaedd34",
+    "name": "Defence & Aerospace - Mission Planning",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 250000000,
+        "annualRevenue": 0,
+        "revenuePerCustomer": 0,
+        "profitMargin": 0,
+        "customerLifetimeValue": 0,
+        "lifetimeValue": 0,
+        "acquisitionCost": 0,
+        "costPerAcquisition": 0,
+        "conversionProbability": 0.85,
+        "conversionRate": 85,
+        "engagementScore": 95,
+        "timeToConversion": 4320,
+        "sessionDuration": 7200,
+        "pageViews": 25,
+        "purchaseFrequency": 0,
+        "netPromoterScore": 0,
+        "satisfactionRating": 0,
+        "retentionProbability": 0.99,
+        "processingTime": 14400,
+        "operationalCost": 5000000,
+        "efficiencyRating": 88,
+        "missionReadiness": 0.92,
+        "threatLevel": [
+            "low",
+            "medium",
+            "high",
+            "critical",
+            "extreme"
+        ],
+        "channel": [
+            "command_centre",
+            "tactical_terminal",
+            "mobile_ops",
+            "secure_radio",
+            "satellite_link"
+        ],
+        "deviceType": [
+            "ruggedised_desktop",
+            "tactical_tablet",
+            "mobile_secure",
+            "radio",
+            "terminal"
+        ],
+        "region": [
+            "EUCOM",
+            "INDOPACOM",
+            "CENTCOM",
+            "AFRICOM",
+            "NATO_HQ"
+        ],
+        "customerSegmentValue": [
+            "joint_force",
+            "special_ops",
+            "air_wing",
+            "naval_group",
+            "logistics_corps"
+        ],
+        "loyaltyTier": [
+            "Strategic",
+            "Operational",
+            "Tactical",
+            "Support",
+            "Reserve"
+        ],
+        "segment": [
+            "kinetic",
+            "ISR",
+            "cyber",
+            "logistics",
+            "peacekeeping"
+        ],
+        "Productname": [
+            "Joint Strike Package",
+            "ISR Mission Suite",
+            "Cyber Defence Op",
+            "Logistics Convoy Plan",
+            "Peacekeeping Patrol"
+        ],
+        "ProductId": [
+            "DEF-KN-001",
+            "DEF-IS-002",
+            "DEF-CY-003",
+            "DEF-LG-004",
+            "DEF-PK-005"
+        ],
+        "ProductType": [
+            "kinetic_mission",
+            "surveillance",
+            "cyber_operation",
+            "logistics",
+            "peacekeeping"
+        ],
+        "Price": [
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "classificationLevel": [
+            "SECRET",
+            "TOP_SECRET",
+            "SECRET",
+            "CONFIDENTIAL",
+            "RESTRICTED"
+        ],
+        "forceReadiness": [
+            0.95,
+            0.92,
+            0.88,
+            0.9,
+            0.85
+        ],
+        "marketTrend": [
+            "AI_decision_support",
+            "autonomous_systems",
+            "multi_domain_ops",
+            "cyber_warfare",
+            "space_domain"
+        ]
+    }
+}

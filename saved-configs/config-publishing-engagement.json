@@ -1,0 +1,273 @@
+{
+    "companyName": "PublishTech Media",
+    "domain": "https://www.publishtech-media.com",
+    "industryType": "Publishing & Digital Media",
+    "journeyType": "Reader Engagement",
+    "journeyDetail": "AI-Powered Reader Engagement & Content Personalisation",
+    "journeyId": "journey_reader_engagement_59068775",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "ReaderProfiling",
+            "serviceName": "ReaderProfileService",
+            "description": "AI builds reader profiles from reading history, dwell time, scroll depth, topic interests, and sharing behaviour. Reading personas and content affinity scores generated.",
+            "category": "Profiling",
+            "estimatedDuration": 168,
+            "businessRationale": "Deep reader understanding drives engagement. Personalised content recommendations increase page views per session by 40%.",
+            "substeps": [
+                {
+                    "substepName": "ReadingHistoryAnalysis",
+                    "duration": 56
+                },
+                {
+                    "substepName": "BehaviouralSignals",
+                    "duration": 56
+                },
+                {
+                    "substepName": "PersonaMapping",
+                    "duration": 56
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "ContentPersonalisation",
+            "serviceName": "ContentPersonService",
+            "description": "AI personalises homepage, article recommendations, and newsletter content per reader. Topic-based and behavioural targeting. Serendipity injection to prevent filter bubbles.",
+            "category": "Personalisation",
+            "estimatedDuration": 0.2,
+            "businessRationale": "Personalised homepages generate 2x more article reads. Breaking filter bubbles maintains editorial breadth and prevents audience fragmentation.",
+            "substeps": [
+                {
+                    "substepName": "HomepagePersonalisation",
+                    "duration": 0.07
+                },
+                {
+                    "substepName": "ArticleRecommendation",
+                    "duration": 0.07
+                },
+                {
+                    "substepName": "SerendipityInjection",
+                    "duration": 0.06
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "EngagementOptimization",
+            "serviceName": "EngagementOptService",
+            "description": "AI optimises headlines (A/B testing), article length, multimedia placement, and comment moderation. Push notification timing and frequency personalised per reader.",
+            "category": "Engagement",
+            "estimatedDuration": 24,
+            "businessRationale": "Headline optimisation alone increases click-through by 15-25%. Notification timing directly affects open rates: right time = 3x engagement.",
+            "substeps": [
+                {
+                    "substepName": "HeadlineTesting",
+                    "duration": 8
+                },
+                {
+                    "substepName": "MultimediaPlacement",
+                    "duration": 8
+                },
+                {
+                    "substepName": "NotificationTiming",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "NewsletterOptimization",
+            "serviceName": "NewsletterService",
+            "description": "AI curates personalised newsletters: content selection, subject line optimisation, send time optimisation, and format adaptation (brief vs deep). Subscriber segment targeting.",
+            "category": "Distribution",
+            "estimatedDuration": 24,
+            "businessRationale": "Newsletters are the strongest retention channel with 40% open rates vs 2% social media. AI-personalised newsletters reduce unsubscribe by 30%.",
+            "substeps": [
+                {
+                    "substepName": "ContentCuration",
+                    "duration": 8
+                },
+                {
+                    "substepName": "SubjectLineOptimization",
+                    "duration": 8
+                },
+                {
+                    "substepName": "SendTimeOptimization",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "PaywallOptimization",
+            "serviceName": "PaywallService",
+            "description": "AI manages dynamic paywall: meter flexibility per user, propensity-to-subscribe scoring, and optimal conversion moment identification. Free article sampling strategy.",
+            "category": "Monetisation",
+            "estimatedDuration": 1,
+            "businessRationale": "Dynamic paywalls convert 40% more subscribers than rigid meters. The sweet spot between too many free articles and too few is different per reader.",
+            "substeps": [
+                {
+                    "substepName": "MeterFlexibility",
+                    "duration": 0.3
+                },
+                {
+                    "substepName": "PropensityScoring",
+                    "duration": 0.3
+                },
+                {
+                    "substepName": "ConversionMoment",
+                    "duration": 0.4
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "ContentAnalytics",
+            "serviceName": "ContentAnalyticsService",
+            "description": "AI analyses content performance: article engagement depth, topic trends, author performance, and editorial calendar effectiveness. Newsroom resource allocation recommendations.",
+            "category": "Analytics",
+            "estimatedDuration": 168,
+            "businessRationale": "Data-informed newsrooms produce 25% more high-performing content. Understanding what resonates guides editorial strategy without compromising journalism.",
+            "substeps": [
+                {
+                    "substepName": "ArticlePerformance",
+                    "duration": 56
+                },
+                {
+                    "substepName": "TopicTrending",
+                    "duration": 56
+                },
+                {
+                    "substepName": "AuthorAnalytics",
+                    "duration": 56
+                }
+            ]
+        }
+    ],
+    "id": "e61c94bd-4f5b-4e15-830a-ddd7fdde5d1b",
+    "name": "Publishing & Digital Media - Reader Engagement",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 0,
+        "annualRevenue": 500000000,
+        "revenuePerCustomer": 120,
+        "profitMargin": 15.0,
+        "customerLifetimeValue": 600,
+        "lifetimeValue": 600,
+        "acquisitionCost": 4,
+        "costPerAcquisition": 4,
+        "conversionProbability": 0.02,
+        "conversionRate": 2,
+        "engagementScore": 65,
+        "timeToConversion": 20160,
+        "sessionDuration": 420,
+        "pageViews": 6,
+        "purchaseFrequency": 30,
+        "netPromoterScore": 35,
+        "satisfactionRating": 3.8,
+        "retentionProbability": 0.6,
+        "processingTime": 0.1,
+        "operationalCost": 0.05,
+        "efficiencyRating": 85,
+        "avgDwellTime": 180,
+        "articlesPerSession": 3.2,
+        "channel": [
+            "website",
+            "mobile_app",
+            "newsletter",
+            "social_media",
+            "google_discover"
+        ],
+        "deviceType": [
+            "desktop",
+            "mobile",
+            "email",
+            "mobile",
+            "mobile"
+        ],
+        "region": [
+            "US",
+            "UK",
+            "India",
+            "Australia",
+            "Canada"
+        ],
+        "customerSegmentValue": [
+            "loyal_subscriber",
+            "registered_free",
+            "flyby_visitor",
+            "newsletter_only",
+            "social_referral"
+        ],
+        "loyaltyTier": [
+            "Premium Subscriber",
+            "Digital Subscriber",
+            "Registered Free",
+            "Anonymous",
+            "Churned"
+        ],
+        "segment": [
+            "news",
+            "opinion",
+            "lifestyle",
+            "sport",
+            "business"
+        ],
+        "Productname": [
+            "Premium Digital Access",
+            "Standard Digital",
+            "Weekend Print+Digital",
+            "All Access Bundle",
+            "Student Subscription"
+        ],
+        "ProductId": [
+            "PUB-PD-001",
+            "PUB-SD-002",
+            "PUB-WP-003",
+            "PUB-AA-004",
+            "PUB-SS-005"
+        ],
+        "ProductType": [
+            "premium_digital",
+            "standard_digital",
+            "print_digital",
+            "all_access",
+            "student"
+        ],
+        "Price": [
+            19.99,
+            12.99,
+            29.99,
+            39.99,
+            4.99
+        ],
+        "bounceRate": [
+            0.45,
+            0.55,
+            0.3,
+            0.65,
+            0.7
+        ],
+        "paywallConversion": [
+            0.015,
+            0.035,
+            0.008,
+            0.055,
+            0.005
+        ],
+        "marketTrend": [
+            "newsletter_renaissance",
+            "audio_journalism",
+            "AI_content_tools",
+            "subscriber_only_events",
+            "bundled_subscriptions"
+        ]
+    }
+}

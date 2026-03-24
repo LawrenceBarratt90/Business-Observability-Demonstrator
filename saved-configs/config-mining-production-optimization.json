@@ -1,0 +1,273 @@
+{
+    "companyName": "MineralTech Resources",
+    "domain": "https://www.mineraltech-resources.com",
+    "industryType": "Mining & Resources",
+    "journeyType": "Production Optimization",
+    "journeyDetail": "AI-Driven Mine Production & Processing Optimisation",
+    "journeyId": "journey_production_optimization_98f11a47",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "MinePlanning",
+            "serviceName": "MinePlanService",
+            "description": "AI generates optimal mine plans: pit shell optimisation, cut-off grade analysis, production scheduling, and waste dump design. Multi-scenario modelling for commodity price sensitivity.",
+            "category": "Planning",
+            "estimatedDuration": 720,
+            "businessRationale": "Mine plans span 10-30 years and determine $billions in capital commitment. A 5% improvement in mine planning NPV = hundreds of millions.",
+            "substeps": [
+                {
+                    "substepName": "PitOptimization",
+                    "duration": 240
+                },
+                {
+                    "substepName": "ProductionScheduling",
+                    "duration": 240
+                },
+                {
+                    "substepName": "ScenarioModelling",
+                    "duration": 240
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "FleetManagement",
+            "serviceName": "FleetMgmtService",
+            "description": "AI dispatches haul trucks, excavators, and drills in real-time. Route optimisation, queue management at dumps and crushers, and predictive maintenance scheduling.",
+            "category": "Operations",
+            "estimatedDuration": 0.1,
+            "businessRationale": "Fleet is 40-60% of mining operating costs. AI dispatch improves fleet productivity by 10-15%. One extra truck cycle per hour = $millions annually.",
+            "substeps": [
+                {
+                    "substepName": "TruckDispatch",
+                    "duration": 0.03
+                },
+                {
+                    "substepName": "RouteOptimization",
+                    "duration": 0.04
+                },
+                {
+                    "substepName": "QueueManagement",
+                    "duration": 0.03
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "GradeControl",
+            "serviceName": "GradeControlService",
+            "description": "AI manages ore/waste classification at the dig face using blast hole sampling, real-time sensor data, and geological model updates. Grade reconciliation between model and mill.",
+            "category": "Quality",
+            "estimatedDuration": 1,
+            "businessRationale": "Ore loss and dilution cost mines 10-20% of potential revenue. Better grade control recovers value from every tonne.",
+            "substeps": [
+                {
+                    "substepName": "BlastHoleAnalysis",
+                    "duration": 0.3
+                },
+                {
+                    "substepName": "SensorFusion",
+                    "duration": 0.3
+                },
+                {
+                    "substepName": "ReconciliationLoop",
+                    "duration": 0.4
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "ProcessingOptimization",
+            "serviceName": "ProcessingService",
+            "description": "AI optimises comminution (crushing/grinding), flotation, leaching, and smelting. Real-time adjustments to reagent dosing, particle size, and throughput based on ore variability.",
+            "category": "Processing",
+            "estimatedDuration": 0.5,
+            "businessRationale": "Processing is 30-40% of production costs. AI optimisation improves recovery by 1-3% and throughput by 5-10% with same energy.",
+            "substeps": [
+                {
+                    "substepName": "GrindingOptimization",
+                    "duration": 0.15
+                },
+                {
+                    "substepName": "FlotationControl",
+                    "duration": 0.15
+                },
+                {
+                    "substepName": "ReagentDosing",
+                    "duration": 0.2
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "SafetyAndEnvironmental",
+            "serviceName": "SafetyEnvService",
+            "description": "AI monitors safety KPIs: near-miss patterns, fatigue detection, proximity alerts, and geotechnical slope stability. Environmental monitoring: dust, water, tailings dam, and rehabilitation.",
+            "category": "Compliance",
+            "estimatedDuration": 24,
+            "businessRationale": "Mining fatalities cost lives and can result in $billion liabilities. AI safety reduces LTIFR by 30-50%. Environmental non-compliance can close a mine.",
+            "substeps": [
+                {
+                    "substepName": "FatigueDetection",
+                    "duration": 8
+                },
+                {
+                    "substepName": "ProximityAlerts",
+                    "duration": 8
+                },
+                {
+                    "substepName": "EnvironmentalMonitoring",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "ProductionAnalytics",
+            "serviceName": "ProductionAnalyticsService",
+            "description": "AI generates shift reports, production dashboards, and cost-per-tonne analysis. Variance from plan reporting. Integration with commodity markets for revenue forecasting.",
+            "category": "Analytics",
+            "estimatedDuration": 24,
+            "businessRationale": "Real-time production analytics enable same-shift corrections. Variance analysis identifies systemic issues before they compound.",
+            "substeps": [
+                {
+                    "substepName": "ShiftReporting",
+                    "duration": 8
+                },
+                {
+                    "substepName": "CostAnalysis",
+                    "duration": 8
+                },
+                {
+                    "substepName": "RevenueForecasting",
+                    "duration": 8
+                }
+            ]
+        }
+    ],
+    "id": "5b17911c-5d5a-42df-a57a-76ce46c4a4fe",
+    "name": "Mining & Resources - Production Optimization",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 200000000,
+        "annualRevenue": 2500000000,
+        "revenuePerCustomer": 2500000000,
+        "profitMargin": 30.0,
+        "customerLifetimeValue": 0,
+        "lifetimeValue": 0,
+        "acquisitionCost": 0,
+        "costPerAcquisition": 0,
+        "conversionProbability": 1.0,
+        "conversionRate": 100,
+        "engagementScore": 85,
+        "timeToConversion": 0,
+        "sessionDuration": 28800,
+        "pageViews": 50,
+        "purchaseFrequency": 365,
+        "netPromoterScore": 0,
+        "satisfactionRating": 0,
+        "retentionProbability": 1.0,
+        "processingTime": 1440,
+        "operationalCost": 1200000000,
+        "efficiencyRating": 78,
+        "oee": 88,
+        "recoveryRate": 91.5,
+        "channel": [
+            "SCADA_control",
+            "dispatch_system",
+            "mobile_field",
+            "engineering_desktop",
+            "boardroom_dashboard"
+        ],
+        "deviceType": [
+            "HMI_panel",
+            "desktop",
+            "ruggedised_tablet",
+            "desktop",
+            "desktop"
+        ],
+        "region": [
+            "Pilbara AU",
+            "Atacama CL",
+            "Sudbury CA",
+            "Witwatersrand ZA",
+            "Carajas BR"
+        ],
+        "customerSegmentValue": [
+            "open_pit_gold",
+            "underground_copper",
+            "iron_ore_bulk",
+            "lithium_brine",
+            "coal_thermal"
+        ],
+        "loyaltyTier": [
+            "Tier 1 Major",
+            "Tier 2 Producer",
+            "Mid-Tier",
+            "Junior Producer",
+            "Development Stage"
+        ],
+        "segment": [
+            "open_pit",
+            "underground",
+            "heap_leach",
+            "concentrator",
+            "smelter"
+        ],
+        "Productname": [
+            "Fleet Management System",
+            "Processing Control AI",
+            "Grade Control Suite",
+            "Safety Monitoring Platform",
+            "Mine Plan Optimizer"
+        ],
+        "ProductId": [
+            "MOP-FM-001",
+            "MOP-PC-002",
+            "MOP-GC-003",
+            "MOP-SM-004",
+            "MOP-MP-005"
+        ],
+        "ProductType": [
+            "fleet",
+            "processing",
+            "grade_control",
+            "safety",
+            "planning"
+        ],
+        "Price": [
+            15000000,
+            8000000,
+            5000000,
+            3000000,
+            10000000
+        ],
+        "tonnagePerDay": [
+            250000,
+            50000,
+            250000,
+            80000,
+            150000
+        ],
+        "costPerTonne": [
+            2.5,
+            12.0,
+            2.5,
+            8.0,
+            4.0
+        ],
+        "marketTrend": [
+            "autonomous_haulage",
+            "electric_fleet",
+            "digital_twin_mine",
+            "ESG_decarbonization",
+            "remote_operations_centre"
+        ]
+    }
+}

@@ -1,0 +1,273 @@
+{
+    "companyName": "HotelTech International",
+    "domain": "https://www.hoteltech-intl.com",
+    "industryType": "Hospitality & Travel",
+    "journeyType": "Corporate Booking",
+    "journeyDetail": "AI-Managed Corporate Travel & Accommodation",
+    "journeyId": "journey_corporate_booking_05eecf70",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "RateNegotiation",
+            "serviceName": "RateNegotiationService",
+            "description": "AI analyses corporate travel patterns, room night volumes, and market rates to negotiate optimal corporate rates. Dynamic discount structures based on commitment tiers.",
+            "category": "Procurement",
+            "estimatedDuration": 720,
+            "businessRationale": "AI-negotiated rates save 10-20% vs standard corporate discounts. Volume commitment optimisation maximises discount without over-committing.",
+            "substeps": [
+                {
+                    "substepName": "PatternAnalysis",
+                    "duration": 240
+                },
+                {
+                    "substepName": "MarketBenchmarking",
+                    "duration": 240
+                },
+                {
+                    "substepName": "TierOptimization",
+                    "duration": 240
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "PolicyCompliance",
+            "serviceName": "PolicyService",
+            "description": "AI enforces corporate travel policy at booking time. Budget limits, preferred properties, advance booking requirements, and approval workflows automated.",
+            "category": "Compliance",
+            "estimatedDuration": 0.5,
+            "businessRationale": "Policy compliance reduces travel spend by 15-25%. Without enforcement, 40% of bookings violate policy.",
+            "substeps": [
+                {
+                    "substepName": "BudgetCheck",
+                    "duration": 0.2
+                },
+                {
+                    "substepName": "PropertyCompliance",
+                    "duration": 0.15
+                },
+                {
+                    "substepName": "ApprovalRouting",
+                    "duration": 0.15
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "BookingOptimization",
+            "serviceName": "BookingOptService",
+            "description": "AI recommends optimal property for each trip: nearest to meeting location, best rate, loyalty status consideration, and traveller preference matching.",
+            "category": "Booking",
+            "estimatedDuration": 1,
+            "businessRationale": "Smart property recommendation saves 20 minutes per booking and reduces location-related complaints by 60%.",
+            "substeps": [
+                {
+                    "substepName": "LocationMatching",
+                    "duration": 0.3
+                },
+                {
+                    "substepName": "RateComparison",
+                    "duration": 0.3
+                },
+                {
+                    "substepName": "PreferenceMatching",
+                    "duration": 0.4
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "ExpenseManagement",
+            "serviceName": "ExpenseService",
+            "description": "AI auto-captures folio charges, matches to bookings, and generates expense reports. Policy violations flagged. Tax reclaim (VAT/GST) automated per jurisdiction.",
+            "category": "Finance",
+            "estimatedDuration": 2,
+            "businessRationale": "Automated expense management saves 30 minutes per trip per employee. VAT recovery adds 5-15% to travel spend savings.",
+            "substeps": [
+                {
+                    "substepName": "FolioCapture",
+                    "duration": 0.5
+                },
+                {
+                    "substepName": "ExpenseMatching",
+                    "duration": 0.5
+                },
+                {
+                    "substepName": "TaxReclaim",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "TravellerSatisfaction",
+            "serviceName": "SatisfactionService",
+            "description": "AI surveys travellers post-stay, aggregates property ratings, and generates preferred property lists. Traveller wellbeing tracked for duty of care.",
+            "category": "Experience",
+            "estimatedDuration": 24,
+            "businessRationale": "Traveller satisfaction directly affects talent retention. Companies with good travel programmes have 20% higher satisfaction among frequent travellers.",
+            "substeps": [
+                {
+                    "substepName": "PostStaySurvey",
+                    "duration": 8
+                },
+                {
+                    "substepName": "PropertyRating",
+                    "duration": 8
+                },
+                {
+                    "substepName": "WellbeingTracking",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "SpendAnalytics",
+            "serviceName": "SpendAnalyticsService",
+            "description": "AI analyses total travel spend by department, destination, property, and traveller. Identifies savings opportunities, negotiation leverage, and policy gaps.",
+            "category": "Analytics",
+            "estimatedDuration": 168,
+            "businessRationale": "Travel spend analytics identifies 8-15% additional savings. Board-level reporting justifies travel programme investment.",
+            "substeps": [
+                {
+                    "substepName": "SpendBreakdown",
+                    "duration": 56
+                },
+                {
+                    "substepName": "SavingsIdentification",
+                    "duration": 56
+                },
+                {
+                    "substepName": "NegotiationInsights",
+                    "duration": 56
+                }
+            ]
+        }
+    ],
+    "id": "db34aff4-e5ad-4c02-aac4-203ee2028078",
+    "name": "Hospitality & Travel - Corporate Booking",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 280,
+        "transactionValue": 280,
+        "averageOrderValue": 320,
+        "contractValue": 2500000,
+        "annualRevenue": 250000000,
+        "revenuePerCustomer": 85000,
+        "profitMargin": 18.0,
+        "customerLifetimeValue": 500000,
+        "lifetimeValue": 500000,
+        "acquisitionCost": 5000,
+        "costPerAcquisition": 5000,
+        "conversionProbability": 0.72,
+        "conversionRate": 72,
+        "engagementScore": 70,
+        "timeToConversion": 4320,
+        "sessionDuration": 300,
+        "pageViews": 5,
+        "purchaseFrequency": 48,
+        "netPromoterScore": 40,
+        "satisfactionRating": 3.9,
+        "retentionProbability": 0.85,
+        "processingTime": 10,
+        "operationalCost": 35,
+        "efficiencyRating": 82,
+        "policyCompliance": 88,
+        "avgDailyRate": 195,
+        "channel": [
+            "TMC_platform",
+            "corporate_portal",
+            "mobile_app",
+            "email_booking",
+            "direct_phone"
+        ],
+        "deviceType": [
+            "desktop",
+            "desktop",
+            "mobile",
+            "desktop",
+            "phone"
+        ],
+        "region": [
+            "London",
+            "New York",
+            "Frankfurt",
+            "Singapore",
+            "Sydney"
+        ],
+        "customerSegmentValue": [
+            "executive",
+            "senior_manager",
+            "consultant",
+            "sales_team",
+            "technical_staff"
+        ],
+        "loyaltyTier": [
+            "C-Suite",
+            "Director",
+            "Manager",
+            "Individual",
+            "Contractor"
+        ],
+        "segment": [
+            "transient_business",
+            "group_meeting",
+            "conference",
+            "extended_stay",
+            "project_based"
+        ],
+        "Productname": [
+            "Corporate Rate Room",
+            "Meeting Room Block",
+            "Conference Package",
+            "Extended Stay Suite",
+            "Project Team Rate"
+        ],
+        "ProductId": [
+            "CRP-CR-001",
+            "CRP-MR-002",
+            "CRP-CP-003",
+            "CRP-ES-004",
+            "CRP-PT-005"
+        ],
+        "ProductType": [
+            "corporate_rate",
+            "group_block",
+            "conference",
+            "extended_stay",
+            "project"
+        ],
+        "Price": [
+            195,
+            180,
+            250,
+            165,
+            175
+        ],
+        "roomNightsBooked": [
+            25000,
+            5000,
+            3000,
+            8000,
+            12000
+        ],
+        "savingsVsRack": [
+            0.28,
+            0.22,
+            0.35,
+            0.4,
+            0.25
+        ],
+        "marketTrend": [
+            "managed_travel_AI",
+            "bleisure",
+            "sustainability_reporting",
+            "duty_of_care",
+            "virtual_meetings_offset"
+        ]
+    }
+}

@@ -3,19 +3,11 @@
  * Emits gen_ai.* spans following the OTel GenAI Semantic Conventions
  * so Dynatrace AI Observability can visualize LLM requests, tokens, latency.
  *
- * Env vars (set by the app or .env):
- *   DT_ENVIRONMENT   — e.g. https://abc12345.live.dynatrace.com
- *   DT_PLATFORM_TOKEN — API token with openTelemetryTrace.ingest scope
- *
- * The OTLP exporter sends to: {DT_ENVIRONMENT}/api/v2/otlp/v1/traces
+ * IMPORTANT: Uses the GLOBAL TracerProvider registered by otel.cjs (loaded via --require).
+ * Do NOT create a separate NodeTracerProvider here — that would override the global one
+ * and break metrics/logs export.
  */
 
-import { readFileSync } from 'fs';
-import path from 'path';
-import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node';
-import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-node';
-import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-proto';
-import { resourceFromAttributes } from '@opentelemetry/resources';
 import { trace, context, SpanKind, SpanStatusCode, Span } from '@opentelemetry/api';
 import { createLogger } from './logger.js';
 
@@ -41,108 +33,18 @@ export interface GenAISpanResult {
 }
 
 // ─── Singleton Provider ───────────────────────────────────────
-
-let _provider: NodeTracerProvider | null = null;
+// Uses the GLOBAL TracerProvider from otel.cjs (no duplicate provider)
 let _initialized = false;
-
-/**
- * Read DT credentials from .dt-credentials.json (set via the UI).
- * Falls back gracefully if the file doesn't exist.
- */
-function loadCredentialsFile(): { environmentUrl?: string; apiToken?: string; otelToken?: string } {
-  try {
-    const credsPath = path.join(process.cwd(), '.dt-credentials.json');
-    const data = JSON.parse(readFileSync(credsPath, 'utf-8'));
-    return {
-      environmentUrl: data.environmentUrl || undefined,
-      apiToken: data.apiToken || undefined,
-      otelToken: data.otelToken || undefined,
-    };
-  } catch {
-    return {};
-  }
-}
-
-function getDTEndpoint(): string | null {
-  const env = process.env.DT_ENVIRONMENT || process.env.DYNATRACE_URL || '';
-  let url = env;
-  // Fallback: read from persisted .dt-credentials.json (saved via UI)
-  if (!url) {
-    const creds = loadCredentialsFile();
-    url = creds.environmentUrl || '';
-    if (url) log.info('📦 DT URL loaded from .dt-credentials.json');
-  }
-  if (!url) return null;
-  // Strip trailing slash, ensure no .apps. in URL
-  const base = url.replace(/\/+$/, '').replace('.apps.dynatrace', '.dynatrace');
-  return `${base}/api/v2/otlp/v1/traces`;
-}
-
-function getDTToken(): string | null {
-  const envToken = process.env.DT_OTEL_TOKEN || process.env.DT_PLATFORM_TOKEN || process.env.DYNATRACE_TOKEN || process.env.DT_API_TOKEN || null;
-  if (envToken) return envToken;
-  // Fallback: read from persisted credentials file
-  // Prefer otelToken (has ingest scopes) over apiToken (general)
-  const creds = loadCredentialsFile();
-  if (creds.otelToken) {
-    log.info('📦 DT otelToken loaded from .dt-credentials.json (ingest scopes)');
-    return creds.otelToken;
-  }
-  if (creds.apiToken) {
-    log.info('📦 DT apiToken loaded from .dt-credentials.json (general)');
-    return creds.apiToken;
-  }
-  return null;
-}
 
 export function initTracing(): void {
   if (_initialized) return;
   _initialized = true;
-
-  const endpoint = getDTEndpoint();
-  const token = getDTToken();
-
-  if (!endpoint || !token) {
-    log.warn('⚠️  OTel tracing NOT enabled — DT_ENVIRONMENT or DT_PLATFORM_TOKEN not set');
-    log.info('📋 Current environment variables:');
-    log.info(`   DT_ENVIRONMENT: ${process.env.DT_ENVIRONMENT ? '✓ set' : '✗ not set'}`);
-    log.info(`   DYNATRACE_URL: ${process.env.DYNATRACE_URL ? '✓ set' : '✗ not set'}`);
-    log.info(`   DT_PLATFORM_TOKEN: ${process.env.DT_PLATFORM_TOKEN ? '✓ set (hidden)' : '✗ not set'}`);
-    log.info(`   DYNATRACE_TOKEN: ${process.env.DYNATRACE_TOKEN ? '✓ set (hidden)' : '✗ not set'}`);
-    log.info(`   DT_API_TOKEN: ${process.env.DT_API_TOKEN ? '✓ set (hidden)' : '✗ not set'}`);
-    log.info('💡 To enable AI Observability: set DT_ENVIRONMENT and DT_PLATFORM_TOKEN');
-    return;
-  }
-
-  log.info(`✅ Initializing OTel tracing for AI Observability`);
-  log.info(`   Endpoint: ${endpoint}`);
-  log.info(`   Service: bizobs-ai-agents v1.0.0`);
-
-  const resource = resourceFromAttributes({
-    'service.name': 'bizobs-ai-agents',
-    'service.version': '1.0.0',
-    'deployment.environment': process.env.NODE_ENV || 'production',
-  });
-
-  const exporter = new OTLPTraceExporter({
-    url: endpoint,
-    headers: {
-      Authorization: `Api-Token ${token}`,
-    },
-  });
-
-  _provider = new NodeTracerProvider({
-    resource,
-    spanProcessors: [new BatchSpanProcessor(exporter)],
-  });
-  _provider.register();
-
-  log.info('🎯 OTel tracing initialized — GenAI spans for Ollama calls will appear in Dynatrace');
+  log.info('✅ GenAI tracing using global OTel provider from otel.cjs');
   log.info('📊 View in Dynatrace: Notebooks > Dynatrace Intelligence > AI Observability');
 }
 
 export function getTracer() {
-  return trace.getTracer('bizobs-ai-agents', '1.0.0');
+  return trace.getTracer('bizobs-ai-agents', '2.0.0');
 }
 
 // ─── GenAI Span Wrapper ──────────────────────────────────────
@@ -156,11 +58,6 @@ export async function withGenAISpan<T>(
   fn: () => Promise<T>,
   extractResult?: (result: T) => GenAISpanResult,
 ): Promise<T> {
-  if (!_provider) {
-    // Tracing not enabled — run without span
-    return fn();
-  }
-
   const tracer = getTracer();
   const spanName = `${options.operation} ${options.model}`;
 
@@ -226,10 +123,8 @@ export async function withGenAISpan<T>(
 // ─── Graceful shutdown ───────────────────────────────────────
 
 export async function shutdownTracing(): Promise<void> {
-  if (_provider) {
-    log.info('Shutting down OTel tracing...');
-    await _provider.shutdown();
-  }
+  // No-op: global provider from otel.cjs handles shutdown
+  log.info('Tracing shutdown delegated to global otel.cjs provider');
 }
 
 // ─── Helpers ─────────────────────────────────────────────────

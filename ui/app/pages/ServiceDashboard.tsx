@@ -6,6 +6,7 @@ import { Button } from '@dynatrace/strato-components/buttons';
 import { TitleBar } from '@dynatrace/strato-components-preview/layouts';
 import Colors from '@dynatrace/strato-design-tokens/colors';
 import { getEnvironmentUrl } from '@dynatrace-sdk/app-environment';
+import { InfoButton } from '../components/InfoButton';
 
 const API_BASE = 'http://YOUR_SERVER_IP:8080/api';
 
@@ -115,7 +116,23 @@ export const ServiceDashboard = () => {
     <Page>
       <Page.Header>
         <TitleBar>
-          <TitleBar.Title>Service Dashboard</TitleBar.Title>
+          <TitleBar.Title>
+            <Flex alignItems="center" gap={8}>
+              Service Dashboard
+              <InfoButton
+                title="📋 Service Dashboard"
+                description="Real-time view of all generated microservices grouped by company."
+                sections={[
+                  { label: 'All / Running / Stopped', detail: 'Filter services by status' },
+                  { label: '🔄 Refresh', detail: 'Manually refresh the service list (also auto-refreshes every 5s)' },
+                  { label: '⏹️ Stop All', detail: 'Stop all running services at once' },
+                  { label: 'Start / Stop', detail: 'Control individual services per company' },
+                  { label: '🔗 Service links', detail: 'Click a company name to open Dynatrace Services filtered by that company' },
+                ]}
+                footer="Services are auto-discovered by OneAgent and appear in Dynatrace within ~2 minutes."
+              />
+            </Flex>
+          </TitleBar.Title>
           <TitleBar.Subtitle>
             Real-time service monitoring and management · Last update: {lastUpdate.toLocaleTimeString()}
           </TitleBar.Subtitle>

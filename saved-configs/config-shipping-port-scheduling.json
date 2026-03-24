@@ -1,0 +1,273 @@
+{
+    "companyName": "OceanTech Shipping",
+    "domain": "https://www.oceantech-shipping.com",
+    "industryType": "Shipping & Maritime",
+    "journeyType": "Port Scheduling",
+    "journeyDetail": "AI-Optimised Port Operations & Berth Scheduling",
+    "journeyId": "journey_port_scheduling_e14f3bec",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "VesselArrivalPrediction",
+            "serviceName": "VesselPredictService",
+            "description": "AI predicts vessel arrival times from AIS tracking, weather routing, and port congestion. Dynamic ETA updates shared with all port stakeholders. Berth window optimisation.",
+            "category": "Forecasting",
+            "estimatedDuration": 24,
+            "businessRationale": "Accurate ETAs enable berth planning 24-48 hours ahead. Each hour of berth idle time costs the port $5K-15K in lost revenue.",
+            "substeps": [
+                {
+                    "substepName": "AISSTracking",
+                    "duration": 8
+                },
+                {
+                    "substepName": "WeatherRouting",
+                    "duration": 8
+                },
+                {
+                    "substepName": "CongestionModelling",
+                    "duration": 8
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "BerthAllocation",
+            "serviceName": "BerthAllocService",
+            "description": "AI allocates berths: vessel size/type matching, crane availability, cargo type (container, bulk, tanker), and tidal window constraints. Priority handling for liner services.",
+            "category": "Planning",
+            "estimatedDuration": 4,
+            "businessRationale": "Optimal berth allocation increases port throughput by 15-20% without capital investment. Poor allocation creates cascading delays across the port.",
+            "substeps": [
+                {
+                    "substepName": "VesselMatching",
+                    "duration": 1.5
+                },
+                {
+                    "substepName": "CraneAvailability",
+                    "duration": 1.5
+                },
+                {
+                    "substepName": "TidalConstraints",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "CraneScheduling",
+            "serviceName": "CraneScheduleService",
+            "description": "AI schedules container crane operations: quay crane assignment, container sequencing (restow minimisation), and yard crane coordination. Twin-lift and tandem-lift optimisation.",
+            "category": "Operations",
+            "estimatedDuration": 2,
+            "businessRationale": "Crane productivity determines vessel turnaround time. Improving crane moves per hour from 25 to 30 = 20% faster vessel operations.",
+            "substeps": [
+                {
+                    "substepName": "CraneAssignment",
+                    "duration": 0.5
+                },
+                {
+                    "substepName": "ContainerSequencing",
+                    "duration": 1
+                },
+                {
+                    "substepName": "YardCoordination",
+                    "duration": 0.5
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "YardManagement",
+            "serviceName": "YardManagementService",
+            "description": "AI manages container yard: stack position optimisation (minimising re-handles), reefer container monitoring, and dangerous goods segregation. Gate appointment scheduling.",
+            "category": "Storage",
+            "estimatedDuration": 24,
+            "businessRationale": "Re-handling adds $25-50 per container move. AI stacking reduces re-handles by 30-40%. Reefer failure can destroy $100K+ in cargo.",
+            "substeps": [
+                {
+                    "substepName": "StackOptimization",
+                    "duration": 8
+                },
+                {
+                    "substepName": "ReeferMonitoring",
+                    "duration": 8
+                },
+                {
+                    "substepName": "GateScheduling",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "InlandTransport",
+            "serviceName": "InlandTransportService",
+            "description": "AI coordinates inland transport: truck appointment systems, rail loading optimisation, and barge scheduling. Modal split optimisation for cost and carbon. Chassis management.",
+            "category": "Distribution",
+            "estimatedDuration": 48,
+            "businessRationale": "Port congestion from uncoordinated trucking costs $billions annually. Truck appointment systems reduce gate wait times from 2 hours to 20 minutes.",
+            "substeps": [
+                {
+                    "substepName": "TruckAppointments",
+                    "duration": 16
+                },
+                {
+                    "substepName": "RailOptimization",
+                    "duration": 16
+                },
+                {
+                    "substepName": "ModalSplitOptimization",
+                    "duration": 16
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "PortAnalytics",
+            "serviceName": "PortAnalyticsService",
+            "description": "AI generates port performance reports: vessel turnaround time, crane productivity, yard utilisation, and dwell time analysis. Benchmarking against competitor ports.",
+            "category": "Analytics",
+            "estimatedDuration": 168,
+            "businessRationale": "Port analytics drive investment decisions and competitive positioning. Ports that demonstrate efficiency win shipping line contracts worth $100M+.",
+            "substeps": [
+                {
+                    "substepName": "TurnaroundAnalysis",
+                    "duration": 56
+                },
+                {
+                    "substepName": "ProductivityMetrics",
+                    "duration": 56
+                },
+                {
+                    "substepName": "CompetitiveBenchmark",
+                    "duration": 56
+                }
+            ]
+        }
+    ],
+    "id": "bd3d0dcd-ec76-47b4-9d97-87ee0ff49572",
+    "name": "Shipping & Maritime - Port Scheduling",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 500000000,
+        "annualRevenue": 2000000000,
+        "revenuePerCustomer": 50000000,
+        "profitMargin": 20.0,
+        "customerLifetimeValue": 500000000,
+        "lifetimeValue": 500000000,
+        "acquisitionCost": 0,
+        "costPerAcquisition": 0,
+        "conversionProbability": 1.0,
+        "conversionRate": 100,
+        "engagementScore": 82,
+        "timeToConversion": 0,
+        "sessionDuration": 28800,
+        "pageViews": 40,
+        "purchaseFrequency": 365,
+        "netPromoterScore": 0,
+        "satisfactionRating": 0,
+        "retentionProbability": 1.0,
+        "processingTime": 1440,
+        "operationalCost": 500000000,
+        "efficiencyRating": 75,
+        "craneMPH": 28,
+        "avgDwellTime": 4.5,
+        "channel": [
+            "port_TOS",
+            "shipping_line_portal",
+            "truck_appointment_app",
+            "customs_EDI",
+            "control_tower"
+        ],
+        "deviceType": [
+            "HMI_panel",
+            "desktop",
+            "mobile",
+            "server",
+            "desktop"
+        ],
+        "region": [
+            "Rotterdam NL",
+            "Singapore",
+            "Shanghai CN",
+            "Los Angeles US",
+            "Dubai UAE"
+        ],
+        "customerSegmentValue": [
+            "container_liner",
+            "bulk_carrier",
+            "tanker_operator",
+            "cruise_line",
+            "feeder_service"
+        ],
+        "loyaltyTier": [
+            "Alliance Partner",
+            "Key Account",
+            "Regular Caller",
+            "Occasional",
+            "Transshipment"
+        ],
+        "segment": [
+            "container_terminal",
+            "bulk_terminal",
+            "tanker_berth",
+            "cruise_terminal",
+            "ro_ro_terminal"
+        ],
+        "Productname": [
+            "Smart Berth Planner",
+            "Crane Scheduling AI",
+            "Yard Management Suite",
+            "Gate Control System",
+            "Port Community Platform"
+        ],
+        "ProductId": [
+            "PORT-SB-001",
+            "PORT-CS-002",
+            "PORT-YM-003",
+            "PORT-GC-004",
+            "PORT-PC-005"
+        ],
+        "ProductType": [
+            "berth_planning",
+            "crane_scheduling",
+            "yard_management",
+            "gate_control",
+            "port_community"
+        ],
+        "Price": [
+            10000000,
+            8000000,
+            12000000,
+            5000000,
+            3000000
+        ],
+        "annualTEU": [
+            15000000,
+            5000000,
+            0,
+            0,
+            2000000
+        ],
+        "vesselCallsPerYear": [
+            12000,
+            3000,
+            2000,
+            500,
+            5000
+        ],
+        "marketTrend": [
+            "port_automation",
+            "digital_twin_port",
+            "green_port_operations",
+            "blockchain_BL",
+            "autonomous_vessels"
+        ]
+    }
+}

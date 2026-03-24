@@ -1,16 +1,18 @@
 /**
- * PDF Export Routes
+ * PDF / Document Export Routes
  * 
  * Endpoints:
  *   POST /api/pdf/executive-summary  — Generate a bespoke Dynatrace Intelligence executive summary PDF
+ *   POST /api/pdf/executive-doc      — Generate an HTML executive summary (Word-convertible)
  *   
- * Accepts journey + dashboard data, enriches from saved-configs, returns a downloadable PDF.
+ * Accepts journey + dashboard data, enriches from saved-configs, returns a downloadable file.
  */
 
 import express from 'express';
 import path from 'path';
 import { readdir, readFile } from 'fs/promises';
 import { generateExecutiveSummaryPDF } from '../services/pdfGenerator.js';
+import { generateExecutiveSummaryDoc } from '../services/docGenerator.js';
 
 const router = express.Router();
 
@@ -102,6 +104,57 @@ router.post('/executive-summary', async (req, res) => {
   } catch (error) {
     console.error('[PDF Export] Generation error:', error);
     res.status(500).json({ error: 'Failed to generate PDF: ' + error.message });
+  }
+});
+
+/**
+ * POST /api/pdf/executive-doc
+ * Word-convertible HTML executive summary
+ */
+router.post('/executive-doc', async (req, res) => {
+  try {
+    let { journeyData, dashboardData } = req.body;
+
+    if (!journeyData || !journeyData.steps || journeyData.steps.length === 0) {
+      return res.status(400).json({ error: 'Journey data with steps is required' });
+    }
+
+    // Enrich from saved configs (same as PDF path)
+    const enriched = await enrichFromSavedConfig(journeyData);
+    if (enriched && enriched.steps) {
+      const enrichedSteps = journeyData.steps.map(step => {
+        const stepKey = (step.stepName || step.name || '').toLowerCase().replace(/service$/i, '');
+        const match = enriched.steps.find(es => {
+          const esKey = (es.stepName || '').toLowerCase();
+          return esKey === stepKey || esKey.includes(stepKey) || stepKey.includes(esKey);
+        });
+        return match ? { ...step, ...match } : step;
+      });
+      journeyData = {
+        ...journeyData,
+        steps: enrichedSteps,
+        domain: journeyData.domain || enriched.domain,
+        industryType: journeyData.industryType || enriched.industryType,
+        journeyDetail: journeyData.journeyDetail || enriched.journeyDetail,
+      };
+    }
+
+    console.log(`[Doc Export] Generating executive doc for: ${journeyData.companyName || journeyData.company} — ${journeyData.journeyType}`);
+
+    const html = generateExecutiveSummaryDoc({ journeyData, dashboardData: dashboardData || {} });
+    const filename = `${(journeyData.companyName || journeyData.company || 'Customer').replace(/\s+/g, '-')}-Executive-Summary.html`;
+
+    res.set({
+      'Content-Type': 'text/html; charset=utf-8',
+      'Content-Disposition': `attachment; filename="${filename}"`,
+      'Content-Length': Buffer.byteLength(html, 'utf8'),
+    });
+
+    res.send(html);
+    console.log(`[Doc Export] Generated ${filename} (${(Buffer.byteLength(html, 'utf8') / 1024).toFixed(1)}KB)`);
+  } catch (error) {
+    console.error('[Doc Export] Generation error:', error);
+    res.status(500).json({ error: 'Failed to generate document: ' + error.message });
   }
 });
 

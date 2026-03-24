@@ -1,0 +1,273 @@
+{
+    "companyName": "MediaStream Global",
+    "domain": "https://www.mediastream-global.com",
+    "industryType": "Media & Entertainment",
+    "journeyType": "Content Discovery",
+    "journeyDetail": "AI-Personalised Content Discovery & Engagement",
+    "journeyId": "journey_content_discovery_82ff3c49",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "PersonalisedHomeFeed",
+            "serviceName": "HomeFeedService",
+            "description": "AI curates personalised home feed from viewing history, explicit preferences, trending content, and social signals. Multi-armed bandit for exploration vs exploitation.",
+            "category": "Discovery",
+            "estimatedDuration": 0.1,
+            "businessRationale": "The home feed is where 75% of viewing starts. Better personalisation directly drives 15-20% more watch time.",
+            "substeps": [
+                {
+                    "substepName": "ProfileAnalysis",
+                    "duration": 0.03
+                },
+                {
+                    "substepName": "ContentRanking",
+                    "duration": 0.04
+                },
+                {
+                    "substepName": "TrendInjection",
+                    "duration": 0.03
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "SearchAndRecommendation",
+            "serviceName": "SearchRecService",
+            "description": "AI-powered search with natural language, voice, and visual queries. 'Because you watched' recommendations. Mood-based and contextual suggestions (time of day, device).",
+            "category": "Navigation",
+            "estimatedDuration": 0.2,
+            "businessRationale": "Good recommendations reduce browse time from 10 minutes to 2. Users who find content in under 60 seconds have 3x higher session duration.",
+            "substeps": [
+                {
+                    "substepName": "NLPSearch",
+                    "duration": 0.07
+                },
+                {
+                    "substepName": "CollabFiltering",
+                    "duration": 0.07
+                },
+                {
+                    "substepName": "ContextualRec",
+                    "duration": 0.06
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "ContentPreview",
+            "serviceName": "PreviewService",
+            "description": "AI generates personalised trailers, thumbnails (A/B tested per user), and synopsis summaries. Auto-play previews with attention-optimised duration.",
+            "category": "Engagement",
+            "estimatedDuration": 0.5,
+            "businessRationale": "Personalised thumbnails increase click-through by 20-30%. The right preview converts a browser to a viewer.",
+            "substeps": [
+                {
+                    "substepName": "DynamicThumbnail",
+                    "duration": 0.2
+                },
+                {
+                    "substepName": "TrailerGeneration",
+                    "duration": 0.15
+                },
+                {
+                    "substepName": "SynopsisGeneration",
+                    "duration": 0.15
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "ViewingExperience",
+            "serviceName": "ViewingService",
+            "description": "AI optimises stream quality (adaptive bitrate), provides skip-intro/recap features, and tracks engagement signals. Real-time content rating and social viewing features.",
+            "category": "Experience",
+            "estimatedDuration": 60,
+            "businessRationale": "Buffering causes 25% of session abandonment. AI-optimised streaming quality reduces abandonment and maintains engagement.",
+            "substeps": [
+                {
+                    "substepName": "AdaptiveBitrate",
+                    "duration": 20
+                },
+                {
+                    "substepName": "EngagementTracking",
+                    "duration": 20
+                },
+                {
+                    "substepName": "SocialFeatures",
+                    "duration": 20
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "ContinuityAndBingeing",
+            "serviceName": "ContinuityService",
+            "description": "AI manages cross-device continuity, auto-play next episode with smart countdowns, and binge-watch pacing. Content calendar notifications for new episodes.",
+            "category": "Retention",
+            "estimatedDuration": 5,
+            "businessRationale": "Binge completion rate directly predicts subscription retention. Users who finish a series are 70% more likely to renew.",
+            "substeps": [
+                {
+                    "substepName": "CrossDeviceSync",
+                    "duration": 1.5
+                },
+                {
+                    "substepName": "AutoPlayOptimization",
+                    "duration": 1.5
+                },
+                {
+                    "substepName": "ReleaseNotifications",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "ContentAnalytics",
+            "serviceName": "ContentAnalyticsService",
+            "description": "AI analyses viewership patterns for content acquisition decisions. Audience overlap, completion rates, and engagement depth by genre/format. Content ROI calculation.",
+            "category": "Analytics",
+            "estimatedDuration": 168,
+            "businessRationale": "Content spend is the #1 cost ($15-20B for major platforms). AI-informed acquisition decisions improve content ROI by 20-40%.",
+            "substeps": [
+                {
+                    "substepName": "ViewershipAnalysis",
+                    "duration": 56
+                },
+                {
+                    "substepName": "ContentROI",
+                    "duration": 56
+                },
+                {
+                    "substepName": "AcquisitionInsights",
+                    "duration": 56
+                }
+            ]
+        }
+    ],
+    "id": "90b07dc1-9470-4260-a447-29307546b1d9",
+    "name": "Media & Entertainment - Content Discovery",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 12.99,
+        "transactionValue": 12.99,
+        "averageOrderValue": 14.99,
+        "contractValue": 0,
+        "annualRevenue": 8000000000,
+        "revenuePerCustomer": 156,
+        "profitMargin": 8.0,
+        "customerLifetimeValue": 780,
+        "lifetimeValue": 780,
+        "acquisitionCost": 50,
+        "costPerAcquisition": 50,
+        "conversionProbability": 0.06,
+        "conversionRate": 6,
+        "engagementScore": 70,
+        "timeToConversion": 1440,
+        "sessionDuration": 3600,
+        "pageViews": 8,
+        "purchaseFrequency": 12,
+        "netPromoterScore": 42,
+        "satisfactionRating": 4.1,
+        "retentionProbability": 0.72,
+        "processingTime": 0.1,
+        "operationalCost": 2,
+        "efficiencyRating": 90,
+        "avgWatchTime": 95,
+        "completionRate": 68,
+        "channel": [
+            "smart_tv",
+            "mobile_app",
+            "web_browser",
+            "gaming_console",
+            "tablet"
+        ],
+        "deviceType": [
+            "smart_tv",
+            "mobile",
+            "desktop",
+            "console",
+            "tablet"
+        ],
+        "region": [
+            "US",
+            "UK",
+            "Brazil",
+            "India",
+            "Japan"
+        ],
+        "customerSegmentValue": [
+            "binge_watcher",
+            "casual_viewer",
+            "family_account",
+            "sports_fan",
+            "documentary_lover"
+        ],
+        "loyaltyTier": [
+            "Premium 4K",
+            "Standard HD",
+            "Basic",
+            "Ad-Supported",
+            "Trial"
+        ],
+        "segment": [
+            "drama",
+            "comedy",
+            "documentary",
+            "reality",
+            "sports"
+        ],
+        "Productname": [
+            "Premium 4K Plan",
+            "Standard HD Plan",
+            "Basic Plan",
+            "Ad-Supported Free",
+            "Sports Add-On"
+        ],
+        "ProductId": [
+            "MED-P4-001",
+            "MED-SH-002",
+            "MED-BA-003",
+            "MED-AF-004",
+            "MED-SA-005"
+        ],
+        "ProductType": [
+            "subscription_premium",
+            "subscription_standard",
+            "subscription_basic",
+            "ad_supported",
+            "add_on"
+        ],
+        "Price": [
+            22.99,
+            15.49,
+            6.99,
+            0,
+            9.99
+        ],
+        "contentLibrarySize": [
+            15000,
+            12000,
+            8000,
+            5000,
+            3000
+        ],
+        "churnRate": [
+            0.03,
+            0.05,
+            0.08,
+            0.12,
+            0.04
+        ],
+        "marketTrend": [
+            "ad_supported_tiers",
+            "live_sports_streaming",
+            "interactive_content",
+            "AI_content_creation",
+            "global_localisation"
+        ]
+    }
+}

@@ -1,0 +1,257 @@
+{
+    "companyName": "Advertising",
+    "domain": "https://www.advertising-demo.com",
+    "industryType": "Advertising & MarTech",
+    "journeyType": "Programmatic Campaign",
+    "journeyDetail": "Programmatic Campaign",
+    "journeyId": "journey_advertising_programmatic_campaign",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "AudienceBuilding",
+            "serviceName": "AudienceBuildingService",
+            "description": "AI builds programmatic audiences from first-party, second-party, and data clean room sources. Creates lookalike models, intent signals, and contextual targeting segments that comply with privacy regulations.",
+            "category": "DataManagement",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 5,
+            "businessRationale": "AI audience building increases ad relevance by 45%. Privacy-compliant audiences maintain targeting effectiveness in a cookieless world, protecting \u00a32B in programmatic spend.",
+            "substeps": [
+                {
+                    "substepName": "DataOnboarding",
+                    "duration": 2
+                },
+                {
+                    "substepName": "SegmentCreation",
+                    "duration": 3
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "DSPBidding",
+            "serviceName": "DSPBiddingService",
+            "description": "AI manages real-time bidding across demand-side platforms: evaluates 100K+ bid requests/second, calculates optimal bid price using ML models, and manages frequency caps, brand safety, and viewability requirements.",
+            "category": "Bidding",
+            "estimatedDuration": 1,
+            "businessRationale": "AI bidding reduces CPM by 22% while improving conversion rates by 18%. Real-time optimization across exchanges captures arbitrage opportunities worth \u00a35M annually.",
+            "substeps": [
+                {
+                    "substepName": "BidEvaluation",
+                    "duration": 0
+                },
+                {
+                    "substepName": "BidSubmission",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "CreativeServing",
+            "serviceName": "CreativeServingService",
+            "description": "AI serves dynamically assembled creative: personalised messages, product recommendations, and format optimization (display, video, native, CTV). A/B tests thousands of creative variants simultaneously.",
+            "category": "Creative",
+            "estimatedDuration": 1,
+            "businessRationale": "Dynamic creative optimization lifts CTR by 35% over static creative. Personalized messaging drives 2x conversion rates across display and video formats.",
+            "substeps": [
+                {
+                    "substepName": "CreativeSelection",
+                    "duration": 0
+                },
+                {
+                    "substepName": "DynamicAssembly",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "SupplyPathOptimization",
+            "serviceName": "SupplyPathOptimizationService",
+            "description": "AI optimises supply paths: identifies most efficient routes to inventory, eliminates reseller arbitrage, reduces auction duplicates, and selects exchanges offering best viewability and brand safety.",
+            "category": "Optimization",
+            "estimatedDuration": 10,
+            "businessRationale": "Supply path optimization reduces ad tech tax by 15%. Cleaner supply chains improve working media ratio from 55% to 70%, directly increasing client ad impact.",
+            "substeps": [
+                {
+                    "substepName": "PathAnalysis",
+                    "duration": 5
+                },
+                {
+                    "substepName": "ExchangeSelection",
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "FraudDetection",
+            "serviceName": "FraudDetectionService",
+            "description": "AI detects ad fraud: invalid traffic, domain spoofing, viewability fraud, and attribution manipulation. Pre-bid filtering blocks fraudulent inventory, post-bid analysis recovers misattributed spend.",
+            "category": "Verification",
+            "estimatedDuration": 1,
+            "businessRationale": "AI fraud detection saves 12% of ad spend lost to fraud. Pre-bid blocking prevents waste before it occurs, protecting \u00a3250M in annual programmatic investment.",
+            "substeps": [
+                {
+                    "substepName": "PreBidFiltering",
+                    "duration": 0
+                },
+                {
+                    "substepName": "PostBidAnalysis",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "CampaignReporting",
+            "serviceName": "CampaignReportingService",
+            "description": "AI provides unified reporting across all programmatic channels: reach, frequency, viewability, brand lift, attribution, and incrementality. Recommends budget reallocation based on cross-channel performance.",
+            "category": "Reporting",
+            "estimatedDuration": 60,
+            "businessRationale": "Unified cross-channel reporting eliminates siloed optimization. AI budget reallocation recommendations improve overall ROAS by 20% through evidence-based channel mix decisions.",
+            "substeps": [
+                {
+                    "substepName": "CrossChannelAnalysis",
+                    "duration": 30
+                },
+                {
+                    "substepName": "OptimizationRecommendations",
+                    "duration": 30
+                }
+            ]
+        }
+    ],
+    "id": "e4bea008-bb1f-4da4-bced-50af0d7254d3",
+    "name": "Advertising & MarTech - Programmatic Campaign",
+    "timestamp": "2026-03-18T21:35:20.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 500000,
+        "annualRevenue": 0,
+        "revenuePerCustomer": 0,
+        "profitMargin": 15,
+        "customerLifetimeValue": 3000000,
+        "lifetimeValue": 3000000,
+        "acquisitionCost": 50000,
+        "costPerAcquisition": 0,
+        "conversionProbability": 0.025,
+        "conversionRate": 2.5,
+        "engagementScore": 5.2,
+        "timeToConversion": 14,
+        "sessionDuration": 0,
+        "pageViews": 0,
+        "purchaseFrequency": 0,
+        "netPromoterScore": 35,
+        "satisfactionRating": 3.8,
+        "retentionProbability": 0.78,
+        "processingTime": 0.05,
+        "operationalCost": 0.004,
+        "efficiencyRating": 88,
+        "discountApplied": 0,
+        "taxAmount": 0,
+        "shippingCost": 0,
+        "channel": [
+            "display",
+            "video",
+            "native",
+            "ctv",
+            "audio"
+        ],
+        "deviceType": [
+            "desktop",
+            "mobile",
+            "tablet",
+            "connected_tv",
+            "mobile"
+        ],
+        "region": [
+            "UK",
+            "DACH",
+            "France",
+            "Nordics",
+            "Benelux"
+        ],
+        "customerSegmentValue": [
+            "fmcg_brand",
+            "auto_brand",
+            "finance_brand",
+            "tech_brand",
+            "retail_brand"
+        ],
+        "loyaltyTier": [
+            "managed_service",
+            "self_service",
+            "programmatic_guaranteed",
+            "preferred_deal",
+            "agency_partner"
+        ],
+        "segment": [
+            "display_rtb",
+            "video_pre_roll",
+            "native_content",
+            "ctv_streaming",
+            "dooh"
+        ],
+        "Productname": [
+            "Display_RTB",
+            "Video_PreRoll",
+            "Native_Content",
+            "CTV_Spot",
+            "DOOH_Programmatic"
+        ],
+        "ProductId": [
+            "PRG-DSP-001",
+            "PRG-VID-002",
+            "PRG-NAT-003",
+            "PRG-CTV-004",
+            "PRG-DOH-005"
+        ],
+        "ProductType": [
+            "display",
+            "video",
+            "native",
+            "connected_tv",
+            "out_of_home"
+        ],
+        "Price": [
+            3.5,
+            18.0,
+            8.5,
+            35.0,
+            12.0
+        ],
+        "cpm": [
+            3.5,
+            18.0,
+            8.5,
+            35.0,
+            12.0
+        ],
+        "viewabilityRate": [
+            72,
+            85,
+            68,
+            95,
+            90
+        ],
+        "fraudRate": [
+            8,
+            3,
+            5,
+            1,
+            2
+        ],
+        "marketTrend": [
+            "cookieless_targeting",
+            "ctv_growth",
+            "retail_media",
+            "attention_metrics",
+            "carbon_measurement"
+        ]
+    }
+}

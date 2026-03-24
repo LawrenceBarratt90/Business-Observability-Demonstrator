@@ -1,0 +1,9 @@
+{
+  "name": "skill-development",
+  "description": "Tools for creating, validating, and managing AI agent skills with quality checks and structural standards",
+  "resources": [
+    "skill/skill-creator",
+    "skill/skill-validator",
+    "agent/skill-tester-agent"
+  ]
+}

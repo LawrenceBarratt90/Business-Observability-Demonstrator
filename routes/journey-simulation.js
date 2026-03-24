@@ -7,6 +7,8 @@ import { ensureServiceRunning, getServicePort, getServiceNameFromStep, stopServi
 import loadRunnerManager from '../scripts/continuous-loadrunner.js';
 // Import transaction tracking for volume-based chaos triggering
 import { recordTransaction } from '../dist/agents/gremlin/autonomousScheduler.js';
+// Import field repository — captures bizevent field schemas for Ollama AI tiles
+import { captureFields } from '../services/field-repo.js';
 
 const router = express.Router();
 
@@ -1497,6 +1499,19 @@ router.post('/simulate-journey', async (req, res) => {
       console.error('[journey-sim] ⚠️  Failed to record transaction (non-fatal):', recordErr.message);
     }
     
+    // Capture field schema to field repository for Ollama AI tiles
+    try {
+      captureFields(
+        currentPayload.companyName,
+        currentPayload.journeyType,
+        journeyComplete.additionalFields,
+        stepData.map(s => s.serviceName).filter(Boolean),
+        stepData.map(s => s.stepName).filter(Boolean)
+      );
+    } catch (captureErr) {
+      console.warn('[journey-sim] ⚠️  Field repo capture failed (non-fatal):', captureErr.message);
+    }
+    
     res.json({
       success: true,
       journey: journeyComplete,
@@ -2260,6 +2275,23 @@ router.post('/simulate-multiple-journeys', async (req, res) => {
       console.error('[journey-sim] ⚠️  Failed to record transactions (non-fatal):', recordErr.message);
     }
 
+    // Capture field schema from first successful journey for the field repo
+    try {
+      const firstSuccess = results.find(c => c.status === 'completed' && c.additionalFields);
+      if (firstSuccess) {
+        const journeyObj = req.body.journey || req.body;
+        captureFields(
+          journeyObj.companyName || firstSuccess.companyName || 'DefaultCompany',
+          journeyObj.journeyType || firstSuccess.journeyType || 'customer_journey',
+          firstSuccess.additionalFields,
+          stepData.map(s => s.serviceName).filter(Boolean),
+          stepData.map(s => s.stepName).filter(Boolean)
+        );
+      }
+    } catch (captureErr) {
+      console.warn('[journey-sim] ⚠️  Field repo capture failed (non-fatal):', captureErr.message);
+    }
+
     res.json({
       success: true,
       loadTestSummary: {
@@ -2482,6 +2514,22 @@ router.post('/simulate-batch-chained', async (req, res) => {
       await new Promise(r => setTimeout(r, delay));
     }
 
+    // Capture field schema for field repo from batch chained results
+    try {
+      const batchFields = req.body.additionalFields || journeyObj.additionalFields || {};
+      if (Object.keys(batchFields).length > 0 && completed > 0) {
+        captureFields(
+          journeyObj.companyName || bodyCompany || 'DefaultCompany',
+          journeyObj.journeyType || 'customer_journey',
+          batchFields,
+          stepData.map(s => s.serviceName).filter(Boolean),
+          stepData.map(s => s.stepName).filter(Boolean)
+        );
+      }
+    } catch (captureErr) {
+      console.warn('[journey-sim] ⚠️  Field repo capture failed (non-fatal):', captureErr.message);
+    }
+
     res.json({ ok: true, summary: { customers: requestedCustomers, completed, failed }, sample: results });
   } catch (e) {
     console.error('[journey-sim] simulate-batch-chained error:', e);
@@ -2611,6 +2659,22 @@ router.post('/simulate-single-step-journeys', async (req, res) => {
         // Small delay to avoid thundering herd
         await new Promise(r => setTimeout(r, 10));
       }
+    }
+
+    // Capture field schema for field repo from single-step results
+    try {
+      const ssFields = req.body.additionalFields || journeyObj.additionalFields || {};
+      if (Object.keys(ssFields).length > 0 && completed > 0) {
+        captureFields(
+          journeyObj.companyName || req.body.companyName || 'DefaultCompany',
+          journeyObj.journeyType || 'customer_journey',
+          ssFields,
+          stepData.map(s => s.serviceName).filter(Boolean),
+          stepData.map(s => s.stepName).filter(Boolean)
+        );
+      }
+    } catch (captureErr) {
+      console.warn('[journey-sim] ⚠️  Field repo capture failed (non-fatal):', captureErr.message);
     }
 
     res.json({ 

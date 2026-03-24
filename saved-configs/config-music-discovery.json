@@ -1,0 +1,273 @@
+{
+    "companyName": "SonicStream Music",
+    "domain": "https://www.sonicstream-music.com",
+    "industryType": "Music & Audio",
+    "journeyType": "Music Discovery",
+    "journeyDetail": "AI-Powered Personalised Music Discovery",
+    "journeyId": "journey_music_discovery_1beed41e",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "ListeningProfileBuild",
+            "serviceName": "ProfileService",
+            "description": "AI builds listener profile from play history, skips, saves, playlist creation, and audio feature preferences (tempo, energy, valence). Taste clusters and genre affinities mapped.",
+            "category": "Profiling",
+            "estimatedDuration": 168,
+            "businessRationale": "Deep listener profiling is the foundation of personalisation. Platforms with better profiles achieve 40% higher daily active use.",
+            "substeps": [
+                {
+                    "substepName": "PlayHistoryAnalysis",
+                    "duration": 56
+                },
+                {
+                    "substepName": "AudioFeatureProfiling",
+                    "duration": 56
+                },
+                {
+                    "substepName": "TasteClusterMapping",
+                    "duration": 56
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "PersonalisedPlaylists",
+            "serviceName": "PlaylistService",
+            "description": "AI generates personalised playlists: Discover Weekly, Daily Mix, Release Radar. New artist introduction balanced with familiar favourites. Mood and activity-based playlists.",
+            "category": "Discovery",
+            "estimatedDuration": 24,
+            "businessRationale": "Personalised playlists drive 31% of all streams. Discover Weekly alone has introduced 2.3B artist discoveries globally.",
+            "substeps": [
+                {
+                    "substepName": "DiscoverWeekly",
+                    "duration": 8
+                },
+                {
+                    "substepName": "DailyMix",
+                    "duration": 8
+                },
+                {
+                    "substepName": "MoodPlaylists",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "ArtistRecommendation",
+            "serviceName": "ArtistRecService",
+            "description": "AI recommends new artists from audio similarity, listener overlap, and concert proximity. 'Fans Also Like' with explanation. Emerging artist spotlight for early adopters.",
+            "category": "Exploration",
+            "estimatedDuration": 1,
+            "businessRationale": "Artist discovery benefits the entire ecosystem: listeners find new favourites, artists grow audiences. Better discovery = more engagement.",
+            "substeps": [
+                {
+                    "substepName": "AudioSimilarity",
+                    "duration": 0.3
+                },
+                {
+                    "substepName": "ListenerOverlap",
+                    "duration": 0.3
+                },
+                {
+                    "substepName": "EmergingArtistSpotlight",
+                    "duration": 0.4
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "ContextualMusic",
+            "serviceName": "ContextualService",
+            "description": "AI adapts music recommendations to context: time of day, weather, workout intensity, driving speed, and calendar events. Smart speaker and connected device integration.",
+            "category": "Adaptation",
+            "estimatedDuration": 0.5,
+            "businessRationale": "Contextual music plays have 2x completion rate. Right music at right moment builds the habit loop that drives daily use.",
+            "substeps": [
+                {
+                    "substepName": "TimeOfDayAdaptation",
+                    "duration": 0.15
+                },
+                {
+                    "substepName": "ActivityDetection",
+                    "duration": 0.15
+                },
+                {
+                    "substepName": "DeviceContext",
+                    "duration": 0.2
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "SocialAndSharing",
+            "serviceName": "SocialService",
+            "description": "AI facilitates social discovery: collaborative playlists, listening activity feed, blend playlists for friend pairs, and concert group matching. Viral content identification.",
+            "category": "Engagement",
+            "estimatedDuration": 24,
+            "businessRationale": "Social features increase referrals by 25%. Collaborative playlists have 3x the engagement of solo playlists.",
+            "substeps": [
+                {
+                    "substepName": "CollaborativePlaylists",
+                    "duration": 8
+                },
+                {
+                    "substepName": "SocialFeed",
+                    "duration": 8
+                },
+                {
+                    "substepName": "ViralDetection",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "ListeningAnalytics",
+            "serviceName": "ListeningAnalyticsService",
+            "description": "AI generates personalised listening stats: top genres, artists, tracks, listening hours, and music personality type. Year-in-review features for social sharing.",
+            "category": "Analytics",
+            "estimatedDuration": 168,
+            "businessRationale": "Wrapped/year-in-review generates $100M+ in earned media. Listening analytics create emotional connection and prevent churn.",
+            "substeps": [
+                {
+                    "substepName": "PersonalStats",
+                    "duration": 56
+                },
+                {
+                    "substepName": "YearInReview",
+                    "duration": 56
+                },
+                {
+                    "substepName": "MusicPersonality",
+                    "duration": 56
+                }
+            ]
+        }
+    ],
+    "id": "e5bf0d4f-7695-4e3f-ba0b-b7d2cfeb1f3d",
+    "name": "Music & Audio - Music Discovery",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 10.99,
+        "transactionValue": 10.99,
+        "averageOrderValue": 11.99,
+        "contractValue": 0,
+        "annualRevenue": 5000000000,
+        "revenuePerCustomer": 132,
+        "profitMargin": 5.0,
+        "customerLifetimeValue": 660,
+        "lifetimeValue": 660,
+        "acquisitionCost": 8,
+        "costPerAcquisition": 8,
+        "conversionProbability": 0.12,
+        "conversionRate": 12,
+        "engagementScore": 80,
+        "timeToConversion": 720,
+        "sessionDuration": 2400,
+        "pageViews": 6,
+        "purchaseFrequency": 12,
+        "netPromoterScore": 50,
+        "satisfactionRating": 4.3,
+        "retentionProbability": 0.78,
+        "processingTime": 0.1,
+        "operationalCost": 0.004,
+        "efficiencyRating": 92,
+        "avgDailyListeningMinutes": 52,
+        "skipRate": 22,
+        "channel": [
+            "mobile_app",
+            "desktop_app",
+            "smart_speaker",
+            "car_infotainment",
+            "web_player"
+        ],
+        "deviceType": [
+            "mobile",
+            "desktop",
+            "smart_speaker",
+            "car",
+            "desktop"
+        ],
+        "region": [
+            "US",
+            "UK",
+            "Brazil",
+            "Mexico",
+            "Sweden"
+        ],
+        "customerSegmentValue": [
+            "premium_individual",
+            "premium_family",
+            "free_ad_supported",
+            "student",
+            "duo"
+        ],
+        "loyaltyTier": [
+            "Premium Family",
+            "Premium Individual",
+            "Premium Student",
+            "Free",
+            "Trial"
+        ],
+        "segment": [
+            "pop",
+            "hip_hop",
+            "rock",
+            "latin",
+            "electronic"
+        ],
+        "Productname": [
+            "Premium Individual",
+            "Premium Family (6)",
+            "Premium Student",
+            "Free Ad-Supported",
+            "Premium Duo"
+        ],
+        "ProductId": [
+            "MUS-PI-001",
+            "MUS-PF-002",
+            "MUS-PS-003",
+            "MUS-FA-004",
+            "MUS-PD-005"
+        ],
+        "ProductType": [
+            "premium_individual",
+            "premium_family",
+            "premium_student",
+            "free",
+            "premium_duo"
+        ],
+        "Price": [
+            10.99,
+            16.99,
+            5.99,
+            0,
+            14.99
+        ],
+        "tracksAvailable": [
+            100000000,
+            100000000,
+            100000000,
+            100000000,
+            100000000
+        ],
+        "playlistFollowers": [
+            5000000,
+            2000000,
+            1500000,
+            8000000,
+            800000
+        ],
+        "marketTrend": [
+            "spatial_audio",
+            "AI_generated_music",
+            "podcast_integration",
+            "live_audio",
+            "creator_economy"
+        ]
+    }
+}

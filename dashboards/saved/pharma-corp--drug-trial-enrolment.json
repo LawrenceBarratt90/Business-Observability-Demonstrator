@@ -1,0 +1,499 @@
+{
+  "id": "pharma-corp--drug-trial-enrolment",
+  "dashboard": {
+    "name": "Pharma Corp Drug Trial Enrolment Dashboard [MCP Custom]",
+    "type": "dashboard",
+    "version": 1,
+    "content": {
+      "version": 21,
+      "variables": [
+        {
+          "key": "CompanyName",
+          "visible": true,
+          "type": "query",
+          "version": 2,
+          "editable": true,
+          "multiple": false,
+          "input": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == \"Pharma Corp\" | fields json.companyName | dedup json.companyName"
+        },
+        {
+          "key": "JourneyType",
+          "visible": true,
+          "type": "query",
+          "version": 2,
+          "editable": true,
+          "multiple": true,
+          "defaultValue": "3420b2ac-f1cf-4b24-b62d-61ba1ba8ed05*",
+          "input": "fetch bizevents \n| filter json.companyName == $CompanyName\n| fields json.journeyType | dedup json.journeyType"
+        },
+        {
+          "key": "Step",
+          "visible": true,
+          "type": "query",
+          "version": 2,
+          "editable": true,
+          "multiple": true,
+          "defaultValue": "3420b2ac-f1cf-4b24-b62d-61ba1ba8ed05*",
+          "input": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter in(json.journeyType, $JourneyType) | filter json.companyName == \"Pharma Corp\" | fields json.stepName | dedup json.stepName"
+        },
+        {
+          "key": "Service",
+          "visible": true,
+          "type": "query",
+          "version": 2,
+          "editable": true,
+          "multiple": true,
+          "defaultValue": "3420b2ac-f1cf-4b24-b62d-61ba1ba8ed05*",
+          "input": "fetch bizevents\n| fields json.serviceName, json.companyName, json.journeyType\n| summarize count(),by:{json.companyName, json.journeyType, json.serviceName}\n| filter json.companyName == $CompanyName \n| filter in(json.journeyType, $JourneyType)\n| dedup json.serviceName\n| fields json.serviceName = lower(json.serviceName)\n| filter isNotNull(json.serviceName)"
+        },
+        {
+          "key": "PGI",
+          "visible": true,
+          "type": "query",
+          "version": 2,
+          "editable": true,
+          "multiple": true,
+          "defaultValue": "3420b2ac-f1cf-4b24-b62d-61ba1ba8ed05*",
+          "input": "smartscapeNodes PROCESS\n| lookup [smartscapeNodes SERVICE | fields id, name], sourceField:name, lookupField:name, prefix:\"svc.\"\n| lookup [timeseries cpu = avg(dt.process.cpu.usage), by:{dt.smartscape.process}], sourceField:id, lookupField:dt.smartscape.process, fields:{cpu}\n| filter isNotNull(cpu)\n| fieldsAdd LowerService = lower(name)\n| filter in(LowerService, $Service)\n| fields id\n| dedup id"
+        }
+      ],
+      "tiles": {
+        "0": {
+          "title": "",
+          "type": "markdown",
+          "content": "# Pharma Corp Drug Trial Enrolment Dashboard\n## Pharma Corp | Drug Trial Enrolment Journey | Business Observability\n**Data Signals:** 🔧 Services\n---"
+        },
+        "1": {
+          "title": "",
+          "type": "markdown",
+          "content": "**Journey Flow:** `Step 1` → `Step 2` → `Step 3`"
+        },
+        "2": {
+          "title": "",
+          "type": "markdown",
+          "content": "### 📊 Key Performance Indicators"
+        },
+        "3": {
+          "title": "Traffic",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize value = sum(additionalfields.requestCount)",
+          "visualization": "singleValue",
+          "visualizationSettings": {},
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "4": {
+          "title": "",
+          "type": "markdown",
+          "content": "### 📈 Analysis & Trends"
+        },
+        "5": {
+          "title": "Latency",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | makeTimeseries value = avg(additionalfields.responseTime), bins:30",
+          "visualization": "lineChart",
+          "visualizationSettings": {
+            "chartSettings": {
+              "gapPolicy": "connect"
+            },
+            "thresholds": [],
+            "unitsOverrides": []
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "6": {
+          "title": "",
+          "type": "markdown",
+          "content": "### 📋 Detailed Views"
+        },
+        "7": {
+          "title": "Errors",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize Events = count(), Errors = countIf(additionalfields.hasError == true), \"Avg Processing (ms)\" = avg(additionalfields.processingTime), by: {json.stepName} | sort Events desc",
+          "visualization": "table",
+          "visualizationSettings": {},
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "8": {
+          "title": "",
+          "type": "markdown",
+          "content": "### 📈 Analysis & Trends"
+        },
+        "9": {
+          "title": "CPU Usage",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize value = sum(additionalfields.cpuUsage)",
+          "visualization": "barChart",
+          "visualizationSettings": {
+            "categoryAxis": {
+              "label": {
+                "showLabel": true
+              },
+              "tickLayout": "horizontal"
+            },
+            "numericAxis": {
+              "label": {
+                "showLabel": true
+              },
+              "scale": "linear"
+            },
+            "legend": {
+              "position": "auto",
+              "showLegend": true
+            },
+            "layout": {
+              "groupMode": "grouped",
+              "position": "horizontal"
+            }
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "10": {
+          "title": "Memory Usage",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize value = sum(additionalfields.memoryUsage)",
+          "visualization": "barChart",
+          "visualizationSettings": {
+            "categoryAxis": {
+              "label": {
+                "showLabel": true
+              },
+              "tickLayout": "horizontal"
+            },
+            "numericAxis": {
+              "label": {
+                "showLabel": true
+              },
+              "scale": "linear"
+            },
+            "legend": {
+              "position": "auto",
+              "showLegend": true
+            },
+            "layout": {
+              "groupMode": "grouped",
+              "position": "horizontal"
+            }
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "11": {
+          "title": "Error Message Breakdown",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | filter isNotNull(additionalfields.errorMessageCount) | summarize count = count(), by: {additionalfields.errorMessageCount} | sort count desc | limit 10",
+          "visualization": "categoricalBarChart",
+          "visualizationSettings": {
+            "categoryAxis": {
+              "label": {
+                "showLabel": true
+              },
+              "tickLayout": "horizontal"
+            },
+            "numericAxis": {
+              "label": {
+                "showLabel": true
+              },
+              "scale": "linear"
+            },
+            "legend": {
+              "position": "auto",
+              "showLegend": true
+            },
+            "layout": {
+              "groupMode": "grouped",
+              "position": "horizontal"
+            }
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "12": {
+          "title": "Step-Level Error Rates",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize total = count(), errors = countIf(additionalfields.hasError == true) | fieldsAdd rate = round((toDouble(errors)/toDouble(total))*100, decimals:2)",
+          "visualization": "donutChart",
+          "visualizationSettings": {
+            "legend": {
+              "position": "auto",
+              "showLegend": true
+            }
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "13": {
+          "title": "SLA Compliance",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize total = count(), success = countIf(isNull(additionalfields.hasError) or additionalfields.hasError == false) | fieldsAdd rate = round((toDouble(success)/toDouble(total))*100, decimals:2)",
+          "visualization": "pieChart",
+          "visualizationSettings": {
+            "legend": {
+              "position": "auto",
+              "showLegend": true
+            }
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "14": {
+          "title": "",
+          "type": "markdown",
+          "content": "---\n🤖 *Dashboard generated by Bespoke Ollama (8 unique tiles) | 2026-03-18 | 14 tiles*"
+        },
+        "15": {
+          "title": "",
+          "type": "markdown",
+          "content": "## 🔗 Deep-Link Navigation\n\n| Resource | Link |\n|----------|------|\n| 🔍 **Distributed Traces** | [Open Trace Explorer →](https://your-environment.apps.dynatrace.com/ui/diagnostictools/purepaths?gtf=-24h+to+now&gf=all) |\n| 📊 **Service Overview** | [Open Services →](https://your-environment.apps.dynatrace.com/ui/services?gtf=-24h+to+now&gf=all) |\n| ❌ **Failure Analysis** | [Open Failure Analysis →](https://your-environment.apps.dynatrace.com/ui/diagnostictools/mda?gtf=-24h+to+now&gf=all&mdaId=failureAnalysis) |\n| 🐛 **Exception Analysis** | [Open Exception Analysis →](https://your-environment.apps.dynatrace.com/ui/diagnostictools/mda?gtf=-24h+to+now&gf=all&mdaId=exceptionAnalysis) |\n| 📈 **Dynatrace Intelligence Problems** | [Open Problems →](https://your-environment.apps.dynatrace.com/ui/problems?gtf=-24h+to+now) |\n| 📊 **Business Events** | [Open BizEvents →](https://your-environment.apps.dynatrace.com/ui/bizevents?gtf=-24h+to+now) |\n\n*Links open in your Dynatrace environment*"
+        }
+      },
+      "layouts": {
+        "0": {
+          "x": 0,
+          "y": 0,
+          "w": 24,
+          "h": 3
+        },
+        "1": {
+          "x": 0,
+          "y": 3,
+          "w": 24,
+          "h": 2
+        },
+        "2": {
+          "x": 0,
+          "y": 5,
+          "w": 24,
+          "h": 1
+        },
+        "3": {
+          "x": 0,
+          "y": 6,
+          "w": 6,
+          "h": 3
+        },
+        "4": {
+          "x": 0,
+          "y": 9,
+          "w": 24,
+          "h": 1
+        },
+        "5": {
+          "x": 0,
+          "y": 10,
+          "w": 12,
+          "h": 4
+        },
+        "6": {
+          "x": 0,
+          "y": 14,
+          "w": 24,
+          "h": 1
+        },
+        "7": {
+          "x": 0,
+          "y": 15,
+          "w": 24,
+          "h": 6
+        },
+        "8": {
+          "x": 0,
+          "y": 21,
+          "w": 24,
+          "h": 1
+        },
+        "9": {
+          "x": 0,
+          "y": 22,
+          "w": 12,
+          "h": 4
+        },
+        "10": {
+          "x": 12,
+          "y": 22,
+          "w": 12,
+          "h": 4
+        },
+        "11": {
+          "x": 0,
+          "y": 26,
+          "w": 12,
+          "h": 4
+        },
+        "12": {
+          "x": 12,
+          "y": 26,
+          "w": 12,
+          "h": 4
+        },
+        "13": {
+          "x": 0,
+          "y": 30,
+          "w": 12,
+          "h": 4
+        },
+        "14": {
+          "x": 0,
+          "y": 34,
+          "w": 24,
+          "h": 1
+        },
+        "15": {
+          "x": 0,
+          "y": 35,
+          "w": 24,
+          "h": 5
+        }
+      },
+      "importedWithCode": false,
+      "settings": {
+        "defaultTimeframe": {
+          "value": {
+            "from": "now()-24h",
+            "to": "now()"
+          },
+          "enabled": true
+        }
+      },
+      "annotations": []
+    },
+    "metadata": {
+      "generatedBy": "ai-dashboard-generator",
+      "generationMethod": "mcp-prompt-driven",
+      "model": "llama3.2",
+      "company": "Pharma Corp",
+      "journeyType": "Drug Trial Enrolment",
+      "dashboardSlug": "pharma-corp-drug-trial-enrolment-dashboard",
+      "totalTiles": 16,
+      "dynamicFieldTiles": 0,
+      "detectedFields": {
+        "additionalFields": [],
+        "customerProfile": [],
+        "flags": {
+          "revenue": false,
+          "loyalty": false,
+          "ltv": false,
+          "segments": false,
+          "devices": false,
+          "channel": false,
+          "nps": false,
+          "churnRisk": false,
+          "conversion": false,
+          "pricing": false,
+          "risk": false,
+          "fraud": false,
+          "compliance": false,
+          "engagement": false,
+          "satisfaction": false,
+          "retention": false,
+          "product": false,
+          "operational": false,
+          "forecast": false,
+          "acquisition": false,
+          "upsell": false,
+          "browser": false,
+          "subscription": false,
+          "membership": false,
+          "services": false
+        }
+      },
+      "generatedAt": "2026-03-18T14:27:42.595Z"
+    }
+  },
+  "generationMethod": "mcp-prompt-driven",
+  "company": "Pharma Corp",
+  "journeyType": "Drug Trial Enrolment",
+  "tileCount": 16,
+  "savedAt": "2026-03-18T14:27:42.596Z"
+}

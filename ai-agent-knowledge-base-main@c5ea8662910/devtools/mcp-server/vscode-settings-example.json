@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "dql-knowledgebase": {
+      "comment": "Using local development path - replace with your actual path",
+      "command": "node",
+      "args": ["/Users/YOUR_USERNAME/path/to/mcp-server/dist/index.js"]
+    }
+  },
+  "mcpServers_alternative_1": {
+    "dql-knowledgebase": {
+      "comment": "If installed globally via npm install -g",
+      "command": "dql-kb-mcp"
+    }
+  },
+  "mcpServers_alternative_2": {
+    "dql-knowledgebase": {
+      "comment": "Using npx (will download from npm registry)",
+      "command": "npx",
+      "args": ["@dynatrace/dql-kb-mcp"]
+    }
+  }
+}

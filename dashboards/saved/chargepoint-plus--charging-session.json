@@ -1,0 +1,738 @@
+{
+  "id": "chargepoint-plus--charging-session",
+  "dashboard": {
+    "name": "Executive Charging Operations Dashboard [MCP Custom]",
+    "type": "dashboard",
+    "version": 1,
+    "content": {
+      "version": 21,
+      "variables": [
+        {
+          "key": "CompanyName",
+          "visible": true,
+          "type": "query",
+          "version": 2,
+          "editable": true,
+          "multiple": false,
+          "input": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == \"ChargePoint Plus\" | fields json.companyName | dedup json.companyName"
+        },
+        {
+          "key": "JourneyType",
+          "visible": true,
+          "type": "query",
+          "version": 2,
+          "editable": true,
+          "multiple": true,
+          "defaultValue": "3420b2ac-f1cf-4b24-b62d-61ba1ba8ed05*",
+          "input": "fetch bizevents \n| filter json.companyName == $CompanyName\n| fields json.journeyType | dedup json.journeyType"
+        },
+        {
+          "key": "Step",
+          "visible": true,
+          "type": "query",
+          "version": 2,
+          "editable": true,
+          "multiple": true,
+          "defaultValue": "3420b2ac-f1cf-4b24-b62d-61ba1ba8ed05*",
+          "input": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter in(json.journeyType, $JourneyType) | filter json.companyName == \"ChargePoint Plus\" | fields json.stepName | dedup json.stepName"
+        },
+        {
+          "key": "Service",
+          "visible": true,
+          "type": "query",
+          "version": 2,
+          "editable": true,
+          "multiple": true,
+          "defaultValue": "3420b2ac-f1cf-4b24-b62d-61ba1ba8ed05*",
+          "input": "fetch bizevents\n| fields json.serviceName, json.companyName, json.journeyType\n| summarize count(),by:{json.companyName, json.journeyType, json.serviceName}\n| filter json.companyName == $CompanyName \n| filter in(json.journeyType, $JourneyType)\n| dedup json.serviceName\n| fields json.serviceName = lower(json.serviceName)\n| filter isNotNull(json.serviceName)"
+        },
+        {
+          "key": "PGI",
+          "visible": true,
+          "type": "query",
+          "version": 2,
+          "editable": true,
+          "multiple": true,
+          "defaultValue": "3420b2ac-f1cf-4b24-b62d-61ba1ba8ed05*",
+          "input": "smartscapeNodes PROCESS\n| lookup [smartscapeNodes SERVICE | fields id, name], sourceField:name, lookupField:name, prefix:\"svc.\"\n| lookup [timeseries cpu = avg(dt.process.cpu.usage), by:{dt.smartscape.process}], sourceField:id, lookupField:dt.smartscape.process, fields:{cpu}\n| filter isNotNull(cpu)\n| fieldsAdd LowerService = lower(name)\n| filter in(LowerService, $Service)\n| fields id\n| dedup id"
+        }
+      ],
+      "tiles": {
+        "0": {
+          "title": "",
+          "type": "markdown",
+          "content": "# Executive Charging Operations Dashboard\n## ChargePoint Plus | Charging Session Journey | Electric Vehicle & Charging\n**Data Signals:** 📊 Revenue | 📊 Satisfaction\n---"
+        },
+        "1": {
+          "title": "",
+          "type": "markdown",
+          "content": "**Journey Flow:** `StationDiscovery` → `SessionInitiation` → `ChargingOptimization` → `GridBalancing` → `SessionCompletion` → `FleetReporting`"
+        },
+        "2": {
+          "title": "",
+          "type": "markdown",
+          "content": "### 📊 Key Performance Indicators"
+        },
+        "3": {
+          "title": "Total Sessions",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize value = sum(additionalfields.sessionDuration)",
+          "visualization": "singleValue",
+          "visualizationSettings": {},
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "4": {
+          "title": "Average Session Duration",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize value = avg(additionalfields.sessionDuration)",
+          "visualization": "singleValue",
+          "visualizationSettings": {},
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "5": {
+          "title": "Charger Utilisation",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize value = avg(additionalfields.chargerUtilisation)",
+          "visualization": "gauge",
+          "visualizationSettings": {
+            "gauge": {
+              "label": "Charger Utilisation",
+              "recordField": "value",
+              "min": 0,
+              "max": "auto",
+              "thresholds": [
+                {
+                  "value": 95,
+                  "color": "#2AB06F"
+                },
+                {
+                  "value": 85,
+                  "color": "#EEA53C"
+                },
+                {
+                  "value": 0,
+                  "color": "#C62239"
+                }
+              ]
+            }
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "6": {
+          "title": "",
+          "type": "markdown",
+          "content": "### 📈 Analysis & Trends"
+        },
+        "7": {
+          "title": "Revenue per Session",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | makeTimeseries value = sum(additionalfields.orderTotal), bins:30",
+          "visualization": "lineChart",
+          "visualizationSettings": {
+            "chartSettings": {
+              "gapPolicy": "connect"
+            },
+            "thresholds": [],
+            "unitsOverrides": []
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "8": {
+          "title": "Region-wise Charger Utilisation",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize value = sum(additionalfields.chargerUtilisation), by: {json.stepName} | sort value desc",
+          "visualization": "barChart",
+          "visualizationSettings": {
+            "categoryAxis": {
+              "label": {
+                "showLabel": true
+              },
+              "tickLayout": "horizontal"
+            },
+            "numericAxis": {
+              "label": {
+                "showLabel": true
+              },
+              "scale": "linear"
+            },
+            "legend": {
+              "position": "auto",
+              "showLegend": true
+            },
+            "layout": {
+              "groupMode": "grouped",
+              "position": "horizontal"
+            }
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "9": {
+          "title": "Session Duration by Region",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | makeTimeseries value = sum(additionalfields.sessionDuration), bins:30",
+          "visualization": "areaChart",
+          "visualizationSettings": {
+            "chartSettings": {
+              "gapPolicy": "connect"
+            },
+            "thresholds": [],
+            "unitsOverrides": []
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "10": {
+          "title": "Revenue per Region",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | filter isNotNull(additionalfields.region) | summarize count = count(), by: {additionalfields.region} | sort count desc | limit 10",
+          "visualization": "pieChart",
+          "visualizationSettings": {
+            "legend": {
+              "position": "auto",
+              "showLegend": true
+            }
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "11": {
+          "title": "Customer Satisfaction by Device Type",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize value = sum(additionalfields.satisfactionRating), by: {json.stepName} | sort value desc",
+          "visualization": "barChart",
+          "visualizationSettings": {
+            "categoryAxis": {
+              "label": {
+                "showLabel": true
+              },
+              "tickLayout": "horizontal"
+            },
+            "numericAxis": {
+              "label": {
+                "showLabel": true
+              },
+              "scale": "linear"
+            },
+            "legend": {
+              "position": "auto",
+              "showLegend": true
+            },
+            "layout": {
+              "groupMode": "grouped",
+              "position": "horizontal"
+            }
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "12": {
+          "title": "Charger Utilisation by Segment",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize value = sum(additionalfields.chargerUtilisation), by: {json.stepName} | sort value desc",
+          "visualization": "categoricalBarChart",
+          "visualizationSettings": {
+            "categoryAxis": {
+              "label": {
+                "showLabel": true
+              },
+              "tickLayout": "horizontal"
+            },
+            "numericAxis": {
+              "label": {
+                "showLabel": true
+              },
+              "scale": "linear"
+            },
+            "legend": {
+              "position": "auto",
+              "showLegend": true
+            },
+            "layout": {
+              "groupMode": "grouped",
+              "position": "horizontal"
+            }
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "13": {
+          "title": "Revenue per Segment",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize value = sum(additionalfields.orderTotal), by: {json.stepName} | sort value desc",
+          "visualization": "histogram",
+          "visualizationSettings": {
+            "histogram": {
+              "numberOfBuckets": 20
+            },
+            "legend": {
+              "position": "auto",
+              "showLegend": true
+            }
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "14": {
+          "title": "Session Duration by Device Type",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize value = avg(additionalfields.sessionDuration), by: {json.stepName} | sort value desc",
+          "visualization": "barChart",
+          "visualizationSettings": {
+            "categoryAxis": {
+              "label": {
+                "showLabel": true
+              },
+              "tickLayout": "horizontal"
+            },
+            "numericAxis": {
+              "label": {
+                "showLabel": true
+              },
+              "scale": "linear"
+            },
+            "legend": {
+              "position": "auto",
+              "showLegend": true
+            },
+            "layout": {
+              "groupMode": "grouped",
+              "position": "horizontal"
+            }
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "15": {
+          "title": "Customer Satisfaction by Payment Method",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize value = avg(additionalfields.satisfactionRating), by: {json.stepName} | sort value desc",
+          "visualization": "categoricalBarChart",
+          "visualizationSettings": {
+            "categoryAxis": {
+              "label": {
+                "showLabel": true
+              },
+              "tickLayout": "horizontal"
+            },
+            "numericAxis": {
+              "label": {
+                "showLabel": true
+              },
+              "scale": "linear"
+            },
+            "legend": {
+              "position": "auto",
+              "showLegend": true
+            },
+            "layout": {
+              "groupMode": "grouped",
+              "position": "horizontal"
+            }
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "16": {
+          "title": "",
+          "type": "markdown",
+          "content": "### 📋 Detailed Views"
+        },
+        "17": {
+          "title": "Customer Satisfaction by Region",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | filter isNotNull(additionalfields.region) | summarize count = count(), by: {additionalfields.region} | sort count desc",
+          "visualization": "choroplethMap",
+          "visualizationSettings": {
+            "choroplethMap": {
+              "baseLayer": {
+                "type": "world"
+              },
+              "dataMapping": {
+                "regionField": "additionalfields.region",
+                "valueField": "count"
+              },
+              "colorPalette": {
+                "type": "sequential",
+                "steps": 5,
+                "minColor": "#E8F5E9",
+                "maxColor": "#1B5E20"
+              }
+            }
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "18": {
+          "title": "Executive Summary",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize Events = count(), Errors = countIf(additionalfields.hasError == true), \"Avg Processing (ms)\" = avg(additionalfields.processingTime), by: {json.stepName} | sort Events desc",
+          "visualization": "table",
+          "visualizationSettings": {},
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "19": {
+          "title": "",
+          "type": "markdown",
+          "content": "---\n🤖 *Dashboard generated by Bespoke AI (14 Ollama tiles + 6 sections, Grail field data) | 2026-03-20 | 19 tiles*"
+        },
+        "20": {
+          "title": "",
+          "type": "markdown",
+          "content": "## 🔗 Deep-Link Navigation\n\n| Resource | Link |\n|----------|------|\n| 🔍 **Distributed Traces** | [Open Trace Explorer →](https://your-environment.apps.dynatrace.com/ui/diagnostictools/purepaths?gtf=-24h+to+now&gf=all) |\n| 📊 **Service Overview** | [Open Services →](https://your-environment.apps.dynatrace.com/ui/services?gtf=-24h+to+now&gf=all) |\n| ❌ **Failure Analysis** | [Open Failure Analysis →](https://your-environment.apps.dynatrace.com/ui/diagnostictools/mda?gtf=-24h+to+now&gf=all&mdaId=failureAnalysis) |\n| 🐛 **Exception Analysis** | [Open Exception Analysis →](https://your-environment.apps.dynatrace.com/ui/diagnostictools/mda?gtf=-24h+to+now&gf=all&mdaId=exceptionAnalysis) |\n| 📈 **Dynatrace Intelligence Problems** | [Open Problems →](https://your-environment.apps.dynatrace.com/ui/problems?gtf=-24h+to+now) |\n| 📊 **Business Events** | [Open BizEvents →](https://your-environment.apps.dynatrace.com/ui/bizevents?gtf=-24h+to+now) |\n\n*Links open in your Dynatrace environment*"
+        }
+      },
+      "layouts": {
+        "0": {
+          "x": 0,
+          "y": 0,
+          "w": 24,
+          "h": 3
+        },
+        "1": {
+          "x": 0,
+          "y": 3,
+          "w": 24,
+          "h": 2
+        },
+        "2": {
+          "x": 0,
+          "y": 5,
+          "w": 24,
+          "h": 1
+        },
+        "3": {
+          "x": 0,
+          "y": 6,
+          "w": 6,
+          "h": 3
+        },
+        "4": {
+          "x": 6,
+          "y": 6,
+          "w": 6,
+          "h": 3
+        },
+        "5": {
+          "x": 12,
+          "y": 6,
+          "w": 6,
+          "h": 3
+        },
+        "6": {
+          "x": 0,
+          "y": 9,
+          "w": 24,
+          "h": 1
+        },
+        "7": {
+          "x": 0,
+          "y": 10,
+          "w": 12,
+          "h": 4
+        },
+        "8": {
+          "x": 12,
+          "y": 10,
+          "w": 12,
+          "h": 4
+        },
+        "9": {
+          "x": 0,
+          "y": 14,
+          "w": 12,
+          "h": 4
+        },
+        "10": {
+          "x": 12,
+          "y": 14,
+          "w": 12,
+          "h": 4
+        },
+        "11": {
+          "x": 0,
+          "y": 18,
+          "w": 12,
+          "h": 4
+        },
+        "12": {
+          "x": 12,
+          "y": 18,
+          "w": 12,
+          "h": 4
+        },
+        "13": {
+          "x": 0,
+          "y": 22,
+          "w": 12,
+          "h": 4
+        },
+        "14": {
+          "x": 12,
+          "y": 22,
+          "w": 12,
+          "h": 4
+        },
+        "15": {
+          "x": 0,
+          "y": 26,
+          "w": 12,
+          "h": 4
+        },
+        "16": {
+          "x": 0,
+          "y": 30,
+          "w": 24,
+          "h": 1
+        },
+        "17": {
+          "x": 0,
+          "y": 31,
+          "w": 24,
+          "h": 8
+        },
+        "18": {
+          "x": 0,
+          "y": 39,
+          "w": 24,
+          "h": 6
+        },
+        "19": {
+          "x": 0,
+          "y": 45,
+          "w": 24,
+          "h": 1
+        },
+        "20": {
+          "x": 0,
+          "y": 46,
+          "w": 24,
+          "h": 5
+        }
+      },
+      "importedWithCode": false,
+      "settings": {
+        "defaultTimeframe": {
+          "value": {
+            "from": "now()-24h",
+            "to": "now()"
+          },
+          "enabled": true
+        }
+      },
+      "annotations": []
+    },
+    "metadata": {
+      "generatedBy": "ai-dashboard-generator",
+      "generationMethod": "mcp-prompt-driven",
+      "model": "llama3.2",
+      "company": "ChargePoint Plus",
+      "industry": "Electric Vehicle & Charging",
+      "journeyType": "Charging Session",
+      "dashboardSlug": "executive-charging-operations",
+      "totalTiles": 21,
+      "dynamicFieldTiles": 5,
+      "detectedFields": {
+        "additionalFields": [
+          "orderTotal",
+          "kWhDelivered",
+          "chargerUtilisation",
+          "satisfactionRating"
+        ],
+        "customerProfile": [],
+        "flags": {
+          "revenue": true,
+          "loyalty": false,
+          "ltv": false,
+          "segments": false,
+          "devices": false,
+          "channel": false,
+          "nps": false,
+          "churnRisk": false,
+          "conversion": false,
+          "pricing": false,
+          "risk": false,
+          "fraud": false,
+          "compliance": false,
+          "engagement": false,
+          "satisfaction": true,
+          "retention": false,
+          "product": false,
+          "operational": false,
+          "forecast": false,
+          "acquisition": false,
+          "upsell": false,
+          "browser": false,
+          "subscription": false,
+          "membership": false,
+          "services": false
+        }
+      },
+      "generatedAt": "2026-03-20T10:31:10.603Z"
+    }
+  },
+  "generationMethod": "mcp-prompt-driven",
+  "company": "ChargePoint Plus",
+  "journeyType": "Charging Session",
+  "tileCount": 21,
+  "savedAt": "2026-03-20T10:31:10.603Z"
+}

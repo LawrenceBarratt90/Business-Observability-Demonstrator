@@ -1,0 +1,366 @@
+{
+  "energy & utilities|account setup": {
+    "companyName": "Energy & Utilities",
+    "journeyType": "Account Setup",
+    "fields": [
+      {
+        "name": "orderTotal",
+        "type": "numeric",
+        "sampleValue": 111.42
+      },
+      {
+        "name": "transactionValue",
+        "type": "numeric",
+        "sampleValue": 150
+      },
+      {
+        "name": "averageOrderValue",
+        "type": "numeric",
+        "sampleValue": 120
+      },
+      {
+        "name": "contractValue",
+        "type": "numeric",
+        "sampleValue": 1800
+      },
+      {
+        "name": "annualRevenue",
+        "type": "numeric",
+        "sampleValue": 1800
+      },
+      {
+        "name": "revenuePerCustomer",
+        "type": "numeric",
+        "sampleValue": 1800
+      },
+      {
+        "name": "profitMargin",
+        "type": "numeric",
+        "sampleValue": 8
+      },
+      {
+        "name": "customerLifetimeValue",
+        "type": "numeric",
+        "sampleValue": 12000
+      },
+      {
+        "name": "lifetimeValue",
+        "type": "numeric",
+        "sampleValue": 12000
+      },
+      {
+        "name": "acquisitionCost",
+        "type": "numeric",
+        "sampleValue": 65
+      },
+      {
+        "name": "conversionProbability",
+        "type": "numeric",
+        "sampleValue": 0.85
+      },
+      {
+        "name": "conversionRate",
+        "type": "numeric",
+        "sampleValue": 85
+      },
+      {
+        "name": "engagementScore",
+        "type": "numeric",
+        "sampleValue": 55
+      },
+      {
+        "name": "timeToConversion",
+        "type": "numeric",
+        "sampleValue": 2880
+      },
+      {
+        "name": "netPromoterScore",
+        "type": "numeric",
+        "sampleValue": 28
+      },
+      {
+        "name": "satisfactionRating",
+        "type": "numeric",
+        "sampleValue": 3.6
+      },
+      {
+        "name": "retentionProbability",
+        "type": "numeric",
+        "sampleValue": 0.78
+      },
+      {
+        "name": "processingTime",
+        "type": "numeric",
+        "sampleValue": 3600
+      },
+      {
+        "name": "operationalCost",
+        "type": "numeric",
+        "sampleValue": 42
+      },
+      {
+        "name": "efficiencyRating",
+        "type": "numeric",
+        "sampleValue": 72
+      },
+      {
+        "name": "complianceScore",
+        "type": "numeric",
+        "sampleValue": 94
+      },
+      {
+        "name": "channel",
+        "type": "string",
+        "sampleValue": "comparison_site"
+      },
+      {
+        "name": "deviceType",
+        "type": "string",
+        "sampleValue": "desktop"
+      },
+      {
+        "name": "region",
+        "type": "string",
+        "sampleValue": "London"
+      },
+      {
+        "name": "customerSegmentValue",
+        "type": "string",
+        "sampleValue": "first_time_buyer"
+      },
+      {
+        "name": "loyaltyTier",
+        "type": "string",
+        "sampleValue": "Economy"
+      },
+      {
+        "name": "segment",
+        "type": "string",
+        "sampleValue": "electricity_only"
+      },
+      {
+        "name": "Productname",
+        "type": "string",
+        "sampleValue": "Prepayment Smart"
+      },
+      {
+        "name": "ProductId",
+        "type": "string",
+        "sampleValue": "ENG-EV-005"
+      },
+      {
+        "name": "ProductType",
+        "type": "string",
+        "sampleValue": "prepayment"
+      },
+      {
+        "name": "Price",
+        "type": "numeric",
+        "sampleValue": 110
+      },
+      {
+        "name": "estimatedAnnualCost",
+        "type": "numeric",
+        "sampleValue": 700
+      },
+      {
+        "name": "meterType",
+        "type": "string",
+        "sampleValue": "traditional"
+      },
+      {
+        "name": "energyEfficiencyRating",
+        "type": "string",
+        "sampleValue": "C"
+      },
+      {
+        "name": "depositRequired",
+        "type": "numeric",
+        "sampleValue": 0
+      },
+      {
+        "name": "marketTrend",
+        "type": "string",
+        "sampleValue": "energy_price_cap"
+      },
+      {
+        "name": "browser",
+        "type": "string",
+        "sampleValue": "Chrome"
+      },
+      {
+        "name": "location",
+        "type": "string",
+        "sampleValue": "London, UK"
+      },
+      {
+        "name": "entryChannel",
+        "type": "string",
+        "sampleValue": "organic"
+      },
+      {
+        "name": "customerIntent",
+        "type": "string",
+        "sampleValue": "purchase"
+      },
+      {
+        "name": "loyaltyStatus",
+        "type": "string",
+        "sampleValue": "new"
+      },
+      {
+        "name": "abandonmentRisk",
+        "type": "string",
+        "sampleValue": "high"
+      },
+      {
+        "name": "sessionDuration",
+        "type": "numeric",
+        "sampleValue": 300
+      },
+      {
+        "name": "pageViews",
+        "type": "numeric",
+        "sampleValue": 3
+      },
+      {
+        "name": "discountApplied",
+        "type": "numeric",
+        "sampleValue": 8.1
+      },
+      {
+        "name": "taxAmount",
+        "type": "numeric",
+        "sampleValue": 8.91
+      },
+      {
+        "name": "shippingCost",
+        "type": "numeric",
+        "sampleValue": 7.53
+      },
+      {
+        "name": "pricingTier",
+        "type": "string",
+        "sampleValue": "Bronze"
+      },
+      {
+        "name": "subscriptionLevel",
+        "type": "string",
+        "sampleValue": "Basic"
+      },
+      {
+        "name": "membershipStatus",
+        "type": "string",
+        "sampleValue": "Regular"
+      },
+      {
+        "name": "churnRisk",
+        "type": "string",
+        "sampleValue": "high"
+      },
+      {
+        "name": "upsellPotential",
+        "type": "numeric",
+        "sampleValue": 3600
+      },
+      {
+        "name": "crossSellOpportunity",
+        "type": "string",
+        "sampleValue": "high"
+      },
+      {
+        "name": "marketSegment",
+        "type": "string",
+        "sampleValue": "Enterprise"
+      },
+      {
+        "name": "purchaseFrequency",
+        "type": "numeric",
+        "sampleValue": 2
+      },
+      {
+        "name": "competitiveAdvantage",
+        "type": "string",
+        "sampleValue": "Price"
+      },
+      {
+        "name": "marketShare",
+        "type": "numeric",
+        "sampleValue": 0.05
+      },
+      {
+        "name": "brandLoyalty",
+        "type": "string",
+        "sampleValue": "Low"
+      },
+      {
+        "name": "competitorComparison",
+        "type": "string",
+        "sampleValue": "Better"
+      },
+      {
+        "name": "resourceUtilization",
+        "type": "numeric",
+        "sampleValue": 0.6
+      },
+      {
+        "name": "costPerAcquisition",
+        "type": "numeric",
+        "sampleValue": 78
+      },
+      {
+        "name": "riskLevel",
+        "type": "string",
+        "sampleValue": "Low"
+      },
+      {
+        "name": "fraudRisk",
+        "type": "string",
+        "sampleValue": "high"
+      },
+      {
+        "name": "securityRating",
+        "type": "string",
+        "sampleValue": "A"
+      },
+      {
+        "name": "growthPotential",
+        "type": "numeric",
+        "sampleValue": 3000
+      },
+      {
+        "name": "futureValue",
+        "type": "numeric",
+        "sampleValue": 18000
+      },
+      {
+        "name": "expansionOpportunity",
+        "type": "string",
+        "sampleValue": "Limited"
+      },
+      {
+        "name": "seasonalImpact",
+        "type": "numeric",
+        "sampleValue": 0.1
+      }
+    ],
+    "services": [
+      "ServiceAddressVerificationService",
+      "CreditCheckAndDepositService",
+      "TariffAndPlanSelectionService",
+      "MeterProvisioningAndActivationService",
+      "PaymentSetupService",
+      "WelcomeAndOnboardingService"
+    ],
+    "steps": [
+      "ServiceAddressVerification",
+      "CreditCheckAndDeposit",
+      "TariffAndPlanSelection",
+      "MeterProvisioningAndActivation",
+      "PaymentSetup",
+      "WelcomeAndOnboarding"
+    ],
+    "lastUpdated": "2026-03-24T13:32:19.379Z",
+    "runCount": 3432
+  }
+}

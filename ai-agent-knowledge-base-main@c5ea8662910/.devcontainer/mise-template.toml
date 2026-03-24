@@ -1,0 +1,32 @@
+# AI Agent Knowledge Base - Container Tool Versions
+# This file defines tools to install in the dev container via mise
+# NOTE: This is NOT used by your local mise - it's only for the container
+
+[tools]
+# === Core Development ===
+node = "20"              # For kb-run, mcp-server builds
+python = "3.12"          # For Python scripts/tools
+uv = "latest"            # Fast Python package manager (used by mise pipx backend)
+
+# === AI Coding Assistants ===
+opencode = "latest"      # Primary AI assistant
+"npm:@github/copilot" = "latest"  # GitHub Copilot CLI
+
+# === Dynatrace & KB Tools ===
+"github:dynatrace-oss/dtctl" = "latest"        # Dynatrace CLI
+"github:dynatrace-oss/ai-config-manager" = "latest"   # Skill installation (aimgr)
+
+# === Workflow & Project Management ===
+"github:steveyegge/beads" = "latest"  # Beads issue tracking (bd CLI)
+"github:zjrosen/perles" = "latest"    # Perles workflow tool
+
+# === JSON/YAML Tools ===
+jq = "latest"            # JSON processor
+yq = "latest"            # YAML processor
+jsonschema = "latest"    # JSON schema validation
+
+# === Markdown & Documentation ===
+"pipx:mdformat" = { version = "latest", uvx_args = "--with mdformat-gfm --with mdformat-frontmatter" }  # Markdown formatter with GFM and frontmatter support
+
+[env]
+NODE_ENV = "development"

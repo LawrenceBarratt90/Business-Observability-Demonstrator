@@ -1,0 +1,273 @@
+{
+    "companyName": "PaySecure Systems",
+    "domain": "https://www.paysecure-systems.com",
+    "industryType": "Payments & FinTech",
+    "journeyType": "Fraud Detection",
+    "journeyDetail": "AI-Powered Real-Time Payment Fraud Detection",
+    "journeyId": "journey_fraud_detection_977f0bcf",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "TransactionScreening",
+            "serviceName": "TransactionScreenService",
+            "description": "AI screens every transaction in real-time: velocity checks, geographic anomalies, device fingerprinting, and behavioural biometrics. Sub-50ms decision latency.",
+            "category": "Screening",
+            "estimatedDuration": 0.01,
+            "businessRationale": "Payment fraud costs $32B annually. Real-time screening is the first defence. Every millisecond of latency matters for customer experience.",
+            "substeps": [
+                {
+                    "substepName": "VelocityCheck",
+                    "duration": 0.003
+                },
+                {
+                    "substepName": "GeoAnomaly",
+                    "duration": 0.003
+                },
+                {
+                    "substepName": "BiometricCheck",
+                    "duration": 0.004
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "RiskScoring",
+            "serviceName": "RiskScoreService",
+            "description": "AI calculates transaction risk score from 150+ features: merchant category, amount pattern, time deviation, device trust, and network graph analysis. Ensemble ML models.",
+            "category": "Analysis",
+            "estimatedDuration": 0.02,
+            "businessRationale": "Accurate risk scoring reduces false positives by 50% while maintaining fraud catch rate above 95%. Every false positive costs $50 in customer friction.",
+            "substeps": [
+                {
+                    "substepName": "FeatureExtraction",
+                    "duration": 0.007
+                },
+                {
+                    "substepName": "EnsembleScoring",
+                    "duration": 0.007
+                },
+                {
+                    "substepName": "DecisionEngine",
+                    "duration": 0.006
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "FraudPatternDetection",
+            "serviceName": "PatternDetectService",
+            "description": "AI detects emerging fraud patterns: card testing attacks, account takeover sequences, synthetic identity frauds, and first-party fraud networks. Adaptive learning from new attacks.",
+            "category": "Intelligence",
+            "estimatedDuration": 0.5,
+            "businessRationale": "Fraudsters constantly evolve tactics. Pattern detection identifies new attack vectors within hours vs weeks for rule-based systems.",
+            "substeps": [
+                {
+                    "substepName": "CardTestingDetection",
+                    "duration": 0.15
+                },
+                {
+                    "substepName": "AccountTakeoverDetection",
+                    "duration": 0.15
+                },
+                {
+                    "substepName": "SyntheticIdentityDetection",
+                    "duration": 0.2
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "CaseManagement",
+            "serviceName": "CaseManagementService",
+            "description": "AI prioritises fraud cases, auto-generates investigation summaries, links related events, and recommends actions. Analyst workload optimised by case complexity scoring.",
+            "category": "Investigation",
+            "estimatedDuration": 4,
+            "businessRationale": "Fraud analysts can handle 3x more cases with AI assistance. Case prioritisation ensures highest-impact fraud is investigated first.",
+            "substeps": [
+                {
+                    "substepName": "CasePrioritisation",
+                    "duration": 1
+                },
+                {
+                    "substepName": "SummaryGeneration",
+                    "duration": 1.5
+                },
+                {
+                    "substepName": "ActionRecommendation",
+                    "duration": 1.5
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "DisputeResolution",
+            "serviceName": "DisputeService",
+            "description": "AI manages chargeback responses: evidence compilation, reason code matching, and representment optimisation. Auto-resolution for clear-cut cases. Win rate prediction per case.",
+            "category": "Recovery",
+            "estimatedDuration": 48,
+            "businessRationale": "Chargebacks cost merchants $3.75 for every $1 of fraud. Effective representment recovers 40-60% of disputed transactions.",
+            "substeps": [
+                {
+                    "substepName": "EvidenceCompilation",
+                    "duration": 16
+                },
+                {
+                    "substepName": "RepresentmentOptimization",
+                    "duration": 16
+                },
+                {
+                    "substepName": "WinRatePrediction",
+                    "duration": 16
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "FraudAnalytics",
+            "serviceName": "FraudAnalyticsService",
+            "description": "AI generates fraud performance reports: detection rates, false positive rates, loss trends by channel, and model drift monitoring. Regulatory reporting for PSD2/SCA compliance.",
+            "category": "Analytics",
+            "estimatedDuration": 168,
+            "businessRationale": "Continuous model monitoring prevents degradation. A 0.1% increase in fraud losses = $millions. Regulatory compliance avoids $10M+ fines.",
+            "substeps": [
+                {
+                    "substepName": "DetectionMetrics",
+                    "duration": 56
+                },
+                {
+                    "substepName": "LossTrends",
+                    "duration": 56
+                },
+                {
+                    "substepName": "RegulatoryReporting",
+                    "duration": 56
+                }
+            ]
+        }
+    ],
+    "id": "d25e6b04-e5c2-4084-bb78-8bc768dff700",
+    "name": "Payments & FinTech - Fraud Detection",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 85,
+        "transactionValue": 85,
+        "averageOrderValue": 120,
+        "contractValue": 5000000,
+        "annualRevenue": 500000000,
+        "revenuePerCustomer": 2500000,
+        "profitMargin": 40.0,
+        "customerLifetimeValue": 20000000,
+        "lifetimeValue": 20000000,
+        "acquisitionCost": 250000,
+        "costPerAcquisition": 250000,
+        "conversionProbability": 0.25,
+        "conversionRate": 25,
+        "engagementScore": 88,
+        "timeToConversion": 8640,
+        "sessionDuration": 1800,
+        "pageViews": 12,
+        "purchaseFrequency": 365,
+        "netPromoterScore": 52,
+        "satisfactionRating": 4.3,
+        "retentionProbability": 0.92,
+        "processingTime": 0.01,
+        "operationalCost": 0.02,
+        "efficiencyRating": 95,
+        "fraudDetectionRate": 96.5,
+        "falsePositiveRate": 0.8,
+        "channel": [
+            "card_present",
+            "card_not_present",
+            "mobile_wallet",
+            "bank_transfer",
+            "BNPL"
+        ],
+        "deviceType": [
+            "POS_terminal",
+            "mobile",
+            "desktop",
+            "mobile",
+            "desktop"
+        ],
+        "region": [
+            "US",
+            "UK",
+            "EU",
+            "Brazil",
+            "India"
+        ],
+        "customerSegmentValue": [
+            "enterprise_bank",
+            "retail_bank",
+            "neobank",
+            "payment_processor",
+            "merchant_acquirer"
+        ],
+        "loyaltyTier": [
+            "Tier 1 Bank",
+            "Mid-Tier Bank",
+            "FinTech",
+            "Merchant",
+            "Startup"
+        ],
+        "segment": [
+            "card_fraud",
+            "account_takeover",
+            "synthetic_identity",
+            "first_party_fraud",
+            "merchant_fraud"
+        ],
+        "Productname": [
+            "Real-Time Fraud Engine",
+            "Account Takeover Shield",
+            "Synthetic ID Detector",
+            "Chargeback Defender",
+            "Fraud Analytics Dashboard"
+        ],
+        "ProductId": [
+            "PAY-RF-001",
+            "PAY-AT-002",
+            "PAY-SI-003",
+            "PAY-CD-004",
+            "PAY-FA-005"
+        ],
+        "ProductType": [
+            "real_time_detection",
+            "account_protection",
+            "identity_verification",
+            "dispute_management",
+            "analytics"
+        ],
+        "Price": [
+            2000000,
+            1500000,
+            800000,
+            500000,
+            300000
+        ],
+        "transactionsPerSecond": [
+            50000,
+            10000,
+            5000,
+            2000,
+            0
+        ],
+        "modelAccuracy": [
+            0.965,
+            0.942,
+            0.918,
+            0.875,
+            0
+        ],
+        "marketTrend": [
+            "real_time_payments_fraud",
+            "synthetic_identity",
+            "authorised_push_payment",
+            "AI_vs_AI_fraud",
+            "open_banking_risk"
+        ]
+    }
+}

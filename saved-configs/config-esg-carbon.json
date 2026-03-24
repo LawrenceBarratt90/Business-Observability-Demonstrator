@@ -1,0 +1,257 @@
+{
+    "companyName": "Environmental",
+    "domain": "https://www.esg-demo.com",
+    "industryType": "Environmental & ESG",
+    "journeyType": "Carbon Accounting",
+    "journeyDetail": "Carbon Accounting",
+    "journeyId": "journey_esg_carbon_accounting",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "EmissionsDataCollection",
+            "serviceName": "EmissionsDataCollectionService",
+            "description": "AI collects emissions data across Scope 1, 2, and 3: utility bills, fleet telematics, procurement records, travel data, and supply chain surveys. Automates data extraction from 200+ source systems.",
+            "category": "DataCollection",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 60,
+            "businessRationale": "Automated data collection reduces carbon accounting effort by 70%. Complete Scope 3 coverage improves accuracy from 60% to 95%, essential for credible net-zero commitments.",
+            "substeps": [
+                {
+                    "substepName": "SourceIntegration",
+                    "duration": 30
+                },
+                {
+                    "substepName": "DataValidation",
+                    "duration": 30
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "CarbonCalculation",
+            "serviceName": "CarbonCalculationService",
+            "description": "AI calculates carbon footprint using GHG Protocol methodology: applies emission factors, handles unit conversions, manages market vs location-based Scope 2, and calculates intensity ratios per revenue/employee/product.",
+            "category": "Calculation",
+            "estimatedDuration": 15,
+            "businessRationale": "AI calculation ensures GHG Protocol compliance and audit-readiness. Automated emission factor updates prevent 30% of calculation errors found in manual carbon accounting.",
+            "substeps": [
+                {
+                    "substepName": "EmissionFactorApplication",
+                    "duration": 5
+                },
+                {
+                    "substepName": "IntensityCalculation",
+                    "duration": 10
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "HotspotAnalysis",
+            "serviceName": "HotspotAnalysisService",
+            "description": "AI identifies carbon hotspots: ranks emission sources, analyses reduction potential, and models abatement costs per tonne of CO2e. Provides supplier-level carbon attribution across the value chain.",
+            "category": "Analysis",
+            "estimatedDuration": 30,
+            "businessRationale": "Hotspot analysis focuses reduction efforts on the 20% of sources causing 80% of emissions. MAC curve analysis prioritises lowest-cost abatement opportunities first.",
+            "substeps": [
+                {
+                    "substepName": "SourceRanking",
+                    "duration": 15
+                },
+                {
+                    "substepName": "AbatementModeling",
+                    "duration": 15
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "ReductionPlanning",
+            "serviceName": "ReductionPlanningService",
+            "description": "AI develops science-based reduction pathways: models renewable energy procurement, fleet electrification, supply chain engagement, and operational efficiency scenarios against SBTi 1.5\u00b0C trajectories.",
+            "category": "Planning",
+            "estimatedDuration": 120,
+            "businessRationale": "Science-based targets attract ESG investors managing \u00a335T in assets. AI pathway modelling identifies routes to net-zero that save \u00a35M annually through energy efficiency.",
+            "substeps": [
+                {
+                    "substepName": "ScenarioModeling",
+                    "duration": 60
+                },
+                {
+                    "substepName": "TargetSetting",
+                    "duration": 60
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "OffsetManagement",
+            "serviceName": "OffsetManagementService",
+            "description": "AI manages carbon offset portfolio: evaluates project quality, monitors permanence risks, ensures additionality, and tracks retirement against claims. Manages transition from offsets to insetting as reduction progresses.",
+            "category": "Offsetting",
+            "estimatedDuration": 30,
+            "businessRationale": "AI offset management prevents greenwashing risk (\u00a310M+ reputational damage). Quality-verified offsets maintain stakeholder trust during the transition to absolute reduction.",
+            "substeps": [
+                {
+                    "substepName": "ProjectEvaluation",
+                    "duration": 15
+                },
+                {
+                    "substepName": "PortfolioManagement",
+                    "duration": 15
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "CarbonReporting",
+            "serviceName": "CarbonReportingService",
+            "description": "AI generates carbon reports: CDP disclosure, TCFD alignment, CSRD compliance, annual sustainability report, and investor ESG questionnaire responses. Automated submission to reporting frameworks.",
+            "category": "Reporting",
+            "estimatedDuration": 120,
+            "businessRationale": "Automated ESG reporting saves \u00a3200K in consultant fees annually. CDP A-list status attracts sustainable investment and improves access to green finance at 50bps lower rates.",
+            "substeps": [
+                {
+                    "substepName": "FrameworkCompliance",
+                    "duration": 60
+                },
+                {
+                    "substepName": "StakeholderReporting",
+                    "duration": 60
+                }
+            ]
+        }
+    ],
+    "id": "55e620aa-888e-4c5b-bdaf-9060d85a7cbf",
+    "name": "Environmental & ESG - Carbon Accounting",
+    "timestamp": "2026-03-18T21:35:20.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 150000,
+        "annualRevenue": 0,
+        "revenuePerCustomer": 0,
+        "profitMargin": 0,
+        "customerLifetimeValue": 0,
+        "lifetimeValue": 0,
+        "acquisitionCost": 0,
+        "costPerAcquisition": 0,
+        "conversionProbability": 0.9,
+        "conversionRate": 90,
+        "engagementScore": 85,
+        "timeToConversion": 0,
+        "sessionDuration": 60,
+        "pageViews": 0,
+        "purchaseFrequency": 4,
+        "netPromoterScore": 0,
+        "satisfactionRating": 0,
+        "retentionProbability": 0.88,
+        "processingTime": 60,
+        "operationalCost": 80000,
+        "efficiencyRating": 78,
+        "discountApplied": 0,
+        "taxAmount": 0,
+        "shippingCost": 0,
+        "channel": [
+            "platform",
+            "api",
+            "consultant_portal",
+            "investor_portal",
+            "regulatory_submission"
+        ],
+        "deviceType": [
+            "desktop",
+            "desktop",
+            "laptop",
+            "tablet",
+            "server"
+        ],
+        "region": [
+            "UK Operations",
+            "EU Operations",
+            "US Operations",
+            "Asia Operations",
+            "Supply Chain"
+        ],
+        "customerSegmentValue": [
+            "ftse100",
+            "mid_cap",
+            "private_company",
+            "public_sector",
+            "sme"
+        ],
+        "loyaltyTier": [
+            "starter",
+            "professional",
+            "enterprise",
+            "strategic",
+            "partner"
+        ],
+        "segment": [
+            "scope_1_direct",
+            "scope_2_energy",
+            "scope_3_upstream",
+            "scope_3_downstream",
+            "offsets"
+        ],
+        "Productname": [
+            "CarbonAccounting_Platform",
+            "Scope3_Tracker",
+            "SBTI_PathwayPlanner",
+            "OffsetPortfolio_Mgr",
+            "ESGReport_Generator"
+        ],
+        "ProductId": [
+            "ESG-CAR-001",
+            "ESG-SC3-002",
+            "ESG-SBT-003",
+            "ESG-OFF-004",
+            "ESG-RPT-005"
+        ],
+        "ProductType": [
+            "accounting",
+            "supply_chain",
+            "planning",
+            "offsetting",
+            "reporting"
+        ],
+        "Price": [
+            50000,
+            35000,
+            25000,
+            15000,
+            20000
+        ],
+        "emissionsTonnesCO2e": [
+            125000,
+            85000,
+            450000,
+            280000,
+            50000
+        ],
+        "reductionTargetPercent": [
+            42,
+            30,
+            25,
+            15,
+            0
+        ],
+        "reportingFramework": [
+            "CDP",
+            "TCFD",
+            "CSRD",
+            "GRI",
+            "SBTi"
+        ],
+        "marketTrend": [
+            "scope3_measurement",
+            "ai_carbon_accounting",
+            "nature_based_solutions",
+            "carbon_border_tax",
+            "green_finance"
+        ]
+    }
+}

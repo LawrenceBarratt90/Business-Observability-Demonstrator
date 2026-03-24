@@ -1,0 +1,258 @@
+{
+    "companyName": "Energy & Utilities",
+    "domain": "https://www.energyutilities.com",
+    "industryType": "Energy & Utilities",
+    "journeyType": "Account Setup",
+    "journeyDetail": "New Customer Account Setup",
+    "journeyId": "journey_energy_account_2026",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "ServiceAddressVerification",
+            "serviceName": "ServiceAddressVerificationService",
+            "description": "Customer provides service address. System validates against utility service territory, checks meter availability, confirms grid connection status, and identifies applicable tariff zone and rate schedule.",
+            "category": "Verification",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 3,
+            "businessRationale": "Address verification prevents service activation at non-serviceable locations and ensures correct tariff assignment. Incorrect tariff coding causes revenue leakage and regulatory compliance issues.",
+            "substeps": [
+                {
+                    "substepName": "TerritoryAndMeterLookup",
+                    "duration": 1
+                },
+                {
+                    "substepName": "TariffZoneAssignment",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "CreditCheckAndDeposit",
+            "serviceName": "CreditCheckAndDepositService",
+            "description": "Soft credit check performed to determine deposit requirement. High-risk customers require security deposit; low-risk proceed without. Deposit amount calculated based on estimated monthly usage and risk score.",
+            "category": "RiskAssessment",
+            "estimatedDuration": 5,
+            "businessRationale": "Credit screening reduces bad debt exposure. Deposit requirements balance customer acquisition cost against default risk. Incorrect risk assessment leads to either lost customers or uncollectable debt.",
+            "substeps": [
+                {
+                    "substepName": "CreditBureauInquiry",
+                    "duration": 2
+                },
+                {
+                    "substepName": "DepositCalculationAndNotification",
+                    "duration": 3
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "TariffAndPlanSelection",
+            "serviceName": "TariffAndPlanSelectionService",
+            "description": "Customer selects energy plan: fixed rate, variable rate, green energy, time-of-use, or prepayment. System presents estimated monthly cost based on property type and historical usage for the address. Contract terms confirmed.",
+            "category": "ProductSelection",
+            "estimatedDuration": 8,
+            "businessRationale": "Plan selection directly impacts customer lifetime value and margin. Clear cost estimates reduce early cancellation. Green energy options command premium pricing and improve brand positioning.",
+            "substeps": [
+                {
+                    "substepName": "PlanComparisonAndEstimate",
+                    "duration": 5
+                },
+                {
+                    "substepName": "ContractTermsAcceptance",
+                    "duration": 3
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "MeterProvisioningAndActivation",
+            "serviceName": "MeterProvisioningAndActivationService",
+            "description": "Smart meter installation scheduled or existing meter activated remotely. AMI (Advanced Metering Infrastructure) registration confirms two-way communication. Initial meter reading captured as baseline.",
+            "category": "Provisioning",
+            "estimatedDuration": 2880,
+            "businessRationale": "Smart meter activation enables accurate billing from day one and unlocks demand response capabilities. Remote activation reduces truck rolls by 80%, saving $150-300 per activation event.",
+            "substeps": [
+                {
+                    "substepName": "MeterSchedulingOrRemoteActivation",
+                    "duration": 1440
+                },
+                {
+                    "substepName": "AMIRegistrationAndBaselineReading",
+                    "duration": 1440
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "PaymentSetup",
+            "serviceName": "PaymentSetupService",
+            "description": "Customer sets up payment method: direct debit, credit card auto-pay, or manual payment. Budget billing option offered for predictable monthly payments. Paperless billing opt-in presented.",
+            "category": "BillingSetup",
+            "estimatedDuration": 5,
+            "businessRationale": "Auto-pay enrollment reduces late payments by 60% and improves cash flow predictability. Budget billing reduces seasonal payment shock and associated call centre volume.",
+            "substeps": [
+                {
+                    "substepName": "PaymentMethodRegistration",
+                    "duration": 3
+                },
+                {
+                    "substepName": "BudgetBillingAndPaperlessOptIn",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "WelcomeAndOnboarding",
+            "serviceName": "WelcomeAndOnboardingService",
+            "description": "Welcome pack sent with account details, energy-saving tips, and online portal credentials. Smart home integration guide provided. First-month usage monitoring initiated with alerts for unusual consumption patterns.",
+            "category": "Onboarding",
+            "estimatedDuration": 10,
+            "businessRationale": "Effective onboarding reduces early-life churn by 25%. Energy usage alerts build trust and engagement. Portal adoption reduces call centre contacts and enables self-service, cutting cost-to-serve.",
+            "substeps": [
+                {
+                    "substepName": "WelcomePackAndPortalSetup",
+                    "duration": 5
+                },
+                {
+                    "substepName": "UsageMonitoringActivation",
+                    "duration": 5
+                }
+            ]
+        }
+    ],
+    "id": "a1b2c3d4-2222-4aaa-b222-000000000001",
+    "name": "Energy & Utilities - Account Setup",
+    "timestamp": "2026-01-09T15:12:43.556Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 150,
+        "averageOrderValue": 120,
+        "contractValue": 1800,
+        "annualRevenue": 1800,
+        "revenuePerCustomer": 1800,
+        "profitMargin": 8.0,
+        "customerLifetimeValue": 12000,
+        "lifetimeValue": 12000,
+        "acquisitionCost": 65,
+        "conversionProbability": 0.85,
+        "conversionRate": 85,
+        "engagementScore": 55,
+        "timeToConversion": 2880,
+        "netPromoterScore": 28,
+        "satisfactionRating": 3.6,
+        "retentionProbability": 0.78,
+        "processingTime": 3600,
+        "operationalCost": 42,
+        "efficiencyRating": 72,
+        "complianceScore": 94,
+        "channel": [
+            "website",
+            "phone",
+            "estate_agent_referral",
+            "mobile_app",
+            "comparison_site"
+        ],
+        "deviceType": [
+            "desktop",
+            "mobile",
+            "desktop",
+            "mobile",
+            "desktop"
+        ],
+        "region": [
+            "Southeast",
+            "Northwest",
+            "London",
+            "Midlands",
+            "Scotland"
+        ],
+        "customerSegmentValue": [
+            "home_mover",
+            "first_time_buyer",
+            "rental_tenant",
+            "switcher",
+            "new_build"
+        ],
+        "loyaltyTier": [
+            "Standard",
+            "Green",
+            "Premium",
+            "Economy",
+            "Smart Home"
+        ],
+        "segment": [
+            "dual_fuel",
+            "electricity_only",
+            "gas_only",
+            "prepayment",
+            "smart_tariff"
+        ],
+        "Productname": [
+            "Dual Fuel Fixed 12m",
+            "Electricity Green Variable",
+            "Gas Fixed 24m",
+            "Prepayment Smart",
+            "EV Tariff Off-Peak"
+        ],
+        "ProductId": [
+            "ENG-DF-001",
+            "ENG-EL-002",
+            "ENG-GS-003",
+            "ENG-PP-004",
+            "ENG-EV-005"
+        ],
+        "ProductType": [
+            "dual_fuel_fixed",
+            "electricity_variable",
+            "gas_fixed",
+            "prepayment",
+            "ev_tariff"
+        ],
+        "Price": [
+            150,
+            95,
+            68,
+            110,
+            125
+        ],
+        "estimatedAnnualCost": [
+            1800,
+            1100,
+            700,
+            1400,
+            1500
+        ],
+        "meterType": [
+            "smart_meter",
+            "smart_meter",
+            "traditional",
+            "prepayment_smart",
+            "smart_meter"
+        ],
+        "energyEfficiencyRating": [
+            "C",
+            "B",
+            "D",
+            "E",
+            "A"
+        ],
+        "depositRequired": [
+            0,
+            0,
+            0,
+            50,
+            0
+        ],
+        "marketTrend": [
+            "smart_meter_rollout",
+            "green_energy",
+            "ev_charging",
+            "energy_price_cap",
+            "demand_flexibility"
+        ]
+    }
+}

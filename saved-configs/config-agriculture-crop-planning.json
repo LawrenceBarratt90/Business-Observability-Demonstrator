@@ -1,0 +1,273 @@
+{
+    "companyName": "AgriTech Corp",
+    "domain": "https://www.agritech-corp.com",
+    "industryType": "Agriculture & AgriTech",
+    "journeyType": "Crop Planning",
+    "journeyDetail": "AI-Driven Seasonal Crop Planning",
+    "journeyId": "journey_crop_planning_5163fb11",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "SoilAnalysis",
+            "serviceName": "SoilAnalysisService",
+            "description": "AI analyses soil composition, moisture levels, nutrient content and historical yield data across farm zones. Satellite imagery processed for vegetation index mapping. Business event: soil_assessment_completed with zone_id, nutrient_scores, and moisture_level.",
+            "category": "Assessment",
+            "estimatedDuration": 12,
+            "businessRationale": "Accurate soil analysis determines optimal crop selection and fertiliser requirements. Poor analysis leads to 15-25% yield reduction.",
+            "substeps": [
+                {
+                    "substepName": "SoilSampling",
+                    "duration": 6
+                },
+                {
+                    "substepName": "NutrientMapping",
+                    "duration": 3
+                },
+                {
+                    "substepName": "SatelliteImageryAnalysis",
+                    "duration": 3
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "CropSelection",
+            "serviceName": "CropSelectionService",
+            "description": "AI recommends crop varieties based on soil data, weather forecasts, market prices, and rotation history. Considers disease resistance, water requirements, and expected ROI per hectare. Business event: crop_selection_made with variety, expected_yield, and projected_revenue.",
+            "category": "Planning",
+            "estimatedDuration": 8,
+            "businessRationale": "Optimal crop selection can improve revenue per hectare by 20-35%. Wrong variety choice wastes an entire growing season.",
+            "substeps": [
+                {
+                    "substepName": "VarietyAnalysis",
+                    "duration": 3
+                },
+                {
+                    "substepName": "MarketPriceForecast",
+                    "duration": 2
+                },
+                {
+                    "substepName": "RotationOptimization",
+                    "duration": 3
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "ResourceAllocation",
+            "serviceName": "ResourceAllocationService",
+            "description": "Seed, fertiliser, and equipment allocation planned based on crop selection. AI optimises procurement timing against supplier pricing and delivery windows. Business event: resources_allocated with seed_quantity, fertiliser_type, and equipment_schedule.",
+            "category": "Procurement",
+            "estimatedDuration": 10,
+            "businessRationale": "Procurement timing affects input costs by 10-20%. Late ordering causes planting delays that reduce yields.",
+            "substeps": [
+                {
+                    "substepName": "SeedProcurement",
+                    "duration": 4
+                },
+                {
+                    "substepName": "FertiliserPlanning",
+                    "duration": 3
+                },
+                {
+                    "substepName": "EquipmentScheduling",
+                    "duration": 3
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "PlantingExecution",
+            "serviceName": "PlantingExecutionService",
+            "description": "GPS-guided planting with variable rate seeding based on zone-level soil data. Real-time monitoring of planting depth, spacing, and seed population. Business event: planting_completed with hectares_planted, seed_rate, and zone_coverage.",
+            "category": "Operations",
+            "estimatedDuration": 48,
+            "businessRationale": "Precision planting improves germination rates by 8-12%. Each day of planting delay in the window can reduce yields by 1-2%.",
+            "substeps": [
+                {
+                    "substepName": "FieldPreparation",
+                    "duration": 16
+                },
+                {
+                    "substepName": "PrecisionPlanting",
+                    "duration": 24
+                },
+                {
+                    "substepName": "PlantingVerification",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "GrowthMonitoring",
+            "serviceName": "GrowthMonitoringService",
+            "description": "Drone and satellite imagery monitors crop health throughout growing season. AI detects stress, disease, pest presence, and nutrient deficiency. Irrigation scheduling optimised based on weather and crop stage. Business event: growth_alert with field_id, issue_type, and severity.",
+            "category": "Monitoring",
+            "estimatedDuration": 720,
+            "businessRationale": "Early detection of crop issues enables intervention 5-10 days earlier, saving 10-30% of affected yield. Irrigation optimization reduces water use by 25%.",
+            "substeps": [
+                {
+                    "substepName": "DroneScanning",
+                    "duration": 240
+                },
+                {
+                    "substepName": "DiseaseDetection",
+                    "duration": 240
+                },
+                {
+                    "substepName": "IrrigationOptimization",
+                    "duration": 240
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "YieldForecast",
+            "serviceName": "YieldForecastService",
+            "description": "AI generates yield predictions based on growth data, weather models, and historical patterns. Market timing recommendations provided for optimal selling price. Business event: yield_forecast_updated with predicted_tonnes, confidence_interval, and recommended_sell_window.",
+            "category": "Analytics",
+            "estimatedDuration": 24,
+            "businessRationale": "Accurate yield forecasting enables forward contracts at better prices. 5% forecast accuracy improvement translates to 3-7% revenue gain.",
+            "substeps": [
+                {
+                    "substepName": "YieldModelling",
+                    "duration": 12
+                },
+                {
+                    "substepName": "MarketTimingAnalysis",
+                    "duration": 8
+                },
+                {
+                    "substepName": "HarvestScheduling",
+                    "duration": 4
+                }
+            ]
+        }
+    ],
+    "id": "e8863f3e-412f-4526-9ca2-c1e999c5dfd2",
+    "name": "Agriculture & AgriTech - Crop Planning",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 45000,
+        "transactionValue": 45000,
+        "averageOrderValue": 38000,
+        "contractValue": 120000,
+        "annualRevenue": 850000,
+        "revenuePerCustomer": 425000,
+        "profitMargin": 18.0,
+        "customerLifetimeValue": 2500000,
+        "lifetimeValue": 2500000,
+        "acquisitionCost": 5000,
+        "costPerAcquisition": 5000,
+        "conversionProbability": 0.72,
+        "conversionRate": 72,
+        "engagementScore": 78,
+        "timeToConversion": 4320,
+        "sessionDuration": 1800,
+        "pageViews": 12,
+        "purchaseFrequency": 2,
+        "netPromoterScore": 45,
+        "satisfactionRating": 4.0,
+        "retentionProbability": 0.85,
+        "processingTime": 2880,
+        "operationalCost": 15000,
+        "efficiencyRating": 76,
+        "yieldPerHectare": 8.5,
+        "cropWastage": 4.2,
+        "channel": [
+            "farm_portal",
+            "mobile_field_app",
+            "agronomist_visit",
+            "api_integration",
+            "cooperative_platform"
+        ],
+        "deviceType": [
+            "tablet",
+            "mobile",
+            "desktop",
+            "mobile",
+            "tablet"
+        ],
+        "region": [
+            "Midwest US",
+            "Central Valley CA",
+            "East Anglia UK",
+            "Punjab India",
+            "Mato Grosso Brazil"
+        ],
+        "customerSegmentValue": [
+            "large_farm",
+            "family_farm",
+            "cooperative",
+            "agribusiness",
+            "smallholder"
+        ],
+        "loyaltyTier": [
+            "Platinum Grower",
+            "Gold Grower",
+            "Silver Grower",
+            "Bronze Grower",
+            "Starter"
+        ],
+        "segment": [
+            "grain",
+            "vegetable",
+            "fruit",
+            "livestock_feed",
+            "specialty_crop"
+        ],
+        "Productname": [
+            "Winter Wheat Seed Pack",
+            "Precision Fertiliser Blend",
+            "Corn Hybrid Select",
+            "Soybean Premium",
+            "Cover Crop Mix"
+        ],
+        "ProductId": [
+            "AG-SD-001",
+            "AG-FR-002",
+            "AG-SD-003",
+            "AG-SD-004",
+            "AG-CC-005"
+        ],
+        "ProductType": [
+            "seed",
+            "fertiliser",
+            "seed",
+            "seed",
+            "cover_crop"
+        ],
+        "Price": [
+            4500,
+            8200,
+            5100,
+            3800,
+            1200
+        ],
+        "hectaresPlanned": [
+            200,
+            150,
+            300,
+            250,
+            100
+        ],
+        "soilType": [
+            "clay_loam",
+            "sandy_loam",
+            "silt",
+            "clay",
+            "loam"
+        ],
+        "marketTrend": [
+            "precision_agriculture",
+            "regenerative_farming",
+            "carbon_credits",
+            "vertical_farming",
+            "agri_fintech"
+        ]
+    }
+}

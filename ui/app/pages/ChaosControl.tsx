@@ -6,6 +6,7 @@ import { Button } from '@dynatrace/strato-components/buttons';
 import { TitleBar } from '@dynatrace/strato-components-preview/layouts';
 import { SelectV2 } from '@dynatrace/strato-components-preview/forms';
 import Colors from '@dynatrace/strato-design-tokens/colors';
+import { InfoButton } from '../components/InfoButton';
 
 const API_BASE = 'http://YOUR_SERVER_IP:8080/api';
 
@@ -100,7 +101,25 @@ export const ChaosControl = () => {
     <Page>
       <Page.Header>
         <TitleBar>
-          <TitleBar.Title>👹 Chaos Control - Nemesis Agent</TitleBar.Title>
+          <TitleBar.Title>
+            <Flex alignItems="center" gap={8}>
+              👹 Chaos Control - Nemesis Agent
+              <InfoButton
+                title="👹 Chaos Control"
+                description="Inject controlled faults into running services to test resilience and trigger Dynatrace problem detection."
+                sections={[
+                  { label: '🎯 Target Service', detail: 'Pick a specific service or apply chaos globally to all services' },
+                  { label: '💥 Error Rate slider', detail: 'Set the percentage of requests that will fail (10%-100%)' },
+                  { label: '👹 Inject Chaos', detail: 'Apply the selected fault — sends a CUSTOM_DEPLOYMENT event to Dynatrace' },
+                  { label: '💤 💥 📊 Quick Recipes', detail: 'Pre-built fault combos: Network Flakiness, Service Outage, Load Testing' },
+                  { label: '⏹️ Revert All Chaos', detail: 'Remove all active faults and return services to normal' },
+                  { label: 'Active Faults', detail: 'Shows currently injected faults with per-fault revert buttons' },
+                ]}
+                footer="Chaos events are tagged [ROOT CAUSE] so Dynatrace Intelligence correlates them with problems."
+                color="#ff5252"
+              />
+            </Flex>
+          </TitleBar.Title>
           <TitleBar.Subtitle>Inject controlled chaos into your services for testing resilience</TitleBar.Subtitle>
         </TitleBar>
       </Page.Header>

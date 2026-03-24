@@ -1,0 +1,257 @@
+{
+    "companyName": "Fitness",
+    "domain": "https://www.fitness-demo.com",
+    "industryType": "Fitness & Wellness",
+    "journeyType": "Member Retention",
+    "journeyDetail": "Member Retention",
+    "journeyId": "journey_fitness_member_retention",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "MemberBehaviourTracking",
+            "serviceName": "MemberBehaviourTrackingService",
+            "description": "AI tracks member engagement signals: visit frequency, class attendance patterns, personal training sessions, app usage, wearable data, and social interactions. Builds comprehensive engagement profiles.",
+            "category": "Tracking",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 1,
+            "businessRationale": "Comprehensive behaviour tracking enables early churn detection. Members who reduce visits by 30% have 5x higher churn risk \u2014 AI catches this trend within 2 weeks.",
+            "substeps": [
+                {
+                    "substepName": "DataCollection",
+                    "duration": 0
+                },
+                {
+                    "substepName": "ProfileUpdate",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "ChurnPrediction",
+            "serviceName": "ChurnPredictionService",
+            "description": "AI predicts member churn 60-90 days before cancellation: analyses visit decline patterns, payment failures, goal non-achievement, and seasonal dropout signals. Segments at-risk members by intervention type.",
+            "category": "Prediction",
+            "estimatedDuration": 5,
+            "businessRationale": "60-day churn prediction enables proactive retention. Preventing one cancellation saves \u00a3708 in annual revenue. AI-intervened members retain at 2x the rate of non-intervened.",
+            "substeps": [
+                {
+                    "substepName": "RiskScoring",
+                    "duration": 2
+                },
+                {
+                    "substepName": "SegmentClassification",
+                    "duration": 3
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "PersonalizedIntervention",
+            "serviceName": "PersonalizedInterventionService",
+            "description": "AI creates targeted retention interventions: personalised workout plans, free PT session offers, class recommendations aligned to goals, membership freeze options, and re-engagement challenges.",
+            "category": "Intervention",
+            "estimatedDuration": 10,
+            "businessRationale": "Personalised interventions achieve 35% save rate vs 12% for generic offers. AI matches intervention type to churn reason, reducing retention cost by 40% per saved member.",
+            "substeps": [
+                {
+                    "substepName": "InterventionSelection",
+                    "duration": 3
+                },
+                {
+                    "substepName": "OfferPersonalization",
+                    "duration": 7
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "GoalTracking",
+            "serviceName": "GoalTrackingService",
+            "description": "AI manages member fitness goals: weight management, strength milestones, flexibility improvements, and training consistency targets. Celebrates achievements, adjusts targets, and connects progress to retention.",
+            "category": "GoalManagement",
+            "estimatedDuration": 10080,
+            "businessRationale": "Members with tracked goals retain 45% longer than those without. Goal achievement celebrations create emotional loyalty that resists competitive pricing pressure.",
+            "substeps": [
+                {
+                    "substepName": "ProgressMonitoring",
+                    "duration": 5040
+                },
+                {
+                    "substepName": "GoalAdjustment",
+                    "duration": 5040
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "CommunityBuilding",
+            "serviceName": "CommunityBuildingService",
+            "description": "AI fosters gym community: matches members for buddy workouts, creates challenge groups, manages leaderboards, and facilitates social connections. Community engagement is the strongest churn predictor.",
+            "category": "Community",
+            "estimatedDuration": 10080,
+            "businessRationale": "Socially connected members retain at 80% vs 55% for isolated members. Each gym-friend connection reduces churn probability by 8%. Community is the ultimate retention tool.",
+            "substeps": [
+                {
+                    "substepName": "BuddyMatching",
+                    "duration": 5040
+                },
+                {
+                    "substepName": "ChallengeManagement",
+                    "duration": 5040
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "RetentionReporting",
+            "serviceName": "RetentionReportingService",
+            "description": "AI generates retention analytics: churn rates by cohort, intervention effectiveness, goal achievement correlation, community engagement impact, and lifetime value projections. Powers management decisions on member experience investment.",
+            "category": "Reporting",
+            "estimatedDuration": 60,
+            "businessRationale": "Retention analytics justify investment in member experience. Each 1% improvement in retention equals \u00a355K in annual recurring revenue for a mid-sized gym chain.",
+            "substeps": [
+                {
+                    "substepName": "ChurnAnalysis",
+                    "duration": 30
+                },
+                {
+                    "substepName": "InterventionROI",
+                    "duration": 30
+                }
+            ]
+        }
+    ],
+    "id": "341486bb-f65b-4c79-b035-960b8aab2bdc",
+    "name": "Fitness & Wellness - Member Retention",
+    "timestamp": "2026-03-18T21:35:20.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 708,
+        "annualRevenue": 5500000,
+        "revenuePerCustomer": 708,
+        "profitMargin": 25,
+        "customerLifetimeValue": 2124,
+        "lifetimeValue": 2124,
+        "acquisitionCost": 0,
+        "costPerAcquisition": 0,
+        "conversionProbability": 0,
+        "conversionRate": 0,
+        "engagementScore": 65,
+        "timeToConversion": 0,
+        "sessionDuration": 60,
+        "pageViews": 5,
+        "purchaseFrequency": 8,
+        "netPromoterScore": 42,
+        "satisfactionRating": 3.9,
+        "retentionProbability": 0.68,
+        "processingTime": 5,
+        "operationalCost": 15,
+        "efficiencyRating": 75,
+        "discountApplied": 0,
+        "taxAmount": 0,
+        "shippingCost": 0,
+        "channel": [
+            "mobile_app",
+            "email",
+            "sms",
+            "in_gym_screen",
+            "pt_session"
+        ],
+        "deviceType": [
+            "mobile",
+            "desktop",
+            "wearable",
+            "gym_screen",
+            "tablet"
+        ],
+        "region": [
+            "City Centre",
+            "Suburban",
+            "University",
+            "Corporate",
+            "Boutique"
+        ],
+        "customerSegmentValue": [
+            "at_risk_low",
+            "at_risk_medium",
+            "at_risk_high",
+            "loyal",
+            "new_member"
+        ],
+        "loyaltyTier": [
+            "pay_per_class",
+            "monthly_basic",
+            "monthly_unlimited",
+            "annual_premium",
+            "founding_member"
+        ],
+        "segment": [
+            "visit_decline",
+            "goal_non_achievement",
+            "payment_issue",
+            "seasonal_dropout",
+            "competitor_switch"
+        ],
+        "Productname": [
+            "FreePT_Session",
+            "PersonalPlan",
+            "MembershipFreeze",
+            "ClassPackDeal",
+            "RetentionChallenge"
+        ],
+        "ProductId": [
+            "RET-PT-001",
+            "RET-PLN-002",
+            "RET-FRZ-003",
+            "RET-PKG-004",
+            "RET-CHL-005"
+        ],
+        "ProductType": [
+            "personal_training",
+            "workout_plan",
+            "membership_mgmt",
+            "class_package",
+            "engagement"
+        ],
+        "Price": [
+            0,
+            0,
+            0,
+            45,
+            0
+        ],
+        "churnRiskScore": [
+            85,
+            65,
+            45,
+            15,
+            35
+        ],
+        "visitDeclinePercent": [
+            50,
+            30,
+            10,
+            0,
+            20
+        ],
+        "memberTenureMonths": [
+            4,
+            8,
+            14,
+            36,
+            1
+        ],
+        "marketTrend": [
+            "ai_retention",
+            "community_fitness",
+            "wearable_gamification",
+            "mental_wellness",
+            "recovery_services"
+        ]
+    }
+}

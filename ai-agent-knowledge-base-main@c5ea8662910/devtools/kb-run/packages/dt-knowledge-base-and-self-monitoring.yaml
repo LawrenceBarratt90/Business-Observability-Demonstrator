@@ -1,0 +1,4 @@
+resources:
+    - package/dynatrace-candidate
+    - package/dynatrace-planned
+    - package/dynatrace-self-monitoring

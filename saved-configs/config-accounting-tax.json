@@ -1,0 +1,257 @@
+{
+    "companyName": "Accounting",
+    "domain": "https://www.accounting-demo.com",
+    "industryType": "Accounting & Audit",
+    "journeyType": "Tax Optimization",
+    "journeyDetail": "Tax Optimization",
+    "journeyId": "journey_accounting_tax_optimization",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "TaxDataGathering",
+            "serviceName": "TaxDataGatheringService",
+            "description": "AI extracts tax-relevant data from accounting systems, payroll, investments, and prior returns. Auto-populates tax forms, identifies missing documents, and flags data quality issues before filing.",
+            "category": "DataCollection",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 30,
+            "businessRationale": "AI data gathering reduces preparation time by 60%. Automated extraction eliminates 95% of manual data entry errors that trigger HMRC enquiries.",
+            "substeps": [
+                {
+                    "substepName": "DataExtraction",
+                    "duration": 15
+                },
+                {
+                    "substepName": "QualityValidation",
+                    "duration": 15
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "TaxComputation",
+            "serviceName": "TaxComputationService",
+            "description": "AI computes corporate tax, capital allowances, R&D tax credits, transfer pricing adjustments, and deferred tax. Optimises timing of claims and reliefs within legal boundaries.",
+            "category": "Computation",
+            "estimatedDuration": 60,
+            "businessRationale": "AI tax computation identifies \u00a3150K average additional reliefs per client. Automated capital allowance calculations catch claims missed by 25% of manual preparers.",
+            "substeps": [
+                {
+                    "substepName": "CoreComputation",
+                    "duration": 30
+                },
+                {
+                    "substepName": "ReliefOptimization",
+                    "duration": 30
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "ComplianceFiling",
+            "serviceName": "ComplianceFilingService",
+            "description": "AI manages multi-jurisdiction tax filing: generates CT600, VAT returns, PAYE submissions, and international reporting. Tracks deadlines, validates submissions, and confirms acceptance from HMRC.",
+            "category": "Compliance",
+            "estimatedDuration": 15,
+            "businessRationale": "Automated filing eliminates late-filing penalties worth \u00a31,500-\u00a310K per return. Multi-jurisdiction management prevents double-taxation and ensures treaty benefit claims.",
+            "substeps": [
+                {
+                    "substepName": "ReturnGeneration",
+                    "duration": 5
+                },
+                {
+                    "substepName": "ElectronicFiling",
+                    "duration": 10
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "TaxPlanning",
+            "serviceName": "TaxPlanningService",
+            "description": "AI models tax scenarios: corporate restructurings, international expansion, dividend policies, and succession planning. Quantifies tax impact of business decisions and recommends optimal timing.",
+            "category": "Advisory",
+            "estimatedDuration": 120,
+            "businessRationale": "Proactive tax planning saves clients 8-12% on effective tax rates. Scenario modelling enables informed decision-making for transactions worth \u00a310M+.",
+            "substeps": [
+                {
+                    "substepName": "ScenarioModeling",
+                    "duration": 60
+                },
+                {
+                    "substepName": "StrategyRecommendation",
+                    "duration": 60
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "EnquiryManagement",
+            "serviceName": "EnquiryManagementService",
+            "description": "AI supports HMRC enquiry defence: analyses enquiry patterns, prepares response documentation, identifies precedent cases, and calculates potential exposure. Manages correspondence tracking and deadlines.",
+            "category": "Dispute",
+            "estimatedDuration": 240,
+            "businessRationale": "AI enquiry support reduces average resolution time by 45%. Structured responses with precedent analysis resolve 70% of enquiries favourably in first response.",
+            "substeps": [
+                {
+                    "substepName": "ResponsePreparation",
+                    "duration": 120
+                },
+                {
+                    "substepName": "PrecedentResearch",
+                    "duration": 120
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "TaxReporting",
+            "serviceName": "TaxReportingService",
+            "description": "AI generates tax provision reports, effective tax rate analysis, uncertain tax position schedules, and board-ready tax summaries. Provides year-round tax health monitoring and proactive advisory alerts.",
+            "category": "Reporting",
+            "estimatedDuration": 60,
+            "businessRationale": "Continuous tax reporting replaces year-end surprises. Proactive tax health monitoring identifies planning opportunities worth 3-5% of annual tax liability.",
+            "substeps": [
+                {
+                    "substepName": "ProvisionReporting",
+                    "duration": 30
+                },
+                {
+                    "substepName": "AdvisoryAlerts",
+                    "duration": 30
+                }
+            ]
+        }
+    ],
+    "id": "89a56759-ea48-41cd-8ab4-d3abaf4dace0",
+    "name": "Accounting & Audit - Tax Optimization",
+    "timestamp": "2026-03-18T21:35:20.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 45000,
+        "annualRevenue": 0,
+        "revenuePerCustomer": 0,
+        "profitMargin": 38,
+        "customerLifetimeValue": 450000,
+        "lifetimeValue": 450000,
+        "acquisitionCost": 8000,
+        "costPerAcquisition": 8000,
+        "conversionProbability": 0.72,
+        "conversionRate": 72,
+        "engagementScore": 68,
+        "timeToConversion": 30,
+        "sessionDuration": 90,
+        "pageViews": 12,
+        "purchaseFrequency": 4,
+        "netPromoterScore": 52,
+        "satisfactionRating": 4.4,
+        "retentionProbability": 0.9,
+        "processingTime": 60,
+        "operationalCost": 28000,
+        "efficiencyRating": 85,
+        "discountApplied": 0,
+        "taxAmount": 0,
+        "shippingCost": 0,
+        "channel": [
+            "partner_referral",
+            "website",
+            "seminar",
+            "existing_client",
+            "intermediary"
+        ],
+        "deviceType": [
+            "desktop",
+            "laptop",
+            "tablet",
+            "mobile",
+            "desktop"
+        ],
+        "region": [
+            "London",
+            "South East",
+            "Midlands",
+            "North West",
+            "Scotland"
+        ],
+        "customerSegmentValue": [
+            "sme_owner",
+            "plc_group",
+            "hni_individual",
+            "partnership",
+            "trust"
+        ],
+        "loyaltyTier": [
+            "new_client",
+            "annual_client",
+            "multi_service",
+            "strategic_account",
+            "founding_client"
+        ],
+        "segment": [
+            "corporation_tax",
+            "personal_tax",
+            "vat",
+            "international_tax",
+            "r_and_d_credits"
+        ],
+        "Productname": [
+            "Corp_Tax_Return",
+            "Personal_Tax_Return",
+            "VAT_Advisory",
+            "Transfer_Pricing",
+            "R&D_Tax_Credit"
+        ],
+        "ProductId": [
+            "TAX-CORP-001",
+            "TAX-PERS-002",
+            "TAX-VAT-003",
+            "TAX-TP-004",
+            "TAX-RD-005"
+        ],
+        "ProductType": [
+            "compliance",
+            "compliance",
+            "advisory",
+            "international",
+            "incentive"
+        ],
+        "Price": [
+            12000,
+            3500,
+            8000,
+            45000,
+            15000
+        ],
+        "taxSavings": [
+            85000,
+            12000,
+            35000,
+            250000,
+            120000
+        ],
+        "effectiveTaxRate": [
+            19,
+            40,
+            20,
+            25,
+            0
+        ],
+        "filingDeadline": [
+            "31-Jan",
+            "31-Jan",
+            "Quarterly",
+            "31-Dec",
+            "31-Mar"
+        ],
+        "marketTrend": [
+            "making_tax_digital",
+            "pillar_two",
+            "crypto_taxation",
+            "esg_tax_incentives",
+            "real_time_reporting"
+        ]
+    }
+}

@@ -1,0 +1,273 @@
+{
+    "companyName": "IndustrialTech Systems",
+    "domain": "https://www.industrialtech-systems.com",
+    "industryType": "Industrial & Manufacturing IoT",
+    "journeyType": "Predictive Maintenance",
+    "journeyDetail": "AI-Powered Industrial Predictive Maintenance",
+    "journeyId": "journey_predictive_maintenance_15ed2b38",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "SensorDeployment",
+            "serviceName": "SensorDeployService",
+            "description": "IoT sensors deployed on critical assets: vibration, temperature, acoustic, current, and oil quality. Edge gateways configured for data collection and pre-processing.",
+            "category": "Setup",
+            "estimatedDuration": 168,
+            "businessRationale": "Comprehensive sensor coverage is foundational. Missing a critical asset sensor means blind spots that cause undetected failures.",
+            "substeps": [
+                {
+                    "substepName": "VibrationSensors",
+                    "duration": 56
+                },
+                {
+                    "substepName": "TemperatureSensors",
+                    "duration": 56
+                },
+                {
+                    "substepName": "GatewayConfig",
+                    "duration": 56
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "DataIngestionAndModelling",
+            "serviceName": "DataModelService",
+            "description": "AI ingests sensor data, maintenance history, and operational params. ML models trained per asset class to predict failure modes. Digital twins created for critical assets.",
+            "category": "ML",
+            "estimatedDuration": 720,
+            "businessRationale": "ML models need 3-6 months of data to establish baselines. Digital twins enable what-if analysis for maintenance decisions.",
+            "substeps": [
+                {
+                    "substepName": "DataPipeline",
+                    "duration": 240
+                },
+                {
+                    "substepName": "ModelTraining",
+                    "duration": 240
+                },
+                {
+                    "substepName": "DigitalTwinCreation",
+                    "duration": 240
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "AnomalyDetection",
+            "serviceName": "AnomalyService",
+            "description": "Real-time anomaly detection on vibration spectrum, temperature trends, and power consumption. Severity classification and escalation. Root cause suggestions.",
+            "category": "Detection",
+            "estimatedDuration": 0.01,
+            "businessRationale": "Detecting anomalies 2-4 weeks before failure enables planned maintenance. A single unplanned shutdown of a production line costs $50K-500K.",
+            "substeps": [
+                {
+                    "substepName": "SpectrumAnalysis",
+                    "duration": 0.005
+                },
+                {
+                    "substepName": "TrendDetection",
+                    "duration": 0.003
+                },
+                {
+                    "substepName": "SeverityClassification",
+                    "duration": 0.002
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "MaintenancePlanning",
+            "serviceName": "MaintenancePlanService",
+            "description": "AI generates maintenance work orders, schedules resources, and pre-orders parts. Maintenance window optimised around production schedule to minimise downtime.",
+            "category": "Planning",
+            "estimatedDuration": 8,
+            "businessRationale": "Coordinated maintenance planning reduces downtime by 50%. Parts pre-ordering prevents the #1 delay cause: waiting for spares.",
+            "substeps": [
+                {
+                    "substepName": "WorkOrderGeneration",
+                    "duration": 3
+                },
+                {
+                    "substepName": "ResourceScheduling",
+                    "duration": 2
+                },
+                {
+                    "substepName": "PartsOrdering",
+                    "duration": 3
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "MaintenanceExecution",
+            "serviceName": "MaintenanceExecService",
+            "description": "AR-guided maintenance with step-by-step work instructions. Torque verification, alignment checks, and quality sign-off. Before/after sensor comparison validates repair.",
+            "category": "Operations",
+            "estimatedDuration": 8,
+            "businessRationale": "AR-guided maintenance reduces errors by 30% and contractor dependency by 50%. Sensor-validated repair confirms the fix actually worked.",
+            "substeps": [
+                {
+                    "substepName": "ARGuidedRepair",
+                    "duration": 4
+                },
+                {
+                    "substepName": "QualityVerification",
+                    "duration": 2
+                },
+                {
+                    "substepName": "SensorValidation",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "ReliabilityAnalytics",
+            "serviceName": "ReliabilityService",
+            "description": "AI calculates overall equipment effectiveness (OEE), mean time between failures (MTBF), and maintenance cost per asset. ROI of predictive maintenance programme quantified.",
+            "category": "Analytics",
+            "estimatedDuration": 168,
+            "businessRationale": "OEE improvement of 5% translates to $millions in additional production capacity. MTBF tracking drives capital investment decisions.",
+            "substeps": [
+                {
+                    "substepName": "OEECalculation",
+                    "duration": 56
+                },
+                {
+                    "substepName": "MTBFAnalysis",
+                    "duration": 56
+                },
+                {
+                    "substepName": "ROIReporting",
+                    "duration": 56
+                }
+            ]
+        }
+    ],
+    "id": "26a9e105-9a2b-48e0-b070-a7f5fee30f53",
+    "name": "Industrial & Manufacturing IoT - Predictive Maintenance",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 350000,
+        "transactionValue": 350000,
+        "averageOrderValue": 250000,
+        "contractValue": 2000000,
+        "annualRevenue": 80000000,
+        "revenuePerCustomer": 1500000,
+        "profitMargin": 15.0,
+        "customerLifetimeValue": 12000000,
+        "lifetimeValue": 12000000,
+        "acquisitionCost": 100000,
+        "costPerAcquisition": 100000,
+        "conversionProbability": 0.55,
+        "conversionRate": 55,
+        "engagementScore": 78,
+        "timeToConversion": 8640,
+        "sessionDuration": 2400,
+        "pageViews": 15,
+        "purchaseFrequency": 4,
+        "netPromoterScore": 48,
+        "satisfactionRating": 4.1,
+        "retentionProbability": 0.9,
+        "processingTime": 60,
+        "operationalCost": 85000,
+        "efficiencyRating": 78,
+        "oee": 82.5,
+        "mtbf": 4200,
+        "channel": [
+            "SCADA_integration",
+            "engineering_portal",
+            "mobile_rounds",
+            "API_EAM",
+            "dashboard"
+        ],
+        "deviceType": [
+            "HMI_panel",
+            "desktop",
+            "ruggedised_tablet",
+            "server",
+            "desktop"
+        ],
+        "region": [
+            "Detroit US",
+            "Stuttgart DE",
+            "Nagoya JP",
+            "Shanghai CN",
+            "Pune IN"
+        ],
+        "customerSegmentValue": [
+            "automotive_OEM",
+            "food_beverage",
+            "pharma",
+            "steel_metals",
+            "pulp_paper"
+        ],
+        "loyaltyTier": [
+            "Strategic",
+            "Enterprise",
+            "Growth",
+            "Standard",
+            "Pilot"
+        ],
+        "segment": [
+            "rotating_equipment",
+            "conveyor_systems",
+            "hydraulic_press",
+            "CNC_machine",
+            "HVAC_system"
+        ],
+        "Productname": [
+            "Motor Bearing Monitor",
+            "Conveyor Health Suite",
+            "Press Force Sensor Pack",
+            "CNC Spindle Tracker",
+            "Chiller Predictive Module"
+        ],
+        "ProductId": [
+            "IND-MB-001",
+            "IND-CH-002",
+            "IND-PF-003",
+            "IND-CS-004",
+            "IND-CP-005"
+        ],
+        "ProductType": [
+            "vibration",
+            "conveyor",
+            "force",
+            "spindle",
+            "thermal"
+        ],
+        "Price": [
+            350000,
+            200000,
+            150000,
+            250000,
+            120000
+        ],
+        "assetCriticality": [
+            "critical",
+            "high",
+            "medium",
+            "high",
+            "medium"
+        ],
+        "failureMode": [
+            "bearing_wear",
+            "belt_tracking",
+            "seal_leak",
+            "tool_wear",
+            "refrigerant_loss"
+        ],
+        "marketTrend": [
+            "digital_twin",
+            "edge_AI",
+            "autonomous_maintenance",
+            "asset_performance_mgmt",
+            "sustainability_maintenance"
+        ]
+    }
+}

@@ -1,0 +1,706 @@
+{
+  "id": "retail--click-and-collect-journey",
+  "dashboard": {
+    "name": "Customer and Business Overview [MCP Custom]",
+    "type": "dashboard",
+    "version": 1,
+    "content": {
+      "version": 21,
+      "variables": [
+        {
+          "key": "CompanyName",
+          "visible": true,
+          "type": "query",
+          "version": 2,
+          "editable": true,
+          "multiple": false,
+          "input": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == \"Retail\" | fields json.companyName | dedup json.companyName"
+        },
+        {
+          "key": "JourneyType",
+          "visible": true,
+          "type": "query",
+          "version": 2,
+          "editable": true,
+          "multiple": true,
+          "defaultValue": "3420b2ac-f1cf-4b24-b62d-61ba1ba8ed05*",
+          "input": "fetch bizevents \n| filter json.companyName == $CompanyName\n| fields json.journeyType | dedup json.journeyType"
+        },
+        {
+          "key": "Step",
+          "visible": true,
+          "type": "query",
+          "version": 2,
+          "editable": true,
+          "multiple": true,
+          "defaultValue": "3420b2ac-f1cf-4b24-b62d-61ba1ba8ed05*",
+          "input": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter in(json.journeyType, $JourneyType) | filter json.companyName == \"Retail\" | fields json.stepName | dedup json.stepName"
+        },
+        {
+          "key": "Service",
+          "visible": true,
+          "type": "query",
+          "version": 2,
+          "editable": true,
+          "multiple": true,
+          "defaultValue": "3420b2ac-f1cf-4b24-b62d-61ba1ba8ed05*",
+          "input": "fetch bizevents\n| fields json.serviceName, json.companyName, json.journeyType\n| summarize count(),by:{json.companyName, json.journeyType, json.serviceName}\n| filter json.companyName == $CompanyName \n| filter in(json.journeyType, $JourneyType)\n| dedup json.serviceName\n| fields json.serviceName = lower(json.serviceName)\n| filter isNotNull(json.serviceName)"
+        },
+        {
+          "key": "PGI",
+          "visible": true,
+          "type": "query",
+          "version": 2,
+          "editable": true,
+          "multiple": true,
+          "defaultValue": "3420b2ac-f1cf-4b24-b62d-61ba1ba8ed05*",
+          "input": "smartscapeNodes PROCESS\n| lookup [smartscapeNodes SERVICE | fields id, name], sourceField:name, lookupField:name, prefix:\"svc.\"\n| lookup [timeseries cpu = avg(dt.process.cpu.usage), by:{dt.smartscape.process}], sourceField:id, lookupField:dt.smartscape.process, fields:{cpu}\n| filter isNotNull(cpu)\n| fieldsAdd LowerService = lower(name)\n| filter in(LowerService, $Service)\n| fields id\n| dedup id"
+        }
+      ],
+      "tiles": {
+        "0": {
+          "title": "",
+          "type": "markdown",
+          "content": "# Customer and Business Overview\n## Retail | Click and Collect Journey Journey | Retail & E-Commerce\n**Data Signals:** 📊 Revenue | 📊 Loyalty | 📊 NPS\n---"
+        },
+        "1": {
+          "title": "",
+          "type": "markdown",
+          "content": "**Journey Flow:** `Browse` → `Add to Cart` → `Checkout` → `Payment` → `Confirmation` → `Collection`"
+        },
+        "2": {
+          "title": "",
+          "type": "markdown",
+          "content": "### 📊 Key Performance Indicators"
+        },
+        "3": {
+          "title": "Total Click and Collect Orders",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize value = sum(additionalfields.clickAndCollectOrders)",
+          "visualization": "singleValue",
+          "visualizationSettings": {},
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "4": {
+          "title": "Average Order Value",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize value = avg(additionalfields.averageOrderValue)",
+          "visualization": "singleValue",
+          "visualizationSettings": {},
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "5": {
+          "title": "",
+          "type": "markdown",
+          "content": "### 📈 Analysis & Trends"
+        },
+        "6": {
+          "title": "Customer Retention Rate",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize total = count(), success = countIf(isNull(additionalfields.hasError) or additionalfields.hasError == false) | fieldsAdd rate = round((toDouble(success)/toDouble(total))*100, decimals:2)",
+          "visualization": "pieChart",
+          "visualizationSettings": {
+            "legend": {
+              "position": "auto",
+              "showLegend": true
+            }
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "7": {
+          "title": "Click and Collect Revenue Growth",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | makeTimeseries value = sum(additionalfields.orderTotal), bins:30",
+          "visualization": "lineChart",
+          "visualizationSettings": {
+            "chartSettings": {
+              "gapPolicy": "connect"
+            },
+            "thresholds": [],
+            "unitsOverrides": []
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "8": {
+          "title": "",
+          "type": "markdown",
+          "content": "### 📊 Key Performance Indicators"
+        },
+        "9": {
+          "title": "Loyalty Program Member Count",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize value = sum(additionalfields.loyaltyProgramMembers)",
+          "visualization": "singleValue",
+          "visualizationSettings": {},
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "10": {
+          "title": "",
+          "type": "markdown",
+          "content": "### 📈 Analysis & Trends"
+        },
+        "11": {
+          "title": "Top Channels for Click and Collect",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | filter isNotNull(additionalfields.channel) | summarize count = count(), by: {additionalfields.channel} | sort count desc | limit 10",
+          "visualization": "categoricalBarChart",
+          "visualizationSettings": {
+            "categoryAxis": {
+              "label": {
+                "showLabel": true
+              },
+              "tickLayout": "horizontal"
+            },
+            "numericAxis": {
+              "label": {
+                "showLabel": true
+              },
+              "scale": "linear"
+            },
+            "legend": {
+              "position": "auto",
+              "showLegend": true
+            },
+            "layout": {
+              "groupMode": "grouped",
+              "position": "horizontal"
+            }
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "12": {
+          "title": "Click and Collect Success Rate Over Time",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | makeTimeseries value = avg(additionalfields.successRate), bins:30",
+          "visualization": "areaChart",
+          "visualizationSettings": {
+            "chartSettings": {
+              "gapPolicy": "connect"
+            },
+            "thresholds": [],
+            "unitsOverrides": []
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "13": {
+          "title": "",
+          "type": "markdown",
+          "content": "### 📋 Detailed Views"
+        },
+        "14": {
+          "title": "Journey Step Breakdown by Time of Day",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize Events = count(), Errors = countIf(additionalfields.hasError == true), \"Avg Processing (ms)\" = avg(additionalfields.processingTime), by: {json.stepName} | sort Events desc",
+          "visualization": "heatmap",
+          "visualizationSettings": {
+            "legend": {
+              "position": "auto",
+              "showLegend": true
+            }
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "15": {
+          "title": "",
+          "type": "markdown",
+          "content": "### 📊 Key Performance Indicators"
+        },
+        "16": {
+          "title": "Customer NPS Score",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize value = sum(additionalfields.customerNpsScore)",
+          "visualization": "singleValue",
+          "visualizationSettings": {},
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "17": {
+          "title": "",
+          "type": "markdown",
+          "content": "### 📈 Analysis & Trends"
+        },
+        "18": {
+          "title": "Click and Collect Order Volume by Hour",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | makeTimeseries count = count(), bins:30",
+          "visualization": "barChart",
+          "visualizationSettings": {
+            "categoryAxis": {
+              "label": {
+                "showLabel": true
+              },
+              "tickLayout": "horizontal"
+            },
+            "numericAxis": {
+              "label": {
+                "showLabel": true
+              },
+              "scale": "linear"
+            },
+            "legend": {
+              "position": "auto",
+              "showLegend": true
+            },
+            "layout": {
+              "groupMode": "grouped",
+              "position": "horizontal"
+            }
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "19": {
+          "title": "",
+          "type": "markdown",
+          "content": "### 📊 Key Performance Indicators"
+        },
+        "20": {
+          "title": "Average Click and Collect Order Time to Fulfillment",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | makeTimeseries value = avg(additionalfields.averageOrderTimeToFulfillment), bins:30",
+          "visualization": "singleValue",
+          "visualizationSettings": {},
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "21": {
+          "title": "",
+          "type": "markdown",
+          "content": "### 📈 Analysis & Trends"
+        },
+        "22": {
+          "title": "Click and Collect Revenue by Month",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize value = sum(additionalfields.monthlyRevenue), by: {json.stepName} | sort value desc",
+          "visualization": "barChart",
+          "visualizationSettings": {
+            "categoryAxis": {
+              "label": {
+                "showLabel": true
+              },
+              "tickLayout": "horizontal"
+            },
+            "numericAxis": {
+              "label": {
+                "showLabel": true
+              },
+              "scale": "linear"
+            },
+            "legend": {
+              "position": "auto",
+              "showLegend": true
+            },
+            "layout": {
+              "groupMode": "grouped",
+              "position": "horizontal"
+            }
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "23": {
+          "title": "Success and Failure Rate Trend",
+          "type": "data",
+          "query": "fetch bizevents | filter event.kind == \"BIZ_EVENT\" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | makeTimeseries success = countIf(isNull(additionalfields.hasError) or additionalfields.hasError == false), failed = countIf(additionalfields.hasError == true), bins:30",
+          "visualization": "lineChart",
+          "visualizationSettings": {
+            "chartSettings": {
+              "gapPolicy": "connect"
+            },
+            "thresholds": [],
+            "unitsOverrides": []
+          },
+          "querySettings": {
+            "maxResultRecords": 1000,
+            "defaultScanLimitGbytes": 500,
+            "maxResultMegaBytes": 1,
+            "defaultSamplingRatio": 10,
+            "enableSampling": false
+          },
+          "davis": {
+            "enabled": false,
+            "davisVisualization": {
+              "isAvailable": true
+            }
+          }
+        },
+        "24": {
+          "title": "",
+          "type": "markdown",
+          "content": "---\n🤖 *Dashboard generated by Bespoke Ollama (13 unique tiles) | 2026-03-17 | 24 tiles*"
+        },
+        "25": {
+          "title": "",
+          "type": "markdown",
+          "content": "## 🔗 Deep-Link Navigation\n\n| Resource | Link |\n|----------|------|\n| 🔍 **Distributed Traces** | [Open Trace Explorer →](https://your-environment.apps.dynatrace.com/ui/diagnostictools/purepaths?gtf=-24h+to+now&gf=all) |\n| 📊 **Service Overview** | [Open Services →](https://your-environment.apps.dynatrace.com/ui/services?gtf=-24h+to+now&gf=all) |\n| ❌ **Failure Analysis** | [Open Failure Analysis →](https://your-environment.apps.dynatrace.com/ui/diagnostictools/mda?gtf=-24h+to+now&gf=all&mdaId=failureAnalysis) |\n| 🐛 **Exception Analysis** | [Open Exception Analysis →](https://your-environment.apps.dynatrace.com/ui/diagnostictools/mda?gtf=-24h+to+now&gf=all&mdaId=exceptionAnalysis) |\n| 📈 **Dynatrace Intelligence Problems** | [Open Problems →](https://your-environment.apps.dynatrace.com/ui/problems?gtf=-24h+to+now) |\n| 📊 **Business Events** | [Open BizEvents →](https://your-environment.apps.dynatrace.com/ui/bizevents?gtf=-24h+to+now) |\n\n*Links open in your Dynatrace environment*"
+        }
+      },
+      "layouts": {
+        "0": {
+          "x": 0,
+          "y": 0,
+          "w": 24,
+          "h": 3
+        },
+        "1": {
+          "x": 0,
+          "y": 3,
+          "w": 24,
+          "h": 2
+        },
+        "2": {
+          "x": 0,
+          "y": 5,
+          "w": 24,
+          "h": 1
+        },
+        "3": {
+          "x": 0,
+          "y": 6,
+          "w": 6,
+          "h": 3
+        },
+        "4": {
+          "x": 6,
+          "y": 6,
+          "w": 6,
+          "h": 3
+        },
+        "5": {
+          "x": 0,
+          "y": 9,
+          "w": 24,
+          "h": 1
+        },
+        "6": {
+          "x": 0,
+          "y": 10,
+          "w": 12,
+          "h": 4
+        },
+        "7": {
+          "x": 12,
+          "y": 10,
+          "w": 12,
+          "h": 4
+        },
+        "8": {
+          "x": 0,
+          "y": 14,
+          "w": 24,
+          "h": 1
+        },
+        "9": {
+          "x": 0,
+          "y": 15,
+          "w": 6,
+          "h": 3
+        },
+        "10": {
+          "x": 0,
+          "y": 18,
+          "w": 24,
+          "h": 1
+        },
+        "11": {
+          "x": 0,
+          "y": 19,
+          "w": 12,
+          "h": 4
+        },
+        "12": {
+          "x": 12,
+          "y": 19,
+          "w": 12,
+          "h": 4
+        },
+        "13": {
+          "x": 0,
+          "y": 23,
+          "w": 24,
+          "h": 1
+        },
+        "14": {
+          "x": 0,
+          "y": 24,
+          "w": 24,
+          "h": 6
+        },
+        "15": {
+          "x": 0,
+          "y": 30,
+          "w": 24,
+          "h": 1
+        },
+        "16": {
+          "x": 0,
+          "y": 31,
+          "w": 6,
+          "h": 3
+        },
+        "17": {
+          "x": 0,
+          "y": 34,
+          "w": 24,
+          "h": 1
+        },
+        "18": {
+          "x": 0,
+          "y": 35,
+          "w": 12,
+          "h": 4
+        },
+        "19": {
+          "x": 0,
+          "y": 39,
+          "w": 24,
+          "h": 1
+        },
+        "20": {
+          "x": 0,
+          "y": 40,
+          "w": 6,
+          "h": 3
+        },
+        "21": {
+          "x": 0,
+          "y": 43,
+          "w": 24,
+          "h": 1
+        },
+        "22": {
+          "x": 0,
+          "y": 44,
+          "w": 12,
+          "h": 4
+        },
+        "23": {
+          "x": 12,
+          "y": 44,
+          "w": 12,
+          "h": 4
+        },
+        "24": {
+          "x": 0,
+          "y": 48,
+          "w": 24,
+          "h": 1
+        },
+        "25": {
+          "x": 0,
+          "y": 49,
+          "w": 24,
+          "h": 5
+        }
+      },
+      "importedWithCode": false,
+      "settings": {
+        "defaultTimeframe": {
+          "value": {
+            "from": "now()-24h",
+            "to": "now()"
+          },
+          "enabled": true
+        }
+      },
+      "annotations": []
+    },
+    "metadata": {
+      "generatedBy": "ai-dashboard-generator",
+      "generationMethod": "mcp-prompt-driven",
+      "model": "llama3.2",
+      "company": "Retail",
+      "industry": "Retail & E-Commerce",
+      "journeyType": "Click and Collect Journey",
+      "dashboardSlug": "executive-customer",
+      "totalTiles": 26,
+      "dynamicFieldTiles": 9,
+      "detectedFields": {
+        "additionalFields": [
+          "orderTotal",
+          "cartValue",
+          "channel",
+          "region",
+          "loyaltyStatus",
+          "npsScore",
+          "abandonmentRisk",
+          "discountApplied"
+        ],
+        "customerProfile": [],
+        "flags": {
+          "revenue": true,
+          "loyalty": true,
+          "ltv": false,
+          "segments": false,
+          "devices": false,
+          "channel": true,
+          "nps": true,
+          "churnRisk": false,
+          "conversion": false,
+          "pricing": false,
+          "risk": false,
+          "fraud": false,
+          "compliance": false,
+          "engagement": false,
+          "satisfaction": false,
+          "retention": false,
+          "product": false,
+          "operational": false,
+          "forecast": false,
+          "acquisition": false,
+          "upsell": false,
+          "browser": false,
+          "subscription": false,
+          "membership": false,
+          "services": false
+        }
+      },
+      "generatedAt": "2026-03-17T23:40:46.103Z"
+    }
+  },
+  "generationMethod": "mcp-prompt-driven",
+  "company": "Retail",
+  "journeyType": "Click and Collect Journey",
+  "tileCount": 26,
+  "savedAt": "2026-03-17T23:40:46.105Z"
+}

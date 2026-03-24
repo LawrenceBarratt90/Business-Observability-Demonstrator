@@ -1,0 +1,273 @@
+{
+    "companyName": "RailTech Systems",
+    "domain": "https://www.railtech-systems.com",
+    "industryType": "Rail & Transit",
+    "journeyType": "Timetable Optimization",
+    "journeyDetail": "AI-Optimised Rail Timetabling & Capacity Management",
+    "journeyId": "journey_timetable_optimization_6976cceb",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "DemandForecasting",
+            "serviceName": "DemandForecastService",
+            "description": "AI forecasts passenger demand by route, time, and day: ticket sales, smart card data, mobile signals, and event calendars. Long-term growth modelling for infrastructure planning.",
+            "category": "Forecasting",
+            "estimatedDuration": 168,
+            "businessRationale": "Understanding demand at 15-minute granularity enables right-size services. Over-provision wastes capacity; under-provision creates overcrowding and poor customer experience.",
+            "substeps": [
+                {
+                    "substepName": "HistoricAnalysis",
+                    "duration": 56
+                },
+                {
+                    "substepName": "EventImpact",
+                    "duration": 56
+                },
+                {
+                    "substepName": "GrowthModelling",
+                    "duration": 56
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "TimetableGeneration",
+            "serviceName": "TimetableGenService",
+            "description": "AI generates conflict-free timetables: platform allocation, junction timing, rolling stock utilisation, and crew rostering. Multi-objective optimisation for speed, frequency, and cost.",
+            "category": "Planning",
+            "estimatedDuration": 720,
+            "businessRationale": "Timetable planning is NP-hard with millions of constraints. AI finds solutions 15% more efficient than human planners while satisfying all safety constraints.",
+            "substeps": [
+                {
+                    "substepName": "ConflictResolution",
+                    "duration": 240
+                },
+                {
+                    "substepName": "PlatformAllocation",
+                    "duration": 240
+                },
+                {
+                    "substepName": "CrewRostering",
+                    "duration": 240
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "RealTimeRescheduling",
+            "serviceName": "RescheduleService",
+            "description": "AI manages real-time disruption: automatic rescheduling during incidents, platform changes, connection protection, and rolling stock reallocation. Passenger information updates.",
+            "category": "Operations",
+            "estimatedDuration": 0.5,
+            "businessRationale": "Disruption costs the rail industry $5B+ annually. AI rescheduling reduces recovery time by 30-50% and protects passenger connections.",
+            "substeps": [
+                {
+                    "substepName": "DisruptionAssessment",
+                    "duration": 0.15
+                },
+                {
+                    "substepName": "AutoRescheduling",
+                    "duration": 0.2
+                },
+                {
+                    "substepName": "ConnectionProtection",
+                    "duration": 0.15
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "CapacityOptimization",
+            "serviceName": "CapacityOptService",
+            "description": "AI optimises network capacity: train length decisions, skip-stop patterns, express/local service mix, and off-peak frequency adjustment. Freight path allocation.",
+            "category": "Optimisation",
+            "estimatedDuration": 24,
+            "businessRationale": "Extracting 5% more capacity from existing infrastructure avoids $billion infrastructure upgrades. AI identifies capacity without building new lines.",
+            "substeps": [
+                {
+                    "substepName": "TrainLengthDecisions",
+                    "duration": 8
+                },
+                {
+                    "substepName": "ServicePatternMix",
+                    "duration": 8
+                },
+                {
+                    "substepName": "FreightPathing",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "PricingAndRevenue",
+            "serviceName": "PricingRevService",
+            "description": "AI implements dynamic rail pricing: off-peak incentives, advance purchase discounts, and demand-responsive fares. Yield management for high-speed and long-distance services.",
+            "category": "Revenue",
+            "estimatedDuration": 24,
+            "businessRationale": "Dynamic pricing shifts 10-15% of peak demand to off-peak. Revenue management increases yield by 8-12% while improving load factor distribution.",
+            "substeps": [
+                {
+                    "substepName": "DemandPricing",
+                    "duration": 8
+                },
+                {
+                    "substepName": "YieldManagement",
+                    "duration": 8
+                },
+                {
+                    "substepName": "IncentiveDesign",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "NetworkAnalytics",
+            "serviceName": "NetworkAnalyticsService",
+            "description": "AI analyses network performance: punctuality, capacity utilisation, passenger satisfaction by route, and bottleneck identification. Strategic planning for frequency increases and new routes.",
+            "category": "Analytics",
+            "estimatedDuration": 168,
+            "businessRationale": "Network analytics identify the 5% of infrastructure causing 80% of delays. Targeted investment in bottlenecks gives 10x return vs spread investment.",
+            "substeps": [
+                {
+                    "substepName": "PunctualityAnalysis",
+                    "duration": 56
+                },
+                {
+                    "substepName": "BottleneckIdentification",
+                    "duration": 56
+                },
+                {
+                    "substepName": "StrategicPlanning",
+                    "duration": 56
+                }
+            ]
+        }
+    ],
+    "id": "5a892571-b351-44e8-b109-237665a0e015",
+    "name": "Rail & Transit - Timetable Optimization",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 12,
+        "transactionValue": 12,
+        "averageOrderValue": 25,
+        "contractValue": 200000000,
+        "annualRevenue": 15000000000,
+        "revenuePerCustomer": 450,
+        "profitMargin": 5.0,
+        "customerLifetimeValue": 9000,
+        "lifetimeValue": 9000,
+        "acquisitionCost": 2,
+        "costPerAcquisition": 2,
+        "conversionProbability": 0.85,
+        "conversionRate": 85,
+        "engagementScore": 55,
+        "timeToConversion": 60,
+        "sessionDuration": 180,
+        "pageViews": 4,
+        "purchaseFrequency": 200,
+        "netPromoterScore": 28,
+        "satisfactionRating": 3.5,
+        "retentionProbability": 0.8,
+        "processingTime": 15,
+        "operationalCost": 5,
+        "efficiencyRating": 72,
+        "punctuality": 88.2,
+        "loadFactor": 72,
+        "channel": [
+            "mobile_ticket_app",
+            "station_kiosk",
+            "website",
+            "smartcard_tap",
+            "conductor_sale"
+        ],
+        "deviceType": [
+            "mobile",
+            "kiosk",
+            "desktop",
+            "smartcard",
+            "handheld"
+        ],
+        "region": [
+            "London-Edinburgh UK",
+            "Berlin-Munich DE",
+            "Paris-Lyon FR",
+            "Tokyo-Osaka JP",
+            "Delhi-Mumbai IN"
+        ],
+        "customerSegmentValue": [
+            "season_commuter",
+            "advance_leisure",
+            "walk_up_business",
+            "railcard_holder",
+            "tourist"
+        ],
+        "loyaltyTier": [
+            "Season Ticket Holder",
+            "Frequent Traveller",
+            "Railcard Member",
+            "Occasional",
+            "Tourist"
+        ],
+        "segment": [
+            "high_speed",
+            "intercity",
+            "commuter",
+            "regional",
+            "freight"
+        ],
+        "Productname": [
+            "AI Timetable Planner",
+            "Real-Time Reschedule Engine",
+            "Demand Forecast Module",
+            "Dynamic Pricing Engine",
+            "Capacity Optimizer"
+        ],
+        "ProductId": [
+            "RAIL-TP-001",
+            "RAIL-RR-002",
+            "RAIL-DF-003",
+            "RAIL-DP-004",
+            "RAIL-CO-005"
+        ],
+        "ProductType": [
+            "planning",
+            "operations",
+            "forecasting",
+            "pricing",
+            "capacity"
+        ],
+        "Price": [
+            30000000,
+            20000000,
+            15000000,
+            25000000,
+            18000000
+        ],
+        "trainPathsPerDay": [
+            25000,
+            25000,
+            0,
+            25000,
+            5000
+        ],
+        "capacityUtilisation": [
+            0.72,
+            0.68,
+            0,
+            0.75,
+            0.55
+        ],
+        "marketTrend": [
+            "mobility_as_a_service",
+            "integrated_ticketing",
+            "autonomous_trains",
+            "green_rail_shift",
+            "highspeed_expansion"
+        ]
+    }
+}

@@ -1,0 +1,273 @@
+{
+    "companyName": "RoboFleet Technologies",
+    "domain": "https://www.robofleet-tech.com",
+    "industryType": "Robotics & Automation",
+    "journeyType": "Warehouse Fulfillment",
+    "journeyDetail": "AI-Powered Robotic Warehouse Fulfilment",
+    "journeyId": "journey_warehouse_fulfillment_6b454d79",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "OrderIngestion",
+            "serviceName": "OrderIngestService",
+            "description": "AI ingests orders and optimises fulfilment: order batching, wave planning, and priority sequencing (same-day, next-day, standard). Inventory reservation and allocation.",
+            "category": "Initiation",
+            "estimatedDuration": 0.01,
+            "businessRationale": "Smart order batching reduces robot travel distance by 35%. Priority sequencing ensures SLA compliance for premium orders.",
+            "substeps": [
+                {
+                    "substepName": "OrderBatching",
+                    "duration": 0.003
+                },
+                {
+                    "substepName": "WavePlanning",
+                    "duration": 0.003
+                },
+                {
+                    "substepName": "PrioritySequencing",
+                    "duration": 0.004
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "RoboticPicking",
+            "serviceName": "PickingService",
+            "description": "AI coordinates goods-to-person picking: pod robot navigation, pick station optimisation, and vision-guided robotic arm picking for complex items. Error prevention via weight verification.",
+            "category": "Picking",
+            "estimatedDuration": 3,
+            "businessRationale": "Robotic picking achieves 99.8% accuracy vs 97% manual. Speed is 3-5x faster with goods-to-person vs person-to-goods.",
+            "substeps": [
+                {
+                    "substepName": "PodNavigation",
+                    "duration": 1
+                },
+                {
+                    "substepName": "PickStationOptimization",
+                    "duration": 1
+                },
+                {
+                    "substepName": "VisionGuidedPicking",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "SortingAndPacking",
+            "serviceName": "SortPackService",
+            "description": "AI manages robotic sorting: order consolidation, optimal box selection (DIM weight minimisation), and automated packing. Customs documentation for international orders.",
+            "category": "Processing",
+            "estimatedDuration": 2,
+            "businessRationale": "Optimal box selection reduces shipping costs by 15-25%. A 1cm reduction in average package dimensions = $millions in freight savings.",
+            "substeps": [
+                {
+                    "substepName": "OrderConsolidation",
+                    "duration": 0.5
+                },
+                {
+                    "substepName": "BoxSelection",
+                    "duration": 0.5
+                },
+                {
+                    "substepName": "AutomatedPacking",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "OutboundStaging",
+            "serviceName": "StagingService",
+            "description": "AI stages packed orders for carrier pickup: carrier-specific sorting, loading sequence optimisation, and label/manifest generation. Real-time carrier integration.",
+            "category": "Dispatch",
+            "estimatedDuration": 1,
+            "businessRationale": "Efficient staging reduces carrier wait time and ensures on-time dispatch. A missed carrier window delays delivery by 24 hours.",
+            "substeps": [
+                {
+                    "substepName": "CarrierSorting",
+                    "duration": 0.3
+                },
+                {
+                    "substepName": "LoadingSequence",
+                    "duration": 0.3
+                },
+                {
+                    "substepName": "ManifestGeneration",
+                    "duration": 0.4
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "InventoryManagement",
+            "serviceName": "InventoryMgmtService",
+            "description": "AI manages inventory: cycle counting via autonomous drones, slotting optimisation for fast-moving items, and replenishment triggering. Inventory accuracy tracking.",
+            "category": "Stock",
+            "estimatedDuration": 24,
+            "businessRationale": "Inventory accuracy above 99.5% is essential for reliable fulfilment. Drone counting achieves this 10x faster than manual counting.",
+            "substeps": [
+                {
+                    "substepName": "DroneCounting",
+                    "duration": 8
+                },
+                {
+                    "substepName": "SlottingOptimization",
+                    "duration": 8
+                },
+                {
+                    "substepName": "ReplenishmentTriggering",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "FulfilmentAnalytics",
+            "serviceName": "FulfilmentAnalyticsService",
+            "description": "AI analyses fulfilment performance: orders per hour, pick accuracy, robot utilisation, and cost per order. Labour vs automation ROI comparison. Capacity planning.",
+            "category": "Analytics",
+            "estimatedDuration": 168,
+            "businessRationale": "Fulfilment analytics quantify automation ROI. Typical robotic warehouse achieves 3-5x throughput improvement at 50% lower cost per order.",
+            "substeps": [
+                {
+                    "substepName": "ThroughputAnalysis",
+                    "duration": 56
+                },
+                {
+                    "substepName": "AccuracyMetrics",
+                    "duration": 56
+                },
+                {
+                    "substepName": "CostPerOrderTracking",
+                    "duration": 56
+                }
+            ]
+        }
+    ],
+    "id": "072b730b-30a6-4169-b7a5-8e3a704cc367",
+    "name": "Robotics & Automation - Warehouse Fulfillment",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 45,
+        "transactionValue": 45,
+        "averageOrderValue": 55,
+        "contractValue": 5000000,
+        "annualRevenue": 150000000,
+        "revenuePerCustomer": 3000000,
+        "profitMargin": 20.0,
+        "customerLifetimeValue": 15000000,
+        "lifetimeValue": 15000000,
+        "acquisitionCost": 250000,
+        "costPerAcquisition": 250000,
+        "conversionProbability": 0.2,
+        "conversionRate": 20,
+        "engagementScore": 85,
+        "timeToConversion": 17280,
+        "sessionDuration": 28800,
+        "pageViews": 25,
+        "purchaseFrequency": 365,
+        "netPromoterScore": 50,
+        "satisfactionRating": 4.3,
+        "retentionProbability": 0.9,
+        "processingTime": 5,
+        "operationalCost": 0.8,
+        "efficiencyRating": 90,
+        "ordersPerHour": 450,
+        "pickAccuracy": 99.8,
+        "channel": [
+            "WMS_integration",
+            "ecommerce_API",
+            "ERP_link",
+            "mobile_supervisor",
+            "control_tower"
+        ],
+        "deviceType": [
+            "server",
+            "server",
+            "server",
+            "mobile",
+            "desktop"
+        ],
+        "region": [
+            "US East",
+            "US West",
+            "EU Central",
+            "UK",
+            "Japan"
+        ],
+        "customerSegmentValue": [
+            "ecommerce_giant",
+            "3PL_provider",
+            "grocery_chain",
+            "pharma_distributor",
+            "fashion_retailer"
+        ],
+        "loyaltyTier": [
+            "Mega Warehouse",
+            "Large Warehouse",
+            "Medium Warehouse",
+            "Small Warehouse",
+            "Micro Fulfilment"
+        ],
+        "segment": [
+            "goods_to_person",
+            "person_to_goods",
+            "robotic_arm_picking",
+            "autonomous_forklift",
+            "drone_inventory"
+        ],
+        "Productname": [
+            "Pod Robot Fleet",
+            "Robotic Picking Arm",
+            "Autonomous Forklift",
+            "Inventory Drone",
+            "Sorting Conveyor Robot"
+        ],
+        "ProductId": [
+            "FUL-PR-001",
+            "FUL-RA-002",
+            "FUL-AF-003",
+            "FUL-ID-004",
+            "FUL-SC-005"
+        ],
+        "ProductType": [
+            "pod_robot",
+            "picking_arm",
+            "forklift",
+            "drone",
+            "sorting"
+        ],
+        "Price": [
+            30000,
+            150000,
+            200000,
+            45000,
+            85000
+        ],
+        "unitsPerHour": [
+            300,
+            600,
+            100,
+            1000,
+            500
+        ],
+        "errorRate": [
+            0.002,
+            0.005,
+            0.003,
+            0.001,
+            0.004
+        ],
+        "marketTrend": [
+            "micro_fulfilment_centres",
+            "same_day_delivery",
+            "returns_automation",
+            "cold_chain_robots",
+            "sustainable_packaging_robots"
+        ]
+    }
+}

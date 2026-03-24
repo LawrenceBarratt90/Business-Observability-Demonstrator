@@ -1,6 +1,6 @@
 {
   "name": "business-observability-engine",
-  "version": "2.9.10",
+  "version": "2.16.0",
   "private": true,
   "description": "Dynatrace Business Observability App with Smartscape-inspired UI and Node.js server",
   "main": "server.js",
@@ -37,11 +37,13 @@
     "@dynatrace/strato-components-preview": "^2.16.0",
     "@dynatrace/strato-design-tokens": "^1.2.0",
     "@dynatrace/strato-icons": "^1.11.0",
+    "@modelcontextprotocol/sdk": "^1.27.1",
     "@opentelemetry/api": "^1.9.0",
     "@opentelemetry/exporter-logs-otlp-proto": "^0.212.0",
     "@opentelemetry/exporter-metrics-otlp-proto": "^0.212.0",
     "@opentelemetry/exporter-trace-otlp-proto": "^0.212.0",
     "@opentelemetry/instrumentation-http": "^0.212.0",
+    "@opentelemetry/instrumentation-undici": "^0.23.0",
     "@opentelemetry/resources": "^2.5.1",
     "@opentelemetry/sdk-logs": "^0.212.0",
     "@opentelemetry/sdk-node": "^0.212.0",
@@ -66,7 +68,8 @@
     "socket.io": "^4.7.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "zod": "^4.3.6"
   },
   "optionalDependencies": {
     "@dynatrace/oneagent-sdk": "^1.5.0"

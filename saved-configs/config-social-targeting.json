@@ -1,0 +1,257 @@
+{
+    "companyName": "Social",
+    "domain": "https://www.social-media-demo.com",
+    "industryType": "Social Media & Platforms",
+    "journeyType": "Ad Targeting",
+    "journeyDetail": "Ad Targeting",
+    "journeyId": "journey_social-media_ad_targeting",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "AudienceSegmentation",
+            "serviceName": "AudienceSegmentationService",
+            "description": "AI builds detailed audience segments from behavioral signals: content interactions, search patterns, social graph connections, demographic data, and purchase intent signals. Updates segments hourly.",
+            "category": "Segmentation",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 2,
+            "businessRationale": "Granular audience segmentation enables precise ad targeting. Advertisers using AI segments see 40% higher conversion rates, driving 85% of platform ad revenue.",
+            "substeps": [
+                {
+                    "substepName": "BehavioralModeling",
+                    "duration": 1
+                },
+                {
+                    "substepName": "SegmentRefresh",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "AdCreativeOptimization",
+            "serviceName": "AdCreativeOptimizationService",
+            "description": "AI analyzes ad creative performance across formats (image, video, carousel, story). Recommends copy changes, visual adjustments, and format selection. A/B tests variations automatically.",
+            "category": "Optimization",
+            "estimatedDuration": 5,
+            "businessRationale": "Creative optimization lifts click-through rates by 25%. AI-powered A/B testing reduces creative testing cycles from weeks to hours, accelerating campaign performance.",
+            "substeps": [
+                {
+                    "substepName": "CreativeAnalysis",
+                    "duration": 2
+                },
+                {
+                    "substepName": "ABTestExecution",
+                    "duration": 3
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "BidOptimization",
+            "serviceName": "BidOptimizationService",
+            "description": "Real-time AI bidding engine processes 10M+ ad auction requests per second. Optimizes bids based on predicted engagement, conversion probability, and advertiser budget constraints.",
+            "category": "Auction",
+            "estimatedDuration": 1,
+            "businessRationale": "AI bid optimization improves advertiser ROI by 30% while maximizing platform revenue per impression. Each 1% improvement in auction efficiency equals \u00a328M in annual revenue.",
+            "substeps": [
+                {
+                    "substepName": "PredictiveScoring",
+                    "duration": 0
+                },
+                {
+                    "substepName": "BidCalculation",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "CampaignManagement",
+            "serviceName": "CampaignManagementService",
+            "description": "AI manages campaign pacing, budget allocation across placements, frequency capping, and dayparting. Automatically pauses underperforming ads and reallocates budget to high performers.",
+            "category": "Management",
+            "estimatedDuration": 30,
+            "businessRationale": "Automated campaign management reduces advertiser workload by 60%. Smart budget allocation improves cost-per-acquisition by 20% compared to manual management.",
+            "substeps": [
+                {
+                    "substepName": "BudgetPacing",
+                    "duration": 10
+                },
+                {
+                    "substepName": "PerformanceBalancing",
+                    "duration": 20
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "MeasurementAttribution",
+            "serviceName": "MeasurementAttributionService",
+            "description": "AI attribution models track ad impact across the customer journey: view-through, click-through, cross-device, and incrementality measurement. Privacy-preserving aggregated reporting.",
+            "category": "Measurement",
+            "estimatedDuration": 60,
+            "businessRationale": "Accurate attribution justifies ad spend and drives 70% of re-investment decisions. Privacy-preserving measurement builds trust and complies with GDPR/CCPA regulations.",
+            "substeps": [
+                {
+                    "substepName": "ConversionTracking",
+                    "duration": 20
+                },
+                {
+                    "substepName": "AttributionModeling",
+                    "duration": 40
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "AdvertiserReporting",
+            "serviceName": "AdvertiserReportingService",
+            "description": "AI generates comprehensive campaign reports: reach, frequency, engagement, conversions, ROAS, brand lift studies, and competitive benchmarks. Provides actionable recommendations for next campaigns.",
+            "category": "Reporting",
+            "estimatedDuration": 120,
+            "businessRationale": "Transparent reporting builds advertiser trust and drives re-investment. Advertisers with detailed performance insights renew contracts at 2x the rate of those without.",
+            "substeps": [
+                {
+                    "substepName": "PerformanceAnalysis",
+                    "duration": 60
+                },
+                {
+                    "substepName": "RecommendationEngine",
+                    "duration": 60
+                }
+            ]
+        }
+    ],
+    "id": "236fbff9-6250-422b-b175-d17ab69dd5f4",
+    "name": "Social Media & Platforms - Ad Targeting",
+    "timestamp": "2026-03-18T21:35:20.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 250000,
+        "annualRevenue": 0,
+        "revenuePerCustomer": 0,
+        "profitMargin": 55,
+        "customerLifetimeValue": 750000,
+        "lifetimeValue": 750000,
+        "acquisitionCost": 15000,
+        "costPerAcquisition": 0.85,
+        "conversionProbability": 0.032,
+        "conversionRate": 3.2,
+        "engagementScore": 5.8,
+        "timeToConversion": 4,
+        "sessionDuration": 0,
+        "pageViews": 0,
+        "purchaseFrequency": 0,
+        "netPromoterScore": 42,
+        "satisfactionRating": 4.0,
+        "retentionProbability": 0.82,
+        "processingTime": 0.05,
+        "operationalCost": 0.003,
+        "efficiencyRating": 96,
+        "discountApplied": 0,
+        "taxAmount": 0,
+        "shippingCost": 0,
+        "channel": [
+            "feed_ad",
+            "story_ad",
+            "reel_ad",
+            "search_ad",
+            "messenger_ad"
+        ],
+        "deviceType": [
+            "mobile",
+            "desktop",
+            "tablet",
+            "connected_tv",
+            "mobile"
+        ],
+        "region": [
+            "North America",
+            "Europe",
+            "Asia-Pacific",
+            "Latin America",
+            "Middle East"
+        ],
+        "customerSegmentValue": [
+            "smb_advertiser",
+            "enterprise_brand",
+            "agency",
+            "direct_response",
+            "awareness"
+        ],
+        "loyaltyTier": [
+            "starter",
+            "growth",
+            "managed",
+            "premium_partner",
+            "strategic_partner"
+        ],
+        "segment": [
+            "ecommerce",
+            "finance",
+            "gaming",
+            "cpg",
+            "automotive"
+        ],
+        "Productname": [
+            "Feed_Placement",
+            "Story_Placement",
+            "Reel_Placement",
+            "Search_Placement",
+            "Audience_Network"
+        ],
+        "ProductId": [
+            "AD-FEED-001",
+            "AD-STORY-002",
+            "AD-REEL-003",
+            "AD-SRCH-004",
+            "AD-AUDN-005"
+        ],
+        "ProductType": [
+            "display_ad",
+            "fullscreen_ad",
+            "video_ad",
+            "search_ad",
+            "network_ad"
+        ],
+        "Price": [
+            8.5,
+            12.0,
+            15.0,
+            6.5,
+            4.0
+        ],
+        "adFormat": [
+            "image",
+            "video",
+            "carousel",
+            "collection",
+            "lead_gen"
+        ],
+        "impressionsServed": [
+            150000,
+            280000,
+            95000,
+            420000,
+            210000
+        ],
+        "ctr": [
+            1.2,
+            2.8,
+            3.5,
+            1.8,
+            0.9
+        ],
+        "marketTrend": [
+            "privacy_first_targeting",
+            "ai_creative",
+            "retail_media",
+            "first_party_data",
+            "attention_metrics"
+        ]
+    }
+}

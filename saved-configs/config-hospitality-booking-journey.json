@@ -1,0 +1,273 @@
+{
+    "companyName": "HotelTech International",
+    "domain": "https://www.hoteltech-intl.com",
+    "industryType": "Hospitality & Travel",
+    "journeyType": "Guest Booking",
+    "journeyDetail": "AI-Personalised Hotel Guest Booking Journey",
+    "journeyId": "journey_guest_booking_547394a2",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "SearchAndDiscovery",
+            "serviceName": "SearchService",
+            "description": "AI-powered search with personalised results based on loyalty history, past stays, and preferences. Dynamic pricing displayed. Competitive rate comparison.",
+            "category": "Discovery",
+            "estimatedDuration": 0.5,
+            "businessRationale": "Personalised search increases direct booking by 25%. Each OTA booking costs 15-25% commission.",
+            "substeps": [
+                {
+                    "substepName": "PersonalisedSearch",
+                    "duration": 0.2
+                },
+                {
+                    "substepName": "DynamicPricing",
+                    "duration": 0.15
+                },
+                {
+                    "substepName": "RateComparison",
+                    "duration": 0.15
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "RoomSelection",
+            "serviceName": "RoomService",
+            "description": "AI recommends room type, view, floor, and upgrades based on guest profile. Virtual room tour available. Upsell propensity scored per guest.",
+            "category": "Selection",
+            "estimatedDuration": 3,
+            "businessRationale": "AI upselling generates $15-30 incremental revenue per booking. Matching guest to right room reduces complaint rate by 40%.",
+            "substeps": [
+                {
+                    "substepName": "RoomRecommendation",
+                    "duration": 1
+                },
+                {
+                    "substepName": "VirtualTour",
+                    "duration": 1
+                },
+                {
+                    "substepName": "UpsellOptimization",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "BookingConfirmation",
+            "serviceName": "BookingConfirmService",
+            "description": "Secure payment, loyalty point accrual, and confirmation. Pre-arrival preferences captured: pillow type, minibar stocking, check-in time, and restaurant reservations.",
+            "category": "Transaction",
+            "estimatedDuration": 0.5,
+            "businessRationale": "Pre-arrival preference capture improves guest satisfaction by 20%. Guests who share preferences have 15% higher spend during stay.",
+            "substeps": [
+                {
+                    "substepName": "PaymentProcessing",
+                    "duration": 0.2
+                },
+                {
+                    "substepName": "LoyaltyAccrual",
+                    "duration": 0.1
+                },
+                {
+                    "substepName": "PreferenceCapture",
+                    "duration": 0.2
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "PreArrivalExperience",
+            "serviceName": "PreArrivalService",
+            "description": "AI sends personalised pre-arrival communication: local area guide, restaurant recommendations, spa booking offers, and mobile check-in option.",
+            "category": "Engagement",
+            "estimatedDuration": 48,
+            "businessRationale": "Pre-arrival engagement drives 30% more ancillary bookings. Mobile check-in reduces front desk queue and improves arrival experience.",
+            "substeps": [
+                {
+                    "substepName": "LocalGuide",
+                    "duration": 16
+                },
+                {
+                    "substepName": "AncillaryOffers",
+                    "duration": 16
+                },
+                {
+                    "substepName": "MobileCheckIn",
+                    "duration": 16
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "OnPropertyExperience",
+            "serviceName": "OnPropertyService",
+            "description": "AI concierge: restaurant reservations, activity booking, room service personalisation. Real-time issue detection from IoT sensors and sentiment analysis.",
+            "category": "Experience",
+            "estimatedDuration": 48,
+            "businessRationale": "In-stay AI concierge increases guest spend by 20-35%. Real-time issue detection enables recovery before guests complain.",
+            "substeps": [
+                {
+                    "substepName": "AIConcierge",
+                    "duration": 16
+                },
+                {
+                    "substepName": "PersonalisedOffers",
+                    "duration": 16
+                },
+                {
+                    "substepName": "IssueDetection",
+                    "duration": 16
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "PostStayEngagement",
+            "serviceName": "PostStayService",
+            "description": "AI-triggered review request, loyalty programme engagement, and personalised re-booking offers. Sentiment analysis of reviews for operational improvement.",
+            "category": "Retention",
+            "estimatedDuration": 720,
+            "businessRationale": "Post-stay engagement drives 25% increase in direct rebooking. A 0.1 improvement in review score = 2% increase in RevPAR.",
+            "substeps": [
+                {
+                    "substepName": "ReviewManagement",
+                    "duration": 240
+                },
+                {
+                    "substepName": "LoyaltyEngagement",
+                    "duration": 240
+                },
+                {
+                    "substepName": "RebookingOffers",
+                    "duration": 240
+                }
+            ]
+        }
+    ],
+    "id": "69f93c60-f57c-40f8-a952-77d2eeb93d67",
+    "name": "Hospitality & Travel - Guest Booking",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 450,
+        "transactionValue": 450,
+        "averageOrderValue": 380,
+        "contractValue": 0,
+        "annualRevenue": 250000000,
+        "revenuePerCustomer": 1800,
+        "profitMargin": 22.0,
+        "customerLifetimeValue": 12000,
+        "lifetimeValue": 12000,
+        "acquisitionCost": 45,
+        "costPerAcquisition": 45,
+        "conversionProbability": 0.08,
+        "conversionRate": 8,
+        "engagementScore": 78,
+        "timeToConversion": 1440,
+        "sessionDuration": 600,
+        "pageViews": 12,
+        "purchaseFrequency": 4,
+        "netPromoterScore": 52,
+        "satisfactionRating": 4.3,
+        "retentionProbability": 0.55,
+        "processingTime": 30,
+        "operationalCost": 85,
+        "efficiencyRating": 80,
+        "revPAR": 185,
+        "occupancyRate": 78,
+        "channel": [
+            "direct_website",
+            "mobile_app",
+            "booking_com",
+            "expedia",
+            "corporate_portal"
+        ],
+        "deviceType": [
+            "desktop",
+            "mobile",
+            "mobile",
+            "desktop",
+            "desktop"
+        ],
+        "region": [
+            "London",
+            "Paris",
+            "New York",
+            "Dubai",
+            "Tokyo"
+        ],
+        "customerSegmentValue": [
+            "luxury_leisure",
+            "business_traveller",
+            "group_conference",
+            "wedding_event",
+            "OTA_guest"
+        ],
+        "loyaltyTier": [
+            "Ambassador",
+            "Platinum",
+            "Gold",
+            "Silver",
+            "Member"
+        ],
+        "segment": [
+            "luxury",
+            "business",
+            "resort",
+            "boutique",
+            "extended_stay"
+        ],
+        "Productname": [
+            "Deluxe City View Suite",
+            "Executive Business Room",
+            "Presidential Suite",
+            "Standard Double",
+            "Club Level Access"
+        ],
+        "ProductId": [
+            "HTL-DX-001",
+            "HTL-EX-002",
+            "HTL-PS-003",
+            "HTL-SD-004",
+            "HTL-CL-005"
+        ],
+        "ProductType": [
+            "suite",
+            "executive",
+            "presidential",
+            "standard",
+            "club"
+        ],
+        "Price": [
+            650,
+            350,
+            2500,
+            180,
+            450
+        ],
+        "nightsBooked": [
+            3,
+            2,
+            5,
+            1,
+            4
+        ],
+        "guestRating": [
+            4.8,
+            4.5,
+            4.9,
+            4.2,
+            4.6
+        ],
+        "marketTrend": [
+            "AI_concierge",
+            "mobile_first_booking",
+            "experience_economy",
+            "sustainable_hospitality",
+            "bleisure_travel"
+        ]
+    }
+}

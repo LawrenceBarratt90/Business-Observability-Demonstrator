@@ -1,0 +1,261 @@
+{
+    "companyName": "Space",
+    "domain": "https://www.space-demo.com",
+    "industryType": "Space & Satellite",
+    "journeyType": "Earth Observation",
+    "journeyDetail": "Earth Observation",
+    "journeyId": "journey_space_earth_observation",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "SatelliteTasking",
+            "serviceName": "SatelliteTaskingService",
+            "description": "AI optimizes satellite tasking schedules: selects which satellites image which targets based on orbital position, cloud cover predictions, sun angle, and priority. Maximises daily collection capacity.",
+            "category": "Planning",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 3,
+            "businessRationale": "AI tasking optimization increases collection efficiency by 35%. Maximizing usable image collection directly drives revenue at \u00a350 per km\u00b2 for high-resolution optical imagery.",
+            "substeps": [
+                {
+                    "substepName": "CollectionPlanning",
+                    "duration": 1
+                },
+                {
+                    "substepName": "PriorityScheduling",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "ImageAcquisition",
+            "serviceName": "ImageAcquisitionService",
+            "description": "Satellite captures imagery using optical, SAR, hyperspectral, or infrared sensors. AI monitors acquisition quality in real-time, triggering re-tasking if cloud contamination exceeds thresholds.",
+            "category": "Collection",
+            "estimatedDuration": 2,
+            "businessRationale": "Quality-controlled acquisition reduces wasted downlink bandwidth by 25%. SAR imaging provides all-weather capability, ensuring 99% collection reliability regardless of conditions.",
+            "substeps": [
+                {
+                    "substepName": "SensorActivation",
+                    "duration": 1
+                },
+                {
+                    "substepName": "QualityAssessment",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "ImageProcessing",
+            "serviceName": "ImageProcessingService",
+            "description": "AI processes raw satellite imagery: radiometric correction, geometric orthorectification, atmospheric compensation, pan-sharpening, and mosaic generation. Produces analysis-ready data products.",
+            "category": "Processing",
+            "estimatedDuration": 15,
+            "businessRationale": "Automated image processing reduces delivery time from 24 hours to 30 minutes. Fast turnaround is critical for defence, disaster response, and insurance clients.",
+            "substeps": [
+                {
+                    "substepName": "RadiometricCorrection",
+                    "duration": 5
+                },
+                {
+                    "substepName": "GeometricCorrection",
+                    "duration": 5
+                },
+                {
+                    "substepName": "ProductGeneration",
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "ChangeDetection",
+            "serviceName": "ChangeDetectionService",
+            "description": "AI compares current imagery with historical baselines to detect changes: construction activity, deforestation, crop health shifts, flood extent, infrastructure damage, and vessel movements.",
+            "category": "Analytics",
+            "estimatedDuration": 10,
+            "businessRationale": "Change detection automates monitoring that previously required human analysts. AI processes 10,000 km\u00b2 in minutes vs weeks manually, enabling daily monitoring of critical assets.",
+            "substeps": [
+                {
+                    "substepName": "TemporalComparison",
+                    "duration": 5
+                },
+                {
+                    "substepName": "ChangeClassification",
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "InsightGeneration",
+            "serviceName": "InsightGenerationService",
+            "description": "AI generates actionable intelligence: crop yield predictions, urban growth modelling, maritime domain awareness, environmental compliance monitoring, and natural disaster impact assessments.",
+            "category": "Intelligence",
+            "estimatedDuration": 30,
+            "businessRationale": "Derived insights command 10x the price of raw imagery. Predictive analytics (crop yields, infrastructure risk) drive subscription-based revenue models worth \u00a3200M annually.",
+            "substeps": [
+                {
+                    "substepName": "DomainAnalysis",
+                    "duration": 15
+                },
+                {
+                    "substepName": "PredictiveModeling",
+                    "duration": 15
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "DataDelivery",
+            "serviceName": "DataDeliveryService",
+            "description": "AI manages data delivery: API feeds, cloud storage, GIS platform integration, and custom report generation. Ensures delivery SLAs, data security classification, and access control for sensitive imagery.",
+            "category": "Delivery",
+            "estimatedDuration": 5,
+            "businessRationale": "Reliable data delivery with <1 hour latency commands premium pricing. API-first delivery enables integration into customer workflows, driving 80% subscription retention.",
+            "substeps": [
+                {
+                    "substepName": "FormatConversion",
+                    "duration": 2
+                },
+                {
+                    "substepName": "SecureDelivery",
+                    "duration": 3
+                }
+            ]
+        }
+    ],
+    "id": "1d77edb0-6047-4ae4-abf7-2363ff65011e",
+    "name": "Space & Satellite - Earth Observation",
+    "timestamp": "2026-03-18T21:35:20.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 25000000,
+        "annualRevenue": 0,
+        "revenuePerCustomer": 0,
+        "profitMargin": 35,
+        "customerLifetimeValue": 100000000,
+        "lifetimeValue": 100000000,
+        "acquisitionCost": 2000000,
+        "costPerAcquisition": 2000000,
+        "conversionProbability": 0.72,
+        "conversionRate": 72,
+        "engagementScore": 85,
+        "timeToConversion": 6,
+        "sessionDuration": 0,
+        "pageViews": 0,
+        "purchaseFrequency": 12,
+        "netPromoterScore": 55,
+        "satisfactionRating": 4.3,
+        "retentionProbability": 0.88,
+        "processingTime": 15,
+        "operationalCost": 5000000,
+        "efficiencyRating": 89,
+        "discountApplied": 0,
+        "taxAmount": 0,
+        "shippingCost": 0,
+        "channel": [
+            "api",
+            "cloud_platform",
+            "gis_integration",
+            "direct_download",
+            "streaming"
+        ],
+        "deviceType": [
+            "server",
+            "desktop",
+            "hpc_cluster",
+            "mobile",
+            "edge_device"
+        ],
+        "region": [
+            "Global",
+            "Europe",
+            "Asia-Pacific",
+            "Americas",
+            "Africa"
+        ],
+        "customerSegmentValue": [
+            "defence",
+            "agriculture",
+            "insurance",
+            "environment",
+            "urban_planning"
+        ],
+        "loyaltyTier": [
+            "pay_per_image",
+            "subscription_basic",
+            "subscription_pro",
+            "enterprise",
+            "government_contract"
+        ],
+        "segment": [
+            "optical_imagery",
+            "sar_imagery",
+            "hyperspectral",
+            "analytics",
+            "monitoring"
+        ],
+        "Productname": [
+            "HighRes_Optical",
+            "SAR_AllWeather",
+            "Hyperspectral_Analysis",
+            "Change_Detection_Service",
+            "Maritime_Awareness"
+        ],
+        "ProductId": [
+            "OBS-OPT-001",
+            "OBS-SAR-002",
+            "OBS-HYP-003",
+            "OBS-CHG-004",
+            "OBS-MAR-005"
+        ],
+        "ProductType": [
+            "imagery",
+            "imagery",
+            "imagery",
+            "analytics",
+            "intelligence"
+        ],
+        "Price": [
+            50,
+            120,
+            200,
+            5000,
+            15000
+        ],
+        "resolutionMetres": [
+            0.3,
+            1.0,
+            5.0,
+            0.5,
+            3.0
+        ],
+        "coverageAreaKm2": [
+            100,
+            500,
+            2500,
+            1000,
+            50000
+        ],
+        "revisitDays": [
+            1,
+            1,
+            3,
+            1,
+            1
+        ],
+        "marketTrend": [
+            "sub_metre_resolution",
+            "sar_constellation",
+            "ai_analytics",
+            "real_time_monitoring",
+            "sustainability_reporting"
+        ]
+    }
+}

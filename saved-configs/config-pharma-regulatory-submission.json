@@ -1,0 +1,264 @@
+{
+    "companyName": "Pharma Corp",
+    "domain": "https://www.pharma-corp.com",
+    "industryType": "Pharmaceuticals & Life Sciences",
+    "source": "sector-demo",
+    "timestamp": "2026-01-09T15:50:00.000Z",
+    "journeyType": "Regulatory Submission",
+    "journeyDetail": "Regulatory Submission Journey",
+    "journeyId": "journey_pharma_regulatory_2026",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "id": "a1b2c3d4-1010-4aaa-b101-000000000003",
+    "name": "Pharmaceuticals - Regulatory Submission",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "SubmissionPlanning",
+            "serviceName": "SubmissionPlanningService",
+            "description": "Regulatory affairs team defines submission strategy: target agencies (FDA, EMA, PMDA), submission type (NDA, BLA, MAA, supplement), and timeline. Content plan maps required modules to data sources. Resource allocation across medical writing, statistics, and regulatory operations teams.",
+            "category": "Planning",
+            "estimatedDuration": 60,
+            "businessRationale": "Strategic submission planning can accelerate approval by 6-12 months. Each month of delayed market entry costs $50M-100M for blockbuster drugs. Multi-agency strategy enables parallel rather than sequential submissions.",
+            "substeps": [
+                {
+                    "substepName": "AgencyAndSubmissionTypeStrategy",
+                    "duration": 30
+                },
+                {
+                    "substepName": "ContentPlanAndResourceAllocation",
+                    "duration": 30
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "DocumentAuthoring",
+            "serviceName": "DocumentAuthoringService",
+            "description": "Medical writers produce Common Technical Document (CTD) modules: quality (Module 3), nonclinical (Module 4), and clinical (Module 5). AI-assisted authoring tools accelerate drafting. Cross-functional review cycles with clinical, manufacturing, and regulatory input. Document version control with audit trail.",
+            "category": "Authoring",
+            "estimatedDuration": 4320,
+            "businessRationale": "A typical NDA contains 100,000-500,000 pages across hundreds of documents. AI-assisted writing reduces authoring time by 30%. Document quality directly impacts review time \u2014 deficient applications add 6-12 months to approval.",
+            "substeps": [
+                {
+                    "substepName": "CTDModuleAuthoringAndAIAssist",
+                    "duration": 2880
+                },
+                {
+                    "substepName": "CrossFunctionalReviewCycles",
+                    "duration": 1440
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "QualityCheckAndPublishing",
+            "serviceName": "QualityCheckAndPublishingService",
+            "description": "Regulatory publishing team converts authored documents into eCTD format per ICH specifications. Hyperlinks, bookmarks, and navigation validated. PDF rendering checked for readability. Technical validation tools verify XML backbone and file naming conventions.",
+            "category": "Publishing",
+            "estimatedDuration": 1440,
+            "businessRationale": "Technical validation failures cause submission rejection at gateway \u2014 each rejection delays review start by 2-4 weeks. Publishing errors in 5% of submissions require resubmission. eCTD compliance is mandatory for all major agencies.",
+            "substeps": [
+                {
+                    "substepName": "ECTDFormattingAndHyperlinking",
+                    "duration": 720
+                },
+                {
+                    "substepName": "TechnicalValidationAndRendering",
+                    "duration": 720
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "ElectronicSubmission",
+            "serviceName": "ElectronicSubmissionService",
+            "description": "Completed eCTD sequence submitted through agency electronic gateways (FDA ESG, EMA CESP). Submission acknowledgement confirms gateway acceptance. Sequence number and application tracking number recorded. Cover letter and administrative documents included.",
+            "category": "Submission",
+            "estimatedDuration": 30,
+            "businessRationale": "Gateway acceptance confirms the submission is technically valid and review clock starts. Failed gateway submissions lose days of review time. Multi-region submissions may span 20+ agencies requiring unique format adaptations.",
+            "substeps": [
+                {
+                    "substepName": "GatewayUploadAndTransmission",
+                    "duration": 15
+                },
+                {
+                    "substepName": "AcknowledgementAndTracking",
+                    "duration": 15
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "AgencyReviewAndResponse",
+            "serviceName": "AgencyReviewAndResponseService",
+            "description": "Agency reviews submission per PDUFA timeline (10-12 months standard, 6-8 months priority). Information requests (IRs) and complete response letters (CRLs) require rapid response. Advisory committee meetings prepared with briefing documents. Real-time tracking of review milestones and agency communications.",
+            "category": "Review",
+            "estimatedDuration": 7200,
+            "businessRationale": "FDA review timeline adherence is measured by PDUFA goals. Information request response time directly impacts action date. Advisory committee preparation costs $500K-1M but is critical for complex or controversial applications.",
+            "substeps": [
+                {
+                    "substepName": "ReviewTrackingAndIRResponse",
+                    "duration": 3600
+                },
+                {
+                    "substepName": "AdvisoryCommitteePrepAndMilestones",
+                    "duration": 3600
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "ApprovalAndLaunchReadiness",
+            "serviceName": "ApprovalAndLaunchReadinessService",
+            "description": "Upon approval, labelling finalised, manufacturing ramped to commercial scale, and distribution network activated. Launch readiness checklist: sales force training, marketing materials, patient support programmes. Post-marketing commitments and pharmacovigilance plans activated. Global rollout timeline executed.",
+            "category": "Launch",
+            "estimatedDuration": 2880,
+            "businessRationale": "First-week launch sales set trajectory for product lifecycle. Speed to pharmacy shelf after approval is critical \u2014 competitors may launch within months. Post-marketing commitments are legally binding \u2014 non-compliance risks approval withdrawal.",
+            "substeps": [
+                {
+                    "substepName": "LabellingAndManufacturingRamp",
+                    "duration": 1440
+                },
+                {
+                    "substepName": "LaunchExecutionAndPharmacovigilance",
+                    "duration": 1440
+                }
+            ]
+        }
+    ],
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 2500000,
+        "averageOrderValue": 0,
+        "contractValue": 0,
+        "annualRevenue": 0,
+        "revenuePerCustomer": 500000000,
+        "profitMargin": 0,
+        "customerLifetimeValue": 2000000000,
+        "lifetimeValue": 2000000000,
+        "acquisitionCost": 150000000,
+        "conversionProbability": 0.55,
+        "conversionRate": 55,
+        "engagementScore": 65,
+        "timeToConversion": 31536000,
+        "netPromoterScore": 30,
+        "satisfactionRating": 3.5,
+        "retentionProbability": 0.95,
+        "processingTime": 15552000,
+        "operationalCost": 2500000,
+        "efficiencyRating": 48,
+        "complianceScore": 99,
+        "channel": [
+            "ectd_gateway",
+            "regulatory_portal",
+            "fda_anda",
+            "ema_centralised",
+            "national_procedure"
+        ],
+        "deviceType": [
+            "desktop",
+            "desktop",
+            "desktop",
+            "desktop",
+            "desktop"
+        ],
+        "region": [
+            "FDA_US",
+            "EMA_EU",
+            "MHRA_UK",
+            "PMDA_Japan",
+            "TGA_Australia"
+        ],
+        "customerSegmentValue": [
+            "nda_first",
+            "supplement",
+            "biosimilar_pathway",
+            "orphan_drug",
+            "pediatric_extension"
+        ],
+        "loyaltyTier": [
+            "Priority Review",
+            "Standard Review",
+            "Accelerated",
+            "Breakthrough",
+            "Fast Track"
+        ],
+        "segment": [
+            "new_drug_application",
+            "biologics_licence",
+            "generic_anda",
+            "supplement_variation",
+            "annual_report"
+        ],
+        "Productname": [
+            "NDA New Molecular Entity",
+            "BLA Biologic Application",
+            "ANDA Generic Filing",
+            "Type II Variation Supplement",
+            "Annual Safety Update Report"
+        ],
+        "ProductId": [
+            "PH-RS-201",
+            "PH-RS-202",
+            "PH-RS-203",
+            "PH-RS-204",
+            "PH-RS-205"
+        ],
+        "ProductType": [
+            "nda",
+            "bla",
+            "anda",
+            "variation",
+            "annual_report"
+        ],
+        "Price": [
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "reviewTimeline": [
+            "standard_12m",
+            "priority_6m",
+            "standard_10m",
+            "60_day",
+            "annual"
+        ],
+        "submissionFormat": [
+            "ectd_v4",
+            "ectd_v4",
+            "ectd_v4",
+            "ectd_v4",
+            "ectd_v4"
+        ],
+        "regulatoryMilestone": [
+            "filing_accepted",
+            "day_120_questions",
+            "approval_pending",
+            "variation_approved",
+            "acknowledged"
+        ],
+        "deficiencyLetters": [
+            0,
+            1,
+            0,
+            0,
+            0
+        ],
+        "advisoryCommitteeMeeting": [
+            true,
+            true,
+            false,
+            false,
+            false
+        ],
+        "marketTrend": [
+            "real_world_evidence",
+            "digital_submission",
+            "ai_regulatory_review",
+            "rolling_submission",
+            "harmonisation"
+        ]
+    }
+}

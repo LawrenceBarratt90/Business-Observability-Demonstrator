@@ -1,0 +1,279 @@
+{
+    "companyName": "AgriTech Corp",
+    "domain": "https://www.agritech-corp.com",
+    "industryType": "Agriculture & AgriTech",
+    "journeyType": "Harvest Operations",
+    "journeyDetail": "AI-Optimised Harvest Operations",
+    "journeyId": "journey_harvest_operations_49f65228",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "HarvestReadiness",
+            "serviceName": "HarvestReadinessService",
+            "description": "AI analyses crop maturity using moisture sensors, satellite NDVI, and weather forecasts to determine optimal harvest window. Equipment readiness checked against field conditions.",
+            "category": "Assessment",
+            "estimatedDuration": 24,
+            "businessRationale": "Harvesting at optimal moisture saves 5-8% in drying costs. Missing the window by 3 days can reduce quality grade by one level.",
+            "substeps": [
+                {
+                    "substepName": "MoistureAnalysis",
+                    "duration": 12
+                },
+                {
+                    "substepName": "WeatherWindowPrediction",
+                    "duration": 8
+                },
+                {
+                    "substepName": "EquipmentReadyCheck",
+                    "duration": 4
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "FleetDispatch",
+            "serviceName": "FleetDispatchService",
+            "description": "Combine harvesters, grain carts, and transport trucks dispatched to fields in optimised sequence. Route planning considers field access, load capacity, and elevator wait times.",
+            "category": "Logistics",
+            "estimatedDuration": 8,
+            "businessRationale": "Fleet coordination reduces idle time by 30%. Poor sequencing wastes $500-1000/day per combine in lost productivity.",
+            "substeps": [
+                {
+                    "substepName": "CombineRouting",
+                    "duration": 3
+                },
+                {
+                    "substepName": "GrainCartAllocation",
+                    "duration": 2
+                },
+                {
+                    "substepName": "TransportScheduling",
+                    "duration": 3
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "HarvestExecution",
+            "serviceName": "HarvestExecutionService",
+            "description": "GPS-guided harvesting with real-time yield mapping, moisture monitoring, and grain loss detection. AI adjusts combine settings based on crop conditions. Business event: field_harvested with tonnes, moisture, and yield_per_hectare.",
+            "category": "Operations",
+            "estimatedDuration": 72,
+            "businessRationale": "Automated combine adjustment reduces grain loss by 2-4%. Real-time yield mapping enables immediate ROI calculation per field zone.",
+            "substeps": [
+                {
+                    "substepName": "PrecisionHarvesting",
+                    "duration": 48
+                },
+                {
+                    "substepName": "YieldMonitoring",
+                    "duration": 12
+                },
+                {
+                    "substepName": "GrainQualityCheck",
+                    "duration": 12
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "GrainHandling",
+            "serviceName": "GrainHandlingService",
+            "description": "Grain drying, storage allocation, and quality grading. Temperature and moisture monitored in bins. AI determines optimal storage duration vs immediate sale based on market conditions.",
+            "category": "PostHarvest",
+            "estimatedDuration": 24,
+            "businessRationale": "Proper drying prevents spoilage losses of 5-15%. Storage timing decisions can add $0.50-1.50/bushel in market returns.",
+            "substeps": [
+                {
+                    "substepName": "DryingOptimization",
+                    "duration": 12
+                },
+                {
+                    "substepName": "StorageAllocation",
+                    "duration": 8
+                },
+                {
+                    "substepName": "QualityGrading",
+                    "duration": 4
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "MarketExecution",
+            "serviceName": "MarketExecutionService",
+            "description": "AI-timed grain sales against futures market, basis levels, and storage costs. Contract fulfilment tracked against forward sales commitments. Business event: grain_sold with quantity, price, grade, and buyer.",
+            "category": "Sales",
+            "estimatedDuration": 48,
+            "businessRationale": "Market timing can improve realised prices by 8-15%. Meeting contract specs avoids penalties of $0.10-0.50/bushel.",
+            "substeps": [
+                {
+                    "substepName": "PriceAnalysis",
+                    "duration": 16
+                },
+                {
+                    "substepName": "ContractFulfilment",
+                    "duration": 16
+                },
+                {
+                    "substepName": "LogisticsToElevator",
+                    "duration": 16
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "SeasonReconciliation",
+            "serviceName": "SeasonReconciliationService",
+            "description": "Full season P&L calculated per field zone. AI compares planned vs actual yields, costs, and revenue. Insights fed back into next season planning. Business event: season_closed with total_revenue, total_cost, and roi_per_hectare.",
+            "category": "Analytics",
+            "estimatedDuration": 24,
+            "businessRationale": "Zone-level P&L drives precision decisions for next season. Farms that track zone economics improve margins by 5-10% year over year.",
+            "substeps": [
+                {
+                    "substepName": "YieldReconciliation",
+                    "duration": 8
+                },
+                {
+                    "substepName": "CostAnalysis",
+                    "duration": 8
+                },
+                {
+                    "substepName": "NextSeasonRecommendations",
+                    "duration": 8
+                }
+            ]
+        }
+    ],
+    "id": "27529dd9-1cf9-4fe7-8a62-7dfc21410635",
+    "name": "Agriculture & AgriTech - Harvest Operations",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 85000,
+        "transactionValue": 85000,
+        "averageOrderValue": 72000,
+        "contractValue": 350000,
+        "annualRevenue": 850000,
+        "revenuePerCustomer": 425000,
+        "profitMargin": 22.0,
+        "customerLifetimeValue": 2500000,
+        "lifetimeValue": 2500000,
+        "acquisitionCost": 5000,
+        "costPerAcquisition": 5000,
+        "conversionProbability": 0.92,
+        "conversionRate": 92,
+        "engagementScore": 85,
+        "timeToConversion": 720,
+        "sessionDuration": 600,
+        "pageViews": 8,
+        "purchaseFrequency": 1,
+        "netPromoterScore": 52,
+        "satisfactionRating": 4.2,
+        "retentionProbability": 0.88,
+        "processingTime": 4320,
+        "operationalCost": 35000,
+        "efficiencyRating": 82,
+        "yieldPerHectare": 9.2,
+        "grainMoisture": [
+            13.5,
+            14.2,
+            12.8,
+            15.1,
+            13.0
+        ],
+        "channel": [
+            "farm_portal",
+            "mobile_field_app",
+            "grain_elevator",
+            "futures_broker",
+            "cooperative"
+        ],
+        "deviceType": [
+            "tablet",
+            "mobile",
+            "desktop",
+            "desktop",
+            "mobile"
+        ],
+        "region": [
+            "Midwest US",
+            "Great Plains",
+            "Prairies CA",
+            "East Anglia UK",
+            "Queensland AU"
+        ],
+        "customerSegmentValue": [
+            "large_farm",
+            "family_farm",
+            "cooperative",
+            "contract_grower",
+            "organic_farm"
+        ],
+        "loyaltyTier": [
+            "Platinum",
+            "Gold",
+            "Silver",
+            "Bronze",
+            "Starter"
+        ],
+        "segment": [
+            "wheat",
+            "corn",
+            "soybean",
+            "barley",
+            "canola"
+        ],
+        "Productname": [
+            "Winter Wheat Harvest",
+            "Corn Grain Harvest",
+            "Soybean Harvest",
+            "Barley Malt Grade",
+            "Canola Crush Grade"
+        ],
+        "ProductId": [
+            "HV-WH-001",
+            "HV-CN-002",
+            "HV-SB-003",
+            "HV-BL-004",
+            "HV-CL-005"
+        ],
+        "ProductType": [
+            "grain",
+            "grain",
+            "oilseed",
+            "grain",
+            "oilseed"
+        ],
+        "Price": [
+            7.2,
+            5.85,
+            13.5,
+            6.4,
+            14.8
+        ],
+        "tonnesHarvested": [
+            1800,
+            2400,
+            950,
+            600,
+            450
+        ],
+        "qualityGrade": [
+            "#1",
+            "#2",
+            "#1",
+            "Malt",
+            "Crush"
+        ],
+        "marketTrend": [
+            "precision_harvest",
+            "yield_mapping",
+            "carbon_farming",
+            "traceability",
+            "autonomous_combines"
+        ]
+    }
+}

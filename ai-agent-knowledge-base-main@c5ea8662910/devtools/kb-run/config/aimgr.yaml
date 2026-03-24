@@ -1,0 +1,23 @@
+# Built-in aimgr configuration for kb-run
+#
+# This configuration is isolated from the global aimgr config
+# and only syncs from this knowledge base repository.
+#
+# This ensures reproducible builds that don't depend on
+# the user's global aimgr configuration.
+
+install:
+    targets:
+        - claude
+        - opencode
+
+sync:
+    sources:
+        # Only sync from this knowledge base repository
+        # Using relative path that will be resolved at runtime
+        - path: ../../../knowledge-base/
+
+repo:
+    # Repo will be stored in kb-run's own directory
+    # This path will be resolved at runtime to: devtools/kb-run/.aimgr-repo/
+    path: .aimgr-repo

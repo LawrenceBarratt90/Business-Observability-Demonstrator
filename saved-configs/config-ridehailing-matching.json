@@ -1,0 +1,273 @@
+{
+    "companyName": "RideFlow Mobility",
+    "domain": "https://www.rideflow-mobility.com",
+    "industryType": "Ride-Hailing & Mobility",
+    "journeyType": "Driver-Rider Matching",
+    "journeyDetail": "AI-Powered Ride Matching & Dispatch",
+    "journeyId": "journey_driver-rider_matching_a3be2309",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "RideRequest",
+            "serviceName": "RideRequestService",
+            "description": "AI processes ride request: origin/destination parsing, ride type selection (economy, premium, shared), ETA estimation, and upfront fare calculation with route-based pricing.",
+            "category": "Initiation",
+            "estimatedDuration": 0.1,
+            "businessRationale": "Fast, accurate ETA and fare estimates set customer expectations. Over-promising ETAs causes cancellation; under-quoting fares causes rider dissatisfaction.",
+            "substeps": [
+                {
+                    "substepName": "LocationParsing",
+                    "duration": 0.03
+                },
+                {
+                    "substepName": "RideTypeSelection",
+                    "duration": 0.03
+                },
+                {
+                    "substepName": "FareCalculation",
+                    "duration": 0.04
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "DriverMatching",
+            "serviceName": "MatchingService",
+            "description": "AI matches rider to optimal driver: proximity, direction of travel, driver rating, vehicle type, and predicted acceptance probability. Batched matching for shared rides.",
+            "category": "Matching",
+            "estimatedDuration": 0.3,
+            "businessRationale": "Matching quality determines both rider wait time and driver utilisation. Better matching reduces pickup time by 20% and increases driver earnings.",
+            "substeps": [
+                {
+                    "substepName": "ProximityMatching",
+                    "duration": 0.1
+                },
+                {
+                    "substepName": "AcceptancePrediction",
+                    "duration": 0.1
+                },
+                {
+                    "substepName": "SharedRideBatching",
+                    "duration": 0.1
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "RoutePlanning",
+            "serviceName": "RoutePlanService",
+            "description": "AI generates optimal route: real-time traffic, road closures, passenger pickup sequence (shared rides), and driver-preferred routes. Dynamic re-routing during trip.",
+            "category": "Navigation",
+            "estimatedDuration": 0.5,
+            "businessRationale": "Route quality directly impacts fare, driver earnings, and rider satisfaction. A 10% shorter route = 10% cost savings for riders.",
+            "substeps": [
+                {
+                    "substepName": "TrafficAwareRouting",
+                    "duration": 0.2
+                },
+                {
+                    "substepName": "SharedRideSequencing",
+                    "duration": 0.15
+                },
+                {
+                    "substepName": "DynamicRerouting",
+                    "duration": 0.15
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "TripExecution",
+            "serviceName": "TripExecService",
+            "description": "AI monitors trip in real-time: safety detection (hard braking, route deviation), trip progress for ETA updates, and driver behavior scoring. Emergency SOS integration.",
+            "category": "Operations",
+            "estimatedDuration": 20,
+            "businessRationale": "Safety monitoring prevents incidents and enables rapid response. Real-time tracking provides peace of mind and enables accurate arrival communication.",
+            "substeps": [
+                {
+                    "substepName": "SafetyMonitoring",
+                    "duration": 7
+                },
+                {
+                    "substepName": "ProgressTracking",
+                    "duration": 7
+                },
+                {
+                    "substepName": "BehaviourScoring",
+                    "duration": 6
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "TripCompletion",
+            "serviceName": "TripCompleteService",
+            "description": "AI calculates final fare (accounting for route changes, wait time, tolls), processes payment, and facilitates mutual rating. Tip prompting and post-ride feedback.",
+            "category": "Settlement",
+            "estimatedDuration": 0.5,
+            "businessRationale": "Seamless payment and fair rating build trust on both sides. Accurate fare calculation prevents disputes that cost $5-10 each to resolve.",
+            "substeps": [
+                {
+                    "substepName": "FareCalculation",
+                    "duration": 0.2
+                },
+                {
+                    "substepName": "PaymentProcessing",
+                    "duration": 0.15
+                },
+                {
+                    "substepName": "RatingAndFeedback",
+                    "duration": 0.15
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "PostTripAnalytics",
+            "serviceName": "PostTripAnalyticsService",
+            "description": "AI analyses trip data: service quality metrics, area coverage gaps, peak demand patterns, and driver earnings optimisation. Market health scoring by zone.",
+            "category": "Analytics",
+            "estimatedDuration": 24,
+            "businessRationale": "Trip analytics identify supply/demand imbalances. Addressing coverage gaps before riders experience them prevents churn to competitors.",
+            "substeps": [
+                {
+                    "substepName": "ServiceQualityMetrics",
+                    "duration": 8
+                },
+                {
+                    "substepName": "CoverageAnalysis",
+                    "duration": 8
+                },
+                {
+                    "substepName": "MarketHealthScoring",
+                    "duration": 8
+                }
+            ]
+        }
+    ],
+    "id": "49f70402-85be-4e67-88a0-7347a93c92ca",
+    "name": "Ride-Hailing & Mobility - Driver-Rider Matching",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 22,
+        "transactionValue": 22,
+        "averageOrderValue": 18,
+        "contractValue": 0,
+        "annualRevenue": 30000000000,
+        "revenuePerCustomer": 1200,
+        "profitMargin": 3.0,
+        "customerLifetimeValue": 4800,
+        "lifetimeValue": 4800,
+        "acquisitionCost": 25,
+        "costPerAcquisition": 25,
+        "conversionProbability": 0.35,
+        "conversionRate": 35,
+        "engagementScore": 72,
+        "timeToConversion": 5,
+        "sessionDuration": 1200,
+        "pageViews": 3,
+        "purchaseFrequency": 60,
+        "netPromoterScore": 35,
+        "satisfactionRating": 4.2,
+        "retentionProbability": 0.55,
+        "processingTime": 0.3,
+        "operationalCost": 4,
+        "efficiencyRating": 82,
+        "avgPickupTime": 4.5,
+        "driverUtilisation": 68,
+        "channel": [
+            "mobile_app",
+            "web_app",
+            "API_integration",
+            "voice_assistant",
+            "corporate_portal"
+        ],
+        "deviceType": [
+            "mobile",
+            "mobile",
+            "server",
+            "smart_speaker",
+            "desktop"
+        ],
+        "region": [
+            "San Francisco US",
+            "London UK",
+            "Sao Paulo BR",
+            "Mumbai IN",
+            "Lagos NG"
+        ],
+        "customerSegmentValue": [
+            "daily_commuter",
+            "weekend_social",
+            "airport_transfer",
+            "corporate_account",
+            "tourist"
+        ],
+        "loyaltyTier": [
+            "Platinum Rider",
+            "Gold Rider",
+            "Silver Rider",
+            "Regular",
+            "New"
+        ],
+        "segment": [
+            "economy",
+            "premium",
+            "shared_pool",
+            "XL_group",
+            "electric_green"
+        ],
+        "Productname": [
+            "Economy Ride",
+            "Premium Black",
+            "Shared Pool",
+            "XL Group",
+            "Green Electric"
+        ],
+        "ProductId": [
+            "RH-EC-001",
+            "RH-PB-002",
+            "RH-SP-003",
+            "RH-XL-004",
+            "RH-GE-005"
+        ],
+        "ProductType": [
+            "economy",
+            "premium",
+            "shared",
+            "xl",
+            "electric"
+        ],
+        "Price": [
+            15,
+            35,
+            8,
+            25,
+            18
+        ],
+        "requestToPickup": [
+            4.5,
+            3.2,
+            6.8,
+            5.5,
+            7.0
+        ],
+        "riderRating": [
+            4.75,
+            4.85,
+            4.6,
+            4.7,
+            4.8
+        ],
+        "marketTrend": [
+            "autonomous_vehicles",
+            "electric_fleet",
+            "micro_mobility_integration",
+            "subscription_rides",
+            "shared_autonomous"
+        ]
+    }
+}

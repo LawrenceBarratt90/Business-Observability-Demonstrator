@@ -1,0 +1,273 @@
+{
+    "companyName": "ChemTech Industries",
+    "domain": "https://www.chemtech-industries.com",
+    "industryType": "Chemical & Process Industries",
+    "journeyType": "Process Optimization",
+    "journeyDetail": "AI-Driven Chemical Process Optimization",
+    "journeyId": "journey_process_optimization_b16a4644",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "ProcessModelling",
+            "serviceName": "ProcessModelService",
+            "description": "AI builds digital twin of chemical process from sensor data, batch records, and thermodynamic models. Identifies yield-limiting steps and energy waste points.",
+            "category": "Analysis",
+            "estimatedDuration": 48,
+            "businessRationale": "Digital twin modelling identifies 5-15% yield improvement opportunities. Each 1% yield improvement in a $100M plant = $1M annual savings.",
+            "substeps": [
+                {
+                    "substepName": "SensorDataIngestion",
+                    "duration": 16
+                },
+                {
+                    "substepName": "ThermodynamicModelling",
+                    "duration": 16
+                },
+                {
+                    "substepName": "YieldAnalysis",
+                    "duration": 16
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "RecipeOptimization",
+            "serviceName": "RecipeOptimizationService",
+            "description": "AI optimises batch recipe parameters: temperature profiles, reaction times, catalyst ratios, and addition sequences. Multi-objective optimization balances yield, quality, and energy.",
+            "category": "Optimization",
+            "estimatedDuration": 72,
+            "businessRationale": "Recipe optimization improves batch yield by 3-8% and reduces cycle time by 10-20%. Even small improvements compound across thousands of batches.",
+            "substeps": [
+                {
+                    "substepName": "ParameterSweep",
+                    "duration": 24
+                },
+                {
+                    "substepName": "QualityConstraints",
+                    "duration": 24
+                },
+                {
+                    "substepName": "EnergyMinimization",
+                    "duration": 24
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "QualityPrediction",
+            "serviceName": "QualityPredictionService",
+            "description": "Real-time quality prediction from in-process measurements. AI predicts final batch quality during production, enabling mid-batch corrections before off-spec material is produced.",
+            "category": "Control",
+            "estimatedDuration": 0.5,
+            "businessRationale": "Mid-batch correction reduces off-spec production by 40-60%. Each off-spec batch costs $50K-500K in rework or disposal.",
+            "substeps": [
+                {
+                    "substepName": "InProcessMeasurement",
+                    "duration": 0.2
+                },
+                {
+                    "substepName": "QualityModelling",
+                    "duration": 0.2
+                },
+                {
+                    "substepName": "CorrectionRecommendation",
+                    "duration": 0.1
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "EnergyManagement",
+            "serviceName": "EnergyManagementService",
+            "description": "AI optimises energy consumption across steam, cooling, compressed air, and electrical systems. Load shifting to off-peak periods and heat recovery optimization.",
+            "category": "Efficiency",
+            "estimatedDuration": 24,
+            "businessRationale": "Energy is 20-40% of chemical production cost. AI optimization typically saves 8-15% of energy spend without capital investment.",
+            "substeps": [
+                {
+                    "substepName": "LoadAnalysis",
+                    "duration": 8
+                },
+                {
+                    "substepName": "HeatRecovery",
+                    "duration": 8
+                },
+                {
+                    "substepName": "PeakShifting",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "MaintenancePrediction",
+            "serviceName": "MaintenancePredictionService",
+            "description": "AI predicts equipment failures from vibration, temperature, pressure, and corrosion sensor data. Maintenance windows optimised around production schedule.",
+            "category": "Reliability",
+            "estimatedDuration": 168,
+            "businessRationale": "Unplanned shutdown of a chemical reactor costs $100K-1M per day. Predictive maintenance reduces unplanned downtime by 35-50%.",
+            "substeps": [
+                {
+                    "substepName": "VibrationAnalysis",
+                    "duration": 56
+                },
+                {
+                    "substepName": "CorrosionMonitoring",
+                    "duration": 56
+                },
+                {
+                    "substepName": "ScheduleOptimization",
+                    "duration": 56
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "RegulatoryCompliance",
+            "serviceName": "ComplianceService",
+            "description": "AI monitors emissions, effluent, and waste against permit limits in real-time. Automatic adjustments to stay within limits. Regulatory reporting auto-generated.",
+            "category": "Compliance",
+            "estimatedDuration": 24,
+            "businessRationale": "EPA/REACH violations can result in $50K-1M daily fines and plant shutdown orders. Proactive monitoring prevents exceedances before they occur.",
+            "substeps": [
+                {
+                    "substepName": "EmissionsMonitoring",
+                    "duration": 8
+                },
+                {
+                    "substepName": "EffluentTracking",
+                    "duration": 8
+                },
+                {
+                    "substepName": "ReportGeneration",
+                    "duration": 8
+                }
+            ]
+        }
+    ],
+    "id": "bb170e68-1e95-4ac6-ba9d-9441e4e268b2",
+    "name": "Chemical & Process Industries - Process Optimization",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 2500000,
+        "transactionValue": 2500000,
+        "averageOrderValue": 1800000,
+        "contractValue": 15000000,
+        "annualRevenue": 500000000,
+        "revenuePerCustomer": 8000000,
+        "profitMargin": 12.0,
+        "customerLifetimeValue": 40000000,
+        "lifetimeValue": 40000000,
+        "acquisitionCost": 200000,
+        "costPerAcquisition": 200000,
+        "conversionProbability": 0.75,
+        "conversionRate": 75,
+        "engagementScore": 70,
+        "timeToConversion": 4320,
+        "sessionDuration": 3600,
+        "pageViews": 10,
+        "purchaseFrequency": 4,
+        "netPromoterScore": 40,
+        "satisfactionRating": 3.8,
+        "retentionProbability": 0.92,
+        "processingTime": 720,
+        "operationalCost": 350000,
+        "efficiencyRating": 78,
+        "batchYield": 94.5,
+        "energyPerTonne": 1850,
+        "channel": [
+            "plant_SCADA",
+            "engineering_portal",
+            "mobile_rounds",
+            "lab_LIMS",
+            "ERP_integration"
+        ],
+        "deviceType": [
+            "HMI_panel",
+            "desktop",
+            "ruggedised_tablet",
+            "desktop",
+            "server"
+        ],
+        "region": [
+            "Houston TX",
+            "Rotterdam NL",
+            "Shanghai CN",
+            "Mumbai IN",
+            "Ludwigshafen DE"
+        ],
+        "customerSegmentValue": [
+            "petrochem",
+            "specialty_chem",
+            "pharma_API",
+            "agrochem",
+            "polymer"
+        ],
+        "loyaltyTier": [
+            "Strategic",
+            "Key",
+            "Developing",
+            "Transactional",
+            "Spot"
+        ],
+        "segment": [
+            "bulk_chemical",
+            "specialty_chemical",
+            "pharmaceutical_intermediate",
+            "agrochemical",
+            "polymer"
+        ],
+        "Productname": [
+            "Ethylene Oxide",
+            "TDI Isocyanate",
+            "Ibuprofen API",
+            "Glyphosate Concentrate",
+            "HDPE Resin"
+        ],
+        "ProductId": [
+            "CHM-EO-001",
+            "CHM-TD-002",
+            "CHM-IB-003",
+            "CHM-GL-004",
+            "CHM-PE-005"
+        ],
+        "ProductType": [
+            "commodity",
+            "specialty",
+            "API",
+            "agrochemical",
+            "polymer"
+        ],
+        "Price": [
+            1200,
+            3500,
+            45000,
+            2800,
+            1650
+        ],
+        "purityGrade": [
+            99.9,
+            99.5,
+            99.95,
+            98.0,
+            99.0
+        ],
+        "hazardClass": [
+            "flammable",
+            "toxic",
+            "OEB3",
+            "toxic",
+            "non_hazardous"
+        ],
+        "marketTrend": [
+            "green_chemistry",
+            "process_intensification",
+            "circular_economy",
+            "bio_based_feedstock",
+            "continuous_manufacturing"
+        ]
+    }
+}

@@ -1,0 +1,273 @@
+{
+    "companyName": "SonicStream Music",
+    "domain": "https://www.sonicstream-music.com",
+    "industryType": "Music & Audio",
+    "journeyType": "Music Distribution",
+    "journeyDetail": "AI-Optimised Music Distribution & Artist Analytics",
+    "journeyId": "journey_music_distribution_f8aff0a8",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "TrackIngestion",
+            "serviceName": "IngestionService",
+            "description": "AI processes master recordings: audio quality validation, metadata enrichment, ISRC assignment, and content ID fingerprinting. Rights and ownership verification.",
+            "category": "Onboarding",
+            "estimatedDuration": 2,
+            "businessRationale": "Clean metadata is essential for royalty accuracy. Missing or incorrect metadata causes 10-15% of royalties to go unclaimed globally.",
+            "substeps": [
+                {
+                    "substepName": "AudioValidation",
+                    "duration": 0.5
+                },
+                {
+                    "substepName": "MetadataEnrichment",
+                    "duration": 0.5
+                },
+                {
+                    "substepName": "ContentFingerprint",
+                    "duration": 1
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "MultiPlatformDistribution",
+            "serviceName": "DistributionService",
+            "description": "AI distributes to 150+ streaming platforms, download stores, and social media. Release timing optimised for each market. Pre-save campaign automation.",
+            "category": "Distribution",
+            "estimatedDuration": 48,
+            "businessRationale": "Day-one streams drive algorithmic playlist placement. Optimised release timing and pre-save campaigns increase first-week streams by 40-60%.",
+            "substeps": [
+                {
+                    "substepName": "PlatformDelivery",
+                    "duration": 16
+                },
+                {
+                    "substepName": "ReleaseTimingOptimization",
+                    "duration": 16
+                },
+                {
+                    "substepName": "PreSaveCampaign",
+                    "duration": 16
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "PlaylistPitching",
+            "serviceName": "PlaylistPitchService",
+            "description": "AI identifies optimal playlists for pitching, generates pitch narratives, and tracks playlist additions. Algorithmic and editorial playlist targeting based on audio features.",
+            "category": "Promotion",
+            "estimatedDuration": 336,
+            "businessRationale": "A single major playlist placement can generate 1M+ streams. AI-powered pitching improves acceptance rate from 5% to 15%.",
+            "substeps": [
+                {
+                    "substepName": "PlaylistMatching",
+                    "duration": 112
+                },
+                {
+                    "substepName": "PitchGeneration",
+                    "duration": 112
+                },
+                {
+                    "substepName": "AdditionTracking",
+                    "duration": 112
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "RoyaltyAccounting",
+            "serviceName": "RoyaltyService",
+            "description": "AI reconciles streams across platforms, calculates per-stream royalties by territory and plan type, and manages splits between writers, producers, and labels.",
+            "category": "Finance",
+            "estimatedDuration": 720,
+            "businessRationale": "Royalty accounting for a hit song involves millions of micro-transactions across 150+ countries. Errors create legal disputes and lost income.",
+            "substeps": [
+                {
+                    "substepName": "StreamReconciliation",
+                    "duration": 240
+                },
+                {
+                    "substepName": "RoyaltyCalculation",
+                    "duration": 240
+                },
+                {
+                    "substepName": "SplitManagement",
+                    "duration": 240
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "ArtistAnalytics",
+            "serviceName": "ArtistAnalyticsService",
+            "description": "AI provides artist dashboard: streaming trends, audience demographics, geographic hotspots, playlist performance, and social engagement. Tour routing recommendations.",
+            "category": "Intelligence",
+            "estimatedDuration": 24,
+            "businessRationale": "Data-driven artists grow 3x faster. Geographic hotspot data informs tour routing, increasing concert revenue by 20-30%.",
+            "substeps": [
+                {
+                    "substepName": "StreamingTrends",
+                    "duration": 8
+                },
+                {
+                    "substepName": "AudienceDemographics",
+                    "duration": 8
+                },
+                {
+                    "substepName": "TourRecommendations",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "MarketingAutomation",
+            "serviceName": "MarketingAutoService",
+            "description": "AI automates marketing: social media content calendar, ad spend allocation, influencer matching, and release cycle planning. Fan engagement and community building.",
+            "category": "Growth",
+            "estimatedDuration": 168,
+            "businessRationale": "Independent artists who use AI marketing tools earn 60% more than those who don't. Automated marketing frees artists to focus on creation.",
+            "substeps": [
+                {
+                    "substepName": "SocialContentCalendar",
+                    "duration": 56
+                },
+                {
+                    "substepName": "AdSpendOptimization",
+                    "duration": 56
+                },
+                {
+                    "substepName": "FanEngagement",
+                    "duration": 56
+                }
+            ]
+        }
+    ],
+    "id": "295bc5ec-dd43-4065-8676-4f0e975bf46e",
+    "name": "Music & Audio - Music Distribution",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 0,
+        "annualRevenue": 5000000000,
+        "revenuePerCustomer": 2500,
+        "profitMargin": 15.0,
+        "customerLifetimeValue": 25000,
+        "lifetimeValue": 25000,
+        "acquisitionCost": 50,
+        "costPerAcquisition": 50,
+        "conversionProbability": 0.45,
+        "conversionRate": 45,
+        "engagementScore": 70,
+        "timeToConversion": 1440,
+        "sessionDuration": 900,
+        "pageViews": 10,
+        "purchaseFrequency": 52,
+        "netPromoterScore": 40,
+        "satisfactionRating": 4.0,
+        "retentionProbability": 0.82,
+        "processingTime": 120,
+        "operationalCost": 25,
+        "efficiencyRating": 80,
+        "avgPerStreamPayout": 0.004,
+        "catalogueTracks": 120000000,
+        "channel": [
+            "artist_dashboard",
+            "mobile_app",
+            "API_integration",
+            "label_portal",
+            "distribution_partner"
+        ],
+        "deviceType": [
+            "desktop",
+            "mobile",
+            "server",
+            "desktop",
+            "desktop"
+        ],
+        "region": [
+            "US",
+            "UK",
+            "Latin America",
+            "India",
+            "Sub-Saharan Africa"
+        ],
+        "customerSegmentValue": [
+            "major_label",
+            "indie_label",
+            "independent_artist",
+            "podcast_creator",
+            "audiobook_publisher"
+        ],
+        "loyaltyTier": [
+            "Platinum Artist",
+            "Gold Artist",
+            "Silver Artist",
+            "Bronze Artist",
+            "New Artist"
+        ],
+        "segment": [
+            "pop",
+            "hip_hop",
+            "rock",
+            "latin",
+            "afrobeats"
+        ],
+        "Productname": [
+            "Pro Distribution Plan",
+            "Label Services",
+            "Basic Free Plan",
+            "Podcast Distribution",
+            "Audiobook Distribution"
+        ],
+        "ProductId": [
+            "DIS-PD-001",
+            "DIS-LS-002",
+            "DIS-BF-003",
+            "DIS-PC-004",
+            "DIS-AB-005"
+        ],
+        "ProductType": [
+            "premium_distribution",
+            "label_services",
+            "free_distribution",
+            "podcast",
+            "audiobook"
+        ],
+        "Price": [
+            19.99,
+            500,
+            0,
+            9.99,
+            24.99
+        ],
+        "streamsPerMonth": [
+            50000000000,
+            20000000000,
+            30000000000,
+            5000000000,
+            2000000000
+        ],
+        "artistPayout": [
+            0.004,
+            0.005,
+            0.003,
+            0.006,
+            0.008
+        ],
+        "marketTrend": [
+            "direct_fan_monetization",
+            "AI_mastering",
+            "sync_licensing_AI",
+            "NFT_music",
+            "global_genre_blending"
+        ]
+    }
+}

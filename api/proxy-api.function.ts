@@ -10,11 +10,69 @@ import { documentsClient, environmentSharesClient } from '@dynatrace-sdk/client-
 import { queryExecutionClient } from '@dynatrace-sdk/client-query';
 
 interface ProxyPayload {
-  action: 'simulate-journey' | 'test-connection' | 'get-services' | 'stop-all-services' | 'stop-company-services' | 'get-dormant-services' | 'clear-dormant-services' | 'clear-company-dormant' | 'chaos-get-active' | 'chaos-get-recipes' | 'chaos-inject' | 'chaos-revert' | 'chaos-revert-all' | 'chaos-get-targeted' | 'chaos-remove-target' | 'chaos-smart' | 'ec-create' | 'ec-update-patterns' | 'detect-builtin-settings' | 'deploy-builtin-settings' | 'deploy-workflow' | 'debug-builtin-schema' | 'generate-dashboard' | 'generate-dashboard-async' | 'get-dashboard-status' | 'deploy-dashboard' | 'deploy-ai-dashboard' | 'deploy-business-flow' | 'generate-pdf';
+  action: 'simulate-journey' | 'test-connection' | 'get-services' | 'stop-all-services' | 'stop-company-services' | 'get-dormant-services' | 'clear-dormant-services' | 'clear-company-dormant' | 'chaos-get-active' | 'chaos-get-recipes' | 'chaos-inject' | 'chaos-revert' | 'chaos-revert-all' | 'chaos-get-targeted' | 'chaos-remove-target' | 'chaos-smart' | 'ec-create' | 'ec-update-patterns' | 'detect-builtin-settings' | 'deploy-builtin-settings' | 'deploy-workflow' | 'debug-builtin-schema' | 'generate-dashboard' | 'generate-dashboard-async' | 'get-dashboard-status' | 'deploy-dashboard' | 'deploy-ai-dashboard' | 'mcp-generate-deploy-dashboard' | 'list-saved-dashboards' | 'load-saved-dashboard' | 'delete-saved-dashboard' | 'deploy-business-flow' | 'list-business-flows' | 'delete-business-flows' | 'generate-pdf' | 'generate-doc' | 'load-app-settings' | 'save-app-settings' | 'check-journey-assets' | 'create-notebook' | 'execute-dql' | 'forge-ai-tiles' | 'forge-tiles-status' | 'field-repo-get';
   apiHost: string;
   apiPort: string;
   apiProtocol: string;
   body?: unknown;
+}
+
+// ── Grail Field Discovery: query which additionalfields.* exist for a company/journey ──
+// Returns array of {name, type} objects — type is inferred from actual data values
+async function discoverBizEventFieldsViaSDK(company: string, journeyType: string): Promise<{name: string, type: 'string'|'numeric', sampleValue?: string|number}[] | null> {
+  try {
+    const safeCompany = company.replace(/["\\]/g, '');
+    const safeJourney = journeyType.replace(/["\\]/g, '');
+    // Fetch 1 recent bizevent WITHOUT a | fields clause — this returns ALL columns
+    // including every additionalfields.* the customer has, no matter what they named them.
+    // We only need 1 record since all records share the same schema/fields.
+    const dql = `fetch bizevents
+| filter event.kind == "BIZ_EVENT"
+| filter json.companyName == "${safeCompany}"
+| filter json.journeyType == "${safeJourney}"
+| sort timestamp desc
+| limit 1`;
+
+    console.log(`[proxy-api] Discovering bizevent fields for ${company} / ${journeyType}...`);
+
+    const queryResult = await queryExecutionClient.queryExecute({
+      body: {
+        query: dql,
+        requestTimeoutMilliseconds: 15000,
+        maxResultRecords: 1,
+      },
+    });
+
+    const records = queryResult?.result?.records || [];
+    if (records.length === 0) {
+      console.log('[proxy-api] No bizevent records found for field discovery');
+      return [];
+    }
+
+    // Extract field names, types, and sample values from the single record
+    const record = records[0];
+    const result: {name: string, type: 'string'|'numeric', sampleValue?: string|number}[] = [];
+    if (record && typeof record === 'object') {
+      for (const [key, value] of Object.entries(record)) {
+        if (value !== null && value !== undefined && value !== '' && key.startsWith('additionalfields.')) {
+          const fieldName = key.replace('additionalfields.', '');
+          const strVal = String(value);
+          const isNumeric = !isNaN(Number(strVal)) && strVal.trim() !== '';
+          result.push({
+            name: fieldName,
+            type: isNumeric ? 'numeric' : 'string',
+            sampleValue: isNumeric ? Number(strVal) : strVal,
+          });
+        }
+      }
+    }
+
+    console.log(`[proxy-api] Discovered ${result.length} fields: ${result.map(f => `${f.name}(${f.type}=${f.sampleValue})`).join(', ')}`);
+    return result;
+  } catch (e: any) {
+    console.warn(`[proxy-api] Field discovery error: ${e.message}`);
+    return null;
+  }
 }
 
 export default async function (payload: ProxyPayload) {
@@ -1046,10 +1104,19 @@ export default async function (payload: ProxyPayload) {
     // ── Async Dashboard generation (jobs/polling model) ──
     if (action === 'generate-dashboard-async') {
       try {
+        // Discover available fields before async generation too
+        const asyncBody = { ...(body as any) };
+        const asyncJd = asyncBody.journeyData;
+        if (asyncJd?.company && asyncJd?.journeyType) {
+          const asyncFields = await discoverBizEventFieldsViaSDK(asyncJd.company, asyncJd.journeyType);
+          if (asyncFields !== null) {
+            asyncBody.journeyData = { ...asyncJd, discoveredFields: asyncFields };
+          }
+        }
         const res = await fetchWithRetry(`${baseUrl}/api/ai-dashboard/generate-async`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body),
+          body: JSON.stringify(asyncBody),
           signal: AbortSignal.timeout(20000), // Allow extra time for routing/edge latency
         });
         const data = await res.json();
@@ -1082,11 +1149,21 @@ export default async function (payload: ProxyPayload) {
     // ── AI Dashboard generation (calls server's ai-dashboard route) ──
     if (action === 'generate-dashboard') {
       try {
+        const hasPrompt = !!(body as any)?.customPrompt;
+        // Discover available bizevent fields via SDK before generating
+        const generateBody = { ...(body as any) };
+        const jd = generateBody.journeyData;
+        if (jd?.company && jd?.journeyType) {
+          const discoveredFields = await discoverBizEventFieldsViaSDK(jd.company, jd.journeyType);
+          if (discoveredFields !== null) {
+            generateBody.journeyData = { ...jd, discoveredFields };
+          }
+        }
         const res = await fetchWithRetry(`${baseUrl}/api/ai-dashboard/generate`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body),
-          signal: AbortSignal.timeout(30000), // Template generation: fast, but allow ample time
+          body: JSON.stringify(generateBody),
+          signal: AbortSignal.timeout(hasPrompt ? 130000 : 60000),
         });
         const data = await res.json();
         // Optimize large response: strip unnecessary fields to reduce size
@@ -1121,6 +1198,167 @@ export default async function (payload: ProxyPayload) {
       }
     }
 
+
+    // ── List saved dashboards on EC2 host ──
+    if (action === 'list-saved-dashboards') {
+      try {
+        const res = await fetchWithRetry(`${baseUrl}/api/ai-dashboard/saved`, {
+          method: 'GET',
+          signal: AbortSignal.timeout(10000),
+        });
+        const data = await res.json();
+        return { success: res.ok, ...data };
+      } catch (error: any) {
+        console.error('[proxy-api] List saved dashboards error:', error.message);
+        return { success: false, error: error.message };
+      }
+    }
+
+    // ── Load a specific saved dashboard from EC2 host ──
+    if (action === 'load-saved-dashboard') {
+      try {
+        const { dashboardId } = body as { dashboardId: string };
+        if (!dashboardId) return { success: false, error: 'dashboardId required' };
+        const safeId = dashboardId.replace(/[^a-zA-Z0-9-]/g, '');
+        const res = await fetchWithRetry(`${baseUrl}/api/ai-dashboard/saved/${safeId}`, {
+          method: 'GET',
+          signal: AbortSignal.timeout(10000),
+        });
+        const data = await res.json();
+        return { success: res.ok, ...data };
+      } catch (error: any) {
+        console.error('[proxy-api] Load saved dashboard error:', error.message);
+        return { success: false, error: error.message };
+      }
+    }
+
+    // ── Delete a saved dashboard from EC2 host ──
+    if (action === 'delete-saved-dashboard') {
+      try {
+        const { dashboardId } = body as { dashboardId: string };
+        if (!dashboardId) return { success: false, error: 'dashboardId required' };
+        const safeId = dashboardId.replace(/[^a-zA-Z0-9-]/g, '');
+        const res = await fetchWithRetry(`${baseUrl}/api/ai-dashboard/saved/${safeId}`, {
+          method: 'DELETE',
+          signal: AbortSignal.timeout(10000),
+        });
+        const data = await res.json();
+        return { success: res.ok, ...data };
+      } catch (error: any) {
+        console.error('[proxy-api] Delete saved dashboard error:', error.message);
+        return { success: false, error: error.message };
+      }
+    }
+
+    // ── MCP-powered: Generate + Deploy Dashboard in one step ──
+    if (action === 'mcp-generate-deploy-dashboard') {
+      try {
+        const { company, journeyType, useAI = true, customPrompt } = body as { company: string; journeyType: string; useAI?: boolean; customPrompt?: string };
+        if (!company || !journeyType) {
+          return { success: false, error: 'company and journeyType are required' };
+        }
+
+        const hasCustomPrompt = !!customPrompt;
+        console.log(`[proxy-api] Generate+deploy: ${company} / ${journeyType}${hasCustomPrompt ? ` (custom prompt: "${customPrompt!.substring(0, 60)}...")` : ''}`);
+
+        // Step 1: Discover available bizevent fields via SDK, then call EC2 generate endpoint
+        const discoveredFields = await discoverBizEventFieldsViaSDK(company, journeyType);
+        const generatePayload: any = {
+          journeyData: { company, journeyType, ...(discoveredFields !== null ? { discoveredFields } : {}) },
+          useAI,
+        };
+        if (hasCustomPrompt) generatePayload.customPrompt = customPrompt;
+
+        const genRes = await fetchWithRetry(`${baseUrl}/api/ai-dashboard/generate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(generatePayload),
+          signal: AbortSignal.timeout(180000),
+        });
+
+        const data = await genRes.json();
+        if (!data.success || !data.dashboard) {
+          return { success: false, error: data.error || 'Dashboard generation failed' };
+        }
+
+        const dashboard = data.dashboard;
+        if (!dashboard || !dashboard.content) {
+          return { success: false, error: 'Dashboard generation returned no content' };
+        }
+
+        const generationMethod = data.generationMethod || 'unknown';
+        console.log(`[proxy-api] Generated ${Object.keys(dashboard.content.tiles || {}).length} tiles via ${generationMethod}`);
+
+        // Step 2: Deploy the dashboard to Dynatrace using Document API
+        const sanitizedCompany = company.replace(/[^a-zA-Z0-9-]/g, '-').toLowerCase();
+        const sanitizedJourney = journeyType.replace(/[^a-zA-Z0-9-]/g, '-').toLowerCase();
+        // Use AI-provided slug for unique document IDs per prompt focus, falling back to journey type
+        const aiSlug = (dashboard.metadata?.dashboardSlug || '').replace(/[^a-z0-9-]/gi, '-').toLowerCase().replace(/-+/g, '-').replace(/^-|-$/g, '');
+        const dashboardId = aiSlug
+          ? `bizobs-${sanitizedCompany}-${aiSlug}`
+          : `bizobs-${sanitizedCompany}-${sanitizedJourney}`;
+        const dashboardName = dashboard.name || `${company} - ${journeyType} Journey`;
+
+        let alreadyExisted = false;
+        try {
+          const existing = await documentsClient.getDocument({ id: dashboardId });
+          // Dashboard exists — update it
+          await documentsClient.updateDocument({
+            id: dashboardId,
+            optimisticLockingVersion: existing.metadata!.version,
+            body: {
+              name: dashboardName,
+              content: new Blob([JSON.stringify(dashboard.content)], { type: 'application/json' }),
+            },
+          });
+          alreadyExisted = true;
+          console.log(`[proxy-api] MCP dashboard updated: ${dashboardId}`);
+        } catch (e: any) {
+          // 404 = doesn't exist → create it
+          if (e?.body?.error?.code === 404 || e?.statusCode === 404) {
+            const result = await documentsClient.createDocument({
+              body: {
+                id: dashboardId,
+                name: dashboardName,
+                type: 'dashboard',
+                content: new Blob([JSON.stringify(dashboard.content)], { type: 'application/json' }),
+              },
+            });
+
+            // Share with entire environment
+            try {
+              await environmentSharesClient.createEnvironmentShare({
+                body: { documentId: result.id!, access: 'read' },
+              });
+            } catch (shareErr: any) {
+              console.warn('[proxy-api] Dashboard shared failed (non-blocking):', shareErr.message);
+            }
+            console.log(`[proxy-api] MCP dashboard created: ${dashboardId}`);
+          } else {
+            throw e;
+          }
+        }
+
+        const dashboardUrl = `/ui/apps/dynatrace.dashboards/dashboard/${dashboardId}`;
+        return {
+          success: true,
+          data: {
+            dashboardId,
+            dashboardUrl,
+            dashboardName,
+            tileCount: Object.keys(dashboard.content.tiles || {}).length,
+            generationMethod,
+            alreadyExisted,
+            message: alreadyExisted
+              ? `Dashboard "${dashboardName}" updated successfully`
+              : `Dashboard "${dashboardName}" deployed and shared with environment`,
+          },
+        };
+      } catch (error: any) {
+        console.error('[proxy-api] MCP generate+deploy error:', error.message);
+        return { success: false, error: error.message || 'MCP dashboard generation failed' };
+      }
+    }
 
     if (action === 'deploy-ai-dashboard') {
       // Deploy the built-in AI Observability dashboard using the Document API
@@ -1270,6 +1508,30 @@ export default async function (payload: ProxyPayload) {
       }
     }
 
+    // ── Executive Summary Document (HTML — Word-convertible) ──
+    if (action === 'generate-doc') {
+      try {
+        const res = await fetchWithRetry(`${baseUrl}/api/pdf/executive-doc`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+          signal: AbortSignal.timeout(30000),
+        });
+        if (!res.ok) {
+          const errText = await res.text();
+          return { success: false, error: `Document generation failed (${res.status}): ${errText}` };
+        }
+        const html = await res.text();
+        const contentDisposition = res.headers.get('content-disposition') || '';
+        const filenameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
+        const filename = filenameMatch ? filenameMatch[1] : 'BizObs-Summary.html';
+        return { success: true, data: { html, filename, sizeKb: Math.round(html.length / 1024) } };
+      } catch (error: any) {
+        console.error('[proxy-api] Document generation error:', error.message);
+        return { success: false, error: error.message };
+      }
+    }
+
     if (action === 'simulate-journey') {
       const apiUrl = `${baseUrl}/api/journey-simulation/simulate-journey`;
       const response = await fetchWithRetry(apiUrl, {
@@ -1297,6 +1559,343 @@ export default async function (payload: ProxyPayload) {
       }
 
       return { success: true, status: response.status, data };
+    }
+
+    if (action === 'list-business-flows') {
+      try {
+        const result = await settingsObjectsClient.getSettingsObjects({
+          schemaIds: 'app:dynatrace.biz.flow:biz-flow-settings',
+          fields: 'objectId,value',
+          pageSize: 500,
+        });
+        const flows = (result.items || []).map((item: any) => ({
+          objectId: item.objectId,
+          name: item.value?.name,
+          isSmartscapeTopologyEnabled: item.value?.isSmartscapeTopologyEnabled || false,
+          stepsCount: item.value?.steps?.length || 0,
+          version: item.version,
+        }));
+        return { success: true, data: { totalCount: result.totalCount, flows } };
+      } catch (err: any) {
+        return { success: false, error: err.message || 'Failed to list business flows' };
+      }
+    }
+
+    if (action === 'delete-business-flows') {
+      try {
+        const { objectIds } = body as { objectIds: string[] };
+        if (!objectIds || objectIds.length === 0) {
+          return { success: false, error: 'objectIds array is required' };
+        }
+        const results: { objectId: string; deleted: boolean; error?: string }[] = [];
+        for (const oid of objectIds) {
+          try {
+            await settingsObjectsClient.deleteSettingsObjectByObjectId({ objectId: oid });
+            results.push({ objectId: oid, deleted: true });
+          } catch (err: any) {
+            results.push({ objectId: oid, deleted: false, error: err.message });
+          }
+        }
+        return { success: true, data: { results, deletedCount: results.filter(r => r.deleted).length } };
+      } catch (err: any) {
+        return { success: false, error: err.message || 'Failed to delete business flows' };
+      }
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    // CHECK JOURNEY ASSETS — Dashboard & BizFlow existence per company/journey
+    // ══════════════════════════════════════════════════════════════════
+    if (action === 'check-journey-assets') {
+      try {
+        const journeys = (payload.body as any)?.journeys as Array<{ company: string; journeyType: string }> || [];
+        const assets: Record<string, { dashboard: { exists: boolean; id: string; url: string; name?: string }; bizflow: { exists: boolean; name?: string } }> = {};
+
+        // 1. Fetch all BizFlows in one call
+        let allFlows: any[] = [];
+        try {
+          const flowResult = await settingsObjectsClient.getSettingsObjects({
+            schemaIds: 'app:dynatrace.biz.flow:biz-flow-settings',
+            fields: 'objectId,value',
+            pageSize: 500,
+          });
+          allFlows = flowResult.items || [];
+        } catch { /* BizFlow app may not be installed */ }
+
+        // 2. Collect unique companies and list all their dashboards in bulk
+        const uniqueCompanies = [...new Set(journeys.map(j => j.company))];
+        const dashboardsByCompany: Record<string, Array<{ id: string; name: string }>> = {};
+        for (const company of uniqueCompanies) {
+          const sanitizedCompany = company.replace(/[^a-zA-Z0-9-]/g, '-').toLowerCase();
+          const prefix = `bizobs-${sanitizedCompany}`;
+          try {
+            const docs = await documentsClient.listDocuments({
+              filter: `id starts-with '${prefix}' and type = 'dashboard'`,
+              pageSize: 50,
+            });
+            dashboardsByCompany[company] = (docs.documents || []).map((d: any) => ({
+              id: d.id,
+              name: d.name || d.id,
+            }));
+          } catch {
+            dashboardsByCompany[company] = [];
+          }
+        }
+
+        for (const { company, journeyType } of journeys) {
+          const sanitizedCompany = company.replace(/[^a-zA-Z0-9-]/g, '-').toLowerCase();
+          const sanitizedJourney = journeyType.replace(/[^a-zA-Z0-9-]/g, '-').toLowerCase();
+          const key = `${company}::${journeyType}`;
+
+          // Match dashboard: exact journey ID first, then any that contains the journey slug
+          const companyDashboards = dashboardsByCompany[company] || [];
+          const exactMatch = companyDashboards.find(d => d.id === `bizobs-${sanitizedCompany}-${sanitizedJourney}`);
+          const fuzzyMatch = !exactMatch
+            ? companyDashboards.find(d => d.id.includes(sanitizedJourney) || d.name.toLowerCase().includes(journeyType.toLowerCase()))
+            : undefined;
+          const matchedDash = exactMatch || fuzzyMatch;
+          const dashboardUrl = matchedDash
+            ? `/ui/apps/dynatrace.dashboards/dashboard/${matchedDash.id}`
+            : `/ui/apps/dynatrace.dashboards/dashboard/bizobs-${sanitizedCompany}-${sanitizedJourney}`;
+
+          // Match BizFlow by company or journey name
+          const companyLower = company.toLowerCase();
+          const matchedFlow = allFlows.find((f: any) => {
+            const name = (f.value?.name || '').toLowerCase();
+            return name.includes(companyLower) || (name.includes(sanitizedCompany) && name.includes(sanitizedJourney));
+          });
+
+          assets[key] = {
+            dashboard: {
+              exists: !!matchedDash,
+              id: matchedDash?.id || `bizobs-${sanitizedCompany}-${sanitizedJourney}`,
+              url: dashboardUrl,
+              name: matchedDash?.name,
+            },
+            bizflow: { exists: !!matchedFlow, name: matchedFlow?.value?.name },
+          };
+        }
+        return { success: true, data: assets };
+      } catch (err: any) {
+        return { success: false, error: err.message || 'Failed to check journey assets' };
+      }
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    // APP-WIDE SETTINGS via Document Service
+    // Uses a shared Grail Document (isPrivate=false) so ALL users on the
+    // tenant see the same EC2 IP / port / protocol without configuring.
+    // ══════════════════════════════════════════════════════════════════
+    const APP_SETTINGS_DOC_ID = 'bizobs-forge-app-settings';
+    const APP_SETTINGS_DOC_NAME = 'BizObs Forge App Settings';
+    const APP_SETTINGS_DOC_TYPE = 'bizobs-config';
+
+    if (action === 'load-app-settings') {
+      try {
+        const doc = await documentsClient.getDocument({ id: APP_SETTINGS_DOC_ID });
+        if (doc.content) {
+          const text = await doc.content.get('text');
+          const settings = JSON.parse(text);
+          return { success: true, settings, version: doc.metadata?.version };
+        }
+        return { success: false, error: 'Document has no content' };
+      } catch (err: any) {
+        // 404 = document doesn't exist yet — not an error, just no settings saved
+        const code = err?.body?.error?.code || err?.statusCode || err?.code;
+        if (code === 404 || err?.message?.includes('not found') || err?.name === 'DocumentOrSnapshotNotFound') {
+          return { success: false, error: 'no-document' };
+        }
+        return { success: false, error: err.message || 'Failed to load app settings' };
+      }
+    }
+
+    if (action === 'save-app-settings') {
+      try {
+        const settingsJson = JSON.stringify(payload.body || {});
+        const blob = new Blob([settingsJson], { type: 'application/json' });
+
+        // Try to update existing document first
+        let saved = false;
+        try {
+          const existing = await documentsClient.getDocument({ id: APP_SETTINGS_DOC_ID });
+          const version = existing.metadata?.version;
+          if (version) {
+            await documentsClient.updateDocument({
+              id: APP_SETTINGS_DOC_ID,
+              optimisticLockingVersion: version,
+              body: {
+                content: blob,
+                name: APP_SETTINGS_DOC_NAME,
+                type: APP_SETTINGS_DOC_TYPE,
+                isPrivate: false, // Public = readable by ALL users on the tenant
+              },
+            });
+            saved = true;
+          }
+        } catch (getErr: any) {
+          // Document doesn't exist — create it
+          const code = getErr?.body?.error?.code || getErr?.statusCode || getErr?.code;
+          if (code === 404 || getErr?.message?.includes('not found') || getErr?.name === 'DocumentOrSnapshotNotFound') {
+            await documentsClient.createDocument({
+              body: {
+                id: APP_SETTINGS_DOC_ID,
+                name: APP_SETTINGS_DOC_NAME,
+                type: APP_SETTINGS_DOC_TYPE,
+                content: blob,
+              },
+            });
+            // Make it public so all users can read it
+            try {
+              const created = await documentsClient.getDocument({ id: APP_SETTINGS_DOC_ID });
+              if (created.metadata?.version) {
+                await documentsClient.updateDocument({
+                  id: APP_SETTINGS_DOC_ID,
+                  optimisticLockingVersion: created.metadata.version,
+                  body: { isPrivate: false },
+                });
+              }
+            } catch { /* isPrivate update is best-effort */ }
+
+            // Also create an environment share so other users can write too
+            try {
+              await environmentSharesClient.createEnvironmentShare({
+                body: { documentId: APP_SETTINGS_DOC_ID, access: 'read-write' },
+              });
+            } catch { /* Share may already exist — ignore */ }
+            saved = true;
+          } else {
+            throw getErr;
+          }
+        }
+
+        return { success: saved };
+      } catch (err: any) {
+        return { success: false, error: err.message || 'Failed to save app settings' };
+      }
+    }
+
+    /* ── Forge Dashboards: AI-generated tiles via Ollama (async job model) ── */
+    if (action === 'forge-ai-tiles') {
+      try {
+        const reqBody = payload.body as {
+          fields?: { name: string; type: string; sampleValue?: string | number }[];
+          preset?: string;
+          companyName?: string;
+          journeyType?: string;
+          timeframe?: string;
+          services?: string[];
+        };
+        // If no fields provided by frontend, discover them server-side
+        let fields = reqBody?.fields;
+        if ((!fields || fields.length === 0) && reqBody?.companyName && reqBody?.journeyType) {
+          const discovered = await discoverBizEventFieldsViaSDK(reqBody.companyName, reqBody.journeyType);
+          if (discovered && discovered.length > 0) fields = discovered;
+        }
+        if (!fields || fields.length === 0) {
+          return { success: false, error: 'No fields discovered for AI tile generation' };
+        }
+        console.log(`[proxy-api] forge-ai-tiles: starting async job for ${fields.length} fields, ${reqBody?.preset} preset`);
+        // Start the async job — returns immediately with a jobId
+        const resp = await fetchWithRetry(`${baseUrl}/api/ai-dashboard/forge-tiles-async`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          signal: AbortSignal.timeout(15000),
+          body: JSON.stringify({
+            fields,
+            preset: reqBody?.preset || 'executive',
+            companyName: reqBody?.companyName || '',
+            journeyType: reqBody?.journeyType || '',
+            timeframe: reqBody?.timeframe || 'now()-2h',
+            services: reqBody?.services || [],
+          }),
+        });
+        const data = await resp.json();
+        return data;
+      } catch (err: any) {
+        console.error('[proxy-api] forge-ai-tiles error:', err.message);
+        return { success: false, error: err.message || 'Forge AI tiles request failed' };
+      }
+    }
+
+    /* ── Forge Dashboards: poll for AI tile generation status ── */
+    if (action === 'forge-tiles-status') {
+      try {
+        const { jobId } = (payload.body || {}) as { jobId?: string };
+        if (!jobId) return { success: false, error: 'jobId required' };
+        const resp = await fetchWithRetry(`${baseUrl}/api/ai-dashboard/forge-tiles-status/${encodeURIComponent(jobId)}`, {
+          method: 'GET',
+          signal: AbortSignal.timeout(15000),
+        });
+        const data = await resp.json();
+        return data;
+      } catch (err: any) {
+        console.error('[proxy-api] forge-tiles-status error:', err.message);
+        return { success: false, error: err.message || 'Status check failed' };
+      }
+    }
+
+    /* ── Field Repository: get captured journey field schemas for AI ── */
+    if (action === 'field-repo-get') {
+      try {
+        const reqBody = payload.body as { company?: string; journeyType?: string; full?: boolean };
+        const params = new URLSearchParams();
+        if (reqBody?.company) params.set('company', reqBody.company);
+        if (reqBody?.journeyType) params.set('journey', reqBody.journeyType);
+        if (reqBody?.full) params.set('full', 'true');
+        const resp = await fetchWithRetry(`${baseUrl}/api/ai-dashboard/field-repo?${params.toString()}`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        const data = await resp.json();
+        return data;
+      } catch (err: any) {
+        console.error('[proxy-api] field-repo-get error:', err.message);
+        return { success: false, error: err.message || 'Field repo request failed' };
+      }
+    }
+
+    /* ── Forge Dashboards: execute arbitrary DQL server-side ── */
+    if (action === 'execute-dql') {
+      try {
+        const { query, timeoutMs, maxRecords } = (payload.body || {}) as { query?: string; timeoutMs?: number; maxRecords?: number };
+        console.log('[proxy-api] execute-dql called, query:', query?.substring(0, 120));
+        if (!query || typeof query !== 'string') {
+          return { success: false, error: 'Missing or invalid query' };
+        }
+        const queryResult = await queryExecutionClient.queryExecute({
+          body: {
+            query,
+            requestTimeoutMilliseconds: timeoutMs || 15000,
+            maxResultRecords: maxRecords || 1000,
+          },
+        });
+        const records = queryResult?.result?.records || [];
+        console.log(`[proxy-api] execute-dql returned ${records.length} records, keys:`, records.length > 0 ? Object.keys(records[0]) : '(empty)');
+        return { success: true, records, metadata: queryResult?.result?.metadata };
+      } catch (err: any) {
+        console.error('[proxy-api] execute-dql error:', err.message);
+        return { success: false, error: err.message || 'DQL execution failed' };
+      }
+    }
+
+    /* ── Forge Dashboards: create a Dynatrace Notebook from DQL tiles ── */
+    if (action === 'create-notebook') {
+      try {
+        const { name, content } = (payload.body || {}) as { name?: string; content?: string };
+        if (!name || !content) {
+          return { success: false, error: 'Missing name or content for notebook' };
+        }
+        const blob = new Blob([content], { type: 'application/json' });
+        const result = await documentsClient.createDocument({
+          body: {
+            name,
+            type: 'notebook',
+            content: blob,
+          },
+        });
+        return { success: true, id: result.id || 'created' };
+      } catch (err: any) {
+        return { success: false, error: err.message || 'Failed to create notebook' };
+      }
     }
 
     return { success: false, error: `Unknown action: ${action}` };

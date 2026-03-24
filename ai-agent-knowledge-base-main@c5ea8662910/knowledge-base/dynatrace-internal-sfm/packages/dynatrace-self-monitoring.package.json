@@ -1,0 +1,10 @@
+{
+  "name": "dynatrace-self-monitoring",
+  "description": "Complete Dynatrace production self-monitoring toolkit. Provides tenant analysis (ID-to-customer mapping, cluster location, payment status), cluster architecture understanding (naming conventions, host groups, component deployment), and production monitoring workflows (health dashboards, Grail ingest/query health, PPX monitoring). Essential for production support, incident response, tenant troubleshooting, and platform operations.",
+  "resources": [
+    "skill/dt-prod-tenant-analysis",
+    "skill/dt-prod-self-monitoring",
+    "skill/dt-app-health",
+    "agent/dt-sfm-critical-incident-agent"
+  ]
+}

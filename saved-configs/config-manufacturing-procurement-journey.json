@@ -1,7 +1,7 @@
 {
-  "companyName": "Manufacturing",
+  "companyName": "IndustrialTech Systems",
   "domain": "https://www.manufacturing.com",
-  "industryType": "Industrial Manufacturing",
+  "industryType": "Industrial & Manufacturing IoT",
   "journeyType": "Procurement Journey",
   "journeyDetail": "Procurement Journey",
   "journeyId": "journey_manufacturing_2026",
@@ -110,7 +110,7 @@
       "description": "Siemens schedules delivery, performs installation, and hands over equipment to the customer.",
       "category": "Fulfillment",
       "estimatedDuration": 1440,
-      "businessRationale": "Industrial equipment delivery and installation typically take 1–3 days; timely delivery impacts customer satisfaction and future procurement likelihood.",
+      "businessRationale": "Industrial equipment delivery and installation typically take 1\u20133 days; timely delivery impacts customer satisfaction and future procurement likelihood.",
       "substeps": [
         {
           "substepName": "DeliveryScheduling",
@@ -126,5 +126,147 @@
   "id": "c8926098-d95b-4daa-b28e-e07b38f20826",
   "name": "Manufacturing - Equipment Procurement",
   "timestamp": "2026-01-09T15:12:43.539Z",
-  "source": "sector-demo"
+  "source": "sector-demo",
+  "additionalFields": {
+    "orderTotal": 125000,
+    "transactionValue": 125000,
+    "averageOrderValue": 85000,
+    "contractValue": 500000,
+    "annualRevenue": 2400000,
+    "revenuePerCustomer": 450000,
+    "profitMargin": 18.5,
+    "customerLifetimeValue": 2800000,
+    "lifetimeValue": 2800000,
+    "acquisitionCost": 12000,
+    "conversionProbability": 0.45,
+    "conversionRate": 45,
+    "engagementScore": 62,
+    "timeToConversion": 43200,
+    "netPromoterScore": 40,
+    "satisfactionRating": 4.0,
+    "retentionProbability": 0.85,
+    "processingTime": 7200,
+    "operationalCost": 2500,
+    "efficiencyRating": 72,
+    "complianceScore": 92,
+    "fraudRisk": [
+      "low",
+      "low",
+      "medium",
+      "low",
+      "low"
+    ],
+    "riskLevel": [
+      "standard",
+      "low",
+      "elevated",
+      "standard",
+      "low"
+    ],
+    "channel": [
+      "erp_portal",
+      "procurement_platform",
+      "sales_rep",
+      "rfq_system",
+      "edp_integration"
+    ],
+    "deviceType": [
+      "desktop",
+      "desktop",
+      "desktop",
+      "desktop",
+      "desktop"
+    ],
+    "region": [
+      "EMEA",
+      "APAC",
+      "North America",
+      "EMEA",
+      "LATAM"
+    ],
+    "customerSegmentValue": [
+      "strategic_supplier",
+      "preferred_vendor",
+      "new_supplier",
+      "sole_source",
+      "commodity_supplier"
+    ],
+    "loyaltyTier": [
+      "Platinum",
+      "Gold",
+      "Silver",
+      "Diamond",
+      "Gold"
+    ],
+    "segment": [
+      "raw_materials",
+      "components",
+      "packaging",
+      "mro_supplies",
+      "capital_equipment"
+    ],
+    "Productname": [
+      "Steel Coil Grade A 5000kg",
+      "Precision Bearings SKF-7200",
+      "Corrugated Packaging 10000pcs",
+      "Hydraulic Fluid ISO 46 200L",
+      "CNC Milling Centre 5-Axis"
+    ],
+    "ProductId": [
+      "MFG-RM-001",
+      "MFG-CP-002",
+      "MFG-PK-003",
+      "MFG-MR-004",
+      "MFG-CE-005"
+    ],
+    "ProductType": [
+      "raw_material",
+      "component",
+      "packaging",
+      "consumable",
+      "capital_equipment"
+    ],
+    "Price": [
+      125000,
+      8500,
+      4200,
+      1800,
+      850000
+    ],
+    "leadTimeDays": [
+      14,
+      21,
+      7,
+      3,
+      120
+    ],
+    "moqQuantity": [
+      5000,
+      500,
+      10000,
+      200,
+      1
+    ],
+    "qualityGrade": [
+      "A",
+      "precision",
+      "standard",
+      "industrial",
+      "premium"
+    ],
+    "supplierRating": [
+      4.5,
+      4.8,
+      3.9,
+      4.2,
+      4.7
+    ],
+    "marketTrend": [
+      "nearshoring",
+      "supply_chain_resilience",
+      "sustainable_sourcing",
+      "digital_procurement",
+      "supplier_diversification"
+    ]
+  }
 }

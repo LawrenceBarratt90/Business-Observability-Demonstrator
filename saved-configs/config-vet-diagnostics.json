@@ -1,0 +1,257 @@
+{
+    "companyName": "Veterinary",
+    "domain": "https://www.veterinary-demo.com",
+    "industryType": "Veterinary & Animal Health",
+    "journeyType": "Veterinary Diagnostics",
+    "journeyDetail": "Veterinary Diagnostics",
+    "journeyId": "journey_veterinary_veterinary_diagnostics",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "SampleCollection",
+            "serviceName": "SampleCollectionService",
+            "description": "AI guides sample collection: optimal test selection based on symptoms, species-specific collection protocols, and sample handling requirements. Barcode tracking from collection through analysis.",
+            "category": "Collection",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 10,
+            "businessRationale": "AI test selection reduces unnecessary panels by 20%, saving \u00a325 per visit while improving diagnostic yield. Barcode tracking eliminates sample mix-up risk.",
+            "substeps": [
+                {
+                    "substepName": "TestSelection",
+                    "duration": 3
+                },
+                {
+                    "substepName": "SampleHandling",
+                    "duration": 7
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "LabAnalysis",
+            "serviceName": "LabAnalysisService",
+            "description": "AI-powered in-house and reference lab analysis: blood chemistry, haematology, urinalysis, cytology, and histopathology. Species/breed-specific reference ranges with age-adjusted normals.",
+            "category": "Analysis",
+            "estimatedDuration": 60,
+            "businessRationale": "AI lab analysis with breed-specific ranges reduces false positives by 30%. In-house rapid testing enables same-day diagnosis for 70% of cases, improving client satisfaction.",
+            "substeps": [
+                {
+                    "substepName": "SampleProcessing",
+                    "duration": 30
+                },
+                {
+                    "substepName": "ResultInterpretation",
+                    "duration": 30
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "DiagnosticImaging",
+            "serviceName": "VetImagingService",
+            "description": "AI analyses radiographs, ultrasound, and endoscopy: detects orthopaedic conditions, soft tissue masses, gastrointestinal foreign bodies, and cardiac abnormalities. Breed-specific musculoskeletal baselines.",
+            "category": "Imaging",
+            "estimatedDuration": 20,
+            "businessRationale": "AI imaging assists detection of conditions missed in 12% of manual reads. Faster turnaround enables same-visit treatment decisions, reducing return visits by 25%.",
+            "substeps": [
+                {
+                    "substepName": "ImageAcquisition",
+                    "duration": 8
+                },
+                {
+                    "substepName": "AIInterpretation",
+                    "duration": 12
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "IntegratedDiagnosis",
+            "serviceName": "IntegratedDiagnosisService",
+            "description": "AI correlates lab results, imaging, and clinical findings into a unified diagnostic summary. Suggests differential diagnoses ranked by probability, recommended confirmatory tests, and treatment pathways.",
+            "category": "Diagnosis",
+            "estimatedDuration": 10,
+            "businessRationale": "Integrated AI diagnosis improves accuracy by 18% vs siloed interpretation. Ranked differentials help vets communicate options to owners, improving informed consent.",
+            "substeps": [
+                {
+                    "substepName": "DataCorrelation",
+                    "duration": 5
+                },
+                {
+                    "substepName": "DifferentialRanking",
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "TreatmentMonitoring",
+            "serviceName": "TreatmentMonitoringService",
+            "description": "AI tracks treatment response through follow-up diagnostics: trend analysis of lab values, imaging comparison, and recovery milestones. Alerts vets to unexpected deterioration or non-response.",
+            "category": "Monitoring",
+            "estimatedDuration": 10080,
+            "businessRationale": "AI treatment monitoring detects non-response 3-5 days earlier than scheduled rechecks. Earlier intervention improves outcomes by 20% and reduces client costs.",
+            "substeps": [
+                {
+                    "substepName": "TrendAnalysis",
+                    "duration": 5040
+                },
+                {
+                    "substepName": "AlertGeneration",
+                    "duration": 5040
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "DiagnosticReporting",
+            "serviceName": "DiagnosticReportingService",
+            "description": "AI generates comprehensive diagnostic reports for vets and simplified summaries for pet owners. Practice-wide analytics: test utilization, diagnostic yield, referral patterns, and revenue per diagnostic category.",
+            "category": "Reporting",
+            "estimatedDuration": 30,
+            "businessRationale": "Clear owner reports improve treatment compliance by 25%. Practice analytics identify under-utilized diagnostics and revenue opportunities worth \u00a350K annually.",
+            "substeps": [
+                {
+                    "substepName": "ClinicalReport",
+                    "duration": 15
+                },
+                {
+                    "substepName": "PracticeAnalytics",
+                    "duration": 15
+                }
+            ]
+        }
+    ],
+    "id": "f4ae6d8f-c027-4b1d-a681-66055ae444d1",
+    "name": "Veterinary & Animal Health - Veterinary Diagnostics",
+    "timestamp": "2026-03-18T21:35:20.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 320,
+        "transactionValue": 320,
+        "averageOrderValue": 320,
+        "contractValue": 0,
+        "annualRevenue": 850000,
+        "revenuePerCustomer": 320,
+        "profitMargin": 45,
+        "customerLifetimeValue": 3200,
+        "lifetimeValue": 3200,
+        "acquisitionCost": 0,
+        "costPerAcquisition": 0,
+        "conversionProbability": 0.92,
+        "conversionRate": 92,
+        "engagementScore": 80,
+        "timeToConversion": 0,
+        "sessionDuration": 30,
+        "pageViews": 3,
+        "purchaseFrequency": 3,
+        "netPromoterScore": 58,
+        "satisfactionRating": 4.4,
+        "retentionProbability": 0.88,
+        "processingTime": 60,
+        "operationalCost": 45,
+        "efficiencyRating": 82,
+        "discountApplied": 0,
+        "taxAmount": 64,
+        "shippingCost": 0,
+        "channel": [
+            "in_clinic",
+            "reference_lab",
+            "mobile_unit",
+            "telemedicine",
+            "emergency"
+        ],
+        "deviceType": [
+            "lab_analyser",
+            "xray_unit",
+            "ultrasound",
+            "desktop",
+            "mobile"
+        ],
+        "region": [
+            "Urban",
+            "Suburban",
+            "Rural",
+            "Town Centre",
+            "Mobile"
+        ],
+        "customerSegmentValue": [
+            "routine_checkup",
+            "sick_visit",
+            "surgery_prep",
+            "chronic_condition",
+            "emergency"
+        ],
+        "loyaltyTier": [
+            "standard",
+            "wellness_plan",
+            "premium_plan",
+            "lifetime_client",
+            "breeder_partner"
+        ],
+        "segment": [
+            "blood_chemistry",
+            "haematology",
+            "imaging",
+            "cytology",
+            "histopathology"
+        ],
+        "Productname": [
+            "BloodPanel_Comprehensive",
+            "Xray_Series",
+            "Ultrasound_Abdominal",
+            "Urinalysis_Full",
+            "Biopsy_Histopath"
+        ],
+        "ProductId": [
+            "DX-BLD-001",
+            "DX-XRY-002",
+            "DX-ULS-003",
+            "DX-URN-004",
+            "DX-BIO-005"
+        ],
+        "ProductType": [
+            "lab_test",
+            "imaging",
+            "imaging",
+            "lab_test",
+            "pathology"
+        ],
+        "Price": [
+            120,
+            180,
+            250,
+            45,
+            350
+        ],
+        "turnaroundHours": [
+            2,
+            0.5,
+            0.5,
+            1,
+            72
+        ],
+        "abnormalRate": [
+            35,
+            28,
+            42,
+            22,
+            65
+        ],
+        "species": [
+            "canine",
+            "feline",
+            "rabbit",
+            "avian",
+            "equine"
+        ],
+        "marketTrend": [
+            "point_of_care_testing",
+            "ai_radiology",
+            "liquid_biopsy",
+            "genetic_testing",
+            "wearable_monitoring"
+        ]
+    }
+}

@@ -1,0 +1,273 @@
+{
+    "companyName": "BuildTech Group",
+    "domain": "https://www.buildtech-group.com",
+    "industryType": "Construction & Engineering",
+    "journeyType": "Project Bidding",
+    "journeyDetail": "AI-Powered Construction Project Bidding",
+    "journeyId": "journey_project_bidding_62cb7429",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "OpportunityScreening",
+            "serviceName": "OpportunityScreeningService",
+            "description": "AI scans tender databases, evaluates project fit against company capabilities, capacity, and risk appetite. Scores opportunities by win probability and margin potential.",
+            "category": "Discovery",
+            "estimatedDuration": 4,
+            "businessRationale": "Selective bidding improves win rates from 15% to 30%. Each bid costs $20K-200K in estimating resources.",
+            "substeps": [
+                {
+                    "substepName": "TenderScan",
+                    "duration": 2
+                },
+                {
+                    "substepName": "FitScoring",
+                    "duration": 2
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "CostEstimation",
+            "serviceName": "CostEstimationService",
+            "description": "AI-assisted quantity takeoff from BIM models, material pricing from supplier databases, and labor hour estimation based on historical project data. Risk contingency calculated.",
+            "category": "Analysis",
+            "estimatedDuration": 48,
+            "businessRationale": "Estimation accuracy directly determines profitability. A 2% error on a $50M project means $1M variance.",
+            "substeps": [
+                {
+                    "substepName": "QuantityTakeoff",
+                    "duration": 20
+                },
+                {
+                    "substepName": "MaterialPricing",
+                    "duration": 12
+                },
+                {
+                    "substepName": "LaborEstimation",
+                    "duration": 10
+                },
+                {
+                    "substepName": "RiskContingency",
+                    "duration": 6
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "SupplyChainPricing",
+            "serviceName": "SupplyChainPricingService",
+            "description": "Subcontractor quotes solicited and evaluated. Material supplier pricing locked for bid validity period. AI identifies supply chain risks and alternative sourcing.",
+            "category": "Procurement",
+            "estimatedDuration": 24,
+            "businessRationale": "Subcontractor costs are 60-80% of project value. Getting 3+ competitive quotes per trade saves 5-15%.",
+            "substeps": [
+                {
+                    "substepName": "SubcontractorRFQ",
+                    "duration": 12
+                },
+                {
+                    "substepName": "MaterialQuotes",
+                    "duration": 8
+                },
+                {
+                    "substepName": "SupplyRiskAnalysis",
+                    "duration": 4
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "BidCompilation",
+            "serviceName": "BidCompilationService",
+            "description": "Commercial and technical proposals compiled. Margin targets applied, risk adjustments made, and management review completed. Business event: bid_submitted with project_value, margin_target, and win_probability.",
+            "category": "Submission",
+            "estimatedDuration": 16,
+            "businessRationale": "Well-structured bids with clear value propositions win 2x more often. Late submissions mean automatic disqualification.",
+            "substeps": [
+                {
+                    "substepName": "CommercialProposal",
+                    "duration": 6
+                },
+                {
+                    "substepName": "TechnicalSubmission",
+                    "duration": 6
+                },
+                {
+                    "substepName": "ManagementReview",
+                    "duration": 4
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "NegotiationAndAward",
+            "serviceName": "NegotiationService",
+            "description": "Client Q&A, bid clarifications, best-and-final-offer negotiations. Contract terms reviewed and risk allocation negotiated. Business event: contract_awarded with final_value and terms.",
+            "category": "Closing",
+            "estimatedDuration": 72,
+            "businessRationale": "Negotiation phase typically adjusts price by 3-8%. Unfavorable risk allocation can turn a profitable project into a loss.",
+            "substeps": [
+                {
+                    "substepName": "ClientClarifications",
+                    "duration": 24
+                },
+                {
+                    "substepName": "PriceNegotiation",
+                    "duration": 24
+                },
+                {
+                    "substepName": "ContractReview",
+                    "duration": 24
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "MobilizationPlanning",
+            "serviceName": "MobilizationPlanningService",
+            "description": "Project team assembled, site logistics planned, equipment mobilised, and subcontractors contracted. Baseline schedule and budget established.",
+            "category": "Execution",
+            "estimatedDuration": 168,
+            "businessRationale": "Fast mobilization wins client confidence and enables early revenue recognition. Poor planning causes 3-6 month delays.",
+            "substeps": [
+                {
+                    "substepName": "TeamAssembly",
+                    "duration": 48
+                },
+                {
+                    "substepName": "SiteLogistics",
+                    "duration": 48
+                },
+                {
+                    "substepName": "SubcontractorContracting",
+                    "duration": 72
+                }
+            ]
+        }
+    ],
+    "id": "4e45afca-1318-4439-8183-b15c46fbcee4",
+    "name": "Construction & Engineering - Project Bidding",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 2500000,
+        "transactionValue": 2500000,
+        "averageOrderValue": 1800000,
+        "contractValue": 45000000,
+        "annualRevenue": 180000000,
+        "revenuePerCustomer": 15000000,
+        "profitMargin": 6.5,
+        "customerLifetimeValue": 75000000,
+        "lifetimeValue": 75000000,
+        "acquisitionCost": 150000,
+        "costPerAcquisition": 150000,
+        "conversionProbability": 0.22,
+        "conversionRate": 22,
+        "engagementScore": 65,
+        "timeToConversion": 10080,
+        "sessionDuration": 3600,
+        "pageViews": 15,
+        "purchaseFrequency": 0.5,
+        "netPromoterScore": 42,
+        "satisfactionRating": 3.8,
+        "retentionProbability": 0.65,
+        "processingTime": 20160,
+        "operationalCost": 350000,
+        "efficiencyRating": 72,
+        "projectDuration": 24,
+        "safetyIncidentRate": 0.8,
+        "channel": [
+            "tender_portal",
+            "client_direct",
+            "framework_agreement",
+            "design_build",
+            "joint_venture"
+        ],
+        "deviceType": [
+            "desktop",
+            "desktop",
+            "tablet",
+            "desktop",
+            "desktop"
+        ],
+        "region": [
+            "London",
+            "Dubai",
+            "Sydney",
+            "New York",
+            "Singapore"
+        ],
+        "customerSegmentValue": [
+            "government",
+            "commercial_developer",
+            "infrastructure",
+            "residential",
+            "industrial"
+        ],
+        "loyaltyTier": [
+            "Tier 1 Partner",
+            "Preferred",
+            "Approved",
+            "New",
+            "Framework"
+        ],
+        "segment": [
+            "commercial_building",
+            "infrastructure",
+            "residential",
+            "industrial",
+            "renovation"
+        ],
+        "Productname": [
+            "Office Tower Complex",
+            "Highway Bridge Expansion",
+            "Residential Estate",
+            "Data Centre Build",
+            "Hospital Wing Extension"
+        ],
+        "ProductId": [
+            "CON-CB-001",
+            "CON-IF-002",
+            "CON-RS-003",
+            "CON-DC-004",
+            "CON-HC-005"
+        ],
+        "ProductType": [
+            "new_build",
+            "infrastructure",
+            "residential",
+            "data_centre",
+            "extension"
+        ],
+        "Price": [
+            45000000,
+            28000000,
+            62000000,
+            35000000,
+            18000000
+        ],
+        "bidWinRate": [
+            0.25,
+            0.18,
+            0.3,
+            0.22,
+            0.35
+        ],
+        "projectRisk": [
+            "medium",
+            "high",
+            "low",
+            "medium",
+            "low"
+        ],
+        "marketTrend": [
+            "modular_construction",
+            "BIM_mandate",
+            "green_building",
+            "offsite_manufacturing",
+            "digital_twin"
+        ]
+    }
+}

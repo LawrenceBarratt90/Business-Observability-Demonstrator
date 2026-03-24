@@ -1,0 +1,264 @@
+{
+    "companyName": "Legal Partners",
+    "domain": "https://www.legal-partners.com",
+    "industryType": "Legal Services",
+    "source": "sector-demo",
+    "timestamp": "2026-01-09T16:00:00.000Z",
+    "journeyType": "Document Review",
+    "journeyDetail": "Document Review Journey",
+    "journeyId": "journey_legal_docreview_2026",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "id": "a1b2c3d4-1212-4aaa-b121-000000000002",
+    "name": "Legal Services - Document Review",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "DataCollectionAndIngestion",
+            "serviceName": "DataCollectionAndIngestionService",
+            "description": "Relevant documents collected from all sources: client files, email archives, databases, cloud storage, and custodian devices. Data processed into review platform: de-duplication, de-NISTing (removing system files), text extraction, and metadata indexing. Data volumes typically 1-50 TB per matter.",
+            "category": "Collection",
+            "estimatedDuration": 120,
+            "businessRationale": "Thorough collection prevents spoliation sanctions (average penalty $500K-5M). De-duplication reduces reviewable volume by 30-50%, directly reducing review cost at $1-3 per document. Defensible collection preserves metadata integrity for evidence.",
+            "substeps": [
+                {
+                    "substepName": "SourceIdentificationAndCollection",
+                    "duration": 60
+                },
+                {
+                    "substepName": "ProcessingDedupAndIndex",
+                    "duration": 60
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "AIAssistedCulling",
+            "serviceName": "AIAssistedCullingService",
+            "description": "Technology-assisted review (TAR) / predictive coding applied to reduce document population. AI model trained on seed set of attorney-coded documents. Documents scored by relevance probability. Date range, custodian, and keyword filters further refine population. Non-responsive population validated with statistical sampling.",
+            "category": "Analysis",
+            "estimatedDuration": 480,
+            "businessRationale": "TAR reduces review population by 60-80% compared to keyword-only approach. At $1-3 per document review cost, TAR saves $500K-5M per large matter. Courts increasingly accept TAR as defensible methodology (Da Silva Moore, Rio Tinto).",
+            "substeps": [
+                {
+                    "substepName": "SeedSetCodingAndModelTraining",
+                    "duration": 240
+                },
+                {
+                    "substepName": "ScoringAndStatisticalValidation",
+                    "duration": 240
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "FirstPassReview",
+            "serviceName": "FirstPassReviewService",
+            "description": "Review team (associates, contract attorneys) codes documents for relevance, privilege, confidentiality, and issue tags using review platform. Quality control sampling validates reviewer accuracy. Reviewer disagreements escalated for senior attorney determination. Progress tracked against timeline and budget.",
+            "category": "Review",
+            "estimatedDuration": 2880,
+            "businessRationale": "First-pass review is the largest cost center in litigation ($1-3 per doc). Reviewer accuracy targets are 85%+ with QC sampling every 200 documents. Managed review teams achieve 70-100 docs/hour vs 40-60 for untrained reviewers.",
+            "substeps": [
+                {
+                    "substepName": "RelevanceAndPrivilegeCoding",
+                    "duration": 2160
+                },
+                {
+                    "substepName": "QualityControlAndEscalation",
+                    "duration": 720
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "PrivilegeReview",
+            "serviceName": "PrivilegeReviewService",
+            "description": "Documents flagged as potentially privileged undergo senior attorney review. Attorney-client privilege, work product doctrine, and common interest privilege assessed. Privilege log entries created with required metadata: date, author, recipients, subject, and privilege type. Inadvertent disclosure protocols established.",
+            "category": "Privilege",
+            "estimatedDuration": 1440,
+            "businessRationale": "Privilege review is the highest-stakes phase \u2014 inadvertent production of privileged documents can waive privilege (potential $10M+ impact). Privilege logs are mandatory under FRCP 26(b)(5). Senior attorney rates ($400-800/hr) apply.",
+            "substeps": [
+                {
+                    "substepName": "SeniorAttorneyPrivilegeAssessment",
+                    "duration": 720
+                },
+                {
+                    "substepName": "PrivilegeLogCreation",
+                    "duration": 720
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "ProductionPreparation",
+            "serviceName": "ProductionPreparationService",
+            "description": "Responsive, non-privileged documents prepared for production. Redactions applied for personal information (PII), trade secrets, or court-ordered protections. Production format agreed per ESI protocol: native, TIFF/PDF, or hybrid. Bates numbering applied. Quality check on redactions and formatting.",
+            "category": "Production",
+            "estimatedDuration": 240,
+            "businessRationale": "Production errors (missed redactions, format non-compliance) create motion practice costing $10K-50K. Bates numbering enables precise document reference throughout litigation. PII protection prevents privacy violation claims from non-parties.",
+            "substeps": [
+                {
+                    "substepName": "RedactionAndFormatConversion",
+                    "duration": 180
+                },
+                {
+                    "substepName": "BatesNumberingAndQualityCheck",
+                    "duration": 60
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "ProductionDelivery",
+            "serviceName": "ProductionDeliveryService",
+            "description": "Final production delivered to opposing counsel via secure transfer platform. Production cover letter details volume, format, and any objections or claw-back reservations. Receiving party acknowledges receipt. Production database updated for cross-referencing in depositions and trial preparation.",
+            "category": "Delivery",
+            "estimatedDuration": 30,
+            "businessRationale": "Secure delivery prevents data breach of confidential litigation materials. Cover letter preservations protect against privilege waiver for inadvertent production. Production database enables efficient deposition preparation saving 20+ attorney hours per deposition.",
+            "substeps": [
+                {
+                    "substepName": "SecureTransferAndCoverLetter",
+                    "duration": 20
+                },
+                {
+                    "substepName": "ReceiptConfirmAndDatabase",
+                    "duration": 10
+                }
+            ]
+        }
+    ],
+    "additionalFields": {
+        "orderTotal": 2500,
+        "transactionValue": 2500,
+        "averageOrderValue": 1800,
+        "contractValue": 12000,
+        "annualRevenue": 12000,
+        "revenuePerCustomer": 18000,
+        "profitMargin": 55.0,
+        "customerLifetimeValue": 65000,
+        "lifetimeValue": 65000,
+        "acquisitionCost": 0,
+        "conversionProbability": 0.85,
+        "conversionRate": 85,
+        "engagementScore": 68,
+        "timeToConversion": 2880,
+        "netPromoterScore": 45,
+        "satisfactionRating": 4.2,
+        "retentionProbability": 0.82,
+        "processingTime": 28800,
+        "operationalCost": 850,
+        "efficiencyRating": 72,
+        "complianceScore": 97,
+        "channel": [
+            "client_portal",
+            "email",
+            "secure_upload",
+            "in_person_meeting",
+            "video_call"
+        ],
+        "deviceType": [
+            "desktop",
+            "desktop",
+            "desktop",
+            "desktop",
+            "desktop"
+        ],
+        "region": [
+            "London",
+            "Manchester",
+            "Edinburgh",
+            "Birmingham",
+            "Bristol"
+        ],
+        "customerSegmentValue": [
+            "corporate_client",
+            "private_individual",
+            "sme_business",
+            "property_buyer",
+            "startup_founder"
+        ],
+        "loyaltyTier": [
+            "Corporate Retainer",
+            "Premium",
+            "Business Account",
+            "Standard",
+            "Startup Package"
+        ],
+        "segment": [
+            "contract_review",
+            "due_diligence",
+            "lease_review",
+            "ip_assessment",
+            "compliance_audit"
+        ],
+        "Productname": [
+            "Commercial Contract Review",
+            "M&A Due Diligence Pack",
+            "Commercial Lease Review",
+            "IP Portfolio Assessment",
+            "GDPR Compliance Audit"
+        ],
+        "ProductId": [
+            "LEG-DR-101",
+            "LEG-DR-102",
+            "LEG-DR-103",
+            "LEG-DR-104",
+            "LEG-DR-105"
+        ],
+        "ProductType": [
+            "contract_review",
+            "due_diligence",
+            "lease_review",
+            "ip_assessment",
+            "compliance_audit"
+        ],
+        "Price": [
+            1500,
+            15000,
+            2500,
+            5000,
+            8000
+        ],
+        "documentCount": [
+            12,
+            250,
+            1,
+            45,
+            85
+        ],
+        "turnaroundDays": [
+            5,
+            21,
+            3,
+            10,
+            14
+        ],
+        "riskIssuesFound": [
+            3,
+            15,
+            1,
+            5,
+            8
+        ],
+        "aiAssistedReview": [
+            true,
+            true,
+            false,
+            true,
+            true
+        ],
+        "seniorPartnerReview": [
+            false,
+            true,
+            false,
+            true,
+            true
+        ],
+        "marketTrend": [
+            "ai_document_review",
+            "contract_automation",
+            "virtual_data_room",
+            "legaltech_tools",
+            "continuous_compliance"
+        ]
+    }
+}

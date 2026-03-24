@@ -47,7 +47,7 @@ import workflowWebhookRouter from './dist/routes/workflow-webhook.js';
 import { startScheduler as startNemesisScheduler } from './dist/agents/gremlin/autonomousScheduler.js';
 // Fix-It detector available but not auto-started (triggered via workflow webhook instead)
 // import { startDetector as startFixitDetector } from './dist/agents/fixit/problemDetector.js';
-// MCP integration removed - not needed for core functionality
+import mcpServerRouter from './routes/mcp-server.js';
 import { injectDynatraceMetadata, injectErrorMetadata, propagateMetadata, validateMetadata } from './middleware/dynatrace-metadata.js';
 import { performComprehensiveHealthCheck } from './middleware/observability-hygiene.js';
 // MongoDB integration removed
@@ -341,7 +341,7 @@ async function sendDynatraceEvent(eventType, properties, dtEnvironmentOverride =
     
     // For chaos injection events, keep them OPEN (no timeout) so they correlate with problems
     // For other events (like remediation), use default 15-minute timeout
-    const isChaosInjection = eventProps['change.type'] === 'chaos-injection';
+    const isChaosInjection = eventProps['change.type'] === 'chaos-injection' || eventProps['change.type'] === 'configuration-change';
     const shouldStayOpen = properties.keepOpen || isChaosInjection;
     
     const eventPayload = {
@@ -353,19 +353,19 @@ async function sendDynatraceEvent(eventType, properties, dtEnvironmentOverride =
         'dt.event.description': eventProps['dt.event.description'] || autoDescription,
         'deployment.name': eventProps['deployment.name'] || `Feature Flag: ${eventProps['feature.flag'] || 'unknown'}`,
         'deployment.version': eventProps['deployment.version'] || new Date().toISOString(),
-        'deployment.project': eventProps['deployment.project'] || 'BizObs Chaos Engineering',
+        'deployment.project': eventProps['deployment.project'] || 'BizObs Feature Flags',
         'deployment.source': eventProps['triggered.by'] || 'manual',
         'dt.event.is_rootcause_relevant': 'true',
         'dt.event.deployment.name': eventProps['deployment.name'] || `Feature Flag: ${eventProps['feature.flag'] || 'unknown'}`,
         'dt.event.deployment.version': eventProps['deployment.version'] || new Date().toISOString(),
-        'dt.event.deployment.project': eventProps['deployment.project'] || 'BizObs Chaos Engineering',
+        'dt.event.deployment.project': eventProps['deployment.project'] || 'BizObs Feature Flags',
         ...eventProps
       },
       ...properties
     };
     
     if (shouldStayOpen) {
-      console.log(`[Event API] Creating OPEN event (no timeout) for chaos injection - will stay open until explicitly closed`);
+      console.log(`[Event API] Creating OPEN event (no timeout) for configuration change - will stay open until explicitly closed`);
     }
     
     // Add entitySelector if provided — targets the event to a specific DT entity
@@ -661,7 +661,7 @@ app.use('/api/fixit', fixitRouter.default || fixitRouter);
 app.use('/api/librarian', librarianRouter.default || librarianRouter);
 app.use('/api/autonomous', autonomousRouter.default || autonomousRouter);
 app.use('/api/workflow-webhook', workflowWebhookRouter.default || workflowWebhookRouter);
-// MCP routes removed - not needed
+app.use('/api/mcp', mcpServerRouter);
 
 // 🚦 FEATURE FLAG API - Generic, scalable, future-proof
 // Default values for all feature flags
@@ -883,20 +883,20 @@ app.post('/api/feature_flag', async (req, res) => {
         // Send Dynatrace custom event for per-service flag change — targeted to the DT entity
         const chaosChangeSummary = changes.map(c => `${c.flag} changed from ${c.previous_value} to ${c.new_value}`).join('; ');
         sendDynatraceEvent('CUSTOM_CONFIGURATION', {
-          title: `Chaos Injection: ${targetService}`,
+          title: `Configuration Change: ${targetService}`,
           entitySelector: buildEntitySelector([targetService]),
           properties: {
-            'dt.event.description': `[ROOT CAUSE] Deliberate chaos/error injection on service ${targetService}. ${chaosChangeSummary}. This configuration change directly causes increased failure rates and error responses on this service. Triggered by ${body.triggeredBy || 'nemesis-agent'} via BizObs Chaos Engineering.`,
-            'deployment.name': `Chaos Injection: ${targetService}`,
-            'deployment.project': 'BizObs Chaos Engineering',
-            'deployment.version': `chaos-${Date.now()}`,
+            'dt.event.description': `Configuration update on service ${targetService}. ${chaosChangeSummary}.`,
+            'deployment.name': `Config Update: ${targetService}`,
+            'deployment.project': 'BizObs Feature Flags',
+            'deployment.version': `cfg-${Date.now()}`,
             'feature.flag.scope': 'per-service',
             'feature.flag.targetService': targetService,
             'feature.flag.changes': JSON.stringify(changes),
-            'triggered.by': body.triggeredBy || 'nemesis-agent',
+            'triggered.by': body.triggeredBy || 'config-manager',
             'application': 'BizObs',
-            'change.type': 'chaos-injection',
-            'change.impact': 'Increased error rates and service failures'
+            'change.type': 'configuration-change',
+            'change.impact': 'Service behavior modified'
           }
         });
         
@@ -1170,21 +1170,21 @@ app.delete('/api/feature_flag/service/:serviceName', (req, res) => {
   
   // Send Dynatrace event for the revert — targeted to the DT entity
   sendDynatraceEvent('CUSTOM_CONFIGURATION', {
-    title: `Chaos Reverted: ${serviceName}`,
+    title: `Configuration Rollback: ${serviceName}`,
     entitySelector: buildEntitySelector([serviceName]),
-    keepOpen: true, // Keep open to show when chaos was removed
+    keepOpen: true,
     properties: {
-      'dt.event.description': `[REMEDIATION] Chaos injection reverted for ${serviceName}. Previous error-inducing flags: ${previousFlags ? JSON.stringify(previousFlags) : 'none'}. Service returned to default (healthy) configuration. This deployment event should resolve previously injected failures.`,
-      'deployment.name': `Chaos Revert: ${serviceName}`,
-      'deployment.project': 'BizObs Chaos Engineering',
-      'deployment.version': `revert-${Date.now()}`,
+      'dt.event.description': `Configuration rollback for ${serviceName}. Previous flags: ${previousFlags ? JSON.stringify(previousFlags) : 'none'}. Service returned to default configuration.`,
+      'deployment.name': `Config Rollback: ${serviceName}`,
+      'deployment.project': 'BizObs Feature Flags',
+      'deployment.version': `rollback-${Date.now()}`,
       'feature.flag.scope': 'per-service-revert',
       'feature.flag.targetService': serviceName,
       'feature.flag.previous': previousFlags ? JSON.stringify(previousFlags) : 'none',
-      'triggered.by': 'nemesis-agent',
+      'triggered.by': 'config-manager',
       'application': 'BizObs',
-      'change.type': 'chaos-revert',
-      'change.impact': 'Restored normal operation - errors should decrease'
+      'change.type': 'configuration-rollback',
+      'change.impact': 'Service configuration restored to defaults'
     }
   });
   
@@ -2471,17 +2471,17 @@ app.post('/api/remediation/feature-flag', async (req, res) => {
       entitySelectorForEvent = allSelectors.length > 0 ? allSelectors : undefined;
     }
     
-    // Keep event open if triggered by nemesis-agent (chaos injection)
-    const isNemesisTriggered = triggeredBy === 'nemesis-agent';
+    // Keep event open if triggered by config-manager (configuration change)
+    const isConfigTriggered = triggeredBy === 'nemesis-agent' || triggeredBy === 'config-manager';
     
     const eventResult = await sendDynatraceEvent('CUSTOM_CONFIGURATION', {
       title: `Remediation: ${flag} ${value ? 'enabled' : 'disabled'}`,
       entitySelector: entitySelectorForEvent,
-      keepOpen: isNemesisTriggered, // Keep open for chaos injection events
+      keepOpen: isConfigTriggered,
       properties: {
-        'dt.event.description': `[REMEDIATION] Feature flag '${flag}' changed from ${previousValue} to ${value} as remediation action. Reason: ${reason || 'Not specified'}. This configuration change was triggered by ${triggeredBy} to address problem ${problemId || 'N/A'}. The flag change directly affects service behavior and error rates.`,
+        'dt.event.description': `Feature flag '${flag}' changed from ${previousValue} to ${value}. Reason: ${reason || 'Not specified'}. Triggered by ${triggeredBy} for problem ${problemId || 'N/A'}.`,
         'deployment.name': `Remediation: ${flag}`,
-        'deployment.project': 'BizObs Chaos Engineering',
+        'deployment.project': 'BizObs Feature Flags',
         'deployment.version': `remediation-${Date.now()}`,
         'feature.flag': flag,
         'previous.value': String(previousValue),
@@ -2491,8 +2491,8 @@ app.post('/api/remediation/feature-flag', async (req, res) => {
         'problem.id': problemId || 'N/A',
         'remediation.type': 'feature_flag_toggle',
         'application': 'BizObs',
-        'change.type': isNemesisTriggered ? 'chaos-injection' : 'remediation',
-        'change.impact': value ? 'Error injection enabled' : 'Error injection disabled - service should recover'
+        'change.type': isConfigTriggered ? 'configuration-change' : 'remediation',
+        'change.impact': value ? 'Service behavior modified' : 'Service configuration restored'
       }
     }, dtEnvironment, dtToken);
     
@@ -2729,6 +2729,9 @@ app.post('/api/oauth/authorize', async (req, res) => {
               // Store token globally for reuse
               activeOAuthToken = tokenData.access_token;
               tokenEnvironment = environment.replace(/\/$/, '');
+              // Propagate to env vars so routes (ai-dashboard) can use for Grail queries
+              process.env.DT_PLATFORM_TOKEN = activeOAuthToken;
+              process.env.DT_ENVIRONMENT = tokenEnvironment;
               
               console.log('[OAuth] ✅ Token received and stored!');
               
@@ -2928,6 +2931,9 @@ app.get('/api/oauth/callback', async (req, res) => {
     // Also store immediately in global variable for immediate access
     activeOAuthToken = tokenData.access_token;
     tokenEnvironment = session.environment;
+    // Propagate to env vars so routes (ai-dashboard) can use for Grail queries
+    process.env.DT_PLATFORM_TOKEN = activeOAuthToken;
+    process.env.DT_ENVIRONMENT = tokenEnvironment;
     console.log('[OAuth] Token stored globally for environment:', tokenEnvironment);
     
     res.send(`
@@ -3014,6 +3020,9 @@ app.get('/api/oauth/token-status', (req, res) => {
       // Store token for subsequent use (don't delete!)
       activeOAuthToken = session.accessToken;
       tokenEnvironment = session.environment;
+      // Propagate to env vars so routes (ai-dashboard) can use for Grail queries
+      process.env.DT_PLATFORM_TOKEN = activeOAuthToken;
+      process.env.DT_ENVIRONMENT = tokenEnvironment;
       
       console.log('[OAuth] Token stored for environment:', tokenEnvironment);
       
@@ -3345,7 +3354,20 @@ async function startMcpServer(environmentUrl, port = 3000) {
   });
 
   mcpServerProcess.stderr.on('data', (data) => {
-    console.error('[MCP stderr]', data.toString());
+    const errOutput = data.toString();
+    console.error('[MCP stderr]', errOutput);
+
+    // OAuth URL often appears on stderr
+    const oauthMatch = errOutput.match(/https:\/\/[^\s]+oauth2\/authorize[^\s]+/);
+    if (oauthMatch) {
+      mcpServerAuthUrl = oauthMatch[0];
+      console.log('[MCP] OAuth URL detected (stderr):', mcpServerAuthUrl);
+    }
+
+    if (errOutput.includes('Dynatrace MCP Server running on HTTP') || errOutput.includes('MCP Server listening')) {
+      mcpServerStatus = 'running';
+      console.log('[MCP] Server is now running (detected via stderr)');
+    }
   });
 
   mcpServerProcess.on('exit', (code) => {
@@ -4703,6 +4725,35 @@ app.use((err, req, res, next) => {
   
   // Make startAutoLoadWatcher available globally so journey routes can restart it after a stop
   global.startAutoLoadWatcher = startAutoLoadWatcher;
+
+  // --- Auto-start Dynatrace MCP Server if environment is configured ---
+  if (dtCredentials.environmentUrl) {
+    // Normalize URL to .apps. format required by MCP server
+    let mcpEnvUrl = dtCredentials.environmentUrl;
+    mcpEnvUrl = mcpEnvUrl.replace(/\/+$/, '');
+    if (!mcpEnvUrl.includes('.apps.')) {
+      // e.g. https://abc123.sprint.dynatracelabs.com → https://abc123.sprint.apps.dynatracelabs.com
+      mcpEnvUrl = mcpEnvUrl.replace(/\.sprint\.dynatracelabs\.com/, '.sprint.apps.dynatracelabs.com')
+                           .replace(/\.dynatrace\.com/, '.apps.dynatrace.com');
+    }
+    console.log(`[MCP] Auto-starting Dynatrace MCP Server for ${mcpEnvUrl}...`);
+    startMcpServer(mcpEnvUrl, 3000)
+      .then(result => {
+        if (result.status === 'running') {
+          console.log('[MCP] ✅ Dynatrace MCP Server auto-started on port 3000');
+        } else {
+          console.log(`[MCP] ⚠️  MCP Server status: ${result.status} (may need OAuth — check UI)`);
+        }
+        if (result.authUrl) {
+          console.log(`[MCP] 🔑 OAuth URL: ${result.authUrl}`);
+        }
+      })
+      .catch(err => {
+        console.warn('[MCP] ⚠️  Auto-start failed:', err.message, '— start manually from UI');
+      });
+  } else {
+    console.log('[MCP] No Dynatrace environment configured — MCP Server will start when you connect via UI');
+  }
   
   // Start periodic health monitoring every 15 minutes
   const healthMonitor = setInterval(async () => {
@@ -4960,6 +5011,15 @@ process.on('SIGINT', () => {
     console.log('👋 Server closed');
     process.exit(0);
   });
+});
+
+// Prevent silent crashes — log unhandled errors instead of killing the process
+process.on('uncaughtException', (err) => {
+  console.error('🚨 UNCAUGHT EXCEPTION (process kept alive):', err.message, err.stack);
+});
+
+process.on('unhandledRejection', (reason) => {
+  console.error('🚨 UNHANDLED REJECTION (process kept alive):', reason);
 });
 
 export default app;

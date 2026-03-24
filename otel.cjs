@@ -47,6 +47,9 @@ const {
 const {
   HttpInstrumentation,
 } = require("@opentelemetry/instrumentation-http");
+const {
+  UndiciInstrumentation,
+} = require("@opentelemetry/instrumentation-undici");
 
 const { logs: logsAPI } = require("@opentelemetry/api-logs");
 const fs = require("fs");
@@ -94,10 +97,31 @@ const AUTH_HEADER = { Authorization: "Api-Token " + DT_API_TOKEN };
 
 // ===== GENERAL SETUP =====
 
+// Helper to tag Ollama-bound requests with GenAI attributes
+function tagOllamaSpan(span, url, host) {
+  if (
+    String(host).includes("11434") ||
+    url.includes("/api/generate") ||
+    url.includes("/api/chat") ||
+    url.includes("/api/embeddings")
+  ) {
+    span.setAttribute("gen_ai.system", "ollama");
+    span.setAttribute(
+      "gen_ai.request.model",
+      process.env.OLLAMA_MODEL || "llama3.2"
+    );
+    span.setAttribute("llm.request.type", "completion");
+    span.setAttribute("ai.agent.framework", "bizobs-engine");
+    span.updateName(
+      `chat ${process.env.OLLAMA_MODEL || "llama3.2"}`
+    );
+  }
+}
+
 registerInstrumentations({
   instrumentations: [
+    // Instruments http/https module (legacy requests)
     new HttpInstrumentation({
-      // Tag outbound Ollama HTTP calls with GenAI attributes
       requestHook: (span, request) => {
         const url =
           typeof request.path === "string"
@@ -107,18 +131,16 @@ registerInstrumentations({
           (request.headers && request.headers.host) ||
           (request.getHeader && request.getHeader("host")) ||
           "";
-        if (
-          String(host).includes("11434") ||
-          url.includes("/api/generate") ||
-          url.includes("/api/chat")
-        ) {
-          span.setAttribute("gen_ai.system", "ollama");
-          span.setAttribute(
-            "gen_ai.request.model",
-            process.env.OLLAMA_MODEL || "llama3.2"
-          );
-          span.setAttribute("ai.agent.framework", "bizobs-engine");
-        }
+        tagOllamaSpan(span, url, host);
+      },
+    }),
+    // Instruments native fetch() (undici) — required for Node >= 18
+    // All Ollama calls use native fetch()
+    new UndiciInstrumentation({
+      requestHook: (span, { request }) => {
+        const url = String(request.path || request.origin || "");
+        const host = String(request.origin || "");
+        tagOllamaSpan(span, url, host);
       },
     }),
   ],

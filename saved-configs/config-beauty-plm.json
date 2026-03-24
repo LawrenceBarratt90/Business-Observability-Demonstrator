@@ -1,0 +1,257 @@
+{
+    "companyName": "Beauty",
+    "domain": "https://www.beauty-demo.com",
+    "industryType": "Beauty & Cosmetics",
+    "journeyType": "Product Development",
+    "journeyDetail": "Product Development",
+    "journeyId": "journey_beauty_product_development",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "FormulationDesign",
+            "serviceName": "FormulationDesignService",
+            "description": "AI assists cosmetic formulation: ingredient compatibility analysis, stability prediction, regulatory compliance checking (EU Cosmetics Regulation, FDA), and efficacy modelling. Generates formulation candidates from brief.",
+            "category": "R&D",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 120,
+            "businessRationale": "AI formulation design reduces R&D cycle from 18 months to 6 months. Stability prediction prevents 40% of reformulation iterations, saving \u00a3200K per product launch.",
+            "substeps": [
+                {
+                    "substepName": "IngredientAnalysis",
+                    "duration": 60
+                },
+                {
+                    "substepName": "StabilityPrediction",
+                    "duration": 60
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "RegulatoryCompliance",
+            "serviceName": "RegulatoryComplianceService",
+            "description": "AI checks formulations against global regulations: EU restricted substances, IFRA fragrance limits, China animal testing requirements, and clean beauty certifications. Generates CPNP notifications and SDS documents.",
+            "category": "Compliance",
+            "estimatedDuration": 30,
+            "businessRationale": "Automated compliance checking prevents costly product recalls (\u00a35M average). Multi-market regulatory coverage enables simultaneous global launches, capturing \u00a33M in early-mover revenue.",
+            "substeps": [
+                {
+                    "substepName": "RegulationCheck",
+                    "duration": 15
+                },
+                {
+                    "substepName": "DocumentGeneration",
+                    "duration": 15
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "SupplierSourcing",
+            "serviceName": "SupplierSourcingService",
+            "description": "AI optimises ingredient sourcing: evaluates suppliers on quality, sustainability certifications, lead time, and cost. Tracks ingredient provenance for clean beauty claims and monitors supply chain risks.",
+            "category": "Procurement",
+            "estimatedDuration": 60,
+            "businessRationale": "AI sourcing reduces ingredient costs by 12% through competitive benchmarking. Sustainability-verified sourcing supports \u00a350M premium clean beauty positioning.",
+            "substeps": [
+                {
+                    "substepName": "SupplierEvaluation",
+                    "duration": 30
+                },
+                {
+                    "substepName": "ProvenanceTracking",
+                    "duration": 30
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "ProductionScaling",
+            "serviceName": "ProductionScalingService",
+            "description": "AI manages scale-up from lab to manufacturing: batch size calculations, process parameter optimization, quality control checkpoints, and yield prediction. Coordinates with contract manufacturers.",
+            "category": "Manufacturing",
+            "estimatedDuration": 480,
+            "businessRationale": "AI scale-up optimization achieves 95% first-batch success rate vs 60% traditional. Fewer failed batches save \u00a3100K per product and accelerate time-to-market by 8 weeks.",
+            "substeps": [
+                {
+                    "substepName": "ScaleUpCalculation",
+                    "duration": 240
+                },
+                {
+                    "substepName": "QualityControl",
+                    "duration": 240
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "PackagingDesign",
+            "serviceName": "PackagingDesignService",
+            "description": "AI assists packaging development: sustainability scoring, material compatibility with formulation, consumer testing prediction, and cost optimization. Generates packaging specifications for contract manufacturers.",
+            "category": "Packaging",
+            "estimatedDuration": 60,
+            "businessRationale": "AI packaging optimization reduces material costs by 15% while improving sustainability scores. Consumer appeal prediction reduces packaging redesign iterations by 50%.",
+            "substeps": [
+                {
+                    "substepName": "MaterialSelection",
+                    "duration": 30
+                },
+                {
+                    "substepName": "DesignOptimization",
+                    "duration": 30
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "LaunchReporting",
+            "serviceName": "LaunchReportingService",
+            "description": "AI generates product lifecycle reports: formulation iterations, testing results, compliance status, cost analysis, sustainability metrics, and market readiness assessment. Feeds into portfolio planning.",
+            "category": "Reporting",
+            "estimatedDuration": 60,
+            "businessRationale": "PLM reporting provides end-to-end visibility from concept to shelf. Data-driven portfolio decisions improved launch success rate by 25% and reduced time-to-market by 30%.",
+            "substeps": [
+                {
+                    "substepName": "LifecycleAnalysis",
+                    "duration": 30
+                },
+                {
+                    "substepName": "PortfolioPlanning",
+                    "duration": 30
+                }
+            ]
+        }
+    ],
+    "id": "99c8b050-1517-493c-86f2-aeb188251fa3",
+    "name": "Beauty & Cosmetics - Product Development",
+    "timestamp": "2026-03-18T21:35:20.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 500000,
+        "annualRevenue": 0,
+        "revenuePerCustomer": 0,
+        "profitMargin": 65,
+        "customerLifetimeValue": 0,
+        "lifetimeValue": 0,
+        "acquisitionCost": 0,
+        "costPerAcquisition": 0,
+        "conversionProbability": 0.85,
+        "conversionRate": 85,
+        "engagementScore": 88,
+        "timeToConversion": 180,
+        "sessionDuration": 60,
+        "pageViews": 0,
+        "purchaseFrequency": 0,
+        "netPromoterScore": 0,
+        "satisfactionRating": 0,
+        "retentionProbability": 0.9,
+        "processingTime": 120,
+        "operationalCost": 150000,
+        "efficiencyRating": 78,
+        "discountApplied": 0,
+        "taxAmount": 0,
+        "shippingCost": 0,
+        "channel": [
+            "plm_platform",
+            "r_and_d_lab",
+            "regulatory_portal",
+            "supplier_portal",
+            "manufacturing"
+        ],
+        "deviceType": [
+            "desktop",
+            "lab_terminal",
+            "tablet",
+            "desktop",
+            "plc_hmi"
+        ],
+        "region": [
+            "Europe",
+            "North America",
+            "Asia-Pacific",
+            "Middle East",
+            "Latin America"
+        ],
+        "customerSegmentValue": [
+            "luxury_brand",
+            "mass_market",
+            "indie_brand",
+            "private_label",
+            "professional"
+        ],
+        "loyaltyTier": [
+            "n/a",
+            "n/a",
+            "n/a",
+            "n/a",
+            "n/a"
+        ],
+        "segment": [
+            "skincare",
+            "color_cosmetics",
+            "fragrance",
+            "haircare",
+            "bodycare"
+        ],
+        "Productname": [
+            "AntiAging_Serum",
+            "Foundation_Range",
+            "EdP_Signature",
+            "Repair_Shampoo",
+            "Body_Butter"
+        ],
+        "ProductId": [
+            "PLM-SER-001",
+            "PLM-FND-002",
+            "PLM-FRG-003",
+            "PLM-SHP-004",
+            "PLM-BOD-005"
+        ],
+        "ProductType": [
+            "serum",
+            "foundation",
+            "fragrance",
+            "shampoo",
+            "body_care"
+        ],
+        "Price": [
+            85,
+            42,
+            95,
+            28,
+            22
+        ],
+        "formulationStage": [
+            "stability_testing",
+            "scale_up",
+            "concept",
+            "production",
+            "reformulation"
+        ],
+        "ingredientCount": [
+            22,
+            35,
+            48,
+            18,
+            15
+        ],
+        "sustainabilityScore": [
+            82,
+            75,
+            68,
+            88,
+            92
+        ],
+        "marketTrend": [
+            "clean_beauty",
+            "waterless_formulation",
+            "biotech_ingredients",
+            "refillable_packaging",
+            "personalised_skincare"
+        ]
+    }
+}

@@ -1,0 +1,257 @@
+{
+    "companyName": "Accounting",
+    "domain": "https://www.accounting-demo.com",
+    "industryType": "Accounting & Audit",
+    "journeyType": "Audit Analytics",
+    "journeyDetail": "Audit Analytics",
+    "journeyId": "journey_accounting_audit_analytics",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "AuditPlanning",
+            "serviceName": "AuditPlanningService",
+            "description": "AI analyses historical financial data, risk indicators, and regulatory changes to generate audit plans. Identifies high-risk accounts, estimates materiality thresholds, and allocates audit resources based on complexity.",
+            "category": "Planning",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 60,
+            "businessRationale": "AI audit planning reduces planning phase by 40%. Risk-based resource allocation focuses senior auditors on high-risk areas, improving audit quality while reducing total hours by 15%.",
+            "substeps": [
+                {
+                    "substepName": "RiskAssessment",
+                    "duration": 30
+                },
+                {
+                    "substepName": "ResourceAllocation",
+                    "duration": 30
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "DataExtraction",
+            "serviceName": "DataExtractionService",
+            "description": "AI extracts and normalises financial data from ERP systems, bank feeds, invoicing platforms, and spreadsheets. Automatic reconciliation of multi-source data into unified audit trail with completeness checks.",
+            "category": "DataCollection",
+            "estimatedDuration": 30,
+            "businessRationale": "Automated extraction replaces 80% of manual data gathering. Complete data extraction enables 100% transaction testing vs traditional sampling of 5-10%.",
+            "substeps": [
+                {
+                    "substepName": "SourceConnection",
+                    "duration": 10
+                },
+                {
+                    "substepName": "DataNormalization",
+                    "duration": 20
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "TransactionTesting",
+            "serviceName": "TransactionTestingService",
+            "description": "AI tests 100% of transactions for anomalies: duplicate payments, round-number fraud indicators, Benford's Law violations, segregation-of-duty breaches, and unusual vendor patterns. Flags exceptions for investigation.",
+            "category": "Testing",
+            "estimatedDuration": 120,
+            "businessRationale": "100% transaction testing catches fraud that sampling misses. AI detects anomalies in 0.3% of transactions that represent 80% of audit findings, focusing auditor attention precisely.",
+            "substeps": [
+                {
+                    "substepName": "AnomalyDetection",
+                    "duration": 60
+                },
+                {
+                    "substepName": "ExceptionFlagging",
+                    "duration": 60
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "SubstantiveProcedures",
+            "serviceName": "SubstantiveProceduresService",
+            "description": "AI performs substantive audit procedures: revenue cut-off testing, inventory valuation verification, accounts receivable ageing analysis, related-party transaction identification, and going-concern assessment.",
+            "category": "AuditProcedures",
+            "estimatedDuration": 240,
+            "businessRationale": "AI substantive procedures reduce fieldwork by 35%. Automated procedures are more consistent than manual testing, reducing audit risk and improving regulatory confidence.",
+            "substeps": [
+                {
+                    "substepName": "RevenueTesting",
+                    "duration": 120
+                },
+                {
+                    "substepName": "BalanceVerification",
+                    "duration": 120
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "WorkpaperGeneration",
+            "serviceName": "WorkpaperGenerationService",
+            "description": "AI auto-generates audit workpapers: test results, supporting evidence, cross-references, and findings summaries. Links evidence to assertions and maintains audit trail for regulatory review.",
+            "category": "Documentation",
+            "estimatedDuration": 60,
+            "businessRationale": "Automated workpapers save 50% of documentation time. Consistent formatting and complete cross-referencing reduces review cycles and regulatory queries by 30%.",
+            "substeps": [
+                {
+                    "substepName": "EvidenceLinking",
+                    "duration": 30
+                },
+                {
+                    "substepName": "WorkpaperFormatting",
+                    "duration": 30
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "AuditReporting",
+            "serviceName": "AuditReportingService",
+            "description": "AI generates draft audit opinions, management letters, and internal audit reports. Benchmarks findings against industry peers and prior-year results. Provides trending analysis of control effectiveness.",
+            "category": "Reporting",
+            "estimatedDuration": 120,
+            "businessRationale": "AI reporting accelerates opinion delivery by 3 weeks. Benchmarking against peers provides clients with actionable improvement insights, differentiating the firm's audit value.",
+            "substeps": [
+                {
+                    "substepName": "OpinionDrafting",
+                    "duration": 60
+                },
+                {
+                    "substepName": "BenchmarkAnalysis",
+                    "duration": 60
+                }
+            ]
+        }
+    ],
+    "id": "e3948b30-8a95-4cdc-9013-23629b93a773",
+    "name": "Accounting & Audit - Audit Analytics",
+    "timestamp": "2026-03-18T21:35:20.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 85000,
+        "annualRevenue": 0,
+        "revenuePerCustomer": 0,
+        "profitMargin": 32,
+        "customerLifetimeValue": 680000,
+        "lifetimeValue": 680000,
+        "acquisitionCost": 12000,
+        "costPerAcquisition": 12000,
+        "conversionProbability": 0.65,
+        "conversionRate": 65,
+        "engagementScore": 78,
+        "timeToConversion": 45,
+        "sessionDuration": 120,
+        "pageViews": 15,
+        "purchaseFrequency": 1,
+        "netPromoterScore": 48,
+        "satisfactionRating": 4.2,
+        "retentionProbability": 0.92,
+        "processingTime": 120,
+        "operationalCost": 55000,
+        "efficiencyRating": 82,
+        "discountApplied": 0,
+        "taxAmount": 0,
+        "shippingCost": 0,
+        "channel": [
+            "partner_referral",
+            "website",
+            "conference",
+            "rfp_response",
+            "existing_client"
+        ],
+        "deviceType": [
+            "desktop",
+            "laptop",
+            "tablet",
+            "mobile",
+            "desktop"
+        ],
+        "region": [
+            "London",
+            "Manchester",
+            "Edinburgh",
+            "Birmingham",
+            "Bristol"
+        ],
+        "customerSegmentValue": [
+            "plc_listed",
+            "private_company",
+            "charity",
+            "public_sector",
+            "partnership"
+        ],
+        "loyaltyTier": [
+            "new_client",
+            "annual_client",
+            "multi_year",
+            "strategic_account",
+            "founding_client"
+        ],
+        "segment": [
+            "statutory_audit",
+            "internal_audit",
+            "forensic_audit",
+            "regulatory_audit",
+            "it_audit"
+        ],
+        "Productname": [
+            "Statutory_Audit",
+            "Internal_Audit",
+            "Forensic_Investigation",
+            "IT_Audit",
+            "Regulatory_Audit"
+        ],
+        "ProductId": [
+            "AUD-STAT-001",
+            "AUD-INT-002",
+            "AUD-FOR-003",
+            "AUD-IT-004",
+            "AUD-REG-005"
+        ],
+        "ProductType": [
+            "statutory",
+            "advisory",
+            "forensic",
+            "technology",
+            "compliance"
+        ],
+        "Price": [
+            85000,
+            45000,
+            120000,
+            35000,
+            65000
+        ],
+        "auditRiskLevel": [
+            "medium",
+            "high",
+            "critical",
+            "medium",
+            "high"
+        ],
+        "materialityThreshold": [
+            250000,
+            100000,
+            50000,
+            150000,
+            200000
+        ],
+        "findingsCount": [
+            12,
+            28,
+            8,
+            15,
+            22
+        ],
+        "marketTrend": [
+            "continuous_auditing",
+            "ai_analytics",
+            "esg_assurance",
+            "crypto_audit",
+            "real_time_reporting"
+        ]
+    }
+}

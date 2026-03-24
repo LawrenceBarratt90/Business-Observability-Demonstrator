@@ -1,0 +1,273 @@
+{
+    "companyName": "LotteryTech Gaming",
+    "domain": "https://www.lotterytech-gaming.com",
+    "industryType": "Lottery & Gaming",
+    "journeyType": "Responsible Gaming",
+    "journeyDetail": "AI-Powered Responsible Gaming Programme",
+    "journeyId": "journey_responsible_gaming_7f96dcf3",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "BehaviourMonitoring",
+            "serviceName": "BehaviourMonitorService",
+            "description": "AI monitors player behaviour for problem gambling indicators: increasing spend, chasing losses, session length escalation, and time-of-day shifts. Multi-dimensional risk scoring.",
+            "category": "Detection",
+            "estimatedDuration": 0.05,
+            "businessRationale": "1-3% of players develop gambling problems. AI can identify 80% of at-risk players 2-4 weeks before self-exclusion.",
+            "substeps": [
+                {
+                    "substepName": "SpendTracking",
+                    "duration": 0.02
+                },
+                {
+                    "substepName": "PatternAnalysis",
+                    "duration": 0.02
+                },
+                {
+                    "substepName": "RiskScoring",
+                    "duration": 0.01
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "PlayerIntervention",
+            "serviceName": "InterventionService",
+            "description": "AI triggers graduated interventions: informational pop-ups, reality checks, cooling-off suggestions, and voluntary limit setting. Tone and timing personalised per player.",
+            "category": "Support",
+            "estimatedDuration": 0.5,
+            "businessRationale": "Well-timed interventions reduce problem gambling progression by 40-60%. Heavy-handed messaging causes avoidance rather than behaviour change.",
+            "substeps": [
+                {
+                    "substepName": "MessageSelection",
+                    "duration": 0.2
+                },
+                {
+                    "substepName": "TimingOptimization",
+                    "duration": 0.15
+                },
+                {
+                    "substepName": "ResponseTracking",
+                    "duration": 0.15
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "LimitManagement",
+            "serviceName": "LimitService",
+            "description": "AI manages deposit limits, loss limits, session time limits, and wagering limits. Cooling-off periods and self-exclusion enforced across all channels. Limit effectiveness tracked.",
+            "category": "Controls",
+            "estimatedDuration": 0.1,
+            "businessRationale": "Limit-setting is the most effective responsible gaming tool. Players who set limits have 70% lower risk of developing problems.",
+            "substeps": [
+                {
+                    "substepName": "DepositLimits",
+                    "duration": 0.03
+                },
+                {
+                    "substepName": "SessionLimits",
+                    "duration": 0.03
+                },
+                {
+                    "substepName": "CrossChannelEnforcement",
+                    "duration": 0.04
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "SelfExclusionProgram",
+            "serviceName": "ExclusionService",
+            "description": "AI manages self-exclusion registry, enforces multi-venue/multi-channel exclusion, and prevents circumvention through identity matching. Re-activation process managed safely.",
+            "category": "Protection",
+            "estimatedDuration": 24,
+            "businessRationale": "Self-exclusion is the last resort for problem gamblers. Any breach of exclusion is a serious regulatory violation and duty of care failure.",
+            "substeps": [
+                {
+                    "substepName": "RegistryManagement",
+                    "duration": 8
+                },
+                {
+                    "substepName": "IdentityMatching",
+                    "duration": 8
+                },
+                {
+                    "substepName": "BreachPrevention",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "ResearchAndInsights",
+            "serviceName": "ResearchService",
+            "description": "AI analyses population-level gambling patterns, correlates with harm indicators, and evaluates programme effectiveness. Research findings published for industry benefit.",
+            "category": "Analysis",
+            "estimatedDuration": 720,
+            "businessRationale": "Evidence-based responsible gaming drives regulatory trust. Operators with strong programmes receive regulatory goodwill worth $10M+ in licence terms.",
+            "substeps": [
+                {
+                    "substepName": "PopulationAnalysis",
+                    "duration": 240
+                },
+                {
+                    "substepName": "HarmCorrelation",
+                    "duration": 240
+                },
+                {
+                    "substepName": "ProgrammeEvaluation",
+                    "duration": 240
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "RegulatoryCompliance",
+            "serviceName": "RGComplianceService",
+            "description": "AI generates responsible gaming compliance reports for regulators. Interaction tracking, exclusion logs, and harm minimisation metrics reported per jurisdiction.",
+            "category": "Compliance",
+            "estimatedDuration": 168,
+            "businessRationale": "RG compliance failures result in fines ($1M-50M) and licence conditions. Proactive reporting builds regulatory trust.",
+            "substeps": [
+                {
+                    "substepName": "InteractionReporting",
+                    "duration": 56
+                },
+                {
+                    "substepName": "ExclusionAudit",
+                    "duration": 56
+                },
+                {
+                    "substepName": "HarmMetrics",
+                    "duration": 56
+                }
+            ]
+        }
+    ],
+    "id": "0549951e-249e-4b3c-bc8c-935d6b42191f",
+    "name": "Lottery & Gaming - Responsible Gaming",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 2000000,
+        "annualRevenue": 3500000000,
+        "revenuePerCustomer": 250,
+        "profitMargin": 35.0,
+        "customerLifetimeValue": 2500,
+        "lifetimeValue": 2500,
+        "acquisitionCost": 0,
+        "costPerAcquisition": 0,
+        "conversionProbability": 1.0,
+        "conversionRate": 100,
+        "engagementScore": 60,
+        "timeToConversion": 0,
+        "sessionDuration": 180,
+        "pageViews": 3,
+        "purchaseFrequency": 52,
+        "netPromoterScore": 30,
+        "satisfactionRating": 3.6,
+        "retentionProbability": 0.72,
+        "processingTime": 0.05,
+        "operationalCost": 1000000,
+        "efficiencyRating": 85,
+        "atRiskDetectionRate": 82,
+        "interventionEffectiveness": 45,
+        "channel": [
+            "gaming_platform",
+            "mobile_app",
+            "retail_terminal",
+            "helpline",
+            "website"
+        ],
+        "deviceType": [
+            "desktop",
+            "mobile",
+            "terminal",
+            "phone",
+            "desktop"
+        ],
+        "region": [
+            "UK",
+            "Australia",
+            "Sweden",
+            "Ontario CA",
+            "New Jersey US"
+        ],
+        "customerSegmentValue": [
+            "low_risk",
+            "medium_risk",
+            "high_risk",
+            "self_excluded",
+            "recovering"
+        ],
+        "loyaltyTier": [
+            "Monitored",
+            "Caution",
+            "Alert",
+            "Excluded",
+            "Returning"
+        ],
+        "segment": [
+            "deposit_limits",
+            "session_limits",
+            "self_exclusion",
+            "treatment_referral",
+            "education"
+        ],
+        "Productname": [
+            "Behaviour Analytics Platform",
+            "Intervention Message Engine",
+            "Self-Exclusion Registry",
+            "Limit Management System",
+            "RG Compliance Dashboard"
+        ],
+        "ProductId": [
+            "RG-BA-001",
+            "RG-IM-002",
+            "RG-SE-003",
+            "RG-LM-004",
+            "RG-CD-005"
+        ],
+        "ProductType": [
+            "analytics",
+            "intervention",
+            "exclusion",
+            "controls",
+            "compliance"
+        ],
+        "Price": [
+            500000,
+            300000,
+            400000,
+            250000,
+            200000
+        ],
+        "playersMonitored": [
+            5000000,
+            5000000,
+            15000,
+            5000000,
+            0
+        ],
+        "interventionRate": [
+            0.08,
+            0.12,
+            0.003,
+            0.05,
+            0
+        ],
+        "marketTrend": [
+            "AI_harm_prevention",
+            "affordability_checks",
+            "single_customer_view",
+            "cross_operator_exclusion",
+            "lived_experience_design"
+        ]
+    }
+}

@@ -1,0 +1,19 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dynatrace-control
+  namespace: default
+  title: Dynatrace Control Skill
+  description: >
+    CLI skill for interacting with Dynatrace tenants via dtctl — covering
+    authentication, resource management, configuration, and automation.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace-dev/skills/dynatrace-control
+spec:
+  type: ai-skill
+  lifecycle: experimental
+  owner: capability/data-intelligence
+  system: default/ai-agent-knowledge-base
+  product-architect: user:default/hans.kohlreiter
+  product-manager: user:default/wolfgang.beer

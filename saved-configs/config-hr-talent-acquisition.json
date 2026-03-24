@@ -1,0 +1,273 @@
+{
+    "companyName": "TalentTech HR",
+    "domain": "https://www.talenttech-hr.com",
+    "industryType": "Human Resources & HRTech",
+    "journeyType": "Talent Acquisition",
+    "journeyDetail": "AI-Powered Recruitment & Hiring",
+    "journeyId": "journey_talent_acquisition_8ad31df9",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "JobRequisition",
+            "serviceName": "RequisitionService",
+            "description": "AI auto-generates job descriptions from role requirements, market benchmarks, and internal career frameworks. Compensation ranges set from real-time market data.",
+            "category": "Initiation",
+            "estimatedDuration": 4,
+            "businessRationale": "Well-crafted JDs attract 40% more qualified applicants. Market-aligned compensation prevents losing candidates to counter-offers.",
+            "substeps": [
+                {
+                    "substepName": "JDGeneration",
+                    "duration": 1.5
+                },
+                {
+                    "substepName": "CompBenchmarking",
+                    "duration": 1.5
+                },
+                {
+                    "substepName": "ApprovalRouting",
+                    "duration": 1
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "CandidateSourcing",
+            "serviceName": "SourcingService",
+            "description": "AI sources candidates from job boards, LinkedIn, internal mobility, referral networks, and talent pools. Diversity-aware sourcing ensures inclusive pipelines.",
+            "category": "Sourcing",
+            "estimatedDuration": 168,
+            "businessRationale": "AI sourcing identifies 3x more qualified candidates. Diverse slates lead to 35% better hiring outcomes.",
+            "substeps": [
+                {
+                    "substepName": "MultiChannelPosting",
+                    "duration": 48
+                },
+                {
+                    "substepName": "PassiveSourcing",
+                    "duration": 72
+                },
+                {
+                    "substepName": "DiversityTargeting",
+                    "duration": 48
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "ScreeningAndShortlisting",
+            "serviceName": "ScreeningService",
+            "description": "AI screens CVs against job requirements, skills, and culture fit indicators. Bias-mitigated scoring ensures fair evaluation. Top candidates shortlisted for interviews.",
+            "category": "Assessment",
+            "estimatedDuration": 24,
+            "businessRationale": "AI screening reduces time-to-shortlist from 2 weeks to 2 days. Consistent, bias-aware scoring improves quality of hire.",
+            "substeps": [
+                {
+                    "substepName": "CVParsing",
+                    "duration": 8
+                },
+                {
+                    "substepName": "SkillMatching",
+                    "duration": 8
+                },
+                {
+                    "substepName": "BiasAudit",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "InterviewProcess",
+            "serviceName": "InterviewService",
+            "description": "AI schedules interviews, generates role-specific question banks, and provides interviewer scoring frameworks. Structured interviews with AI-assisted debrief analysis.",
+            "category": "Evaluation",
+            "estimatedDuration": 168,
+            "businessRationale": "Structured interviews predict job performance 2x better than unstructured. AI scheduling eliminates 80% of coordination overhead.",
+            "substeps": [
+                {
+                    "substepName": "Scheduling",
+                    "duration": 24
+                },
+                {
+                    "substepName": "QuestionGeneration",
+                    "duration": 48
+                },
+                {
+                    "substepName": "ScoringFramework",
+                    "duration": 96
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "OfferManagement",
+            "serviceName": "OfferService",
+            "description": "AI generates competitive offer packages. Counter-offer probability predicted. Negotiation guidance provided. Offer acceptance tracked with pipeline analytics.",
+            "category": "Closing",
+            "estimatedDuration": 48,
+            "businessRationale": "AI-optimised offers improve acceptance rate from 75% to 90%. Each declined offer wastes $5K-15K in recruitment costs and restarts the process.",
+            "substeps": [
+                {
+                    "substepName": "OfferGeneration",
+                    "duration": 16
+                },
+                {
+                    "substepName": "NegotiationGuidance",
+                    "duration": 16
+                },
+                {
+                    "substepName": "AcceptanceTracking",
+                    "duration": 16
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "OnboardingHandoff",
+            "serviceName": "OnboardingService",
+            "description": "AI generates personalised onboarding plan: documentation, equipment, training schedule, buddy assignment, and 90-day goals. New hire engagement tracked.",
+            "category": "Transition",
+            "estimatedDuration": 240,
+            "businessRationale": "Structured onboarding improves new hire retention by 82% and productivity ramp by 50%. Poor onboarding is the #1 cause of early attrition.",
+            "substeps": [
+                {
+                    "substepName": "DocumentSetup",
+                    "duration": 48
+                },
+                {
+                    "substepName": "TrainingPlan",
+                    "duration": 96
+                },
+                {
+                    "substepName": "BuddyAssignment",
+                    "duration": 96
+                }
+            ]
+        }
+    ],
+    "id": "b29bc684-296e-4e94-9b3a-f0e758fa4f67",
+    "name": "Human Resources & HRTech - Talent Acquisition",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 500000,
+        "annualRevenue": 20000000,
+        "revenuePerCustomer": 150000,
+        "profitMargin": 25.0,
+        "customerLifetimeValue": 1200000,
+        "lifetimeValue": 1200000,
+        "acquisitionCost": 8500,
+        "costPerAcquisition": 8500,
+        "conversionProbability": 0.35,
+        "conversionRate": 35,
+        "engagementScore": 75,
+        "timeToConversion": 5040,
+        "sessionDuration": 1200,
+        "pageViews": 8,
+        "purchaseFrequency": 12,
+        "netPromoterScore": 42,
+        "satisfactionRating": 4.0,
+        "retentionProbability": 0.85,
+        "processingTime": 10080,
+        "operationalCost": 6500,
+        "efficiencyRating": 72,
+        "timeToHire": 35,
+        "costPerHire": 4200,
+        "channel": [
+            "careers_site",
+            "linkedin",
+            "indeed",
+            "referral_portal",
+            "university_portal"
+        ],
+        "deviceType": [
+            "desktop",
+            "mobile",
+            "mobile",
+            "desktop",
+            "mobile"
+        ],
+        "region": [
+            "San Francisco",
+            "London",
+            "Berlin",
+            "Singapore",
+            "Bangalore"
+        ],
+        "customerSegmentValue": [
+            "engineering",
+            "sales",
+            "operations",
+            "executive",
+            "graduate"
+        ],
+        "loyaltyTier": [
+            "Executive",
+            "Senior",
+            "Mid-Level",
+            "Junior",
+            "Intern"
+        ],
+        "segment": [
+            "tech_hiring",
+            "sales_hiring",
+            "executive_search",
+            "graduate_programme",
+            "contract"
+        ],
+        "Productname": [
+            "Full Recruitment Cycle",
+            "Executive Search Retainer",
+            "Graduate Programme",
+            "Contract Staffing",
+            "RPO Service"
+        ],
+        "ProductId": [
+            "HR-FC-001",
+            "HR-ES-002",
+            "HR-GP-003",
+            "HR-CS-004",
+            "HR-RP-005"
+        ],
+        "ProductType": [
+            "permanent",
+            "executive",
+            "graduate",
+            "contract",
+            "outsourced"
+        ],
+        "Price": [
+            8500,
+            45000,
+            3500,
+            5000,
+            120000
+        ],
+        "applicationToHire": [
+            0.02,
+            0.08,
+            0.05,
+            0.1,
+            0.015
+        ],
+        "offerAcceptance": [
+            0.85,
+            0.9,
+            0.95,
+            0.92,
+            0.88
+        ],
+        "marketTrend": [
+            "AI_screening",
+            "skills_based_hiring",
+            "internal_mobility",
+            "DEI_analytics",
+            "candidate_experience"
+        ]
+    }
+}

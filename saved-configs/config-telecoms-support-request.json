@@ -1,0 +1,257 @@
+{
+    "companyName": "Telecommunications",
+    "domain": "https://www.telecoms-demo.com",
+    "industryType": "Telecommunications",
+    "journeyType": "Support Request",
+    "journeyDetail": "Support Request",
+    "journeyId": "journey_telecoms_support_request",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "IssueClassification",
+            "serviceName": "IssueClassificationService",
+            "description": "AI classifies support requests from calls, chat, app, and social media. Natural language understanding extracts issue type, severity, account context, and sentiment. Routes to optimal resolution channel.",
+            "category": "Intake",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 1,
+            "businessRationale": "AI classification reduces average handling time by 30 seconds and misrouting by 60%. Correct first-contact routing saves \u00a33 per interaction in transfer costs.",
+            "substeps": [
+                {
+                    "substepName": "NLPClassification",
+                    "duration": 0
+                },
+                {
+                    "substepName": "PriorityRouting",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "AutomatedDiagnostics",
+            "serviceName": "AutomatedDiagnosticsService",
+            "description": "AI runs automated network diagnostics: signal strength analysis, tower utilization check, device compatibility verification, account status review, and known-issue correlation. Resolves 40% of issues without agent.",
+            "category": "Diagnostics",
+            "estimatedDuration": 3,
+            "businessRationale": "Automated diagnostics resolve 40% of issues at \u00a30.50 each vs \u00a38 for agent-handled. Self-service resolution also scores higher on customer satisfaction.",
+            "substeps": [
+                {
+                    "substepName": "NetworkDiagnostic",
+                    "duration": 1
+                },
+                {
+                    "substepName": "AccountReview",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "AgentAssist",
+            "serviceName": "AgentAssistService",
+            "description": "AI assists human agents with real-time suggestions: recommended actions, similar case resolutions, customer history context, and next-best-action guidance. Surfaces relevant knowledge base articles automatically.",
+            "category": "Support",
+            "estimatedDuration": 8,
+            "businessRationale": "AI agent assist reduces average handling time by 25% and improves first-call resolution by 15%. New agents reach proficiency 3x faster with AI guidance.",
+            "substeps": [
+                {
+                    "substepName": "ContextSummary",
+                    "duration": 1
+                },
+                {
+                    "substepName": "ResolutionGuidance",
+                    "duration": 7
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "NetworkRemediation",
+            "serviceName": "NetworkRemediationService",
+            "description": "For network issues: AI coordinates with NOC for tower resets, congestion mitigation, signal optimization, and coverage complaint investigation. Tracks remediation through to customer confirmation.",
+            "category": "Remediation",
+            "estimatedDuration": 60,
+            "businessRationale": "Coordinated network remediation resolves coverage complaints 50% faster. Proactive issue linking prevents duplicate tickets, saving \u00a3200K monthly in redundant investigations.",
+            "substeps": [
+                {
+                    "substepName": "NOCCoordination",
+                    "duration": 30
+                },
+                {
+                    "substepName": "RemediationTracking",
+                    "duration": 30
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "BillingResolution",
+            "serviceName": "BillingResolutionService",
+            "description": "AI handles billing disputes: usage verification, charge explanation, credit calculation, plan adjustment, and payment arrangement setup. Automates standard adjustments within policy guardrails.",
+            "category": "Billing",
+            "estimatedDuration": 10,
+            "businessRationale": "AI billing resolution reduces escalations by 45% and credits given by 20% through accurate usage explanation. Faster resolution prevents churn-inducing billing frustration.",
+            "substeps": [
+                {
+                    "substepName": "UsageVerification",
+                    "duration": 4
+                },
+                {
+                    "substepName": "CreditAdjustment",
+                    "duration": 6
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "SatisfactionFollowUp",
+            "serviceName": "SatisfactionFollowUpService",
+            "description": "AI sends post-resolution satisfaction survey, analyses feedback, identifies recurring issues for product improvement, and triggers proactive outreach for at-risk customers with unresolved dissatisfaction.",
+            "category": "FollowUp",
+            "estimatedDuration": 1440,
+            "businessRationale": "Post-resolution follow-up reduces repeat contacts by 18% and identifies churn-risk customers for proactive retention. Each saved customer is worth \u00a32,400 in lifetime value.",
+            "substeps": [
+                {
+                    "substepName": "SurveyAndAnalysis",
+                    "duration": 720
+                },
+                {
+                    "substepName": "RetentionOutreach",
+                    "duration": 720
+                }
+            ]
+        }
+    ],
+    "id": "8a9c3e85-b540-4e1d-945b-04efa8bd3884",
+    "name": "Telecommunications - Support Request",
+    "timestamp": "2026-03-18T21:35:20.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 0,
+        "annualRevenue": 0,
+        "revenuePerCustomer": 0,
+        "profitMargin": 0,
+        "customerLifetimeValue": 2400,
+        "lifetimeValue": 2400,
+        "acquisitionCost": 0,
+        "costPerAcquisition": 0,
+        "conversionProbability": 0.4,
+        "conversionRate": 40,
+        "engagementScore": 55,
+        "timeToConversion": 0,
+        "sessionDuration": 12,
+        "pageViews": 5,
+        "purchaseFrequency": 0,
+        "netPromoterScore": 22,
+        "satisfactionRating": 3.4,
+        "retentionProbability": 0.85,
+        "processingTime": 8,
+        "operationalCost": 8,
+        "efficiencyRating": 72,
+        "discountApplied": 0,
+        "taxAmount": 0,
+        "shippingCost": 0,
+        "channel": [
+            "call_centre",
+            "live_chat",
+            "mobile_app",
+            "social_media",
+            "retail_store"
+        ],
+        "deviceType": [
+            "phone",
+            "mobile",
+            "desktop",
+            "mobile",
+            "in_store"
+        ],
+        "region": [
+            "Urban",
+            "Suburban",
+            "Rural",
+            "Metro",
+            "Regional"
+        ],
+        "customerSegmentValue": [
+            "consumer",
+            "small_business",
+            "enterprise",
+            "prepaid",
+            "senior"
+        ],
+        "loyaltyTier": [
+            "new_customer",
+            "bronze",
+            "silver",
+            "gold",
+            "platinum"
+        ],
+        "segment": [
+            "connectivity_issue",
+            "billing_query",
+            "plan_change",
+            "device_support",
+            "cancellation"
+        ],
+        "Productname": [
+            "NetworkDiag",
+            "BillingExplainer",
+            "PlanAdvisor",
+            "DeviceSetup",
+            "RetentionOffer"
+        ],
+        "ProductId": [
+            "SUP-NET-001",
+            "SUP-BIL-002",
+            "SUP-PLN-003",
+            "SUP-DEV-004",
+            "SUP-RET-005"
+        ],
+        "ProductType": [
+            "diagnostic",
+            "billing",
+            "advisory",
+            "technical",
+            "retention"
+        ],
+        "Price": [
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "issueCategory": [
+            "network",
+            "billing",
+            "plan_change",
+            "device",
+            "cancellation"
+        ],
+        "resolutionTime": [
+            12,
+            8,
+            5,
+            15,
+            20
+        ],
+        "firstContactResolution": [
+            72,
+            85,
+            92,
+            65,
+            45
+        ],
+        "marketTrend": [
+            "ai_chatbot",
+            "proactive_support",
+            "visual_ivr",
+            "social_care",
+            "self_service"
+        ]
+    }
+}

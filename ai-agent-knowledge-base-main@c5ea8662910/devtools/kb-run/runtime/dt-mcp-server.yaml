@@ -1,0 +1,30 @@
+# Runtime config contract file: runtime/<runtime>.yaml
+# Runtime identity comes from this filename: dt-mcp-server.yaml
+
+# Arbitrary aimgr resources to inject for this runtime.
+resources:
+  - skill/self-reflection
+
+# Runtime-specific configuration section (optional).
+# Keep this schema generic (MCP/server-centric) and let runtime code render
+# into client-specific output (OpenCode first, others later).
+# All string values support env interpolation:
+# - ${VAR_NAME}              required, fails if unset/missing
+# - ${VAR_NAME:-default}     optional with default fallback
+#
+# dt-mcp-server also injects tenant metadata from the selected dtctl context:
+# - ${TENANT} or ${KB_RUN_DTCTL_TENANT}            tenant identifier from hostname
+# - ${DT_TENANT_URL} or ${KB_RUN_DTCTL_TENANT_URL} full Environment URL
+# - ${KB_RUN_DTCTL_TENANT_HOST}                    full hostname from Environment URL
+# - ${TOKEN}                                       bearer token from env or dtctl keyring
+#
+# Prefer DT_TENANT_URL when constructing Dynatrace-managed MCP gateway URLs so
+# dev/prod domain variants are inherited directly from the selected dtctl context.
+dt-mcp-server:
+  mcp:
+    servers:
+      dt-mcp:
+        transport: http
+        url: ${DT_TENANT_URL}/platform-reserved/mcp-gateway/v0.1/servers/dynatrace-mcp/mcp
+        headers:
+          Authorization: Bearer ${TOKEN}

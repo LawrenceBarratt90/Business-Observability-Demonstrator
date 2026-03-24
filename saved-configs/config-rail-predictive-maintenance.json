@@ -1,0 +1,273 @@
+{
+    "companyName": "RailTech Systems",
+    "domain": "https://www.railtech-systems.com",
+    "industryType": "Rail & Transit",
+    "journeyType": "Predictive Maintenance",
+    "journeyDetail": "AI-Powered Rail Infrastructure Predictive Maintenance",
+    "journeyId": "journey_predictive_maintenance_2de96682",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "AssetMonitoring",
+            "serviceName": "AssetMonitorService",
+            "description": "AI monitors rail assets from track-side sensors, onboard diagnostics, measurement trains, and drone inspections. Track geometry, rail wear, signalling health, and rolling stock vibration.",
+            "category": "Monitoring",
+            "estimatedDuration": 0.01,
+            "businessRationale": "Rail infrastructure failures cause delays costing $1M+ per incident. Continuous monitoring catches degradation that periodic inspections miss.",
+            "substeps": [
+                {
+                    "substepName": "TrackGeometry",
+                    "duration": 0.003
+                },
+                {
+                    "substepName": "RailWearSensors",
+                    "duration": 0.003
+                },
+                {
+                    "substepName": "SignallingHealth",
+                    "duration": 0.004
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "DegradationModelling",
+            "serviceName": "DegradationModelService",
+            "description": "AI models asset degradation curves: rail fatigue, sleeper deterioration, ballast settlement, and points mechanism wear. Remaining useful life estimation per asset.",
+            "category": "Prediction",
+            "estimatedDuration": 168,
+            "businessRationale": "Understanding degradation rates enables optimal intervention timing: too early wastes money, too late causes failures and delays.",
+            "substeps": [
+                {
+                    "substepName": "RailFatigueModelling",
+                    "duration": 56
+                },
+                {
+                    "substepName": "SleeperDeterioration",
+                    "duration": 56
+                },
+                {
+                    "substepName": "PointsMechanismWear",
+                    "duration": 56
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "MaintenancePlanning",
+            "serviceName": "MaintenancePlanService",
+            "description": "AI generates maintenance plans: work bank prioritisation, possession window optimisation, and resource allocation. Integration with timetable to minimise passenger disruption.",
+            "category": "Planning",
+            "estimatedDuration": 24,
+            "businessRationale": "Track possessions (maintenance windows) cost $10K-100K per hour in lost capacity. AI planning reduces possession duration by 20-30%.",
+            "substeps": [
+                {
+                    "substepName": "WorkBankPrioritisation",
+                    "duration": 8
+                },
+                {
+                    "substepName": "PossessionOptimization",
+                    "duration": 8
+                },
+                {
+                    "substepName": "ResourceAllocation",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "WorkExecution",
+            "serviceName": "WorkExecService",
+            "description": "AI guides maintenance teams: real-time work progress tracking, quality verification, and safety compliance. Digital work instructions and competency matching for specialist tasks.",
+            "category": "Operations",
+            "estimatedDuration": 8,
+            "businessRationale": "Quality assurance during maintenance prevents repeat failures. Digital tracking ensures compliance with railway safety standards.",
+            "substeps": [
+                {
+                    "substepName": "WorkTracking",
+                    "duration": 3
+                },
+                {
+                    "substepName": "QualityVerification",
+                    "duration": 3
+                },
+                {
+                    "substepName": "SafetyCompliance",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "PerformanceVerification",
+            "serviceName": "PerfVerifyService",
+            "description": "AI validates maintenance effectiveness: before/after sensor comparison, speed restriction removal tracking, and fault recurrence monitoring. Maintenance quality scoring.",
+            "category": "Verification",
+            "estimatedDuration": 24,
+            "businessRationale": "30% of maintenance interventions don't fully resolve the underlying issue. Post-maintenance verification catches these before they cause another failure.",
+            "substeps": [
+                {
+                    "substepName": "SensorComparison",
+                    "duration": 8
+                },
+                {
+                    "substepName": "SpeedRestrictionTracking",
+                    "duration": 8
+                },
+                {
+                    "substepName": "RecurrenceMonitoring",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "AssetLifecycleAnalytics",
+            "serviceName": "AssetAnalyticsService",
+            "description": "AI analyses total cost of ownership per asset type, renewal vs maintenance decision support, and capital programme prioritisation. 5-30 year asset management planning.",
+            "category": "Analytics",
+            "estimatedDuration": 720,
+            "businessRationale": "Rail infrastructure has 30-100 year lifecycles. AI-informed renewal decisions optimise $billions in capital expenditure across the network.",
+            "substeps": [
+                {
+                    "substepName": "TCOAnalysis",
+                    "duration": 240
+                },
+                {
+                    "substepName": "RenewalDecisionSupport",
+                    "duration": 240
+                },
+                {
+                    "substepName": "CapitalProgramming",
+                    "duration": 240
+                }
+            ]
+        }
+    ],
+    "id": "f65baa04-0a7f-413a-af30-9c3cadca3471",
+    "name": "Rail & Transit - Predictive Maintenance",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 500000000,
+        "annualRevenue": 15000000000,
+        "revenuePerCustomer": 0,
+        "profitMargin": 5.0,
+        "customerLifetimeValue": 0,
+        "lifetimeValue": 0,
+        "acquisitionCost": 0,
+        "costPerAcquisition": 0,
+        "conversionProbability": 1.0,
+        "conversionRate": 100,
+        "engagementScore": 85,
+        "timeToConversion": 0,
+        "sessionDuration": 28800,
+        "pageViews": 30,
+        "purchaseFrequency": 365,
+        "netPromoterScore": 0,
+        "satisfactionRating": 0,
+        "retentionProbability": 1.0,
+        "processingTime": 60,
+        "operationalCost": 2000000000,
+        "efficiencyRating": 75,
+        "networkReliability": 93.5,
+        "delayMinutesReduced": 2500000,
+        "channel": [
+            "SCADA_rail",
+            "mobile_field_app",
+            "engineering_portal",
+            "control_centre",
+            "drone_inspection"
+        ],
+        "deviceType": [
+            "HMI_panel",
+            "ruggedised_tablet",
+            "desktop",
+            "control_desk",
+            "UAV"
+        ],
+        "region": [
+            "UK Network Rail",
+            "Deutsche Bahn DE",
+            "SNCF France",
+            "JR East Japan",
+            "Indian Railways"
+        ],
+        "customerSegmentValue": [
+            "high_speed_line",
+            "commuter_suburban",
+            "freight_corridor",
+            "regional_line",
+            "metro_urban"
+        ],
+        "loyaltyTier": [
+            "Critical National",
+            "High Usage",
+            "Standard",
+            "Rural",
+            "Heritage"
+        ],
+        "segment": [
+            "track_infrastructure",
+            "signalling_systems",
+            "rolling_stock",
+            "stations",
+            "power_systems"
+        ],
+        "Productname": [
+            "Track Geometry AI Monitor",
+            "Points & Crossing Predictor",
+            "Signalling Health Suite",
+            "Rail Defect Detector",
+            "Overhead Line Monitor"
+        ],
+        "ProductId": [
+            "RAIL-TG-001",
+            "RAIL-PC-002",
+            "RAIL-SH-003",
+            "RAIL-RD-004",
+            "RAIL-OL-005"
+        ],
+        "ProductType": [
+            "track",
+            "switches",
+            "signalling",
+            "rail_defect",
+            "overhead_line"
+        ],
+        "Price": [
+            25000000,
+            15000000,
+            20000000,
+            10000000,
+            12000000
+        ],
+        "routeKmMonitored": [
+            30000,
+            15000,
+            30000,
+            30000,
+            12000
+        ],
+        "failureReduction": [
+            0.35,
+            0.4,
+            0.28,
+            0.32,
+            0.25
+        ],
+        "marketTrend": [
+            "digital_railway",
+            "autonomous_inspection",
+            "ERTMS_migration",
+            "hydrogen_rail",
+            "passenger_experience_AI"
+        ]
+    }
+}

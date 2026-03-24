@@ -1,0 +1,273 @@
+{
+    "companyName": "ImpactTech Foundation",
+    "domain": "https://www.impacttech-foundation.org",
+    "industryType": "Nonprofit & NGO",
+    "journeyType": "Donor Engagement",
+    "journeyDetail": "AI-Powered Donor Engagement & Fundraising",
+    "journeyId": "journey_donor_engagement_ecd00360",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "DonorIdentification",
+            "serviceName": "DonorIDService",
+            "description": "AI identifies prospective donors from wealth screening, philanthropic signals, cause alignment, and social network analysis. Major gift prospects scored and prioritised.",
+            "category": "Acquisition",
+            "estimatedDuration": 168,
+            "businessRationale": "Major gifts ($10K+) account for 80% of fundraising revenue from 20% of donors. AI identification expands the prospect pool by 3x.",
+            "substeps": [
+                {
+                    "substepName": "WealthScreening",
+                    "duration": 56
+                },
+                {
+                    "substepName": "CauseAlignment",
+                    "duration": 56
+                },
+                {
+                    "substepName": "ProspectScoring",
+                    "duration": 56
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "PersonalisedOutreach",
+            "serviceName": "OutreachService",
+            "description": "AI crafts personalised appeal messaging by donor segment: impact stories, programme updates, and giving opportunities matched to donor interests and communication preferences.",
+            "category": "Engagement",
+            "estimatedDuration": 48,
+            "businessRationale": "Personalised appeals generate 2.5x higher response rates. Generic mass emails have <1% response; targeted messaging achieves 5-8%.",
+            "substeps": [
+                {
+                    "substepName": "ImpactStoryCuration",
+                    "duration": 16
+                },
+                {
+                    "substepName": "SegmentMessaging",
+                    "duration": 16
+                },
+                {
+                    "substepName": "ChannelOptimization",
+                    "duration": 16
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "DonationProcessing",
+            "serviceName": "DonationService",
+            "description": "AI optimises donation flow: suggested amounts based on donor capacity, recurring giving nudges, matching gift identification, and Gift Aid/tax deduction automation.",
+            "category": "Transaction",
+            "estimatedDuration": 0.5,
+            "businessRationale": "Optimised donation pages increase average gift by 20%. Recurring giving provides predictable revenue with 90% retention vs 45% for one-time gifts.",
+            "substeps": [
+                {
+                    "substepName": "SmartAskAmounts",
+                    "duration": 0.2
+                },
+                {
+                    "substepName": "RecurringNudge",
+                    "duration": 0.15
+                },
+                {
+                    "substepName": "MatchingGiftDetection",
+                    "duration": 0.15
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "DonorStewardship",
+            "serviceName": "StewardshipService",
+            "description": "AI manages donor journey: thank-you timing, impact reporting, milestone recognition, and birthday/anniversary acknowledgement. Personalised stewardship cadence per donor tier.",
+            "category": "Retention",
+            "estimatedDuration": 720,
+            "businessRationale": "Donors who receive impact reports within 48 hours have 40% higher renewal rates. Stewardship is the #1 predictor of second gift.",
+            "substeps": [
+                {
+                    "substepName": "ThankYouAutomation",
+                    "duration": 240
+                },
+                {
+                    "substepName": "ImpactReporting",
+                    "duration": 240
+                },
+                {
+                    "substepName": "MilestoneRecognition",
+                    "duration": 240
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "GiftUpgrading",
+            "serviceName": "UpgradeService",
+            "description": "AI identifies upgrade opportunities based on giving history, wealth capacity, engagement signals, and life events. Ask amounts calibrated to maximise probability of increase.",
+            "category": "Growth",
+            "estimatedDuration": 168,
+            "businessRationale": "Upgrading existing donors is 3x more cost-effective than acquiring new ones. AI-calibrated asks improve upgrade rates from 8% to 15%.",
+            "substeps": [
+                {
+                    "substepName": "CapacityAnalysis",
+                    "duration": 56
+                },
+                {
+                    "substepName": "TimingOptimization",
+                    "duration": 56
+                },
+                {
+                    "substepName": "AskCalibration",
+                    "duration": 56
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "FundraisingAnalytics",
+            "serviceName": "FundraisingAnalyticsService",
+            "description": "AI analyses campaign performance, donor lifetime value, cost per dollar raised, and channel effectiveness. Board reporting with trend analysis and forecast.",
+            "category": "Analytics",
+            "estimatedDuration": 168,
+            "businessRationale": "Data-driven nonprofits raise 30% more per dollar invested. Board-level analytics justify fundraising investment and strategy.",
+            "substeps": [
+                {
+                    "substepName": "CampaignPerformance",
+                    "duration": 56
+                },
+                {
+                    "substepName": "DonorLTVAnalysis",
+                    "duration": 56
+                },
+                {
+                    "substepName": "BoardReporting",
+                    "duration": 56
+                }
+            ]
+        }
+    ],
+    "id": "5d564a29-e078-4042-a6af-47e92930e470",
+    "name": "Nonprofit & NGO - Donor Engagement",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 150,
+        "transactionValue": 150,
+        "averageOrderValue": 250,
+        "contractValue": 0,
+        "annualRevenue": 50000000,
+        "revenuePerCustomer": 500,
+        "profitMargin": 0,
+        "customerLifetimeValue": 5000,
+        "lifetimeValue": 5000,
+        "acquisitionCost": 25,
+        "costPerAcquisition": 25,
+        "conversionProbability": 0.03,
+        "conversionRate": 3,
+        "engagementScore": 60,
+        "timeToConversion": 4320,
+        "sessionDuration": 300,
+        "pageViews": 5,
+        "purchaseFrequency": 3,
+        "netPromoterScore": 55,
+        "satisfactionRating": 4.4,
+        "retentionProbability": 0.45,
+        "processingTime": 10,
+        "operationalCost": 12,
+        "efficiencyRating": 75,
+        "donorRetentionRate": 45,
+        "costPerDollarRaised": 0.15,
+        "channel": [
+            "email_appeal",
+            "direct_mail",
+            "website",
+            "social_media",
+            "event_fundraising"
+        ],
+        "deviceType": [
+            "desktop",
+            "paper",
+            "mobile",
+            "mobile",
+            "in_person"
+        ],
+        "region": [
+            "US",
+            "UK",
+            "Canada",
+            "Australia",
+            "EU"
+        ],
+        "customerSegmentValue": [
+            "major_donor",
+            "mid_level_donor",
+            "recurring_donor",
+            "one_time_donor",
+            "legacy_prospect"
+        ],
+        "loyaltyTier": [
+            "Founder Circle",
+            "Champion",
+            "Partner",
+            "Supporter",
+            "Friend"
+        ],
+        "segment": [
+            "individual_giving",
+            "corporate_partnership",
+            "foundation_grant",
+            "event_fundraising",
+            "legacy_giving"
+        ],
+        "Productname": [
+            "Clean Water Programme",
+            "Education Initiative",
+            "Health Clinic Build",
+            "Emergency Response Fund",
+            "Climate Action Campaign"
+        ],
+        "ProductId": [
+            "NPO-CW-001",
+            "NPO-EI-002",
+            "NPO-HC-003",
+            "NPO-ER-004",
+            "NPO-CA-005"
+        ],
+        "ProductType": [
+            "programme_support",
+            "restricted_fund",
+            "capital_campaign",
+            "emergency",
+            "advocacy"
+        ],
+        "Price": [
+            25,
+            50,
+            500,
+            100,
+            250
+        ],
+        "impactPerDollar": [
+            4.5,
+            3.2,
+            2.8,
+            6.0,
+            1.5
+        ],
+        "donorRecurrence": [
+            0.45,
+            0.55,
+            0.3,
+            0.15,
+            0.65
+        ],
+        "marketTrend": [
+            "monthly_giving_growth",
+            "donor_advised_funds",
+            "impact_investing",
+            "AI_fundraising",
+            "peer_to_peer"
+        ]
+    }
+}

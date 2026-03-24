@@ -1,0 +1,266 @@
+{
+    "companyName": "Real Estate",
+    "domain": "https://www.realestate-hub.com",
+    "industryType": "Real Estate & Property",
+    "source": "sector-demo",
+    "timestamp": "2026-01-09T15:25:00.000Z",
+    "journeyType": "Property Search & Viewing",
+    "journeyDetail": "Property Search & Viewing Journey",
+    "journeyId": "journey_realestate_search_2026",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "id": "a1b2c3d4-5555-4aaa-b555-000000000001",
+    "name": "Real Estate - Property Search & Viewing",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "RequirementsCapture",
+            "serviceName": "RequirementsCaptureService",
+            "description": "Buyer or renter specifies property requirements: location, budget, bedrooms, property type, and must-have features. Agent profile created with saved search criteria and alert preferences.",
+            "category": "Discovery",
+            "estimatedDuration": 20,
+            "businessRationale": "Precise requirement capture reduces average search time from 12 weeks to 7 weeks. Agents matching >80% of criteria on first shortlist see 2x higher client retention.",
+            "substeps": [
+                {
+                    "substepName": "BudgetAndLocationPreferences",
+                    "duration": 10
+                },
+                {
+                    "substepName": "PropertyFeatureAndAlertSetup",
+                    "duration": 10
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "PropertyShortlisting",
+            "serviceName": "PropertyShortlistingService",
+            "description": "AI-powered matching engine scores available listings against buyer criteria. Market comparables, price history, and neighbourhood analytics presented. Virtual tour links provided for initial screening before in-person viewings.",
+            "category": "Selection",
+            "estimatedDuration": 30,
+            "businessRationale": "Curated shortlists of 5-8 properties convert 3x better than open search. Virtual pre-screening reduces wasted viewings by 40%, saving agent and buyer time.",
+            "substeps": [
+                {
+                    "substepName": "AIMatchingAndScoring",
+                    "duration": 15
+                },
+                {
+                    "substepName": "VirtualTourPreScreening",
+                    "duration": 15
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "ViewingScheduling",
+            "serviceName": "ViewingSchedulingService",
+            "description": "Buyer selects properties for in-person viewing. Calendar integration coordinates buyer, selling agent, and property access. Route-optimised viewing itinerary created for multiple properties in a single trip.",
+            "category": "Scheduling",
+            "estimatedDuration": 15,
+            "businessRationale": "Efficient scheduling increases viewings per trip from 2 to 5. Automated confirmations reduce no-shows from 20% to 5%. Each viewing costs the agency ~$75 in agent time.",
+            "substeps": [
+                {
+                    "substepName": "CalendarCoordinationAndConfirm",
+                    "duration": 10
+                },
+                {
+                    "substepName": "RouteOptimisedItinerary",
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "PropertyViewing",
+            "serviceName": "PropertyViewingService",
+            "description": "Agent conducts property viewing with structured checklist: condition assessment, neighbourhood overview, renovation potential. Buyer feedback captured in-app for each property. Photos and notes recorded for later comparison.",
+            "category": "Viewing",
+            "estimatedDuration": 60,
+            "businessRationale": "Structured viewings with immediate feedback capture improve buyer decision confidence. Properties where agents provide neighbourhood insights sell 15% faster.",
+            "substeps": [
+                {
+                    "substepName": "GuidedPropertyTourAndChecklist",
+                    "duration": 40
+                },
+                {
+                    "substepName": "FeedbackCaptureAndPhotoLog",
+                    "duration": 20
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "ComparisonAndValuation",
+            "serviceName": "ComparisonAndValuationService",
+            "description": "Buyer reviews shortlisted properties side-by-side. Automated valuation model (AVM) provides estimated fair market value. Recent comparable sales, price per square foot, and rental yield data presented for investment buyers.",
+            "category": "Analysis",
+            "estimatedDuration": 25,
+            "businessRationale": "Data-driven comparison reduces offer-to-acceptance negotiation rounds from 3 to 1.5 on average. Accurate AVMs within 5% of sale price build buyer confidence to make offers.",
+            "substeps": [
+                {
+                    "substepName": "SideBySidePropertyComparison",
+                    "duration": 15
+                },
+                {
+                    "substepName": "AVMAndComparableSalesAnalysis",
+                    "duration": 10
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "OfferPreparation",
+            "serviceName": "OfferPreparationService",
+            "description": "Buyer decides on preferred property and prepares formal offer. Agent advises on offer strategy based on market conditions, days on market, and seller motivation. Offer document generated with conditions, settlement terms, and deposit amount.",
+            "category": "Offer",
+            "estimatedDuration": 30,
+            "businessRationale": "Well-crafted initial offers are accepted 35% of the time vs 15% for poorly positioned offers. Agent offer coaching increases average commission realisation by $2,500 per transaction.",
+            "substeps": [
+                {
+                    "substepName": "OfferStrategyAndPricing",
+                    "duration": 15
+                },
+                {
+                    "substepName": "OfferDocumentGeneration",
+                    "duration": 15
+                }
+            ]
+        }
+    ],
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 0,
+        "annualRevenue": 0,
+        "revenuePerCustomer": 8500,
+        "profitMargin": 0,
+        "customerLifetimeValue": 25000,
+        "lifetimeValue": 25000,
+        "acquisitionCost": 350,
+        "conversionProbability": 0.15,
+        "conversionRate": 15,
+        "engagementScore": 85,
+        "timeToConversion": 86400,
+        "sessionDuration": 1500,
+        "pageViews": 55,
+        "netPromoterScore": 38,
+        "satisfactionRating": 3.9,
+        "retentionProbability": 0.62,
+        "processingTime": 600,
+        "operationalCost": 125,
+        "efficiencyRating": 58,
+        "complianceScore": 90,
+        "channel": [
+            "property_portal",
+            "estate_agent_website",
+            "mobile_app",
+            "social_media_ad",
+            "branch_walk_in"
+        ],
+        "deviceType": [
+            "mobile",
+            "desktop",
+            "mobile",
+            "mobile",
+            "desktop"
+        ],
+        "region": [
+            "London",
+            "Southeast",
+            "Northwest",
+            "Midlands",
+            "Scotland"
+        ],
+        "customerSegmentValue": [
+            "first_time_buyer",
+            "upsizer",
+            "downsizer",
+            "investor",
+            "relocator"
+        ],
+        "loyaltyTier": [
+            "Standard",
+            "Premium",
+            "VIP",
+            "Investor Club",
+            "Relocator Package"
+        ],
+        "segment": [
+            "house_search",
+            "flat_search",
+            "new_build",
+            "auction_property",
+            "rental_search"
+        ],
+        "Productname": [
+            "3-Bed Semi-Detached",
+            "2-Bed City Centre Flat",
+            "4-Bed New Build Detached",
+            "Auction Commercial Unit",
+            "1-Bed Rental Apartment"
+        ],
+        "ProductId": [
+            "RE-PR-001",
+            "RE-PR-002",
+            "RE-PR-003",
+            "RE-PR-004",
+            "RE-PR-005"
+        ],
+        "ProductType": [
+            "semi_detached",
+            "flat",
+            "new_build",
+            "commercial",
+            "rental"
+        ],
+        "Price": [
+            350000,
+            275000,
+            485000,
+            180000,
+            1200
+        ],
+        "bedrooms": [
+            3,
+            2,
+            4,
+            0,
+            1
+        ],
+        "propertyType": [
+            "semi_detached",
+            "apartment",
+            "detached",
+            "retail_unit",
+            "apartment"
+        ],
+        "viewingsBooked": [
+            3,
+            5,
+            2,
+            1,
+            4
+        ],
+        "savedProperties": [
+            12,
+            8,
+            5,
+            3,
+            15
+        ],
+        "alertsSetUp": [
+            true,
+            true,
+            true,
+            false,
+            true
+        ],
+        "marketTrend": [
+            "proptech_vr_tours",
+            "green_mortgages",
+            "build_to_rent",
+            "auction_online",
+            "co_living"
+        ]
+    }
+}

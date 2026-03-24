@@ -1,0 +1,257 @@
+{
+    "companyName": "Environmental",
+    "domain": "https://www.esg-demo.com",
+    "industryType": "Environmental & ESG",
+    "journeyType": "ESG Reporting",
+    "journeyDetail": "ESG Reporting",
+    "journeyId": "journey_esg_esg_reporting",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "ESGDataAggregation",
+            "serviceName": "ESGDataAggregationService",
+            "description": "AI aggregates ESG data from across the enterprise: environmental metrics (energy, water, waste), social data (diversity, safety, training), and governance indicators (board composition, ethics, compliance).",
+            "category": "DataCollection",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 120,
+            "businessRationale": "Automated ESG data aggregation reduces collection effort by 75%. Comprehensive data from 50+ internal systems ensures no material ESG topics are under-reported.",
+            "substeps": [
+                {
+                    "substepName": "EnvironmentalData",
+                    "duration": 40
+                },
+                {
+                    "substepName": "SocialGovernanceData",
+                    "duration": 80
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "MaterialityAssessment",
+            "serviceName": "MaterialityAssessmentService",
+            "description": "AI performs double materiality assessment: analyses stakeholder surveys, peer benchmarks, regulatory requirements, and media sentiment to identify material ESG topics. Maps topics to GRI, SASB, and CSRD standards.",
+            "category": "Assessment",
+            "estimatedDuration": 60,
+            "businessRationale": "AI materiality assessment identifies emerging risks 12 months earlier than annual reviews. CSRD-compliant double materiality meets upcoming EU regulatory requirements.",
+            "substeps": [
+                {
+                    "substepName": "StakeholderAnalysis",
+                    "duration": 30
+                },
+                {
+                    "substepName": "TopicPrioritization",
+                    "duration": 30
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "PerformanceBenchmarking",
+            "serviceName": "PerformanceBenchmarkingService",
+            "description": "AI benchmarks ESG performance against industry peers, indices, and best practice: compares metrics across MSCI, Sustainalytics, CDP, and ISS ratings. Identifies gaps and improvement opportunities.",
+            "category": "Benchmarking",
+            "estimatedDuration": 30,
+            "businessRationale": "Peer benchmarking reveals competitive gaps that impact ESG ratings. A 1-point MSCI rating improvement correlates with 50bps lower cost of capital for large corporates.",
+            "substeps": [
+                {
+                    "substepName": "PeerComparison",
+                    "duration": 15
+                },
+                {
+                    "substepName": "GapAnalysis",
+                    "duration": 15
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "TargetTracking",
+            "serviceName": "TargetTrackingService",
+            "description": "AI tracks progress against ESG targets: net-zero pathways, diversity KPIs, safety incident rates, water reduction goals, and governance improvements. Alerts on targets at risk of being missed.",
+            "category": "Monitoring",
+            "estimatedDuration": 1440,
+            "businessRationale": "Proactive target tracking prevents year-end surprises. Early intervention on at-risk targets enables corrective action, maintaining credibility with investors and regulators.",
+            "substeps": [
+                {
+                    "substepName": "ProgressMonitoring",
+                    "duration": 720
+                },
+                {
+                    "substepName": "AlertGeneration",
+                    "duration": 720
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "RegulatoryMapping",
+            "serviceName": "RegulatoryMappingService",
+            "description": "AI maps ESG data to regulatory frameworks: CSRD/ESRS, SEC climate rules, UK Sustainability Disclosure Standards, TCFD, and voluntary frameworks (GRI, SASB, UN SDGs). Manages multi-framework reporting efficiently.",
+            "category": "Compliance",
+            "estimatedDuration": 60,
+            "businessRationale": "Multi-framework mapping reduces duplicate reporting effort by 60%. Regulatory compliance prevents fines and maintains licence to operate in increasingly regulated ESG landscape.",
+            "substeps": [
+                {
+                    "substepName": "FrameworkMapping",
+                    "duration": 30
+                },
+                {
+                    "substepName": "ComplianceValidation",
+                    "duration": 30
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "ESGReportGeneration",
+            "serviceName": "ESGReportGenerationService",
+            "description": "AI generates ESG reports: annual sustainability report, investor ESG questionnaires, regulatory filings, and board presentations. Includes data visualisations, narrative generation, and assurance-ready evidence trails.",
+            "category": "Reporting",
+            "estimatedDuration": 120,
+            "businessRationale": "Automated report generation saves \u00a3300K in consultant and agency fees. Assurance-ready data trails reduce external audit costs by 40% and improve report credibility.",
+            "substeps": [
+                {
+                    "substepName": "ReportDrafting",
+                    "duration": 60
+                },
+                {
+                    "substepName": "AssurancePrep",
+                    "duration": 60
+                }
+            ]
+        }
+    ],
+    "id": "8535acbf-edc9-472d-858c-d07cb48735c2",
+    "name": "Environmental & ESG - ESG Reporting",
+    "timestamp": "2026-03-18T21:35:20.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 200000,
+        "annualRevenue": 0,
+        "revenuePerCustomer": 0,
+        "profitMargin": 0,
+        "customerLifetimeValue": 0,
+        "lifetimeValue": 0,
+        "acquisitionCost": 0,
+        "costPerAcquisition": 0,
+        "conversionProbability": 0.88,
+        "conversionRate": 88,
+        "engagementScore": 80,
+        "timeToConversion": 0,
+        "sessionDuration": 90,
+        "pageViews": 0,
+        "purchaseFrequency": 4,
+        "netPromoterScore": 0,
+        "satisfactionRating": 0,
+        "retentionProbability": 0.9,
+        "processingTime": 120,
+        "operationalCost": 120000,
+        "efficiencyRating": 75,
+        "discountApplied": 0,
+        "taxAmount": 0,
+        "shippingCost": 0,
+        "channel": [
+            "platform",
+            "api",
+            "consultant_portal",
+            "board_portal",
+            "investor_portal"
+        ],
+        "deviceType": [
+            "desktop",
+            "desktop",
+            "laptop",
+            "tablet",
+            "mobile"
+        ],
+        "region": [
+            "UK",
+            "EU",
+            "US",
+            "Asia-Pacific",
+            "Global"
+        ],
+        "customerSegmentValue": [
+            "ftse100",
+            "ftse250",
+            "private_equity",
+            "public_sector",
+            "sme"
+        ],
+        "loyaltyTier": [
+            "starter",
+            "professional",
+            "enterprise",
+            "strategic",
+            "advisory_board"
+        ],
+        "segment": [
+            "environmental",
+            "social",
+            "governance",
+            "integrated",
+            "regulatory"
+        ],
+        "Productname": [
+            "ESG_DataHub",
+            "Materiality_Engine",
+            "BenchmarkTracker",
+            "CSRD_Reporter",
+            "InvestorPortal"
+        ],
+        "ProductId": [
+            "ESGR-HUB-001",
+            "ESGR-MAT-002",
+            "ESGR-BEN-003",
+            "ESGR-CSR-004",
+            "ESGR-INV-005"
+        ],
+        "ProductType": [
+            "data_management",
+            "assessment",
+            "benchmarking",
+            "compliance",
+            "reporting"
+        ],
+        "Price": [
+            80000,
+            40000,
+            30000,
+            50000,
+            25000
+        ],
+        "esgRating": [
+            "A",
+            "BBB",
+            "AA",
+            "B",
+            "AAA"
+        ],
+        "frameworksCovered": [
+            5,
+            3,
+            8,
+            2,
+            10
+        ],
+        "dataPointsManaged": [
+            500,
+            200,
+            800,
+            150,
+            1200
+        ],
+        "marketTrend": [
+            "csrd_compliance",
+            "double_materiality",
+            "ai_esg_analytics",
+            "biodiversity_reporting",
+            "social_taxonomy"
+        ]
+    }
+}

@@ -1,0 +1,117 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: bitbucket-pr
+  namespace: internal
+  title: Bitbucket PR Skill
+  description: >
+    Skill for creating and managing Bitbucket pull requests — covers PR
+    creation, review comments, approval workflows, and merge operations.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace-internal-dev/skills/bitbucket-pr
+spec:
+  type: ai-skill
+  lifecycle: experimental
+  owner: capability/data-intelligence
+  system: third-party/bitbucket
+  product-architect: user:default/hans.kohlreiter
+  product-manager: user:default/wolfgang.beer
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dt-dev-skill-creator
+  namespace: internal
+  title: Dynatrace Skill Creator
+  description: >
+    Internal tooling skill for creating, validating, and managing Dynatrace
+    AI skills — structural validation, quality checks, and asset registry
+    management specific to the dt-<domain>-<name> convention.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace-internal-dev/skills/dt-dev-skill-creator
+spec:
+  type: ai-skill
+  lifecycle: experimental
+  owner: capability/data-intelligence
+  system: default/ai-agent-knowledge-base
+  product-architect: user:default/hans.kohlreiter
+  product-manager: user:default/wolfgang.beer
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: fix-documentation
+  namespace: internal
+  title: Fix Documentation Skill
+  description: >
+    Documentation repair skill — fixes typos, grammar, and clarity in single
+    files or synchronizes project-wide documentation across README.md,
+    CONTRIBUTING.md, and AGENTS.md.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace-internal-dev/skills/fix-documentation
+spec:
+  type: ai-skill
+  lifecycle: experimental
+  owner: capability/data-intelligence
+  system: default/ai-agent-knowledge-base
+  product-architect: user:default/hans.kohlreiter
+  product-manager: user:default/wolfgang.beer
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: observability-triage
+  namespace: internal
+  title: Observability Triage Skill
+  description: >
+    Monitoring data analysis and issue triage skill — analyzes logs, metrics,
+    spans, events, and RUM data to detect and triage issues into actionable
+    work items.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace-internal-dev/skills/observability-triage
+spec:
+  type: ai-skill
+  lifecycle: experimental
+  owner: capability/data-intelligence
+  system: default/ai-agent-knowledge-base
+  product-architect: user:default/hans.kohlreiter
+  product-manager: user:default/wolfgang.beer
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: self-reflection
+  namespace: internal
+  title: Self-Reflection Skill
+  description: >
+    Agent introspection and analysis skill — enables AI agents to analyze
+    their own capabilities, loaded skills, and reasoning processes.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace-internal-dev/skills/self-reflection
+spec:
+  type: ai-skill
+  lifecycle: experimental
+  owner: capability/data-intelligence
+  system: default/ai-agent-knowledge-base
+  product-architect: user:default/hans.kohlreiter
+  product-manager: user:default/wolfgang.beer
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: skill-validator
+  namespace: internal
+  title: Skill Validator
+  description: >
+    Markdown validation framework for AI skill files — checks SKILL.md
+    structure, frontmatter schema, naming conventions, and link integrity.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace-internal-dev/skills/skill-validator
+spec:
+  type: ai-skill
+  lifecycle: experimental
+  owner: capability/data-intelligence
+  system: default/ai-agent-knowledge-base
+  product-architect: user:default/hans.kohlreiter
+  product-manager: user:default/wolfgang.beer

@@ -6,6 +6,7 @@ import { Button } from '@dynatrace/strato-components/buttons';
 import { TitleBar } from '@dynatrace/strato-components-preview/layouts';
 import { TextInput } from '@dynatrace/strato-components-preview/forms';
 import Colors from '@dynatrace/strato-design-tokens/colors';
+import { InfoButton } from '../components/InfoButton';
 import { queryExecutionClient } from '@dynatrace-sdk/client-query';
 
 const API_BASE = 'http://YOUR_SERVER_IP:8080/api';
@@ -138,7 +139,24 @@ export const FixItAgent = () => {
     <Page>
       <Page.Header>
         <TitleBar>
-          <TitleBar.Title>🔧 Fix-It Agent</TitleBar.Title>
+          <TitleBar.Title>
+            <Flex alignItems="center" gap={8}>
+              🔧 Fix-It Agent
+              <InfoButton
+                title="🔧 Fix-It Agent"
+                description="AI-powered autonomous problem detection, diagnosis, and remediation using Dynatrace Intelligence and Ollama LLM."
+                sections={[
+                  { label: '🔍 Check for Problems', detail: 'Query Dynatrace for active problems via DQL' },
+                  { label: '🔧 Fix It', detail: 'Run AI diagnosis on a specific problem — reads feature flags, analyzes root cause, and applies a fix' },
+                  { label: 'Manual Trigger', detail: 'Enter a Dynatrace problem ID to trigger Fix-It manually' },
+                  { label: '📋 Activity Log', detail: 'Timestamped log of all Fix-It actions: detect → diagnose → fix → verify' },
+                  { label: 'Librarian', detail: 'Operational memory — records all incidents and enables semantic search of past problems' },
+                ]}
+                footer="GenAI spans are created for every LLM call. View them in Dynatrace GenAI Observability."
+                color="#00a1c9"
+              />
+            </Flex>
+          </TitleBar.Title>
           <TitleBar.Subtitle>
             AI-powered autonomous problem remediation with Dynatrace Intelligence
             {lastCheck && ` · Last check: ${lastCheck.toLocaleTimeString()}`}

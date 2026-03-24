@@ -1,0 +1,273 @@
+{
+    "companyName": "ChargePoint Plus",
+    "domain": "https://www.chargepointplus.com",
+    "industryType": "Electric Vehicle & Charging",
+    "journeyType": "Fleet Charging",
+    "journeyDetail": "AI-Managed EV Fleet Charging Operations",
+    "journeyId": "journey_fleet_charging_c272271f",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "FleetScheduling",
+            "serviceName": "FleetScheduleService",
+            "description": "AI schedules when each fleet vehicle charges based on next-day routes, energy requirements, grid tariffs, and charger availability. Overnight depot charging optimised.",
+            "category": "Planning",
+            "estimatedDuration": 1,
+            "businessRationale": "Unmanaged fleet charging causes grid demand spikes that trigger demand charges ($10K-50K/month). Smart scheduling cuts energy costs by 30-50%.",
+            "substeps": [
+                {
+                    "substepName": "RouteEnergyCalc",
+                    "duration": 0.3
+                },
+                {
+                    "substepName": "TariffOptimization",
+                    "duration": 0.3
+                },
+                {
+                    "substepName": "ChargerAllocation",
+                    "duration": 0.4
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "DemandManagement",
+            "serviceName": "DemandManageService",
+            "description": "AI manages total site power draw to stay within grid connection capacity. Load balancing across chargers. Demand response participation for grid incentive revenue.",
+            "category": "Energy",
+            "estimatedDuration": 8,
+            "businessRationale": "Grid connection upgrades cost $500K-5M and take 12-24 months. Load management enables 2x more vehicles on existing infrastructure.",
+            "substeps": [
+                {
+                    "substepName": "LoadBalancing",
+                    "duration": 3
+                },
+                {
+                    "substepName": "PeakShaving",
+                    "duration": 3
+                },
+                {
+                    "substepName": "DemandResponse",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "ChargingExecution",
+            "serviceName": "ChargingExecService",
+            "description": "AI monitors all charging sessions: power delivery, battery health, fault detection, and completion status. Automatic failover to alternative chargers on fault.",
+            "category": "Operations",
+            "estimatedDuration": 480,
+            "businessRationale": "A vehicle that fails to charge overnight misses its next-day route, requiring a diesel substitute costing $300-500/day in fuel and emissions penalties.",
+            "substeps": [
+                {
+                    "substepName": "SessionMonitoring",
+                    "duration": 160
+                },
+                {
+                    "substepName": "FaultDetection",
+                    "duration": 160
+                },
+                {
+                    "substepName": "FailoverManagement",
+                    "duration": 160
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "EnergyProcurement",
+            "serviceName": "EnergyProcureService",
+            "description": "AI optimises energy procurement: spot market, PPA, on-site solar, and battery storage dispatch. Carbon matching ensures 100% renewable charging for ESG compliance.",
+            "category": "Procurement",
+            "estimatedDuration": 24,
+            "businessRationale": "Energy cost is 60-70% of fleet charging opex. Optimal procurement saves 15-25% vs standard tariffs. Green energy matching is required for fleet ESG claims.",
+            "substeps": [
+                {
+                    "substepName": "SpotMarketTrading",
+                    "duration": 8
+                },
+                {
+                    "substepName": "PPAManagement",
+                    "duration": 8
+                },
+                {
+                    "substepName": "SolarStorageDispatch",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "VehicleHealthTracking",
+            "serviceName": "VehicleHealthService",
+            "description": "AI analyses battery degradation from charging patterns. State of health (SoH) tracked per vehicle. Charging strategies adjusted to extend battery warranty life.",
+            "category": "Maintenance",
+            "estimatedDuration": 168,
+            "businessRationale": "Battery replacement costs $15K-40K per vehicle. Optimal charging strategies extend battery life by 20-30%, saving $5K-12K per vehicle over its lifecycle.",
+            "substeps": [
+                {
+                    "substepName": "SoHTracking",
+                    "duration": 56
+                },
+                {
+                    "substepName": "DegradationAnalysis",
+                    "duration": 56
+                },
+                {
+                    "substepName": "ChargingAdjustment",
+                    "duration": 56
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "TCOReporting",
+            "serviceName": "TCOReportService",
+            "description": "AI calculates total cost of ownership vs diesel fleet. Energy cost per mile, maintenance savings, and carbon reduction quantified. Board-level transition business case updated.",
+            "category": "Analytics",
+            "estimatedDuration": 24,
+            "businessRationale": "TCO analysis justifies continued EV fleet expansion to the board. Most fleets achieve EV TCO parity at year 3 and 20-30% saving by year 5.",
+            "substeps": [
+                {
+                    "substepName": "CostPerMile",
+                    "duration": 8
+                },
+                {
+                    "substepName": "MaintenanceSavings",
+                    "duration": 8
+                },
+                {
+                    "substepName": "CarbonReduction",
+                    "duration": 8
+                }
+            ]
+        }
+    ],
+    "id": "e312fd0a-7626-4e10-9d4c-6f427f2abfa1",
+    "name": "Electric Vehicle & Charging - Fleet Charging",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 2500,
+        "transactionValue": 2500,
+        "averageOrderValue": 8500,
+        "contractValue": 500000,
+        "annualRevenue": 45000000,
+        "revenuePerCustomer": 120000,
+        "profitMargin": 18.0,
+        "customerLifetimeValue": 900000,
+        "lifetimeValue": 900000,
+        "acquisitionCost": 15000,
+        "costPerAcquisition": 15000,
+        "conversionProbability": 0.72,
+        "conversionRate": 72,
+        "engagementScore": 82,
+        "timeToConversion": 4320,
+        "sessionDuration": 1800,
+        "pageViews": 12,
+        "purchaseFrequency": 365,
+        "netPromoterScore": 48,
+        "satisfactionRating": 4.2,
+        "retentionProbability": 0.9,
+        "processingTime": 480,
+        "operationalCost": 800,
+        "efficiencyRating": 82,
+        "fleetSize": 250,
+        "avgDailyMiles": 120,
+        "channel": [
+            "fleet_portal",
+            "depot_terminal",
+            "mobile_driver_app",
+            "API_telematics",
+            "energy_dashboard"
+        ],
+        "deviceType": [
+            "desktop",
+            "kiosk",
+            "mobile",
+            "server",
+            "desktop"
+        ],
+        "region": [
+            "London UK",
+            "Amsterdam NL",
+            "LA US",
+            "Sydney AU",
+            "Oslo NO"
+        ],
+        "customerSegmentValue": [
+            "delivery_fleet",
+            "bus_operator",
+            "municipal_fleet",
+            "corporate_fleet",
+            "taxi_operator"
+        ],
+        "loyaltyTier": [
+            "Enterprise",
+            "Growth",
+            "Standard",
+            "Trial",
+            "Pilot"
+        ],
+        "segment": [
+            "depot_overnight",
+            "opportunity_fast",
+            "route_planned",
+            "return_to_base",
+            "mixed_use"
+        ],
+        "Productname": [
+            "Depot Smart Charging",
+            "Route-Optimised Charging Plan",
+            "V2G Fleet Revenue",
+            "Solar+Battery Depot",
+            "Fleet Energy Dashboard"
+        ],
+        "ProductId": [
+            "EV-DP-001",
+            "EV-RT-002",
+            "EV-VG-003",
+            "EV-SB-004",
+            "EV-FD-005"
+        ],
+        "ProductType": [
+            "depot_charging",
+            "route_planning",
+            "V2G",
+            "solar_storage",
+            "analytics"
+        ],
+        "Price": [
+            500000,
+            120000,
+            80000,
+            350000,
+            50000
+        ],
+        "energyCostPerMile": [
+            0.04,
+            0.06,
+            0.03,
+            0.02,
+            0
+        ],
+        "emissionsSavedTonnes": [
+            450,
+            180,
+            90,
+            620,
+            0
+        ],
+        "marketTrend": [
+            "fleet_electrification",
+            "depot_smart_charging",
+            "V2G_revenue",
+            "battery_second_life",
+            "charging_as_a_service"
+        ]
+    }
+}

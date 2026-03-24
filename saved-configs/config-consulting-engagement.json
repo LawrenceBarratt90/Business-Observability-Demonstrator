@@ -1,0 +1,257 @@
+{
+    "companyName": "Consulting",
+    "domain": "https://www.consulting-demo.com",
+    "industryType": "Consulting & Professional Services",
+    "journeyType": "Client Engagement",
+    "journeyDetail": "Client Engagement",
+    "journeyId": "journey_consulting_client_engagement",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "OpportunityQualification",
+            "serviceName": "OpportunityQualificationService",
+            "description": "AI qualifies consulting opportunities: analyses RFP requirements, matches firm capabilities, predicts win probability, and estimates required team composition. Scores opportunities on strategic fit and profitability.",
+            "category": "BusinessDevelopment",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 30,
+            "businessRationale": "AI qualification increases win rate by 15% by focusing on high-probability opportunities. Accurate team estimation prevents margin erosion from under-scoped proposals.",
+            "substeps": [
+                {
+                    "substepName": "RFPAnalysis",
+                    "duration": 15
+                },
+                {
+                    "substepName": "WinProbabilityScoring",
+                    "duration": 15
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "ProposalGeneration",
+            "serviceName": "ProposalGenerationService",
+            "description": "AI generates tailored proposals: pulls relevant case studies, benchmarks, methodology descriptions, and team bios. Creates pricing models with scenario analysis and risk-adjusted estimates.",
+            "category": "Sales",
+            "estimatedDuration": 60,
+            "businessRationale": "AI proposal generation reduces preparation time by 65%. Tailored proposals with predictive pricing win at 2x the rate of generic templates.",
+            "substeps": [
+                {
+                    "substepName": "ContentAssembly",
+                    "duration": 30
+                },
+                {
+                    "substepName": "PricingModeling",
+                    "duration": 30
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "TeamAssembly",
+            "serviceName": "TeamAssemblyService",
+            "description": "AI optimises team staffing: matches consultant skills, availability, client industry experience, and development goals. Considers utilisation targets, travel constraints, and team chemistry indicators.",
+            "category": "ResourceManagement",
+            "estimatedDuration": 15,
+            "businessRationale": "Optimal team assembly improves client satisfaction by 20% and consultant utilisation by 8%. Right-skilled teams deliver higher quality work in fewer hours.",
+            "substeps": [
+                {
+                    "substepName": "SkillMatching",
+                    "duration": 5
+                },
+                {
+                    "substepName": "AvailabilityOptimization",
+                    "duration": 10
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "ProjectExecution",
+            "serviceName": "ProjectExecutionService",
+            "description": "AI monitors engagement execution: tracks deliverable progress, flags scope creep, monitors budget burn rate, and identifies risk indicators. Provides real-time dashboards for project managers and partners.",
+            "category": "Delivery",
+            "estimatedDuration": 2880,
+            "businessRationale": "AI project monitoring catches scope creep 3 weeks earlier than manual tracking. Proactive intervention prevents 60% of project overruns that erode margins.",
+            "substeps": [
+                {
+                    "substepName": "ProgressTracking",
+                    "duration": 1440
+                },
+                {
+                    "substepName": "RiskMonitoring",
+                    "duration": 1440
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "KnowledgeCapture",
+            "serviceName": "KnowledgeCaptureService",
+            "description": "AI captures engagement knowledge: methodology refinements, industry insights, reusable deliverable components, and client-specific patterns. Feeds firm knowledge base and accelerates future engagements.",
+            "category": "KnowledgeManagement",
+            "estimatedDuration": 60,
+            "businessRationale": "Knowledge capture increases deliverable reuse by 35%, reducing future engagement costs. Institutional knowledge retention prevents \u00a32M in annual knowledge loss from consultant turnover.",
+            "substeps": [
+                {
+                    "substepName": "InsightExtraction",
+                    "duration": 30
+                },
+                {
+                    "substepName": "KnowledgeIndexing",
+                    "duration": 30
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "EngagementReporting",
+            "serviceName": "EngagementReportingService",
+            "description": "AI generates engagement reports: financial performance, client satisfaction, consultant utilisation, delivery quality metrics, and account growth potential. Informs partner reviews and firm strategy.",
+            "category": "Reporting",
+            "estimatedDuration": 60,
+            "businessRationale": "Engagement analytics improve firm-wide margin by 3 points through evidence-based pricing and staffing decisions. Client satisfaction tracking drives 70% of follow-on work.",
+            "substeps": [
+                {
+                    "substepName": "FinancialAnalysis",
+                    "duration": 30
+                },
+                {
+                    "substepName": "ClientSatisfaction",
+                    "duration": 30
+                }
+            ]
+        }
+    ],
+    "id": "7947a5f8-9faf-43c5-888d-b965a651e3d0",
+    "name": "Consulting & Professional Services - Client Engagement",
+    "timestamp": "2026-03-18T21:35:20.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 350000,
+        "annualRevenue": 0,
+        "revenuePerCustomer": 0,
+        "profitMargin": 35,
+        "customerLifetimeValue": 5000000,
+        "lifetimeValue": 5000000,
+        "acquisitionCost": 50000,
+        "costPerAcquisition": 50000,
+        "conversionProbability": 0.3,
+        "conversionRate": 30,
+        "engagementScore": 82,
+        "timeToConversion": 60,
+        "sessionDuration": 0,
+        "pageViews": 0,
+        "purchaseFrequency": 3,
+        "netPromoterScore": 58,
+        "satisfactionRating": 4.3,
+        "retentionProbability": 0.85,
+        "processingTime": 2880,
+        "operationalCost": 225000,
+        "efficiencyRating": 78,
+        "discountApplied": 0,
+        "taxAmount": 0,
+        "shippingCost": 0,
+        "channel": [
+            "partner_network",
+            "rfp_portal",
+            "conference",
+            "referral",
+            "direct_approach"
+        ],
+        "deviceType": [
+            "desktop",
+            "laptop",
+            "tablet",
+            "mobile",
+            "desktop"
+        ],
+        "region": [
+            "London",
+            "New York",
+            "Singapore",
+            "Frankfurt",
+            "Sydney"
+        ],
+        "customerSegmentValue": [
+            "ftse100",
+            "mid_cap",
+            "private_equity",
+            "public_sector",
+            "ngo"
+        ],
+        "loyaltyTier": [
+            "new_client",
+            "repeat_client",
+            "strategic_account",
+            "alliance_partner",
+            "advisory_board"
+        ],
+        "segment": [
+            "strategy",
+            "operations",
+            "technology",
+            "people_change",
+            "financial_advisory"
+        ],
+        "Productname": [
+            "Strategy_Review",
+            "OpEx_Transformation",
+            "Digital_Strategy",
+            "Change_Management",
+            "Due_Diligence"
+        ],
+        "ProductId": [
+            "CON-STR-001",
+            "CON-OPX-002",
+            "CON-DIG-003",
+            "CON-CHG-004",
+            "CON-DD-005"
+        ],
+        "ProductType": [
+            "strategy",
+            "operations",
+            "technology",
+            "people",
+            "transaction"
+        ],
+        "Price": [
+            350000,
+            500000,
+            250000,
+            180000,
+            120000
+        ],
+        "teamSize": [
+            4,
+            8,
+            6,
+            5,
+            3
+        ],
+        "engagementDurationWeeks": [
+            12,
+            24,
+            16,
+            20,
+            6
+        ],
+        "utilizationRate": [
+            85,
+            78,
+            82,
+            75,
+            92
+        ],
+        "marketTrend": [
+            "ai_augmented_consulting",
+            "esg_advisory",
+            "digital_twin",
+            "fractional_cxo",
+            "outcome_based_fees"
+        ]
+    }
+}

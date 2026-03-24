@@ -1,130 +1,272 @@
 {
-  "companyName": "Financial Services",
-  "domain": "https://www.finance.com",
-  "industryType": "Wealth Management & Retail Investment Platform",
-  "journeyType": "ISA Transfer",
-  "journeyDetail": "ISA Transfer",
-  "journeyId": "journey_financialservices_2026",
-  "journeyStartTime": "2025-11-21T00:00:00.000Z",
-  "steps": [
-    {
-      "stepIndex": 1,
-      "stepName": "TransferRequestInitiation",
-      "serviceName": "TransferRequestInitiationService",
-      "description": "Customer initiates an ISA transfer request by selecting the provider, entering account details, and confirming transfer type.",
-      "category": "TransferStart",
-      "timestamp": "2025-11-21T00:00:00.000Z",
-      "estimatedDuration": 7,
-      "businessRationale": "Initiation requires regulatory disclosures, provider lookup, and validation of ISA eligibility. Smooth UX reduces abandonment and increases transfer completion likelihood.",
-      "substeps": [
+    "companyName": "Financial Services",
+    "domain": "https://www.finance.com",
+    "industryType": "Wealth Management & Retail Investment Platform",
+    "journeyType": "ISA Transfer",
+    "journeyDetail": "ISA Transfer",
+    "journeyId": "journey_financialservices_2026",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
         {
-          "substepName": "ProviderSelection",
-          "duration": 3
+            "stepIndex": 1,
+            "stepName": "TransferRequestInitiation",
+            "serviceName": "TransferRequestInitiationService",
+            "description": "Customer initiates an ISA transfer request by selecting the provider, entering account details, and confirming transfer type.",
+            "category": "TransferStart",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 7,
+            "businessRationale": "Initiation requires regulatory disclosures, provider lookup, and validation of ISA eligibility. Smooth UX reduces abandonment and increases transfer completion likelihood.",
+            "substeps": [
+                {
+                    "substepName": "ProviderSelection",
+                    "duration": 3
+                },
+                {
+                    "substepName": "AccountDetailsEntryAndValidation",
+                    "duration": 4
+                }
+            ]
         },
         {
-          "substepName": "AccountDetailsEntryAndValidation",
-          "duration": 4
-        }
-      ]
-    },
-    {
-      "stepIndex": 2,
-      "stepName": "TransferAuthorisation",
-      "serviceName": "TransferAuthorisationService",
-      "description": "Customer signs digital transfer authority forms and HL submits the request to the existing ISA provider.",
-      "category": "Compliance",
-      "estimatedDuration": 6,
-      "businessRationale": "Digital signatures and regulatory confirmations require secure workflows. This step is critical for legal compliance and transfer acceptance.",
-      "substeps": [
-        {
-          "substepName": "DigitalSignatureCapture",
-          "duration": 2
+            "stepIndex": 2,
+            "stepName": "TransferAuthorisation",
+            "serviceName": "TransferAuthorisationService",
+            "description": "Customer signs digital transfer authority forms and HL submits the request to the existing ISA provider.",
+            "category": "Compliance",
+            "estimatedDuration": 6,
+            "businessRationale": "Digital signatures and regulatory confirmations require secure workflows. This step is critical for legal compliance and transfer acceptance.",
+            "substeps": [
+                {
+                    "substepName": "DigitalSignatureCapture",
+                    "duration": 2
+                },
+                {
+                    "substepName": "TransferFormSubmission",
+                    "duration": 4
+                }
+            ]
         },
         {
-          "substepName": "TransferFormSubmission",
-          "duration": 4
-        }
-      ]
-    },
-    {
-      "stepIndex": 3,
-      "stepName": "ProviderProcessing",
-      "serviceName": "ProviderProcessingService",
-      "description": "The existing ISA provider processes the transfer request, validates holdings, and prepares funds for movement.",
-      "category": "ExternalProcessing",
-      "estimatedDuration": 1440,
-      "businessRationale": "ISA transfers typically take 1–2 weeks depending on provider responsiveness. HL must track SLAs and notify customers of delays.",
-      "substeps": [
-        {
-          "substepName": "ProviderValidation",
-          "duration": 720
+            "stepIndex": 3,
+            "stepName": "ProviderProcessing",
+            "serviceName": "ProviderProcessingService",
+            "description": "The existing ISA provider processes the transfer request, validates holdings, and prepares funds for movement.",
+            "category": "ExternalProcessing",
+            "estimatedDuration": 1440,
+            "businessRationale": "ISA transfers typically take 1\u20132 weeks depending on provider responsiveness. HL must track SLAs and notify customers of delays.",
+            "substeps": [
+                {
+                    "substepName": "ProviderValidation",
+                    "duration": 720
+                },
+                {
+                    "substepName": "FundsPreparation",
+                    "duration": 720
+                }
+            ]
         },
         {
-          "substepName": "FundsPreparation",
-          "duration": 720
-        }
-      ]
-    },
-    {
-      "stepIndex": 4,
-      "stepName": "FundsMovement",
-      "serviceName": "FundsMovementService",
-      "description": "Funds are transferred from the old provider to HL, either as cash or re-registered assets.",
-      "category": "Settlement",
-      "estimatedDuration": 180,
-      "businessRationale": "Settlement and reconciliation require coordination between custodians. Delays directly impact customer satisfaction and AUM growth.",
-      "substeps": [
-        {
-          "substepName": "FundsTransferExecution",
-          "duration": 120
+            "stepIndex": 4,
+            "stepName": "FundsMovement",
+            "serviceName": "FundsMovementService",
+            "description": "Funds are transferred from the old provider to HL, either as cash or re-registered assets.",
+            "category": "Settlement",
+            "estimatedDuration": 180,
+            "businessRationale": "Settlement and reconciliation require coordination between custodians. Delays directly impact customer satisfaction and AUM growth.",
+            "substeps": [
+                {
+                    "substepName": "FundsTransferExecution",
+                    "duration": 120
+                },
+                {
+                    "substepName": "ReconciliationAndAllocation",
+                    "duration": 60
+                }
+            ]
         },
         {
-          "substepName": "ReconciliationAndAllocation",
-          "duration": 60
-        }
-      ]
-    },
-    {
-      "stepIndex": 5,
-      "stepName": "TransferCompletionConfirmation",
-      "serviceName": "TransferCompletionConfirmationService",
-      "description": "HL confirms transfer completion, updates the customer’s ISA balance, and sends notifications.",
-      "category": "Notification",
-      "estimatedDuration": 5,
-      "businessRationale": "Timely confirmation improves trust and reduces support queries. This step triggers AUM recognition for HL.",
-      "substeps": [
-        {
-          "substepName": "BalanceUpdate",
-          "duration": 2
+            "stepIndex": 5,
+            "stepName": "TransferCompletionConfirmation",
+            "serviceName": "TransferCompletionConfirmationService",
+            "description": "HL confirms transfer completion, updates the customer\u2019s ISA balance, and sends notifications.",
+            "category": "Notification",
+            "estimatedDuration": 5,
+            "businessRationale": "Timely confirmation improves trust and reduces support queries. This step triggers AUM recognition for HL.",
+            "substeps": [
+                {
+                    "substepName": "BalanceUpdate",
+                    "duration": 2
+                },
+                {
+                    "substepName": "CustomerNotification",
+                    "duration": 3
+                }
+            ]
         },
         {
-          "substepName": "CustomerNotification",
-          "duration": 3
+            "stepIndex": 6,
+            "stepName": "PortfolioReview",
+            "serviceName": "PortfolioReviewService",
+            "description": "Customer reviews transferred funds, explores investment options, and may set up recurring investments.",
+            "category": "PortfolioManagement",
+            "estimatedDuration": 9,
+            "businessRationale": "Portfolio review is a high\u2011value engagement moment that drives future trades, recurring investments, and long-term retention.",
+            "substeps": [
+                {
+                    "substepName": "HoldingsReview",
+                    "duration": 4
+                },
+                {
+                    "substepName": "InvestmentOptionExploration",
+                    "duration": 5
+                }
+            ]
         }
-      ]
-    },
-    {
-      "stepIndex": 6,
-      "stepName": "PortfolioReview",
-      "serviceName": "PortfolioReviewService",
-      "description": "Customer reviews transferred funds, explores investment options, and may set up recurring investments.",
-      "category": "PortfolioManagement",
-      "estimatedDuration": 9,
-      "businessRationale": "Portfolio review is a high‑value engagement moment that drives future trades, recurring investments, and long-term retention.",
-      "substeps": [
-        {
-          "substepName": "HoldingsReview",
-          "duration": 4
-        },
-        {
-          "substepName": "InvestmentOptionExploration",
-          "duration": 5
-        }
-      ]
+    ],
+    "id": "3ad3b868-21a8-4758-bd39-a77caeecc4df",
+    "name": "Finance - ISA Transfer Journey",
+    "timestamp": "2026-01-09T15:12:43.523Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 35000,
+        "transactionValue": 35000,
+        "averageOrderValue": 28000,
+        "contractValue": 35000,
+        "annualRevenue": 420,
+        "revenuePerCustomer": 1500,
+        "profitMargin": 42.0,
+        "customerLifetimeValue": 48000,
+        "lifetimeValue": 48000,
+        "acquisitionCost": 150,
+        "conversionProbability": 0.78,
+        "conversionRate": 78,
+        "engagementScore": 65,
+        "timeToConversion": 20160,
+        "netPromoterScore": 35,
+        "satisfactionRating": 3.8,
+        "retentionProbability": 0.92,
+        "processingTime": 28800,
+        "operationalCost": 95,
+        "efficiencyRating": 62,
+        "complianceScore": 99,
+        "fraudRisk": [
+            "low",
+            "low",
+            "low",
+            "low",
+            "medium"
+        ],
+        "riskLevel": [
+            "standard",
+            "low",
+            "standard",
+            "low",
+            "standard"
+        ],
+        "channel": [
+            "online_portal",
+            "mobile_app",
+            "phone",
+            "online_portal",
+            "financial_advisor"
+        ],
+        "deviceType": [
+            "desktop",
+            "mobile",
+            "desktop",
+            "tablet",
+            "desktop"
+        ],
+        "region": [
+            "London",
+            "Southeast",
+            "Northwest",
+            "Midlands",
+            "Scotland"
+        ],
+        "customerSegmentValue": [
+            "switcher",
+            "consolidator",
+            "platform_migrator",
+            "fee_conscious",
+            "performance_seeker"
+        ],
+        "loyaltyTier": [
+            "Gold",
+            "Silver",
+            "Platinum",
+            "Silver",
+            "Gold"
+        ],
+        "segment": [
+            "isa_consolidation",
+            "provider_switch",
+            "platform_upgrade",
+            "fee_reduction",
+            "performance_chase"
+        ],
+        "Productname": [
+            "Cash ISA Transfer In",
+            "Stocks & Shares ISA Transfer",
+            "Innovative Finance ISA Transfer",
+            "LISA Transfer",
+            "Junior ISA Transfer"
+        ],
+        "ProductId": [
+            "FS-TRN-101",
+            "FS-TRN-102",
+            "FS-TRN-103",
+            "FS-TRN-104",
+            "FS-TRN-105"
+        ],
+        "ProductType": [
+            "cash_isa_transfer",
+            "ss_isa_transfer",
+            "ifisa_transfer",
+            "lisa_transfer",
+            "jisa_transfer"
+        ],
+        "Price": [
+            35000,
+            42000,
+            15000,
+            8000,
+            5000
+        ],
+        "transferValue": [
+            35000,
+            42000,
+            15000,
+            8000,
+            5000
+        ],
+        "previousProvider": [
+            "Hargreaves Lansdown",
+            "AJ Bell",
+            "Vanguard",
+            "Nationwide",
+            "Halifax"
+        ],
+        "transferDuration": [
+            15,
+            30,
+            21,
+            10,
+            25
+        ],
+        "outOfMarketDays": [
+            5,
+            12,
+            8,
+            0,
+            10
+        ],
+        "marketTrend": [
+            "platform_consolidation",
+            "fee_competition",
+            "digital_transfer",
+            "isa_simplification",
+            "pension_isa_combo"
+        ]
     }
-  ],
-  "id": "3ad3b868-21a8-4758-bd39-a77caeecc4df",
-  "name": "Finance - ISA Transfer Journey",
-  "timestamp": "2026-01-09T15:12:43.523Z",
-  "source": "sector-demo"
 }

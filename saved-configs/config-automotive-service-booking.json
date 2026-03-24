@@ -1,0 +1,265 @@
+{
+    "companyName": "Automotive",
+    "domain": "https://www.automotive.com",
+    "industryType": "Automotive & Mobility",
+    "journeyType": "Service Booking",
+    "journeyDetail": "Vehicle Service Booking Journey",
+    "journeyId": "journey_auto_service_2026",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "ServiceRequirementIdentification",
+            "serviceName": "ServiceRequirementIdentificationService",
+            "description": "Vehicle connected services or customer reports service need. System checks service history, mileage, and manufacturer schedule to determine required work items: routine maintenance, recall campaigns, or reported symptoms.",
+            "category": "Assessment",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 5,
+            "businessRationale": "Proactive service reminders from connected vehicles capture revenue before customers seek independent garages. Accurate work item identification prevents under-servicing (warranty risk) and over-servicing (customer trust).",
+            "substeps": [
+                {
+                    "substepName": "VehicleDataAndHistoryReview",
+                    "duration": 2
+                },
+                {
+                    "substepName": "WorkItemDetermination",
+                    "duration": 3
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "AppointmentScheduling",
+            "serviceName": "AppointmentSchedulingService",
+            "description": "Customer selects preferred dealership, date, and time. System checks workshop bay availability, technician skill availability, and parts stock. Estimated duration and cost presented. Courtesy car or collection service offered.",
+            "category": "Scheduling",
+            "estimatedDuration": 8,
+            "businessRationale": "Online scheduling reduces call centre bookings ($8-12 per call). Workshop capacity optimisation maximises technician utilisation and revenue per bay. Courtesy car availability significantly influences dealer choice.",
+            "substeps": [
+                {
+                    "substepName": "DealerAndSlotSelection",
+                    "duration": 3
+                },
+                {
+                    "substepName": "CostEstimateAndCourtesyCar",
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "VehicleCheckIn",
+            "serviceName": "VehicleCheckInService",
+            "description": "Customer drops off vehicle. Service advisor performs walk-around inspection capturing existing damage with photos. Customer confirms work items and authorisation limit. Digital job card created. Courtesy car keys handed over.",
+            "category": "CheckIn",
+            "estimatedDuration": 15,
+            "businessRationale": "Walk-around inspection with photos prevents dispute over pre-existing damage. Authorisation limits manage customer expectations and enable upsell within agreed bounds. Digital job cards enable real-time status tracking.",
+            "substeps": [
+                {
+                    "substepName": "WalkAroundInspectionAndPhotos",
+                    "duration": 8
+                },
+                {
+                    "substepName": "WorkAuthorisationAndJobCard",
+                    "duration": 7
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "DiagnosticAndRepair",
+            "serviceName": "DiagnosticAndRepairService",
+            "description": "Technician performs diagnostic scan, executes scheduled maintenance, and addresses reported symptoms. Additional work identified during inspection requires customer approval via digital authorisation. Parts ordered if not in stock.",
+            "category": "Workshop",
+            "estimatedDuration": 240,
+            "businessRationale": "Technician efficiency (hours sold vs hours attended) is the key workshop KPI. Digital mid-service approval for additional work captures an average 20% upsell revenue. Parts availability affects first-visit fix rate.",
+            "substeps": [
+                {
+                    "substepName": "DiagnosticScanAndScheduledWork",
+                    "duration": 120
+                },
+                {
+                    "substepName": "AdditionalWorkApprovalAndExecution",
+                    "duration": 120
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "QualityCheckAndWash",
+            "serviceName": "QualityCheckAndWashService",
+            "description": "Completed work verified by workshop controller. Multi-point quality check ensures all work items completed to standard. Vehicle washed and vacuumed. Service record updated in manufacturer database. Invoice generated.",
+            "category": "QualityAssurance",
+            "estimatedDuration": 45,
+            "businessRationale": "Quality checks prevent rework and warranty claims. Vehicle wash is a low-cost high-impact customer satisfaction driver. Manufacturer database update maintains warranty validity and resale value.",
+            "substeps": [
+                {
+                    "substepName": "WorkVerificationAndServiceRecord",
+                    "duration": 20
+                },
+                {
+                    "substepName": "VehicleWashAndInvoicing",
+                    "duration": 25
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "CollectionAndPayment",
+            "serviceName": "CollectionAndPaymentService",
+            "description": "Customer notified vehicle is ready. Service advisor explains completed work and any recommendations for future attention. Payment collected. Next service reminder scheduled. Customer satisfaction survey triggered.",
+            "category": "Completion",
+            "estimatedDuration": 20,
+            "businessRationale": "Clear explanation of work builds trust and validates spend. Future recommendations create pipeline for next visit revenue. Survey scores feed manufacturer dealer performance ratings that affect allocation and incentives.",
+            "substeps": [
+                {
+                    "substepName": "WorkExplanationAndRecommendations",
+                    "duration": 10
+                },
+                {
+                    "substepName": "PaymentAndNextServiceSchedule",
+                    "duration": 10
+                }
+            ]
+        }
+    ],
+    "id": "a1b2c3d4-3333-4aaa-b333-000000000002",
+    "name": "Automotive - Service Booking",
+    "timestamp": "2026-01-09T15:12:43.556Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 450,
+        "transactionValue": 450,
+        "averageOrderValue": 380,
+        "contractValue": 1800,
+        "annualRevenue": 1800,
+        "revenuePerCustomer": 3200,
+        "profitMargin": 48.0,
+        "customerLifetimeValue": 25000,
+        "lifetimeValue": 25000,
+        "acquisitionCost": 15,
+        "conversionProbability": 0.82,
+        "conversionRate": 82,
+        "engagementScore": 60,
+        "timeToConversion": 2880,
+        "netPromoterScore": 42,
+        "satisfactionRating": 4.0,
+        "retentionProbability": 0.75,
+        "processingTime": 300,
+        "operationalCost": 180,
+        "efficiencyRating": 72,
+        "complianceScore": 90,
+        "channel": [
+            "online_portal",
+            "phone",
+            "mobile_app",
+            "connected_car_alert",
+            "dealership_reception"
+        ],
+        "deviceType": [
+            "desktop",
+            "mobile",
+            "mobile",
+            "connected_car",
+            "desktop"
+        ],
+        "region": [
+            "Northeast",
+            "Southeast",
+            "Midwest",
+            "West Coast",
+            "Southwest"
+        ],
+        "customerSegmentValue": [
+            "warranty_customer",
+            "loyalty_plan",
+            "pay_per_service",
+            "maintenance_contract",
+            "recall_customer"
+        ],
+        "loyaltyTier": [
+            "Gold Service",
+            "Silver",
+            "Bronze",
+            "Platinum",
+            "Recall Priority"
+        ],
+        "segment": [
+            "annual_service",
+            "mot_test",
+            "tyre_replacement",
+            "brake_service",
+            "diagnostic_check"
+        ],
+        "Productname": [
+            "Full Annual Service",
+            "MOT Test & Service Bundle",
+            "Premium Tyre Set 4x",
+            "Brake Disc & Pad Replacement",
+            "Connected Diagnostic Check"
+        ],
+        "ProductId": [
+            "AUTO-SV-101",
+            "AUTO-SV-102",
+            "AUTO-SV-103",
+            "AUTO-SV-104",
+            "AUTO-SV-105"
+        ],
+        "ProductType": [
+            "annual_service",
+            "mot_bundle",
+            "tyres",
+            "brakes",
+            "diagnostics"
+        ],
+        "Price": [
+            350,
+            280,
+            680,
+            450,
+            120
+        ],
+        "vehicleAge": [
+            2,
+            4,
+            3,
+            5,
+            1
+        ],
+        "mileage": [
+            18000,
+            45000,
+            32000,
+            62000,
+            8000
+        ],
+        "warrantyStatus": [
+            "in_warranty",
+            "extended",
+            "expired",
+            "expired",
+            "in_warranty"
+        ],
+        "loanerVehicleRequired": [
+            true,
+            false,
+            false,
+            true,
+            false
+        ],
+        "estimatedCompletionHours": [
+            4,
+            2,
+            1.5,
+            3,
+            1
+        ],
+        "marketTrend": [
+            "connected_service",
+            "predictive_maintenance",
+            "ev_service_gap",
+            "mobile_mechanics",
+            "subscription_maintenance"
+        ]
+    }
+}

@@ -1,0 +1,264 @@
+{
+    "companyName": "Logistics Corp",
+    "domain": "https://www.logistics-corp.com",
+    "industryType": "Logistics & Supply Chain",
+    "source": "sector-demo",
+    "timestamp": "2026-01-09T15:30:00.000Z",
+    "journeyType": "Cargo Tracking",
+    "journeyDetail": "Cargo Tracking & Visibility Journey",
+    "journeyId": "journey_logistics_tracking_2026",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "id": "a1b2c3d4-6666-4aaa-b666-000000000002",
+    "name": "Logistics - Cargo Tracking",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "TrackingInitialisation",
+            "serviceName": "TrackingInitialisationService",
+            "description": "Shipment entered into tracking platform upon booking confirmation. Unique tracking ID generated and shared with all stakeholders. Multi-carrier tracking aggregated into single view. Push notification preferences configured for shipper and consignee.",
+            "category": "Setup",
+            "estimatedDuration": 5,
+            "businessRationale": "Unified tracking across carriers reduces 'where is my shipment' enquiries by 70%. Each WISMR call costs $5-10 in customer service time. Proactive notifications improve customer satisfaction scores by 25%.",
+            "substeps": [
+                {
+                    "substepName": "TrackingIDAndStakeholderSetup",
+                    "duration": 3
+                },
+                {
+                    "substepName": "NotificationPreferences",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "MilestoneCapture",
+            "serviceName": "MilestoneCaptureService",
+            "description": "Key milestones captured automatically: pickup confirmed, departed origin hub, in-transit, arrived destination hub, out for delivery, delivered. Carrier EDI messages (214, 990) and API feeds parsed. Manual milestone entry available for non-integrated carriers.",
+            "category": "Tracking",
+            "estimatedDuration": 2880,
+            "businessRationale": "Milestone granularity drives supply chain planning accuracy. Each milestone enables downstream preparation \u2014 customs clearance, warehouse receiving, manufacturing scheduling. 30+ data points per shipment is best practice.",
+            "substeps": [
+                {
+                    "substepName": "AutomatedEDIAndAPIMilestones",
+                    "duration": 1440
+                },
+                {
+                    "substepName": "ManualMilestoneEntryAndValidation",
+                    "duration": 1440
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "ExceptionDetection",
+            "serviceName": "ExceptionDetectionService",
+            "description": "AI-powered exception engine monitors shipments against expected timelines. Exceptions auto-classified: delay (carrier, weather, customs), damage, temperature excursion, security hold. Severity scored and escalation rules triggered.",
+            "category": "Monitoring",
+            "estimatedDuration": 60,
+            "businessRationale": "Early exception detection gives 4-8 hours advance warning for mitigation. Automated classification eliminates manual triage of 500+ daily exceptions. Priority scoring ensures critical shipments get immediate attention.",
+            "substeps": [
+                {
+                    "substepName": "TimelineDeviationAnalysis",
+                    "duration": 30
+                },
+                {
+                    "substepName": "ExceptionClassificationAndEscalation",
+                    "duration": 30
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "ETAManagement",
+            "serviceName": "ETAManagementService",
+            "description": "Machine learning model recalculates delivery ETA based on real-time position, historical lane performance, weather forecasts, and port/terminal congestion. Confidence intervals provided (optimistic, expected, pessimistic). Stakeholders notified of ETA changes exceeding threshold.",
+            "category": "Prediction",
+            "estimatedDuration": 30,
+            "businessRationale": "Accurate ETAs within +/- 2 hours enable just-in-time receiving, reducing warehouse labour cost by 20%. ML models improve ETA accuracy from 65% to 92% compared to carrier-provided estimates.",
+            "substeps": [
+                {
+                    "substepName": "MLPositionAndContextAnalysis",
+                    "duration": 15
+                },
+                {
+                    "substepName": "ETAUpdateAndStakeholderNotify",
+                    "duration": 15
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "ProofOfDeliveryCapture",
+            "serviceName": "ProofOfDeliveryCaptureService",
+            "description": "Electronic proof of delivery (ePOD) captured at destination: consignee signature, delivery photos, piece count verification, and condition notes. Timestamp and GPS coordinates recorded. ePOD transmitted to shipper within 15 minutes of delivery.",
+            "category": "Delivery",
+            "estimatedDuration": 20,
+            "businessRationale": "ePOD eliminates delivery disputes \u2014 reducing claims processing time from 30 days to 3 days. Photo evidence reduces fraudulent claims by 60%. Instant ePOD transmission accelerates invoice-to-payment cycle.",
+            "substeps": [
+                {
+                    "substepName": "SignatureAndPhotoCapture",
+                    "duration": 10
+                },
+                {
+                    "substepName": "EPODTransmissionAndArchival",
+                    "duration": 10
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "PerformanceAnalytics",
+            "serviceName": "PerformanceAnalyticsService",
+            "description": "Shipment data aggregated into carrier scorecards: on-time delivery %, damage rate, billing accuracy, exception frequency. Lane-level performance trends visualised. Benchmarking against industry standards and contractual SLAs. Insights feed carrier selection algorithms.",
+            "category": "Analytics",
+            "estimatedDuration": 15,
+            "businessRationale": "Data-driven carrier management improves service by 12% and reduces costs by 8% through informed rate negotiations. SLA compliance tracking automates penalty and bonus calculations worth $100K+ annually.",
+            "substeps": [
+                {
+                    "substepName": "CarrierScorecardGeneration",
+                    "duration": 10
+                },
+                {
+                    "substepName": "SLAComplianceAndBenchmarking",
+                    "duration": 5
+                }
+            ]
+        }
+    ],
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 0,
+        "annualRevenue": 0,
+        "revenuePerCustomer": 85000,
+        "profitMargin": 0,
+        "customerLifetimeValue": 320000,
+        "lifetimeValue": 320000,
+        "acquisitionCost": 0,
+        "conversionProbability": 0.98,
+        "conversionRate": 98,
+        "engagementScore": 75,
+        "timeToConversion": 5,
+        "netPromoterScore": 45,
+        "satisfactionRating": 4.2,
+        "retentionProbability": 0.88,
+        "processingTime": 30,
+        "operationalCost": 2.5,
+        "efficiencyRating": 92,
+        "complianceScore": 96,
+        "channel": [
+            "tracking_portal",
+            "api_webhook",
+            "mobile_app",
+            "email_notification",
+            "sms_alert"
+        ],
+        "deviceType": [
+            "desktop",
+            "api",
+            "mobile",
+            "email",
+            "mobile"
+        ],
+        "region": [
+            "EMEA",
+            "APAC",
+            "North America",
+            "LATAM",
+            "Global"
+        ],
+        "customerSegmentValue": [
+            "supply_chain_manager",
+            "procurement_team",
+            "end_consumer",
+            "warehouse_ops",
+            "customs_broker"
+        ],
+        "loyaltyTier": [
+            "Enterprise Visibility",
+            "Standard Tracking",
+            "Premium Real-Time",
+            "Warehouse Link",
+            "Broker Portal"
+        ],
+        "segment": [
+            "real_time_gps",
+            "milestone_tracking",
+            "temperature_monitoring",
+            "exception_alert",
+            "eta_prediction"
+        ],
+        "Productname": [
+            "Real-Time GPS Container Track",
+            "Milestone Update Service",
+            "Cold Chain Temperature Monitor",
+            "Exception & Delay Alert",
+            "AI ETA Prediction"
+        ],
+        "ProductId": [
+            "LOG-CT-101",
+            "LOG-CT-102",
+            "LOG-CT-103",
+            "LOG-CT-104",
+            "LOG-CT-105"
+        ],
+        "ProductType": [
+            "gps_tracking",
+            "milestone_tracking",
+            "cold_chain",
+            "exception_alert",
+            "ai_eta"
+        ],
+        "Price": [
+            0,
+            0,
+            50,
+            0,
+            0
+        ],
+        "trackingAccuracy": [
+            "real_time_5min",
+            "milestone_based",
+            "continuous_iot",
+            "event_triggered",
+            "predictive"
+        ],
+        "currentLocation": [
+            "Rotterdam Port",
+            "Singapore Strait",
+            "M1 Motorway UK",
+            "Frankfurt Hub",
+            "Suez Canal"
+        ],
+        "etaVarianceHours": [
+            2,
+            8,
+            0.5,
+            4,
+            1
+        ],
+        "temperatureCompliant": [
+            true,
+            true,
+            true,
+            false,
+            true
+        ],
+        "exceptionsRaised": [
+            0,
+            1,
+            0,
+            3,
+            0
+        ],
+        "marketTrend": [
+            "iot_tracking",
+            "blockchain_provenance",
+            "control_tower",
+            "predictive_eta",
+            "carbon_tracking"
+        ]
+    }
+}

@@ -16,10 +16,8 @@ import { readFileSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { performance } from 'perf_hooks';
-import { NodeTracerProvider, BatchSpanProcessor } from '@opentelemetry/sdk-trace-node';
-import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-proto';
-import { resourceFromAttributes } from '@opentelemetry/resources';
-import { trace, SpanKind, SpanStatusCode } from '@opentelemetry/api';
+import { trace, SpanKind, SpanStatusCode, metrics } from '@opentelemetry/api';
+import { getFields, getAllEntries, getRepoSummary } from '../services/field-repo.js';
 import {
   getProvenVariables,
   buildProvenDashboard,
@@ -35,12 +33,13 @@ import {
   getFooterMarkdown,
   PROVEN_LAYOUT
 } from '../templates/dql/proven-dashboard-template.js';
+import { getBespokePrompt, getBespokeSections } from '../templates/dql/bespoke-prompts.js';
 
 const router = express.Router();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const SKILLS_PATH = path.join(__dirname, '../ai-agent-knowledge-base-main@389e0f6c9c6/knowledge-base/dynatrace/skills');
+const SKILLS_PATH = path.join(__dirname, '../ai-agent-knowledge-base-main@c5ea8662910/knowledge-base/dynatrace/skills');
 const PROMPTS_PATH = path.join(__dirname, '../prompts');
 
 const OLLAMA_ENDPOINT = process.env.OLLAMA_ENDPOINT || 'http://localhost:11434';
@@ -52,67 +51,564 @@ const OLLAMA_DISABLED = (process.env.OLLAMA_MODE || global.ollamaMode || 'full')
 let promptTemplates = null;
 
 // ============================================================================
-// OTEL GenAI Span Export — sends Ollama LLM traces to Dynatrace AI Observability
+// DQL ESSENTIALS — Syntax rules from Knowledge Base (injected into AI prompts)
+// Prevents common DQL mistakes that break dashboards
 // ============================================================================
 
-let _dashboardTracer = null;
-let _dashboardProvider = null;
+const DQL_SYNTAX_RULES = `
+DQL CRITICAL SYNTAX RULES (you MUST follow these):
+- WRONG: filter field in ["a", "b"]  →  RIGHT: filter in(field, "a", "b")  (no array literals in DQL)
+- WRONG: by: severity, status  →  RIGHT: by: {severity, status}  (multiple group fields need braces)
+- contains() is already case-insensitive — never wrap in toLower()
+- WRONG: matchesValue(stringField, "x")  →  RIGHT: contains(stringField, "x")  (matchesValue is for array fields like dt.tags ONLY)
+- WRONG: substring(field, 0, 200)  →  RIGHT: substring(field, from: 0, to: 200)  (use named params)
+- Variable refs in queries: $Var (single), array($Var) (multi-select), $Var:noquote (numbers)
+- Entity fields: use dt.entity.host, dt.entity.service (NOT entity.id)
+- entityName(dt.entity.service) to resolve ID→name
+- No time-range filters in tile queries — the dashboard UI time picker handles this automatically
+- Variable queries MUST return exactly 1 field (e.g., | fields entity.name)
+`.trim();
 
-function _initDashboardTracer() {
-  if (_dashboardTracer) return _dashboardTracer;
-  
-  // Read DT credentials from .dt-credentials.json (set via the UI) or env vars
-  let dtUrl = process.env.DT_ENVIRONMENT || process.env.DYNATRACE_URL || '';
-  let dtToken = process.env.DT_OTEL_TOKEN || process.env.DT_PLATFORM_TOKEN || process.env.DYNATRACE_TOKEN || process.env.DT_API_TOKEN || '';
-  
-  if (!dtUrl || !dtToken) {
-    try {
-      const credsPath = path.join(process.cwd(), '.dt-credentials.json');
-      const creds = JSON.parse(readFileSync(credsPath, 'utf-8'));
-      if (!dtUrl) dtUrl = creds.environmentUrl || '';
-      // Prefer otelToken (has ingest scopes) over apiToken (general)
-      if (!dtToken) dtToken = creds.otelToken || creds.apiToken || '';
-      if (dtUrl) console.log('[AI Dashboard OTel] 📦 DT credentials loaded from .dt-credentials.json');
-      if (creds.otelToken) console.log('[AI Dashboard OTel]    Token type: otelToken (ingest scopes)');
-    } catch { /* no creds file */ }
+// ============================================================================
+// BUSINESS OBSERVABILITY FIELD KNOWLEDGE
+// Injected into AI prompts so the model knows what data lives in bizevents
+// Source: ai-agent-knowledge-base + production dashboards
+// ============================================================================
+
+// ============================================================================
+// FIELD CATALOG: Comprehensive classification of every additionalfield.
+// Each field is categorized by data type, KPI category, visualization, and
+// DQL aggregation so the tile builder knows EXACTLY how to query and display it.
+// ============================================================================
+
+const FIELD_CATALOG = {
+  // ── REVENUE & FINANCIAL (numeric — sum/avg, singleValue/bar/area) ──
+  orderTotal:             { type: 'numeric', category: 'revenue',    label: '💰 Order Total',             agg: 'sum',  unit: '$',  viz: 'categoricalBarChart', kpi: true },
+  transactionValue:       { type: 'numeric', category: 'revenue',    label: '💰 Transaction Value',       agg: 'sum',  unit: '$',  viz: 'categoricalBarChart', kpi: true },
+  Price:                  { type: 'numeric', category: 'revenue',    label: '💲 Product Price',           agg: 'avg',  unit: '$',  viz: 'categoricalBarChart', kpi: false },
+  averageOrderValue:      { type: 'numeric', category: 'revenue',    label: '💵 Avg Order Value',         agg: 'avg',  unit: '$',  viz: 'singleValue',        kpi: true },
+  revenuePerCustomer:     { type: 'numeric', category: 'revenue',    label: '💵 Revenue per Customer',    agg: 'avg',  unit: '$',  viz: 'singleValue',        kpi: true },
+  profitMargin:           { type: 'numeric', category: 'revenue',    label: '📊 Profit Margin',           agg: 'avg',  unit: '%',  viz: 'categoricalBarChart', kpi: true },
+  discountApplied:        { type: 'numeric', category: 'revenue',    label: '🏷️ Discount Applied',        agg: 'avg',  unit: '$',  viz: 'categoricalBarChart', kpi: false },
+  taxAmount:              { type: 'numeric', category: 'revenue',    label: '🧾 Tax Amount',              agg: 'sum',  unit: '$',  viz: 'categoricalBarChart', kpi: false },
+  shippingCost:           { type: 'numeric', category: 'revenue',    label: '📦 Shipping Cost',           agg: 'avg',  unit: '$',  viz: 'categoricalBarChart', kpi: false },
+  annualRevenue:          { type: 'numeric', category: 'revenue',    label: '📈 Annual Revenue',          agg: 'avg',  unit: '$',  viz: 'singleValue',        kpi: true },
+  contractValue:          { type: 'numeric', category: 'revenue',    label: '📑 Contract Value',          agg: 'avg',  unit: '$',  viz: 'categoricalBarChart', kpi: true },
+
+  // ── CUSTOMER LIFETIME & GROWTH (numeric — avg, singleValue/bar) ──
+  customerLifetimeValue:  { type: 'numeric', category: 'customer',   label: '💎 Customer Lifetime Value', agg: 'avg',  unit: '$',  viz: 'categoricalBarChart', kpi: true },
+  lifetimeValue:          { type: 'numeric', category: 'customer',   label: '💎 Lifetime Value',          agg: 'avg',  unit: '$',  viz: 'categoricalBarChart', kpi: true },
+  upsellPotential:        { type: 'numeric', category: 'customer',   label: '📈 Upsell Potential',        agg: 'avg',  unit: '$',  viz: 'categoricalBarChart', kpi: false },
+  growthPotential:        { type: 'numeric', category: 'customer',   label: '🌱 Growth Potential',        agg: 'avg',  unit: '$',  viz: 'categoricalBarChart', kpi: false },
+  futureValue:            { type: 'numeric', category: 'customer',   label: '🔮 Future Value',            agg: 'avg',  unit: '$',  viz: 'categoricalBarChart', kpi: false },
+  acquisitionCost:        { type: 'numeric', category: 'customer',   label: '💸 Acquisition Cost',        agg: 'avg',  unit: '$',  viz: 'categoricalBarChart', kpi: false },
+  costPerAcquisition:     { type: 'numeric', category: 'customer',   label: '💸 Cost per Acquisition',    agg: 'avg',  unit: '$',  viz: 'categoricalBarChart', kpi: false },
+
+  // ── CONVERSION & ENGAGEMENT (numeric — avg, bar/line) ──
+  conversionProbability:  { type: 'numeric', category: 'conversion', label: '🎯 Conversion Probability',  agg: 'avg',  unit: '%',  viz: 'categoricalBarChart', kpi: true },
+  conversionRate:         { type: 'numeric', category: 'conversion', label: '🎯 Conversion Rate',         agg: 'avg',  unit: '%',  viz: 'categoricalBarChart', kpi: true },
+  engagementScore:        { type: 'numeric', category: 'conversion', label: '⚡ Engagement Score',        agg: 'avg',  unit: '',   viz: 'categoricalBarChart', kpi: false },
+  timeToConversion:       { type: 'numeric', category: 'conversion', label: '⏱️ Time to Conversion',      agg: 'avg',  unit: 's',  viz: 'categoricalBarChart', kpi: false },
+  sessionDuration:        { type: 'numeric', category: 'conversion', label: '⏱️ Session Duration',        agg: 'avg',  unit: 's',  viz: 'categoricalBarChart', kpi: false },
+  pageViews:              { type: 'numeric', category: 'conversion', label: '📄 Page Views',              agg: 'avg',  unit: '',   viz: 'categoricalBarChart', kpi: false },
+  purchaseFrequency:      { type: 'numeric', category: 'conversion', label: '🔄 Purchase Frequency',     agg: 'avg',  unit: '',   viz: 'categoricalBarChart', kpi: false },
+
+  // ── SATISFACTION & LOYALTY (numeric scores — avg, bar/table) ──
+  netPromoterScore:       { type: 'numeric', category: 'satisfaction', label: '😊 Net Promoter Score',    agg: 'avg',  unit: '',   viz: 'categoricalBarChart', kpi: true },
+  npsScore:               { type: 'numeric', category: 'satisfaction', label: '😊 NPS Score',             agg: 'avg',  unit: '',   viz: 'categoricalBarChart', kpi: true },
+  satisfactionRating:     { type: 'numeric', category: 'satisfaction', label: '⭐ Satisfaction Rating',   agg: 'avg',  unit: '',   viz: 'categoricalBarChart', kpi: true },
+  satisfactionScore:      { type: 'numeric', category: 'satisfaction', label: '⭐ Satisfaction Score',    agg: 'avg',  unit: '',   viz: 'categoricalBarChart', kpi: true },
+  retentionProbability:   { type: 'numeric', category: 'satisfaction', label: '🤝 Retention Probability', agg: 'avg',  unit: '%',  viz: 'categoricalBarChart', kpi: true },
+
+  // ── OPERATIONS & PERFORMANCE (numeric — avg/p90, bar/line) ──
+  processingTime:         { type: 'numeric', category: 'operations', label: '⏱️ Processing Time',        agg: 'avg',  unit: 'ms', viz: 'categoricalBarChart', kpi: true },
+  operationalCost:        { type: 'numeric', category: 'operations', label: '💸 Operational Cost',       agg: 'sum',  unit: '$',  viz: 'categoricalBarChart', kpi: false },
+  efficiencyRating:       { type: 'numeric', category: 'operations', label: '⚙️ Efficiency Rating',      agg: 'avg',  unit: '',   viz: 'categoricalBarChart', kpi: false },
+  resourceUtilization:    { type: 'numeric', category: 'operations', label: '📊 Resource Utilization',   agg: 'avg',  unit: '%',  viz: 'categoricalBarChart', kpi: false },
+
+  // ── RISK & COMPLIANCE (numeric — avg, bar/table) ──
+  complianceScore:        { type: 'numeric', category: 'risk',       label: '✅ Compliance Score',       agg: 'avg',  unit: '',   viz: 'categoricalBarChart', kpi: false },
+  seasonalImpact:         { type: 'numeric', category: 'risk',       label: '📅 Seasonal Impact',        agg: 'avg',  unit: '',   viz: 'categoricalBarChart', kpi: false },
+  marketShare:            { type: 'numeric', category: 'risk',       label: '📊 Market Share',           agg: 'avg',  unit: '%',  viz: 'categoricalBarChart', kpi: false },
+
+  // ── STRING DIMENSION FIELDS (categorical — countBy, donut/pie/bar) ──
+  deviceType:             { type: 'string',  category: 'channel',    label: '📱 Device Type',            viz: 'donutChart' },
+  browser:                { type: 'string',  category: 'channel',    label: '🌐 Browser',                viz: 'donutChart' },
+  location:               { type: 'string',  category: 'channel',    label: '📍 Location',               viz: 'pieChart' },
+  entryChannel:           { type: 'string',  category: 'channel',    label: '📡 Entry Channel',          viz: 'donutChart' },
+  channel:                { type: 'string',  category: 'channel',    label: '📡 Channel',                viz: 'donutChart' },
+  region:                 { type: 'string',  category: 'channel',    label: '🌍 Region',                 viz: 'pieChart' },
+  customerIntent:         { type: 'string',  category: 'segment',    label: '🎯 Customer Intent',        viz: 'donutChart' },
+  loyaltyStatus:          { type: 'string',  category: 'segment',    label: '⭐ Loyalty Status',         viz: 'donutChart' },
+  loyaltyTier:            { type: 'string',  category: 'segment',    label: '⭐ Loyalty Tier',           viz: 'donutChart' },
+  membershipStatus:       { type: 'string',  category: 'segment',    label: '🏅 Membership Status',      viz: 'donutChart' },
+  pricingTier:            { type: 'string',  category: 'segment',    label: '💎 Pricing Tier',           viz: 'donutChart' },
+  subscriptionLevel:      { type: 'string',  category: 'segment',    label: '📋 Subscription Level',     viz: 'donutChart' },
+  segment:                { type: 'string',  category: 'segment',    label: '👥 Customer Segment',       viz: 'pieChart' },
+  customerSegmentValue:   { type: 'string',  category: 'segment',    label: '👥 Segment Value',          viz: 'donutChart' },
+  marketSegment:          { type: 'string',  category: 'segment',    label: '🏢 Market Segment',         viz: 'pieChart' },
+  churnRisk:              { type: 'string',  category: 'risk_label', label: '⚠️ Churn Risk',             viz: 'donutChart' },
+  abandonmentRisk:        { type: 'string',  category: 'risk_label', label: '🚪 Abandonment Risk',       viz: 'donutChart' },
+  crossSellOpportunity:   { type: 'string',  category: 'risk_label', label: '🔄 Cross-Sell Opportunity', viz: 'donutChart' },
+  fraudRisk:              { type: 'string',  category: 'risk_label', label: '🛡️ Fraud Risk',             viz: 'donutChart' },
+  riskLevel:              { type: 'string',  category: 'risk_label', label: '⚠️ Risk Level',             viz: 'donutChart' },
+  securityRating:         { type: 'string',  category: 'risk_label', label: '🔒 Security Rating',        viz: 'donutChart' },
+  competitiveAdvantage:   { type: 'string',  category: 'market',     label: '🏆 Competitive Advantage',  viz: 'donutChart' },
+  competitorComparison:   { type: 'string',  category: 'market',     label: '⚔️ Competitor Comparison',  viz: 'donutChart' },
+  brandLoyalty:           { type: 'string',  category: 'market',     label: '❤️ Brand Loyalty',           viz: 'donutChart' },
+  expansionOpportunity:   { type: 'string',  category: 'market',     label: '🚀 Expansion Opportunity',  viz: 'donutChart' },
+  marketTrend:            { type: 'string',  category: 'market',     label: '📈 Market Trend',           viz: 'donutChart' },
+  Productname:            { type: 'string',  category: 'product',    label: '📦 Product Name',           viz: 'categoricalBarChart' },
+  ProductId:              { type: 'string',  category: 'product',    label: '🏷️ Product ID (SKU)',        viz: 'categoricalBarChart' },
+  ProductType:            { type: 'string',  category: 'product',    label: '📂 Product Type',           viz: 'donutChart' },
+};
+
+// Map prompt focus keywords to which field categories should be prioritized
+const FOCUS_CATEGORY_MAP = {
+  revenue:     ['revenue', 'customer', 'conversion', 'product'],
+  executive:   ['revenue', 'customer', 'satisfaction', 'conversion'],
+  operations:  ['operations', 'risk', 'risk_label', 'channel'],
+  customer:    ['customer', 'satisfaction', 'segment', 'conversion'],
+  performance: ['operations', 'conversion', 'channel'],
+  risk:        ['risk', 'risk_label', 'operations'],
+  marketing:   ['channel', 'segment', 'market', 'product', 'conversion'],
+  product:     ['product', 'revenue', 'conversion', 'segment'],
+};
+
+const BIZOBS_FIELD_KNOWLEDGE = `
+BUSINESS EVENT DATA MODEL (available in Grail via "fetch bizevents"):
+
+TOP-LEVEL FIELDS (json.*):
+  json.companyName    — Company/tenant (e.g. "Telecommunications", "Financial Services")
+  json.journeyType    — Journey type (e.g. "Purchase", "Broadband Signup", "Account Opening")
+  json.stepName       — Journey step name (e.g. "Browse Plans", "Enter Details", "Payment")
+  json.serviceName    — Linked Dynatrace service name (lowercase)
+  json.hasError       — Boolean error flag
+  event.kind          — Always "BIZ_EVENT" for business events
+  event.type          — Step name
+  event.category      — "Business Observability Forge"
+
+ADDITIONAL FIELDS (additionalfields.* — flattened from JSON payload):
+  additionalfields.hasError         — Boolean: step had error
+  additionalfields.processingTime   — Numeric: processing time in ms
+  additionalfields.orderTotal       — Numeric: revenue/order value
+  additionalfields.errorMessage     — String: error message text
+  additionalfields.deviceType       — String: "Desktop", "Mobile", "Tablet"
+  additionalfields.browser          — String: browser name
+  additionalfields.region           — String: geographic region
+  additionalfields.channel          — String: acquisition channel
+  additionalfields.loyaltyTier      — String: customer loyalty tier
+  additionalfields.churnRisk        — String: churn risk label ("high", "medium", "low") — use countBy, NOT avg
+  additionalfields.abandonmentRisk  — String: abandonment risk label ("high", "medium", "low") — use countBy
+  additionalfields.fraudRisk        — String: fraud risk label ("high", "medium", "low") — use countBy
+  additionalfields.riskLevel        — String: risk level label — use countBy
+  additionalfields.npsScore         — Numeric: NPS score
+  additionalfields.netPromoterScore — Numeric: net promoter score (alias of npsScore)
+  additionalfields.satisfactionScore — Numeric: satisfaction score
+  additionalfields.satisfactionRating — Numeric: satisfaction rating (alias)
+  additionalfields.customerLifetimeValue — Numeric: customer lifetime value
+  additionalfields.conversionProbability — Numeric: conversion probability (0-1)
+  additionalfields.conversionRate   — Numeric: conversion rate percentage
+  additionalfields.engagementScore  — Numeric: engagement score
+  additionalfields.retentionProbability — Numeric: retention probability
+  additionalfields.planName         — String: selected plan/product name
+  additionalfields.planPrice        — Numeric: plan price
+  additionalfields.Productname      — String: product name
+  additionalfields.ProductId        — String: product ID
+  additionalfields.ProductType      — String: product type
+  additionalfields.subscriptionType — String: subscription type
+  additionalfields.paymentMethod    — String: payment method
+  additionalfields.segment          — String: customer segment
+  additionalfields.customerSegmentValue — String: customer segment value
+  additionalfields.marketSegment    — String: market segment
+  additionalfields.loyaltyStatus    — String: loyalty status label
+  additionalfields.membershipStatus — String: membership status
+  additionalfields.pricingTier      — String: pricing tier
+  additionalfields.subscriptionLevel — String: subscription level
+  additionalfields.transactionValue — Numeric: transaction monetary value
+  additionalfields.Price            — Numeric: item price
+  additionalfields.averageOrderValue — Numeric: average order value
+  additionalfields.revenuePerCustomer — Numeric: revenue per customer
+  additionalfields.profitMargin     — Numeric: profit margin percentage
+  additionalfields.annualRevenue    — Numeric: annual revenue
+  additionalfields.contractValue    — Numeric: contract monetary value
+  additionalfields.operationalCost  — Numeric: operational cost
+  additionalfields.acquisitionCost  — Numeric: customer acquisition cost
+  additionalfields.sessionDuration  — Numeric: session duration ms
+  additionalfields.pageViews        — Numeric: page view count
+  additionalfields.purchaseFrequency — Numeric: purchase frequency
+  additionalfields.location         — String: user location
+  additionalfields.entryChannel     — String: entry channel
+  additionalfields.customerIntent   — String: customer intent label
+
+GOLDEN SIGNAL METRICS (Dynatrace service-level, via "timeseries"):
+  dt.service.request.count          — Request count per service
+  dt.service.request.response_time  — Response time per service
+  dt.service.request.failure_count  — Failed request count per service
+
+DASHBOARD VARIABLES (always available in queries as $Variable):
+  $CompanyName  — Single-select: filters json.companyName
+  $JourneyType  — Multi-select: filters json.journeyType (use: in(json.journeyType, $JourneyType))
+  $Step         — Multi-select: filters json.stepName
+  $Service      — Multi-select: filters linked Dynatrace services
+
+KEY QUERY PATTERNS:
+  Revenue:        summarize revenue = sum(additionalfields.orderTotal)
+  Success Rate:   summarize total = count(), successful = countIf(isNull(additionalfields.hasError) or additionalfields.hasError == false) | fieldsAdd rate = round((toDouble(successful)/toDouble(total))*100, decimals:2)
+  Error Rate:     summarize errors = countIf(additionalfields.hasError == true), total = count() | fieldsAdd rate = round((toDouble(errors)/toDouble(total))*100, decimals:2)
+  P90 Latency:    summarize p90 = percentile(additionalfields.processingTime, 90)
+  Time Series:    makeTimeseries success = countIf(isNull(additionalfields.hasError) or additionalfields.hasError == false), failed = countIf(additionalfields.hasError == true), bins:30
+  SLA Compliance: summarize total = count(), withinSLA = countIf(additionalfields.processingTime < 5000), by: {json.stepName} | fieldsAdd compliance = (withinSLA / total) * 100
+  Hourly Pattern: fieldsAdd hour = toString(getHour(timestamp)) | summarize Events = count(), by: {hour}
+  Heatmap:        fieldsAdd hour = formatTimestamp(timestamp, format: "HH") | summarize count = count(), by: {json.stepName, hour}
+  String Dim:     filter isNotNull(additionalfields.churnRisk) | summarize Count = count(), by: {additionalfields.churnRisk} | sort Count desc
+  Numeric KPI:    summarize value = sum(additionalfields.orderTotal) (use singleValue visualization)
+  Numeric byStep: summarize Value = avg(additionalfields.processingTime), by: {json.stepName} | sort Value desc
+
+IMPORTANT TYPE RULES:
+  - STRING fields (churnRisk, abandonmentRisk, fraudRisk, riskLevel, deviceType, loyaltyTier, segment, etc.)
+    → NEVER use avg(), sum(), percentile() — these return NULL for strings
+    → USE: summarize Count = count(), by: {additionalfields.fieldName}
+    → Visualize with: donutChart, pieChart, categoricalBarChart
+  - NUMERIC fields (orderTotal, processingTime, netPromoterScore, conversionProbability, etc.)
+    → USE: sum(), avg(), percentile(), min(), max()
+    → Visualize with: singleValue, categoricalBarChart, areaChart, table
+
+VISUALIZATION BEST PRACTICES:
+  singleValue  — Executive KPIs (one number: volume, rate, revenue)
+  table        — Step metrics, SLA compliance, error details (multi-row aggregations)
+  areaChart    — Volume over time, success vs failed trends (makeTimeseries)
+  lineChart    — Error rate trends, golden signals (timeseries)
+  donutChart   — Events by step proportional breakdown
+  categoricalBarChart — Events by step (bar), volume distribution
+  pieChart     — Hourly activity pattern
+  heatmap      — Step × Hour activity matrix
+`.trim();
+
+// Dynatrace theme-aware threshold colors (adapt to dark/light mode)
+const DT_THRESHOLD_COLORS = {
+  ideal: 'var(--dt-colors-charts-status-ideal-default, #2f6862)',
+  warning: 'var(--dt-colors-charts-status-warning-default, #eea53c)',
+  critical: 'var(--dt-colors-charts-status-critical-default, #c62239)'
+};
+
+// ============================================================================
+// DASHBOARD SCHEMA VALIDATION (v21)
+// Validates generated dashboards before deployment — catches structural errors
+// ============================================================================
+
+function validateDashboardSchema(dashboard) {
+  const errors = [];
+  const warnings = [];
+  const content = dashboard.content || dashboard;
+
+  // Required top-level fields
+  if (content.version !== 21) {
+    errors.push(`version must be 21, got ${content.version}`);
+  }
+  if (!content.tiles || typeof content.tiles !== 'object') {
+    errors.push('tiles object is required');
+  }
+  if (!content.layouts || typeof content.layouts !== 'object') {
+    errors.push('layouts object is required');
   }
 
-  if (!dtUrl || !dtToken) {
-    console.warn('[AI Dashboard OTel] ⚠️ No DT credentials — GenAI spans will only be logged to console');
-    return null;
+  const validVizTypes = new Set([
+    'lineChart', 'areaChart', 'barChart', 'bandChart',
+    'categoricalBarChart', 'pieChart', 'donutChart',
+    'singleValue', 'meterBar', 'gauge',
+    'table', 'raw', 'recordList',
+    'histogram', 'honeycomb',
+    'choroplethMap', 'dotMap', 'connectionMap', 'bubbleMap',
+    'heatmap', 'scatterplot'
+  ]);
+
+  if (content.tiles) {
+    const tileIds = Object.keys(content.tiles);
+    const layoutIds = Object.keys(content.layouts || {});
+
+    // Every tile must have a layout
+    for (const id of tileIds) {
+      if (!layoutIds.includes(id)) {
+        errors.push(`tile ${id} has no corresponding layout`);
+      }
+    }
+
+    for (const [id, tile] of Object.entries(content.tiles)) {
+      if (!tile.type) {
+        errors.push(`tile ${id}: missing type`);
+        continue;
+      }
+      if (tile.type === 'data') {
+        if (!tile.query) warnings.push(`tile ${id} (${tile.title || 'untitled'}): data tile has no query`);
+        if (tile.visualization && !validVizTypes.has(tile.visualization)) {
+          errors.push(`tile ${id}: invalid visualization "${tile.visualization}"`);
+        }
+      }
+    }
+
+    // Validate layouts
+    for (const [id, layout] of Object.entries(content.layouts || {})) {
+      if (layout.x == null || layout.y == null || layout.w == null || layout.h == null) {
+        errors.push(`layout ${id}: missing x/y/w/h`);
+      }
+      if (layout.w !== undefined && (layout.w < 1 || layout.w > 24)) {
+        warnings.push(`layout ${id}: width ${layout.w} outside 1-24 range`);
+      }
+    }
   }
 
-  const endpoint = dtUrl.replace(/\/+$/, '').replace('.apps.dynatrace', '.dynatrace') + '/api/v2/otlp/v1/traces';
+  // Validate variables
+  if (Array.isArray(content.variables)) {
+    const keys = new Set();
+    for (const v of content.variables) {
+      if (!v.key) { errors.push('variable missing key'); continue; }
+      if (keys.has(v.key)) errors.push(`duplicate variable key: ${v.key}`);
+      keys.add(v.key);
+      if (!['query', 'csv', 'text'].includes(v.type)) {
+        warnings.push(`variable ${v.key}: unknown type "${v.type}"`);
+      }
+      if (v.type === 'query' && !v.input) {
+        errors.push(`variable ${v.key}: query type requires input`);
+      }
+    }
+  }
 
+  const isValid = errors.length === 0;
+  if (!isValid) console.warn(`[Schema Validation] ❌ ${errors.length} errors:`, errors);
+  if (warnings.length > 0) console.log(`[Schema Validation] ⚠️ ${warnings.length} warnings:`, warnings);
+  if (isValid) console.log(`[Schema Validation] ✅ Dashboard passed validation`);
+
+  return { isValid, errors, warnings };
+}
+
+// ============================================================================
+// VARIABLE DEPENDENCY TOPOLOGICAL SORT
+// Resolves variable ordering so dependent variables are defined after their deps
+// ============================================================================
+
+function sortVariablesByDependency(variables) {
+  if (!Array.isArray(variables) || variables.length === 0) return variables;
+
+  // Built-in timeframe vars that should be excluded from dependency tracking
+  const builtins = new Set(['dt_timeframe_from', 'dt_timeframe_to']);
+  const varMap = new Map(variables.map(v => [v.key, v]));
+  const varKeys = new Set(variables.map(v => v.key));
+
+  // Find dependencies for each variable
+  function findDeps(v) {
+    const input = v.input || '';
+    const matches = input.match(/\$([A-Za-z_][A-Za-z0-9_]*)/g) || [];
+    return [...new Set(
+      matches.map(m => m.slice(1))
+        .filter(name => !builtins.has(name) && varKeys.has(name))
+    )];
+  }
+
+  const deps = new Map();
+  for (const v of variables) {
+    deps.set(v.key, findDeps(v));
+  }
+
+  // Kahn's algorithm for topological sort
+  const inDegree = new Map();
+  for (const key of varKeys) inDegree.set(key, 0);
+  for (const [, d] of deps) {
+    for (const dep of d) {
+      inDegree.set(dep, (inDegree.get(dep) || 0) + 1);
+    }
+  }
+
+  // Reverse: we want vars with no deps first, then vars that depend on them
+  const depCount = new Map();
+  for (const key of varKeys) depCount.set(key, 0);
+  for (const [key, d] of deps) {
+    depCount.set(key, d.length);
+  }
+
+  const queue = [];
+  for (const [key, count] of depCount) {
+    if (count === 0) queue.push(key);
+  }
+
+  const sorted = [];
+  const visited = new Set();
+  while (queue.length > 0) {
+    const key = queue.shift();
+    if (visited.has(key)) continue;
+    visited.add(key);
+    sorted.push(key);
+
+    // Find vars that depend on this key
+    for (const [vKey, vDeps] of deps) {
+      if (vDeps.includes(key) && !visited.has(vKey)) {
+        const remaining = vDeps.filter(d => !visited.has(d));
+        if (remaining.length === 0) queue.push(vKey);
+      }
+    }
+  }
+
+  // Add any unvisited (cyclic deps) at the end with a warning
+  for (const key of varKeys) {
+    if (!visited.has(key)) {
+      console.warn(`[Variable Sort] ⚠️ Cyclic dependency detected for variable: ${key}`);
+      sorted.push(key);
+    }
+  }
+
+  return sorted.map(key => varMap.get(key)).filter(Boolean);
+}
+
+// ============================================================================
+// GRAIL FIELD DISCOVERY — Query Dynatrace to discover which additionalfields.*
+// actually exist for a given company/journey before building dashboard tiles.
+// Prevents null-value tiles from appearing on dashboards.
+// ============================================================================
+
+/**
+ * Query Dynatrace Grail for sample bizevents to discover which additionalfields
+ * are present for this company+journey. Returns a Set of field names with .records
+ * containing the full bizevent payloads (company, journey, step data, business metrics).
+ * If no records are found, polls up to maxRetries times (waiting pollIntervalMs between attempts)
+ * since bizevents may take time to arrive in Grail after a journey starts.
+ */
+async function discoverBizEventFields(company, journeyType, { maxRetries = 8, pollIntervalMs = 15000 } = {}) {
   try {
-    const resource = resourceFromAttributes({
-      'service.name': 'bizobs-ai-dashboard',
-      'service.version': '1.0.0',
-      'deployment.environment': process.env.NODE_ENV || 'production',
-    });
+    // Load DT credentials
+    let dtUrl = process.env.DT_ENVIRONMENT || process.env.DYNATRACE_URL || '';
+    let dtToken = process.env.DT_PLATFORM_TOKEN || process.env.DYNATRACE_TOKEN || process.env.DT_API_TOKEN || '';
 
-    const exporter = new OTLPTraceExporter({
-      url: endpoint,
-      headers: { Authorization: `Api-Token ${dtToken}` },
-    });
+    if (!dtUrl || !dtToken) {
+      try {
+        const credsPath = path.join(process.cwd(), '.dt-credentials.json');
+        const creds = JSON.parse(readFileSync(credsPath, 'utf-8'));
+        if (!dtUrl) dtUrl = creds.environmentUrl || '';
+        if (!dtToken) dtToken = creds.apiToken || '';
+      } catch { /* no creds file */ }
+    }
 
-    _dashboardProvider = new NodeTracerProvider({
-      resource,
-      spanProcessors: [new BatchSpanProcessor(exporter)],
-    });
-    _dashboardProvider.register();
-    _dashboardTracer = trace.getTracer('bizobs-ai-dashboard', '1.0.0');
-    
-    console.log(`[AI Dashboard OTel] ✅ GenAI tracing enabled → ${endpoint}`);
-    return _dashboardTracer;
+    if (!dtUrl || !dtToken) {
+      console.warn('[AI Dashboard] ⚠️ No DT credentials for field discovery — skipping');
+      return null;
+    }
+
+    // Detect token type: OAuth tokens are long and don't start with 'dt0'
+    const isOAuthToken = dtToken.length > 100 && !dtToken.startsWith('dt0');
+    const authHeader = isOAuthToken ? `Bearer ${dtToken}` : `Api-Token ${dtToken}`;
+
+    // Normalize URL: Grail endpoint needs the non-apps URL for Api-Token auth
+    const baseUrl = dtUrl.replace(/\/+$/, '').replace('.apps.dynatrace', '.dynatrace');
+    const queryUrl = `${baseUrl}/platform/storage/query/v1/query:execute`;
+
+    // Query a sample of recent bizevents WITHOUT | fields to discover ALL additionalfields
+    // Real customers may have any field names — status, productSKU, warrantyType, etc.
+    const safeCompany = company.replace(/["\\]/g, '');
+    const safeJourney = journeyType.replace(/["\\]/g, '');
+    const dql = `fetch bizevents
+| filter event.kind == "BIZ_EVENT"
+| filter json.companyName == "${safeCompany}"
+| filter json.journeyType == "${safeJourney}"
+| sort timestamp desc
+| limit 5`;
+
+    console.log(`[AI Dashboard] 🔍 Discovering bizevent fields for ${company} / ${journeyType} (auth: ${isOAuthToken ? 'OAuth' : 'ApiToken'})...`);
+
+    // Poll loop: bizevents may take time to arrive in Grail after journey start
+    let records = [];
+    for (let attempt = 1; attempt <= maxRetries + 1; attempt++) {
+      const response = await fetch(queryUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': authHeader,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          query: dql,
+          requestTimeoutMilliseconds: 15000,
+          maxResultRecords: 5
+        })
+      });
+
+      if (!response.ok) {
+        console.warn(`[AI Dashboard] ⚠️ Field discovery query failed: ${response.status}`);
+        return null;
+      }
+
+      const data = await response.json();
+      records = data?.result?.records || [];
+
+      if (records.length > 0) {
+        if (attempt > 1) {
+          console.log(`[AI Dashboard] ✅ Found ${records.length} bizevent records on attempt ${attempt}`);
+        }
+        break;
+      }
+
+      // No records yet — if we have retries left, wait and try again
+      if (attempt <= maxRetries) {
+        const waitSec = pollIntervalMs / 1000;
+        console.log(`[AI Dashboard] ⏳ No bizevents yet — waiting ${waitSec}s before retry ${attempt}/${maxRetries} (bizevents may still be ingesting into Grail)...`);
+        await new Promise(resolve => setTimeout(resolve, pollIntervalMs));
+      }
+    }
+
+    if (records.length === 0) {
+      console.log('[AI Dashboard] ℹ️ No bizevent records found after polling — field discovery returning empty');
+      const emptyResult = new Set();
+      emptyResult.records = [];
+      return emptyResult;
+    }
+
+    // Extract all non-null additionalfields AND preserve full records
+    // so Ollama can see the actual company/journey payload data
+    const foundFields = new Set();
+    for (const record of records) {
+      for (const [key, value] of Object.entries(record)) {
+        if (value !== null && value !== undefined && value !== '' && key.startsWith('additionalfields.')) {
+          foundFields.add(key.replace('additionalfields.', ''));
+        }
+      }
+    }
+
+    // Attach the full bizevent records so callers can pass real data to Ollama
+    // Each record contains: timestamp, json.companyName, json.journeyType,
+    // json.journeyStep, additionalfields.*, and other Grail-enriched fields
+    foundFields.records = records;
+
+    console.log(`[AI Dashboard] ✅ Discovered ${foundFields.size} fields: ${[...foundFields].join(', ')}`);
+    console.log(`[AI Dashboard] 📋 Bizevent payload (${records.length} records): ${JSON.stringify(records[0], null, 0).substring(0, 600)}`);
+    return foundFields;
+
   } catch (err) {
-    console.error('[AI Dashboard OTel] ❌ Failed to init tracer:', err.message);
-    return null;
+    console.warn(`[AI Dashboard] ⚠️ Field discovery error: ${err.message}`);
+    return null; // null = couldn't check, fall back to adding all tiles
   }
 }
 
-// Initialize tracer at module load
-_initDashboardTracer();
+// ============================================================================
+// OTEL GenAI Span + Metrics — sends Ollama LLM traces to Dynatrace AI Observability
+// Uses the GLOBAL TracerProvider registered by otel.cjs (no duplicate provider)
+// ============================================================================
+
+// Get the global tracer (set up by otel.cjs via --require)
+const _genaiTracer = trace.getTracer('bizobs-ai-dashboard', '2.0.0');
+
+// OTel Metrics for LLM token usage and latency
+const _genaiMeter = metrics.getMeter('bizobs-ai-dashboard', '2.0.0');
+const _tokenCounter = _genaiMeter.createCounter('gen_ai.client.token.usage', {
+  description: 'Total tokens consumed by Ollama LLM calls',
+  unit: 'token',
+});
+const _requestDuration = _genaiMeter.createHistogram('gen_ai.client.operation.duration', {
+  description: 'Duration of Ollama LLM requests',
+  unit: 'ms',
+});
+const _requestCounter = _genaiMeter.createCounter('gen_ai.client.operation.count', {
+  description: 'Total number of Ollama LLM requests',
+  unit: '{request}',
+});
+
+console.log('[AI Dashboard OTel] ✅ GenAI tracing + metrics using global OTel provider from otel.cjs');
 
 function createGenAISpan(prompt, completion, model, promptTokens, completionTokens, duration) {
   return {
@@ -131,22 +627,32 @@ function createGenAISpan(prompt, completion, model, promptTokens, completionToke
   };
 }
 
-async function logGenAISpan(spanAttributes) {
+async function logGenAISpan(spanAttributes, operationName) {
   try {
+    const promptTokens = spanAttributes['gen_ai.usage.prompt_tokens'] || 0;
+    const completionTokens = spanAttributes['gen_ai.usage.completion_tokens'] || 0;
+    const durationMs = spanAttributes['gen_ai.response.duration_ms'] || 0;
+    const model = spanAttributes['gen_ai.request.model'] || OLLAMA_MODEL;
+
     // Always log to console for debugging
     console.log('[GenAI Span]', JSON.stringify({
-      model: spanAttributes['gen_ai.request.model'],
-      prompt_tokens: spanAttributes['gen_ai.usage.prompt_tokens'],
-      completion_tokens: spanAttributes['gen_ai.usage.completion_tokens'],
-      duration_ms: spanAttributes['gen_ai.response.duration_ms'],
+      operation: operationName || 'chat',
+      model,
+      prompt_tokens: promptTokens,
+      completion_tokens: completionTokens,
+      duration_ms: durationMs,
     }));
 
-    // Export real OTel span to Dynatrace
-    const tracer = _dashboardTracer || _initDashboardTracer();
-    if (!tracer) return;
+    // Record OTel metrics (always works via global meter from otel.cjs)
+    const metricAttrs = { 'gen_ai.system': 'ollama', 'gen_ai.request.model': model, 'gen_ai.operation.name': operationName || 'chat' };
+    _tokenCounter.add(promptTokens, { ...metricAttrs, 'gen_ai.token.type': 'input' });
+    _tokenCounter.add(completionTokens, { ...metricAttrs, 'gen_ai.token.type': 'output' });
+    _requestDuration.record(durationMs, metricAttrs);
+    _requestCounter.add(1, metricAttrs);
 
-    const spanName = `chat ${spanAttributes['gen_ai.request.model'] || OLLAMA_MODEL}`;
-    const span = tracer.startSpan(spanName, {
+    // Export GenAI span to Dynatrace via global tracer
+    const spanName = `chat ${model}`;
+    const span = _genaiTracer.startSpan(spanName, {
       kind: SpanKind.CLIENT,
       attributes: spanAttributes,
     });
@@ -206,21 +712,30 @@ async function warmupOllama() {
     }
     
     console.log('[Ollama Warmup] 🔥 Sending warmup prompt to Ollama...');
+    const warmupPrompt = 'Say "ready" in one word.';
     const response = await fetch(`${OLLAMA_ENDPOINT}/api/generate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: OLLAMA_MODEL,
-        prompt: 'Say "ready" in one word.',
+        prompt: warmupPrompt,
         stream: false,
-        temperature: 0.3
+        keep_alive: -1,
+        options: { num_predict: 8 }
       }),
       signal: AbortSignal.timeout(60000) // 60s timeout for warmup
     });
 
     const elapsed = Date.now() - startTime;
     if (response.ok) {
-      console.log(`[Ollama Warmup] ✅ Model loaded and ready (${elapsed}ms)`);
+      const result = await response.json();
+      console.log(`[Ollama Warmup] ✅ Model loaded and ready (${elapsed}ms) — tokens: prompt=${result.prompt_eval_count || 0}, completion=${result.eval_count || 0}`);
+      // Export warmup as a GenAI span so Ollama calls are always visible in AI Observability
+      await logGenAISpan(
+        createGenAISpan(warmupPrompt, result.response || 'ready', OLLAMA_MODEL,
+          result.prompt_eval_count || 0, result.eval_count || 0, elapsed),
+        'warmup'
+      );
     } else {
       console.warn(`[Ollama Warmup] ⚠️ Warmup failed (HTTP ${response.status}, ${elapsed}ms)`);
     }
@@ -662,9 +1177,9 @@ function generateDynamicFieldTiles(detected, company, journeyType) {
       visualizationSettings: {
         gauge: { label: 'NPS', min: 0, max: 100 },
         thresholds: [{ id: 1, field: 'value', isEnabled: true, rules: [
-          { id: 1, color: { Default: '#2ab06f' }, comparator: '≥', value: 70 },
-          { id: 2, color: { Default: '#f5d30f' }, comparator: '≥', value: 40 },
-          { id: 3, color: { Default: '#c62239' }, comparator: '<', value: 40 }
+          { id: 1, color: { Default: DT_THRESHOLD_COLORS.ideal }, comparator: '≥', value: 70 },
+          { id: 2, color: { Default: DT_THRESHOLD_COLORS.warning }, comparator: '≥', value: 40 },
+          { id: 3, color: { Default: DT_THRESHOLD_COLORS.critical }, comparator: '<', value: 40 }
         ]}],
         unitsOverrides: [{ identifier: 'value', unitCategory: 'unspecified', baseUnit: 'count', decimals: 0, suffix: '', delimiter: true }]
       }
@@ -685,9 +1200,9 @@ function generateDynamicFieldTiles(detected, company, journeyType) {
       visualizationSettings: {
         gauge: { label: 'CSAT', min: 0, max: 5 },
         thresholds: [{ id: 1, field: 'value', isEnabled: true, rules: [
-          { id: 1, color: { Default: '#2ab06f' }, comparator: '≥', value: 4 },
-          { id: 2, color: { Default: '#f5d30f' }, comparator: '≥', value: 3 },
-          { id: 3, color: { Default: '#c62239' }, comparator: '<', value: 3 }
+          { id: 1, color: { Default: DT_THRESHOLD_COLORS.ideal }, comparator: '≥', value: 4 },
+          { id: 2, color: { Default: DT_THRESHOLD_COLORS.warning }, comparator: '≥', value: 3 },
+          { id: 3, color: { Default: DT_THRESHOLD_COLORS.critical }, comparator: '<', value: 3 }
         ]}],
         unitsOverrides: [{ identifier: 'value', unitCategory: 'unspecified', baseUnit: 'count', decimals: 1, suffix: '/5', delimiter: true }]
       }
@@ -711,9 +1226,9 @@ function generateDynamicFieldTiles(detected, company, journeyType) {
       visualizationSettings: {
         singleValue: { label: 'HIGH CHURN RISK', recordField: 'value', colorThresholdTarget: 'background' },
         thresholds: [{ id: 1, field: 'value', isEnabled: true, rules: [
-          { id: 1, color: { Default: '#c62239' }, comparator: '>', value: 5 },
-          { id: 2, color: { Default: '#f5d30f' }, comparator: '>', value: 2 },
-          { id: 3, color: { Default: '#2ab06f' }, comparator: '≤', value: 2 }
+          { id: 1, color: { Default: DT_THRESHOLD_COLORS.critical }, comparator: '>', value: 5 },
+          { id: 2, color: { Default: DT_THRESHOLD_COLORS.warning }, comparator: '>', value: 2 },
+          { id: 3, color: { Default: DT_THRESHOLD_COLORS.ideal }, comparator: '≤', value: 2 }
         ]}],
         unitsOverrides: [{ identifier: 'value', unitCategory: 'unspecified', baseUnit: 'count', decimals: 0, suffix: '', delimiter: true }]
       }
@@ -728,9 +1243,9 @@ function generateDynamicFieldTiles(detected, company, journeyType) {
       visualizationSettings: {
         singleValue: { label: 'ENGAGEMENT SCORE', recordField: 'value', colorThresholdTarget: 'background' },
         thresholds: [{ id: 1, field: 'value', isEnabled: true, rules: [
-          { id: 1, color: { Default: '#2ab06f' }, comparator: '≥', value: 80 },
-          { id: 2, color: { Default: '#f5d30f' }, comparator: '≥', value: 60 },
-          { id: 3, color: { Default: '#c62239' }, comparator: '<', value: 60 }
+          { id: 1, color: { Default: DT_THRESHOLD_COLORS.ideal }, comparator: '≥', value: 80 },
+          { id: 2, color: { Default: DT_THRESHOLD_COLORS.warning }, comparator: '≥', value: 60 },
+          { id: 3, color: { Default: DT_THRESHOLD_COLORS.critical }, comparator: '<', value: 60 }
         ]}],
         unitsOverrides: [{ identifier: 'value', unitCategory: 'unspecified', baseUnit: 'count', decimals: 1, suffix: '', delimiter: true }]
       }
@@ -784,9 +1299,9 @@ function generateDynamicFieldTiles(detected, company, journeyType) {
       visualizationSettings: {
         gauge: { label: 'COMPLIANCE', min: 0, max: 100 },
         thresholds: [{ id: 1, field: 'value', isEnabled: true, rules: [
-          { id: 1, color: { Default: '#2ab06f' }, comparator: '≥', value: 90 },
-          { id: 2, color: { Default: '#f5d30f' }, comparator: '≥', value: 75 },
-          { id: 3, color: { Default: '#c62239' }, comparator: '<', value: 75 }
+          { id: 1, color: { Default: DT_THRESHOLD_COLORS.ideal }, comparator: '≥', value: 90 },
+          { id: 2, color: { Default: DT_THRESHOLD_COLORS.warning }, comparator: '≥', value: 75 },
+          { id: 3, color: { Default: DT_THRESHOLD_COLORS.critical }, comparator: '<', value: 75 }
         ]}],
         unitsOverrides: [{ identifier: 'value', unitCategory: 'percentage', baseUnit: 'percent', decimals: 1, suffix: '%', delimiter: true }]
       }
@@ -801,9 +1316,9 @@ function generateDynamicFieldTiles(detected, company, journeyType) {
       visualizationSettings: {
         singleValue: { label: 'RETENTION RATE', recordField: 'value', colorThresholdTarget: 'background' },
         thresholds: [{ id: 1, field: 'value', isEnabled: true, rules: [
-          { id: 1, color: { Default: '#2ab06f' }, comparator: '≥', value: 80 },
-          { id: 2, color: { Default: '#f5d30f' }, comparator: '≥', value: 60 },
-          { id: 3, color: { Default: '#c62239' }, comparator: '<', value: 60 }
+          { id: 1, color: { Default: DT_THRESHOLD_COLORS.ideal }, comparator: '≥', value: 80 },
+          { id: 2, color: { Default: DT_THRESHOLD_COLORS.warning }, comparator: '≥', value: 60 },
+          { id: 3, color: { Default: DT_THRESHOLD_COLORS.critical }, comparator: '<', value: 60 }
         ]}],
         unitsOverrides: [{ identifier: 'value', unitCategory: 'percentage', baseUnit: 'percent', decimals: 1, suffix: '%', delimiter: true }]
       }
@@ -860,9 +1375,9 @@ function generateDynamicFieldTiles(detected, company, journeyType) {
       visualizationSettings: {
         gauge: { label: 'EFFICIENCY', min: 0, max: 100 },
         thresholds: [{ id: 1, field: 'value', isEnabled: true, rules: [
-          { id: 1, color: { Default: '#2ab06f' }, comparator: '≥', value: 85 },
-          { id: 2, color: { Default: '#f5d30f' }, comparator: '≥', value: 70 },
-          { id: 3, color: { Default: '#c62239' }, comparator: '<', value: 70 }
+          { id: 1, color: { Default: DT_THRESHOLD_COLORS.ideal }, comparator: '≥', value: 85 },
+          { id: 2, color: { Default: DT_THRESHOLD_COLORS.warning }, comparator: '≥', value: 70 },
+          { id: 3, color: { Default: DT_THRESHOLD_COLORS.critical }, comparator: '<', value: 70 }
         ]}],
         unitsOverrides: [{ identifier: 'value', unitCategory: 'percentage', baseUnit: 'percent', decimals: 1, suffix: '%', delimiter: true }]
       }
@@ -964,9 +1479,9 @@ function generateDynamicFieldTiles(detected, company, journeyType) {
       visualizationSettings: {
         singleValue: { label: 'CONVERSION RATE', recordField: 'value', colorThresholdTarget: 'background' },
         thresholds: [{ id: 1, field: 'value', isEnabled: true, rules: [
-          { id: 1, color: { Default: '#2ab06f' }, comparator: '≥', value: 10 },
-          { id: 2, color: { Default: '#f5d30f' }, comparator: '≥', value: 5 },
-          { id: 3, color: { Default: '#c62239' }, comparator: '<', value: 5 }
+          { id: 1, color: { Default: DT_THRESHOLD_COLORS.ideal }, comparator: '≥', value: 10 },
+          { id: 2, color: { Default: DT_THRESHOLD_COLORS.warning }, comparator: '≥', value: 5 },
+          { id: 3, color: { Default: DT_THRESHOLD_COLORS.critical }, comparator: '<', value: 5 }
         ]}],
         unitsOverrides: [{ identifier: 'value', unitCategory: 'percentage', baseUnit: 'percent', decimals: 1, suffix: '%', delimiter: true }]
       }
@@ -1005,14 +1520,14 @@ function generateCoreTileTemplates(company, journeyType, steps, dynatraceUrl) {
         table: { columnWidths: { 'json.stepName': 200, 'OrdersInStep': 120, 'SuccessRate': 120, 'AvgTimeInStep': 120, 'ErrorsInStep': 120, 'ErrorRate': 120 } },
         thresholds: [
           { id: 1, field: 'SuccessRate', isEnabled: true, rules: [
-            { id: 1, color: { Default: '#2ab06f' }, comparator: '≥', value: 95 },
-            { id: 2, color: { Default: '#f5d30f' }, comparator: '≥', value: 85 },
-            { id: 3, color: { Default: '#dc2626' }, comparator: '<', value: 85 }
+            { id: 1, color: { Default: DT_THRESHOLD_COLORS.ideal }, comparator: '≥', value: 95 },
+            { id: 2, color: { Default: DT_THRESHOLD_COLORS.warning }, comparator: '≥', value: 85 },
+            { id: 3, color: { Default: DT_THRESHOLD_COLORS.critical }, comparator: '<', value: 85 }
           ]},
           { id: 2, field: 'ErrorRate', isEnabled: true, rules: [
-            { id: 1, color: { Default: '#dc2626' }, comparator: '>', value: 5 },
-            { id: 2, color: { Default: '#f5d30f' }, comparator: '>', value: 2 },
-            { id: 3, color: { Default: '#2ab06f' }, comparator: '≤', value: 2 }
+            { id: 1, color: { Default: DT_THRESHOLD_COLORS.critical }, comparator: '>', value: 5 },
+            { id: 2, color: { Default: DT_THRESHOLD_COLORS.warning }, comparator: '>', value: 2 },
+            { id: 3, color: { Default: DT_THRESHOLD_COLORS.ideal }, comparator: '≤', value: 2 }
           ]}
         ],
         unitsOverrides: [
@@ -1030,9 +1545,9 @@ function generateCoreTileTemplates(company, journeyType, steps, dynatraceUrl) {
       visualizationSettings: {
         singleValue: { label: 'SUCCESS RATE', recordField: 'success_rate', colorThresholdTarget: 'value', prefixIcon: 'CheckmarkIcon' },
         thresholds: [{ id: 1, field: 'success_rate', isEnabled: true, rules: [
-          { id: 1, color: { Default: '#2ab06f' }, comparator: '≥', value: 95 },
-          { id: 2, color: { Default: '#f5d30f' }, comparator: '≥', value: 85 },
-          { id: 3, color: { Default: '#dc2626' }, comparator: '<', value: 85 }
+          { id: 1, color: { Default: DT_THRESHOLD_COLORS.ideal }, comparator: '≥', value: 95 },
+          { id: 2, color: { Default: DT_THRESHOLD_COLORS.warning }, comparator: '≥', value: 85 },
+          { id: 3, color: { Default: DT_THRESHOLD_COLORS.critical }, comparator: '<', value: 85 }
         ]}],
         unitsOverrides: [{ identifier: 'success_rate', unitCategory: 'percentage', baseUnit: 'percent', decimals: 1, suffix: '%', delimiter: true }]
       }
@@ -1054,9 +1569,9 @@ function generateCoreTileTemplates(company, journeyType, steps, dynatraceUrl) {
       visualizationSettings: {
         singleValue: { label: 'ERRORS', recordField: 'errors', colorThresholdTarget: 'background' },
         thresholds: [{ id: 1, field: 'errors', isEnabled: true, rules: [
-          { id: 1, color: { Default: '#dc2626' }, comparator: '>', value: 10 },
-          { id: 2, color: { Default: '#f5d30f' }, comparator: '>', value: 5 },
-          { id: 3, color: { Default: '#2ab06f' }, comparator: '≤', value: 5 }
+          { id: 1, color: { Default: DT_THRESHOLD_COLORS.critical }, comparator: '>', value: 10 },
+          { id: 2, color: { Default: DT_THRESHOLD_COLORS.warning }, comparator: '>', value: 5 },
+          { id: 3, color: { Default: DT_THRESHOLD_COLORS.ideal }, comparator: '≤', value: 5 }
         ]}],
         unitsOverrides: [{ identifier: 'errors', unitCategory: 'unspecified', baseUnit: 'count', decimals: 0, delimiter: true }]
       }
@@ -1128,8 +1643,8 @@ function generateCoreTileTemplates(company, journeyType, steps, dynatraceUrl) {
       visualizationSettings: {
         chartSettings: { gapPolicy: 'connect', seriesOverrides: [{ seriesId: ['ErrorRate'], override: { color: '#C62239' } }] },
         thresholds: [{ id: 1, field: 'ErrorRate', isEnabled: true, rules: [
-          { id: 1, color: { Default: '#dc2626' }, comparator: '>', value: 5 },
-          { id: 2, color: { Default: '#f5d30f' }, comparator: '>', value: 2 }
+          { id: 1, color: { Default: DT_THRESHOLD_COLORS.critical }, comparator: '>', value: 5 },
+          { id: 2, color: { Default: DT_THRESHOLD_COLORS.warning }, comparator: '>', value: 2 }
         ]}],
         unitsOverrides: [{ identifier: 'ErrorRate', unitCategory: 'percentage', baseUnit: 'percent', decimals: 2, suffix: '%', delimiter: true }]
       }
@@ -1141,9 +1656,9 @@ function generateCoreTileTemplates(company, journeyType, steps, dynatraceUrl) {
       visualizationSettings: {
         table: { rowDensity: 'condensed', enableLineWrap: false, columnWidths: { 'json.stepName': 200, 'Events': 100, 'AvgTime': 120, 'ErrorRate': 120 } },
         thresholds: [{ id: 1, field: 'ErrorRate', isEnabled: true, rules: [
-          { id: 1, color: { Default: '#dc2626' }, comparator: '>', value: 5 },
-          { id: 2, color: { Default: '#f5d30f' }, comparator: '>', value: 2 },
-          { id: 3, color: { Default: '#2ab06f' }, comparator: '≤', value: 2 }
+          { id: 1, color: { Default: DT_THRESHOLD_COLORS.critical }, comparator: '>', value: 5 },
+          { id: 2, color: { Default: DT_THRESHOLD_COLORS.warning }, comparator: '>', value: 2 },
+          { id: 3, color: { Default: DT_THRESHOLD_COLORS.ideal }, comparator: '≤', value: 2 }
         ]}],
         unitsOverrides: [
           { identifier: 'AvgTime', unitCategory: 'time', baseUnit: 'milli_second', decimals: 0, suffix: 'ms', delimiter: true },
@@ -1177,9 +1692,9 @@ function generateCoreTileTemplates(company, journeyType, steps, dynatraceUrl) {
       visualizationSettings: {
         singleValue: { label: 'AVG COMPLETION TIME', recordField: 'AvgCompletionTime', colorThresholdTarget: 'background', prefixIcon: 'ClockIcon' },
         thresholds: [{ id: 1, field: 'AvgCompletionTime', isEnabled: true, rules: [
-          { id: 1, color: { Default: '#2ab06f' }, comparator: '≤', value: 2000 },
-          { id: 2, color: { Default: '#f5d30f' }, comparator: '≤', value: 5000 },
-          { id: 3, color: { Default: '#dc2626' }, comparator: '>', value: 5000 }
+          { id: 1, color: { Default: DT_THRESHOLD_COLORS.ideal }, comparator: '≤', value: 2000 },
+          { id: 2, color: { Default: DT_THRESHOLD_COLORS.warning }, comparator: '≤', value: 5000 },
+          { id: 3, color: { Default: DT_THRESHOLD_COLORS.critical }, comparator: '>', value: 5000 }
         ]}],
         unitsOverrides: [{ identifier: 'AvgCompletionTime', unitCategory: 'time', baseUnit: 'milli_second', decimals: 0, suffix: 'ms', delimiter: true }]
       }
@@ -1191,9 +1706,9 @@ function generateCoreTileTemplates(company, journeyType, steps, dynatraceUrl) {
       visualizationSettings: {
         table: { rowDensity: 'condensed', enableLineWrap: false, columnWidths: { 'json.stepName': 200, 'TotalEvents': 100, 'WithinSLA': 100, 'ComplianceRate': 120 } },
         thresholds: [{ id: 1, field: 'ComplianceRate', isEnabled: true, rules: [
-          { id: 1, color: { Default: '#2ab06f' }, comparator: '≥', value: 95 },
-          { id: 2, color: { Default: '#f5d30f' }, comparator: '≥', value: 85 },
-          { id: 3, color: { Default: '#dc2626' }, comparator: '<', value: 85 }
+          { id: 1, color: { Default: DT_THRESHOLD_COLORS.ideal }, comparator: '≥', value: 95 },
+          { id: 2, color: { Default: DT_THRESHOLD_COLORS.warning }, comparator: '≥', value: 85 },
+          { id: 3, color: { Default: DT_THRESHOLD_COLORS.critical }, comparator: '<', value: 85 }
         ]}],
         unitsOverrides: [
           { identifier: 'ComplianceRate', unitCategory: 'percentage', baseUnit: 'percent', decimals: 1, suffix: '%', delimiter: true },
@@ -1215,9 +1730,9 @@ function generateCoreTileTemplates(company, journeyType, steps, dynatraceUrl) {
       visualizationSettings: {
         singleValue: { label: 'P90 RESPONSE TIME', recordField: 'p90', colorThresholdTarget: 'background' },
         thresholds: [{ id: 1, field: 'p90', isEnabled: true, rules: [
-          { id: 1, color: { Default: '#2ab06f' }, comparator: '≤', value: 50 },
-          { id: 2, color: { Default: '#f5d30f' }, comparator: '≤', value: 100 },
-          { id: 3, color: { Default: '#c62239' }, comparator: '>', value: 100 }
+          { id: 1, color: { Default: DT_THRESHOLD_COLORS.ideal }, comparator: '≤', value: 50 },
+          { id: 2, color: { Default: DT_THRESHOLD_COLORS.warning }, comparator: '≤', value: 100 },
+          { id: 3, color: { Default: DT_THRESHOLD_COLORS.critical }, comparator: '>', value: 100 }
         ]}],
         unitsOverrides: [{ identifier: 'p90', unitCategory: 'time', baseUnit: 'millisecond', decimals: 0, suffix: ' ms', delimiter: true }]
       }
@@ -1235,9 +1750,9 @@ function generateCoreTileTemplates(company, journeyType, steps, dynatraceUrl) {
       visualizationSettings: {
         table: { rowDensity: 'condensed', enableLineWrap: false, columnWidths: { 'json.stepName': 200, 'TotalAtStep': 120, 'CompletedFromStep': 140, 'ConversionRate': 140 } },
         thresholds: [{ id: 1, field: 'ConversionRate', isEnabled: true, rules: [
-          { id: 1, color: { Default: '#2ab06f' }, comparator: '≥', value: 90 },
-          { id: 2, color: { Default: '#f5d30f' }, comparator: '≥', value: 75 },
-          { id: 3, color: { Default: '#dc2626' }, comparator: '<', value: 75 }
+          { id: 1, color: { Default: DT_THRESHOLD_COLORS.ideal }, comparator: '≥', value: 90 },
+          { id: 2, color: { Default: DT_THRESHOLD_COLORS.warning }, comparator: '≥', value: 75 },
+          { id: 3, color: { Default: DT_THRESHOLD_COLORS.critical }, comparator: '<', value: 75 }
         ]}],
         unitsOverrides: [
           { identifier: 'TotalAtStep', unitCategory: 'unspecified', baseUnit: 'count', decimals: 0, delimiter: true },
@@ -1314,9 +1829,9 @@ function generateCoreTileTemplates(company, journeyType, steps, dynatraceUrl) {
         table: { rowDensity: 'condensed', enableLineWrap: false, columnWidths: { 'serviceName': 250, 'failureRate': 120 } },
         thresholds: [
           { id: 1, field: 'failureRate', isEnabled: true, rules: [
-            { id: 1, color: { Default: '#2ab06f' }, comparator: '≤', value: 1 },
-            { id: 2, color: { Default: '#f5d30f' }, comparator: '≤', value: 5 },
-            { id: 3, color: { Default: '#dc2626' }, comparator: '>', value: 5 }
+            { id: 1, color: { Default: DT_THRESHOLD_COLORS.ideal }, comparator: '≤', value: 1 },
+            { id: 2, color: { Default: DT_THRESHOLD_COLORS.warning }, comparator: '≤', value: 5 },
+            { id: 3, color: { Default: DT_THRESHOLD_COLORS.critical }, comparator: '>', value: 5 }
           ]}
         ],
         unitsOverrides: [{ identifier: 'failureRate', unitCategory: 'percentage', baseUnit: 'percent', decimals: 2, suffix: '%', delimiter: true }]
@@ -1361,13 +1876,13 @@ function generateCoreTileTemplates(company, journeyType, steps, dynatraceUrl) {
         table: { rowDensity: 'condensed', enableLineWrap: false, columnWidths: { 'serviceName': 250, 'total4xx': 120, 'total5xx': 120 } },
         thresholds: [
           { id: 1, field: 'total5xx', isEnabled: true, rules: [
-            { id: 1, color: { Default: '#dc2626' }, comparator: '>', value: 10 },
-            { id: 2, color: { Default: '#f5d30f' }, comparator: '>', value: 0 },
-            { id: 3, color: { Default: '#2ab06f' }, comparator: '≤', value: 0 }
+            { id: 1, color: { Default: DT_THRESHOLD_COLORS.critical }, comparator: '>', value: 10 },
+            { id: 2, color: { Default: DT_THRESHOLD_COLORS.warning }, comparator: '>', value: 0 },
+            { id: 3, color: { Default: DT_THRESHOLD_COLORS.ideal }, comparator: '≤', value: 0 }
           ]},
           { id: 2, field: 'total4xx', isEnabled: true, rules: [
-            { id: 1, color: { Default: '#f5d30f' }, comparator: '>', value: 10 },
-            { id: 2, color: { Default: '#2ab06f' }, comparator: '≤', value: 10 }
+            { id: 1, color: { Default: DT_THRESHOLD_COLORS.warning }, comparator: '>', value: 10 },
+            { id: 2, color: { Default: DT_THRESHOLD_COLORS.ideal }, comparator: '≤', value: 10 }
           ]}
         ],
         unitsOverrides: [
@@ -1388,9 +1903,9 @@ function generateCoreTileTemplates(company, journeyType, steps, dynatraceUrl) {
       visualizationSettings: {
         table: { rowDensity: 'condensed', enableLineWrap: true, columnWidths: { 'event.name': 350, 'serviceName': 200, 'occurrences': 100, 'lastSeen': 160 } },
         thresholds: [{ id: 1, field: 'occurrences', isEnabled: true, rules: [
-          { id: 1, color: { Default: '#dc2626' }, comparator: '≥', value: 50 },
-          { id: 2, color: { Default: '#f5d30f' }, comparator: '≥', value: 10 },
-          { id: 3, color: { Default: '#2ab06f' }, comparator: '<', value: 10 }
+          { id: 1, color: { Default: DT_THRESHOLD_COLORS.critical }, comparator: '≥', value: 50 },
+          { id: 2, color: { Default: DT_THRESHOLD_COLORS.warning }, comparator: '≥', value: 10 },
+          { id: 3, color: { Default: DT_THRESHOLD_COLORS.ideal }, comparator: '<', value: 10 }
         ]}],
         unitsOverrides: [{ identifier: 'occurrences', unitCategory: 'unspecified', baseUnit: 'count', decimals: 0, delimiter: true }]
       }
@@ -1417,8 +1932,8 @@ function generateCoreTileTemplates(company, journeyType, steps, dynatraceUrl) {
       visualizationSettings: {
         chartSettings: { gapPolicy: 'connect', seriesOverrides: [{ seriesId: ['failureRate'], override: { color: '#C62239', lineWidth: 2 } }] },
         thresholds: [{ id: 1, field: 'failureRate', isEnabled: true, rules: [
-          { id: 1, color: { Default: '#dc2626' }, comparator: '>', value: 5 },
-          { id: 2, color: { Default: '#f5d30f' }, comparator: '>', value: 1 }
+          { id: 1, color: { Default: DT_THRESHOLD_COLORS.critical }, comparator: '>', value: 5 },
+          { id: 2, color: { Default: DT_THRESHOLD_COLORS.warning }, comparator: '>', value: 1 }
         ]}],
         unitsOverrides: [{ identifier: 'failureRate', unitCategory: 'percentage', baseUnit: 'percent', decimals: 2, suffix: '%', delimiter: true }]
       }
@@ -1431,8 +1946,8 @@ function generateCoreTileTemplates(company, journeyType, steps, dynatraceUrl) {
       visualizationSettings: {
         chartSettings: { gapPolicy: 'connect', legend: { position: 'bottom' } },
         thresholds: [{ id: 1, field: 'avg(dt.process.cpu.usage)', isEnabled: true, rules: [
-          { id: 1, color: { Default: '#dc2626' }, comparator: '>', value: 80 },
-          { id: 2, color: { Default: '#f5d30f' }, comparator: '>', value: 60 }
+          { id: 1, color: { Default: DT_THRESHOLD_COLORS.critical }, comparator: '>', value: 80 },
+          { id: 2, color: { Default: DT_THRESHOLD_COLORS.warning }, comparator: '>', value: 60 }
         ]}],
         unitsOverrides: [{ identifier: 'avg(dt.process.cpu.usage)', unitCategory: 'percentage', baseUnit: 'percent', decimals: 1, suffix: '%', delimiter: true }]
       }
@@ -1473,8 +1988,8 @@ function generateCoreTileTemplates(company, journeyType, steps, dynatraceUrl) {
       visualizationSettings: {
         table: { rowDensity: 'condensed', enableLineWrap: true, columnWidths: { 'timestamp': 160, 'loglevel': 80, 'content': 400, 'serviceName': 200 } },
         thresholds: [{ id: 1, field: 'loglevel', isEnabled: true, rules: [
-          { id: 1, color: { Default: '#dc2626' }, comparator: '==', value: 'ERROR' },
-          { id: 2, color: { Default: '#f5d30f' }, comparator: '==', value: 'WARN' }
+          { id: 1, color: { Default: DT_THRESHOLD_COLORS.critical }, comparator: '==', value: 'ERROR' },
+          { id: 2, color: { Default: DT_THRESHOLD_COLORS.warning }, comparator: '==', value: 'WARN' }
         ]}],
         unitsOverrides: []
       }
@@ -1614,10 +2129,1565 @@ function buildDashboardLayout(coreTiles, dynamicTiles, markdownTiles, variables,
 
 
 // ============================================================================
+// PROMPT-DRIVEN DASHBOARD GENERATION (MCP Custom Prompt Path)
+// Instead of always using the full 46-tile template, Ollama selects which
+// themed sections to include based on the user's natural language request.
+// ============================================================================
+
+/**
+ * SECTION CATALOG — the building blocks Ollama can pick from.
+ * Each section maps to real tile-builder functions from the proven template.
+ */
+const SECTION_CATALOG = {
+  executive_kpis: {
+    label: 'Executive KPIs',
+    description: 'High-level KPI cards: total volume, success rate, revenue, errors',
+    audience: 'C-level, executives, leadership',
+    tiles: ['total_volume', 'success_rate', 'total_revenue', 'total_errors'],
+    section: 'journey_overview'
+  },
+  journey_overview: {
+    label: 'Journey Overview',
+    description: 'Step metrics table, volume over time, events by step — full funnel view',
+    audience: 'all, product managers, analysts',
+    tiles: ['step_metrics', 'volume_over_time', 'events_by_step'],
+    section: 'journey_overview'
+  },
+  filtered_view: {
+    label: 'Filtered Step View',
+    description: 'KPIs and charts filtered by individual journey step — drill-down analysis',
+    audience: 'analysts, operations, product managers',
+    tiles: ['filtered_events', 'filtered_revenue', 'filtered_aov', 'filtered_p90', 'filtered_volume_trend', 'filtered_events_by_step'],
+    section: 'filtered_view'
+  },
+  performance_sla: {
+    label: 'Performance & SLA',
+    description: 'Step performance, SLA compliance, response times, hourly patterns',
+    audience: 'operations, SRE, engineering',
+    tiles: ['step_performance', 'sla_compliance', 'hourly_pattern'],
+    section: 'performance'
+  },
+  error_analysis: {
+    label: 'Error Analysis',
+    description: 'Error rate trends, errors by step, error details breakdown',
+    audience: 'operations, SRE, engineering, incident response',
+    tiles: ['error_rate_trend', 'errors_by_step', 'error_details'],
+    section: 'performance'
+  },
+  golden_signals_traffic: {
+    label: 'Golden Signals — Traffic',
+    description: 'Service request rates, success vs failed, key requests',
+    audience: 'SRE, operations, platform engineering',
+    tiles: ['requests', 'requests_success_failed', 'key_requests'],
+    section: 'golden_signals'
+  },
+  golden_signals_latency: {
+    label: 'Golden Signals — Latency',
+    description: 'P50/P90/P99 response times by service',
+    audience: 'SRE, operations, platform engineering',
+    tiles: ['latency_p50', 'latency_p90', 'latency_p99'],
+    section: 'golden_signals'
+  },
+  golden_signals_errors: {
+    label: 'Golden Signals — Errors',
+    description: 'Failed requests, 5xx errors, 4xx errors by service',
+    audience: 'SRE, operations, incident response',
+    tiles: ['failed_requests', 'errors_5xx', 'errors_4xx'],
+    section: 'golden_signals'
+  },
+  golden_signals_saturation: {
+    label: 'Golden Signals — Saturation',
+    description: 'CPU usage, memory usage, GC suspension by service',
+    audience: 'SRE, platform engineering, capacity planning',
+    tiles: ['cpu_usage', 'memory_used', 'gc_suspension'],
+    section: 'golden_signals'
+  },
+  observability: {
+    label: 'Traces & Observability',
+    description: 'Top exceptions, traces with exceptions, Davis problems, log errors',
+    audience: 'SRE, operations, engineering, incident response',
+    tiles: ['top_exceptions', 'traces_with_exceptions', 'davis_problems', 'log_errors'],
+    section: 'observability'
+  },
+  customer_dynamic: {
+    label: 'Customer & Business Metrics',
+    description: 'Dynamic tiles from detected payload fields — churn risk, NPS, loyalty, satisfaction, pricing, engagement, segments',
+    audience: 'C-level, customer success, product, marketing',
+    tiles: ['_dynamic_'],
+    section: 'dynamic'
+  },
+  geographic_view: {
+    label: 'Geographic Distribution',
+    description: 'Heatmap or map of events by region/country — geo analysis of journey activity',
+    audience: 'executives, marketing, regional managers',
+    tiles: ['_geo_heatmap_'],
+    section: 'dynamic'
+  },
+  trend_analysis: {
+    label: 'Trend Analysis',
+    description: 'Hourly patterns, volume histograms, and trend lines for forecasting',
+    audience: 'analysts, product managers, capacity planning',
+    tiles: ['hourly_pattern', '_volume_histogram_'],
+    section: 'performance'
+  }
+};
+
+/**
+ * Ask Ollama to select dashboard sections based on the user's natural language prompt.
+ * This is a SMALL ask — Ollama just picks from a menu, doesn't generate full dashboards.
+ */
+async function selectSectionsWithOllama(customPrompt, company, journeyType, industry, detectedSignals) {
+  // Few-shot completion pattern: provide examples as completed lines, then start the answer
+  // so the LLM continues with JSON rather than adding prose. Compact for 2048 context window.
+  const prompt = `Pick 4-8 section IDs for a dashboard. ALWAYS include executive_kpis and journey_overview.
+
+Sections: executive_kpis (revenue KPIs) [exec], customer_dynamic (churn,NPS,CLV) [exec], journey_overview (funnel,steps) [all], filtered_view (step drill-down) [analyst], performance_sla (SLA,response times) [ops], golden_signals_latency (P50/P90/P99) [SRE], golden_signals_traffic (request rates) [SRE], golden_signals_errors (5xx/4xx) [SRE], golden_signals_saturation (CPU,memory) [SRE], error_analysis (error trends) [ops], observability (traces,exceptions) [SRE], geographic_view (regional heatmap) [marketing], trend_analysis (hourly patterns) [analyst]
+
+Request: "C-level revenue dashboard" → {"sections":["executive_kpis","journey_overview","customer_dynamic","trend_analysis","geographic_view"],"title":"Executive Revenue Dashboard","slug":"executive-revenue"}
+Request: "SRE performance monitoring" → {"sections":["executive_kpis","journey_overview","performance_sla","golden_signals_latency","golden_signals_errors","observability"],"title":"SRE Performance Monitor","slug":"sre-performance"}
+Request: "customer churn analysis" → {"sections":["executive_kpis","journey_overview","customer_dynamic","filtered_view","trend_analysis"],"title":"Customer Churn Analysis","slug":"customer-churn"}
+Request: "${customPrompt}" →`;
+
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 45000);
+    const sectionStartTime = performance.now();
+
+    const response = await fetch(`${OLLAMA_ENDPOINT}/api/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      signal: controller.signal,
+      body: JSON.stringify({
+        model: OLLAMA_MODEL,
+        prompt,
+        format: 'json',
+        stream: false,
+        keep_alive: -1,
+        options: { temperature: 0.2, num_predict: 128, num_ctx: 2048 }
+      })
+    });
+    clearTimeout(timeout);
+
+    if (!response.ok) throw new Error(`Ollama returned ${response.status}`);
+
+    const result = await response.json();
+    const responseText = result.response || '';
+    const sectionDuration = performance.now() - sectionStartTime;
+    console.log(`[AI Dashboard] 🧠 Section selector raw response: ${responseText.substring(0, 300)}`);
+
+    // Log GenAI span for section selection
+    await logGenAISpan(createGenAISpan(prompt, responseText, OLLAMA_MODEL, result.prompt_eval_count || 0, result.eval_count || 0, sectionDuration), 'section_selection');
+
+    // Robust JSON repair — handles all common LLM mistakes
+    let parsed;
+    const repaired = responseText
+      .replace(/(["'])\s*:\s*\1/g, '$1: $1')           // "focus:"" → "focus": ""
+      .replace(/,\s*([}\]])/g, '$1')                    // trailing commas
+      .replace(/([{,]\s*)(\w+)\s*:/g, '$1"$2":')       // unquoted keys
+      .replace(/'([^']*)'/g, '"$1"')                    // single → double quotes
+      .replace(/\n/g, ' ');                              // newlines inside JSON
+    try {
+      parsed = JSON.parse(repaired);
+    } catch {
+      const jsonMatch = repaired.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        try { parsed = JSON.parse(jsonMatch[0]); } catch { /* will fall through */ }
+      }
+    }
+
+    if (parsed && Array.isArray(parsed.sections) && parsed.sections.length > 0) {
+      // Validate section IDs against catalog
+      let validSections = parsed.sections.filter(s => SECTION_CATALOG[s]);
+      if (validSections.length === 0) throw new Error('No valid sections returned');
+
+      // Post-processing: force-add mandatory sections if LLM forgot them
+      const mandatory = ['executive_kpis', 'journey_overview'];
+      for (const req of mandatory) {
+        if (!validSections.includes(req)) {
+          validSections.unshift(req);
+          console.log(`[AI Dashboard] 📌 Force-added mandatory section: ${req}`);
+        }
+      }
+
+      // Post-processing: audience-based filtering — remove clearly mismatched sections
+      const p = customPrompt.toLowerCase();
+      const isExecRequest = /exec|c-level|ceo|cfo|board|strategic|revenue|business|leadership/i.test(p);
+      const isTechRequest = /sre|devops|platform|infrastructure|cpu|memory|saturation/i.test(p);
+      if (isExecRequest && !isTechRequest) {
+        // Remove deep technical sections from executive dashboards
+        const techSections = ['golden_signals_saturation', 'golden_signals_errors', 'golden_signals_latency', 'golden_signals_traffic'];
+        const before = validSections.length;
+        validSections = validSections.filter(s => !techSections.includes(s) || validSections.length <= 4);
+        if (validSections.length < before) {
+          console.log(`[AI Dashboard] 🎯 Removed ${before - validSections.length} technical sections from executive dashboard`);
+        }
+      }
+
+      // Sanitize slug: lowercase, hyphens only, max 60 chars
+      const rawSlug = (parsed.slug || '').replace(/[^a-z0-9-]/gi, '-').toLowerCase().replace(/-+/g, '-').replace(/^-|-$/g, '').substring(0, 60);
+      console.log(`[AI Dashboard] ✅ Section selection: ${validSections.join(', ')}`);
+      return {
+        sections: validSections,
+        title: parsed.title || `${company} - ${journeyType} Dashboard`,
+        slug: rawSlug || '',
+        focus: parsed.focus || ''
+      };
+    }
+    throw new Error('Invalid section selection response');
+  } catch (err) {
+    console.warn(`[AI Dashboard] ⚠️ Section selector failed: ${err.message}, using smart defaults`);
+    return getDefaultSectionsForPrompt(customPrompt, industry);
+  }
+}
+
+/**
+ * Fallback: if Ollama can't select sections, use keyword matching on the prompt.
+ */
+function getDefaultSectionsForPrompt(prompt, industryType) {
+  // If we have an industry type, use bespoke sections first
+  if (industryType) {
+    const bespokeSections = getBespokeSections(industryType);
+    if (bespokeSections && bespokeSections.length > 3) {
+      console.log(`[AI Dashboard] 🏭 Using bespoke sections for ${industryType}: ${bespokeSections.join(', ')}`);
+      return {
+        sections: bespokeSections,
+        title: prompt.substring(0, 60),
+        slug: industryType.toLowerCase().replace(/[^a-z0-9]+/g, '-').substring(0, 40),
+        focus: `${industryType} industry-specific dashboard`
+      };
+    }
+  }
+  const p = prompt.toLowerCase();
+  const sections = ['executive_kpis', 'journey_overview', 'customer_dynamic']; // Always include these
+
+  // Executive / C-level
+  if (/exec|c-level|ceo|cfo|cto|leadership|board|strategic|revenue|business/i.test(p)) {
+    sections.push('customer_dynamic');
+  }
+  // Operations / SRE
+  if (/ops|operation|sre|infra|platform|reliability|incident/i.test(p)) {
+    sections.push('performance_sla', 'error_analysis', 'golden_signals_traffic', 'golden_signals_errors');
+  }
+  // Performance
+  if (/perf|sla|latency|speed|response/i.test(p)) {
+    sections.push('performance_sla', 'golden_signals_latency');
+  }
+  // Customer / CX
+  if (/customer|churn|satisf|nps|loyalty|cx|experience|retention/i.test(p)) {
+    sections.push('customer_dynamic', 'filtered_view');
+  }
+  // Error / Incident focus
+  if (/error|fail|incident|problem|bug|exception/i.test(p)) {
+    sections.push('error_analysis', 'observability');
+  }
+  // Geographic / regional
+  if (/geo|region|country|location|map|global|international/i.test(p)) {
+    sections.push('geographic_view');
+  }
+  // Trends / forecasting
+  if (/trend|forecast|pattern|histogram|analysis|capacity/i.test(p)) {
+    sections.push('trend_analysis');
+  }
+  // Full / comprehensive
+  if (/full|comprehensive|complete|everything|all/i.test(p)) {
+    return {
+      sections: Object.keys(SECTION_CATALOG),
+      title: prompt.substring(0, 60),
+      slug: 'comprehensive-full-view',
+      focus: 'Comprehensive dashboard with all available sections'
+    };
+  }
+
+  // Deduplicate
+  // Generate a slug from keyword matches
+  const slugParts = [];
+  if (/exec|c-level|ceo|cfo|cto|leadership|board|strategic|revenue|business/i.test(p)) slugParts.push('executive');
+  if (/ops|operation|sre|infra|platform|reliability|incident/i.test(p)) slugParts.push('ops');
+  if (/perf|sla|latency|speed|response/i.test(p)) slugParts.push('performance');
+  if (/customer|churn|satisf|nps|loyalty|cx|experience|retention/i.test(p)) slugParts.push('customer');
+  if (/error|fail|incident|problem|bug|exception/i.test(p)) slugParts.push('errors');
+  if (/geo|region|country|location|map|global|international/i.test(p)) slugParts.push('geo');
+  if (/trend|forecast|pattern|histogram|analysis|capacity/i.test(p)) slugParts.push('trends');
+  return {
+    sections: [...new Set(sections)],
+    title: prompt.substring(0, 60),
+    slug: slugParts.length > 0 ? slugParts.join('-') : 'custom-view',
+    focus: ''
+  };
+}
+
+// ============================================================================
+// OLLAMA BESPOKE TILE GENERATION (v1.8.18)
+// Instead of hardcoded section templates, Ollama designs each tile uniquely.
+// Architecture: Ollama generates tile PLANS (title, viz, field, agg),
+// code constructs valid DQL and wraps in proper dashboard JSON.
+// ============================================================================
+
+const VALID_VIZ_TYPES = new Set([
+  'singleValue', 'lineChart', 'areaChart', 'barChart', 'categoricalBarChart',
+  'pieChart', 'donutChart', 'table', 'heatmap',
+  'gauge', 'honeycomb', 'histogram', 'bandChart', 'scatterplot',
+  'meterBar', 'recordList', 'choroplethMap'
+]);
+
+const BASE_DQL_FILTER = `fetch bizevents | filter event.kind == "BIZ_EVENT" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType)`;
+
+const DQL_AGG_TEMPLATES = {
+  // Numeric field aggregations
+  sum:              (f) => `${BASE_DQL_FILTER} | summarize value = sum(additionalfields.${f})`,
+  avg:              (f) => `${BASE_DQL_FILTER} | summarize value = avg(additionalfields.${f})`,
+  max:              (f) => `${BASE_DQL_FILTER} | summarize value = max(additionalfields.${f})`,
+  min:              (f) => `${BASE_DQL_FILTER} | summarize value = min(additionalfields.${f})`,
+  timeseries_sum:   (f) => `${BASE_DQL_FILTER} | makeTimeseries value = sum(additionalfields.${f}), bins:30`,
+  timeseries_avg:   (f) => `${BASE_DQL_FILTER} | makeTimeseries value = avg(additionalfields.${f}), bins:30`,
+  sum_by_step:      (f) => `${BASE_DQL_FILTER} | summarize value = sum(additionalfields.${f}), by: {json.stepName} | sort value desc`,
+  avg_by_step:      (f) => `${BASE_DQL_FILTER} | summarize value = avg(additionalfields.${f}), by: {json.stepName} | sort value desc`,
+  p90:              (f) => `${BASE_DQL_FILTER} | summarize value = percentile(additionalfields.${f}, 90)`,
+  p90_by_step:      (f) => `${BASE_DQL_FILTER} | summarize value = percentile(additionalfields.${f}, 90), by: {json.stepName} | sort value desc`,
+
+  // String field aggregations
+  count_by:         (f) => `${BASE_DQL_FILTER} | filter isNotNull(additionalfields.${f}) | summarize count = count(), by: {additionalfields.${f}} | sort count desc | limit 10`,
+
+  // Special aggregations (no field needed)
+  count:              () => `${BASE_DQL_FILTER} | summarize value = count()`,
+  success_rate:       () => `${BASE_DQL_FILTER} | summarize total = count(), success = countIf(isNull(additionalfields.hasError) or additionalfields.hasError == false) | fieldsAdd rate = round((toDouble(success)/toDouble(total))*100, decimals:2)`,
+  error_rate:         () => `${BASE_DQL_FILTER} | summarize total = count(), errors = countIf(additionalfields.hasError == true) | fieldsAdd rate = round((toDouble(errors)/toDouble(total))*100, decimals:2)`,
+  volume_timeseries:  () => `${BASE_DQL_FILTER} | makeTimeseries count = count(), bins:30`,
+  hourly_pattern:     () => `${BASE_DQL_FILTER} | fieldsAdd hour = toString(getHour(timestamp)) | summarize Events = count(), by: {hour} | sort hour asc`,
+  step_table:         () => `${BASE_DQL_FILTER} | summarize Events = count(), Errors = countIf(additionalfields.hasError == true), "Avg Processing (ms)" = avg(additionalfields.processingTime), by: {json.stepName} | sort Events desc`,
+  sla_compliance:     () => `${BASE_DQL_FILTER} | summarize total = count(), withinSLA = countIf(additionalfields.processingTime < 5000), by: {json.stepName} | fieldsAdd compliance = round((toDouble(withinSLA)/toDouble(total))*100, decimals:2) | sort compliance asc`,
+  success_fail_trend: () => `${BASE_DQL_FILTER} | makeTimeseries success = countIf(isNull(additionalfields.hasError) or additionalfields.hasError == false), failed = countIf(additionalfields.hasError == true), bins:30`,
+  count_by_step:      () => `${BASE_DQL_FILTER} | summarize count = count(), by: {json.stepName} | sort count desc`,
+  heatmap_step_hour:  () => `${BASE_DQL_FILTER} | fieldsAdd hour = formatTimestamp(timestamp, format: "HH") | summarize count = count(), by: {json.stepName, hour} | sort hour asc`,
+
+  // Gauge / meter aggregations (returns rate 0-100)
+  gauge_success:      () => `${BASE_DQL_FILTER} | summarize total = count(), successful = countIf(isNull(additionalfields.hasError) or additionalfields.hasError == false) | fieldsAdd rate = round((toDouble(successful) / toDouble(total)) * 100, decimals:1)`,
+  gauge_error:        () => `${BASE_DQL_FILTER} | summarize total = count(), errors = countIf(additionalfields.hasError == true) | fieldsAdd rate = round((toDouble(errors) / toDouble(total)) * 100, decimals:1)`,
+  gauge_field:        (f) => `${BASE_DQL_FILTER} | summarize value = avg(additionalfields.${f})`,
+
+  // Band chart (min/avg/max over time)
+  band_timeseries:    (f) => `${BASE_DQL_FILTER} | makeTimeseries min = min(additionalfields.${f}), avg = avg(additionalfields.${f}), max = max(additionalfields.${f}), bins:30`,
+
+  // Scatter plot (two numeric fields correlated)
+  scatter_two:        (f) => `${BASE_DQL_FILTER} | filter isNotNull(additionalfields.${f}) | fields timestamp, additionalfields.${f}, json.stepName | limit 200`,
+
+  // Record list (raw event drill-down)
+  recent_events:      () => `${BASE_DQL_FILTER} | sort timestamp desc | limit 25 | fields timestamp, json.stepName, json.journeyStatus, additionalfields.region, additionalfields.deviceType, additionalfields.channel`,
+
+  // Geo map (region → count for choropleth)
+  geo_region:         (f) => `${BASE_DQL_FILTER} | filter isNotNull(additionalfields.${f}) | summarize count = count(), by: {additionalfields.${f}} | sort count desc`,
+
+  // Honeycomb (step health overview)
+  honeycomb_steps:    () => `${BASE_DQL_FILTER} | summarize total = count(), errors = countIf(additionalfields.hasError == true), by: {json.stepName} | fieldsAdd errorRate = round((toDouble(errors) / toDouble(total)) * 100, decimals:1) | sort errorRate desc`,
+};
+
+const FIELD_REQUIRED_AGGS = new Set(['sum', 'avg', 'max', 'min', 'timeseries_sum', 'timeseries_avg', 'sum_by_step', 'avg_by_step', 'p90', 'p90_by_step', 'count_by', 'gauge_field', 'band_timeseries', 'scatter_two', 'geo_region']);
+const NUMERIC_ONLY_AGGS = new Set(['sum', 'avg', 'max', 'min', 'timeseries_sum', 'timeseries_avg', 'sum_by_step', 'avg_by_step', 'p90', 'p90_by_step', 'gauge_field', 'band_timeseries', 'scatter_two']);
+
+function getVizSettingsForType(viz) {
+  switch (viz) {
+    case 'singleValue':
+      return {};
+    case 'lineChart':
+    case 'areaChart':
+      return {
+        chartSettings: { gapPolicy: 'connect' },
+        thresholds: [], unitsOverrides: []
+      };
+    case 'barChart':
+    case 'categoricalBarChart':
+      return {
+        categoryAxis: { label: { showLabel: true }, tickLayout: 'horizontal' },
+        numericAxis: { label: { showLabel: true }, scale: 'linear' },
+        legend: { position: 'auto', showLegend: true },
+        layout: { groupMode: 'grouped', position: 'horizontal' }
+      };
+    case 'pieChart':
+    case 'donutChart':
+      return { legend: { position: 'auto', showLegend: true } };
+    case 'heatmap':
+      return { legend: { position: 'auto', showLegend: true } };
+    case 'gauge':
+      return {
+        gauge: { label: '', recordField: 'rate', min: 0, max: 100,
+          thresholds: [{ value: 95, color: '#2AB06F' }, { value: 85, color: '#EEA53C' }, { value: 0, color: '#C62239' }]
+        }
+      };
+    case 'meterBar':
+      return {
+        gauge: { label: '', recordField: 'rate', min: 0, max: 100,
+          thresholds: [{ value: 95, color: '#2AB06F' }, { value: 85, color: '#EEA53C' }, { value: 0, color: '#C62239' }]
+        }
+      };
+    case 'honeycomb':
+      return { honeycomb: { legend: { position: 'auto', showLegend: true } } };
+    case 'histogram':
+      return {
+        histogram: { numberOfBuckets: 20 },
+        legend: { position: 'auto', showLegend: true }
+      };
+    case 'bandChart':
+      return {
+        chartSettings: { gapPolicy: 'connect' },
+        thresholds: [], unitsOverrides: []
+      };
+    case 'scatterplot':
+      return { legend: { position: 'auto', showLegend: true } };
+    case 'recordList':
+      return {};
+    case 'choroplethMap':
+      return {
+        choroplethMap: {
+          baseLayer: { type: 'world' },
+          dataMapping: { regionField: null, valueField: 'count' },
+          colorPalette: { type: 'sequential', steps: 5, minColor: '#E8F5E9', maxColor: '#1B5E20' }
+        }
+      };
+    case 'table':
+    default:
+      return {};
+  }
+}
+
+function getTileDimensions(viz) {
+  switch (viz) {
+    case 'singleValue':    return { w: 6, h: 3 };
+    case 'gauge':          return { w: 6, h: 3 };
+    case 'meterBar':       return { w: 6, h: 3 };
+    case 'table':          return { w: 24, h: 6 };
+    case 'recordList':     return { w: 24, h: 5 };
+    case 'heatmap':        return { w: 24, h: 6 };
+    case 'choroplethMap':  return { w: 24, h: 8 };
+    case 'honeycomb':      return { w: 12, h: 5 };
+    case 'histogram':      return { w: 12, h: 4 };
+    case 'bandChart':      return { w: 12, h: 4 };
+    case 'scatterplot':    return { w: 12, h: 5 };
+    default:               return { w: 12, h: 4 };
+  }
+}
+
+/**
+ * Ask Ollama to generate a bespoke tile plan — what tiles to create, with what viz and data.
+ * Returns array of {title, viz, field, agg} or null on failure.
+ */
+async function generateTilePlanWithOllama(customPrompt, company, journeyType, industry, discoveredFieldMap, dataSignals) {
+  const numericFields = [];
+  const stringFields = [];
+  const sampleData = {};
+  if (discoveredFieldMap && discoveredFieldMap.size > 0) {
+    for (const [name, info] of discoveredFieldMap) {
+      if (name === 'hasError') continue;
+      if (info.type === 'numeric') numericFields.push(name);
+      else stringFields.push(name);
+      // Collect sample values from the Grail record
+      if (info.sampleValue !== undefined) sampleData[name] = info.sampleValue;
+    }
+  }
+
+  // Build a compact field+value table so Ollama sees REAL data
+  const fieldLines = [];
+  for (const n of numericFields.slice(0, 8)) {
+    const sv = sampleData[n] !== undefined ? `=${sampleData[n]}` : '';
+    fieldLines.push(`  ${n}(numeric${sv})`);
+  }
+  for (const s of stringFields.slice(0, 8)) {
+    const sv = sampleData[s] !== undefined ? `="${sampleData[s]}"` : '';
+    fieldLines.push(`  ${s}(string${sv})`);
+  }
+  const fieldBlock = fieldLines.length > 0 ? fieldLines.join('\n') : '  (no fields — use specials only)';
+
+  // Use format:"json" to force JSON output — ask for {"tiles":[...]} wrapper.
+  // Single compact example so the 3B model follows the pattern.
+  const prompt = `You are a dashboard tile planner. Output JSON: {"tiles":[array of tile objects]}.
+Each tile: {"title":"string","viz":"string","field":"string or null","agg":"string"}.
+
+Available fields from real Grail data (${company} / ${journeyType}):
+${fieldBlock}
+
+Valid viz types:
+- KPIs: singleValue, gauge, meterBar
+- Time series: lineChart, areaChart, bandChart
+- Categorical: categoricalBarChart, barChart, pieChart, donutChart, histogram
+- Spatial: choroplethMap (geo map for regions/countries), honeycomb
+- Correlation: scatterplot
+- Tabular: table, recordList
+
+Valid agg for numeric fields: sum, avg, timeseries_sum, timeseries_avg, sum_by_step, avg_by_step, p90, band_timeseries, scatter_two, gauge_field
+Valid agg for string fields: count_by, geo_region
+Valid agg without field (set field to null): count, success_rate, error_rate, volume_timeseries, step_table, hourly_pattern, gauge_success, gauge_error, recent_events, honeycomb_steps, heatmap_step_hour
+
+Pairing rules:
+- gauge/meterBar → use gauge_success, gauge_error, or gauge_field(numeric)
+- choroplethMap → use geo_region with a string field like region/country
+- bandChart → use band_timeseries with a numeric field
+- scatterplot → use scatter_two with a numeric field
+- honeycomb → use honeycomb_steps (no field)
+- recordList → use recent_events (no field)
+- histogram → use count_by with a string field
+
+Example for "revenue overview" with orderTotal(numeric=149.99), region(string="Northeast"):
+{"tiles":[{"title":"Total Revenue","viz":"singleValue","field":"orderTotal","agg":"sum"},{"title":"Avg Order Value","viz":"singleValue","field":"orderTotal","agg":"avg"},{"title":"Success Rate","viz":"gauge","field":null,"agg":"gauge_success"},{"title":"Revenue Trend","viz":"areaChart","field":"orderTotal","agg":"timeseries_sum"},{"title":"Revenue Range","viz":"bandChart","field":"orderTotal","agg":"band_timeseries"},{"title":"Revenue by Step","viz":"categoricalBarChart","field":"orderTotal","agg":"sum_by_step"},{"title":"Regional Map","viz":"choroplethMap","field":"region","agg":"geo_region"},{"title":"Orders by Region","viz":"pieChart","field":"region","agg":"count_by"},{"title":"Step Health","viz":"honeycomb","field":null,"agg":"honeycomb_steps"},{"title":"Journey Steps","viz":"table","field":null,"agg":"step_table"}]}
+
+IMPORTANT: You MUST return exactly 10 to 14 tiles in ONE single "tiles" array. No fewer than 10. Use every available field at least once. Include at least 1 gauge, 1 choroplethMap (if a region/country string field exists), and 1 table.
+Generate tiles for: "${customPrompt}"
+Rules: Start with 2-3 singleValue KPIs + 1 gauge, add charts with mixed viz types, include 1 geo map for any regional field, end with 1 table. Use ONLY the fields listed above. Output ONE JSON object with ONE "tiles" key.`;
+
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 120000);
+    const tilePlanStartTime = performance.now();
+
+    const response = await fetch(`${OLLAMA_ENDPOINT}/api/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      signal: controller.signal,
+      body: JSON.stringify({
+        model: OLLAMA_MODEL,
+        prompt,
+        format: 'json',
+        stream: true,
+        keep_alive: -1,
+        options: { temperature: 0.3, num_predict: 2048, num_ctx: 4096 }
+      })
+    });
+
+    if (!response.ok) { clearTimeout(timeout); throw new Error(`Ollama returned ${response.status}`); }
+
+    // Stream tokens — accumulate response
+    let responseText = '';
+    try {
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+        for (const line of chunk.split('\n')) {
+          if (!line.trim()) continue;
+          try {
+            const obj = JSON.parse(line);
+            if (obj.response) responseText += obj.response;
+            if (obj.done) break;
+          } catch { /* partial line, skip */ }
+        }
+      }
+    } catch (streamErr) {
+      if (streamErr.name !== 'AbortError' && !responseText) throw streamErr;
+      console.log(`[AI Dashboard] ⏱️ Tile stream ended (${streamErr.name}), parsing ${responseText.length} chars collected`);
+    }
+    clearTimeout(timeout);
+
+    console.log(`[AI Dashboard] 🧠 Tile plan raw (${responseText.length} chars): ${responseText.substring(0, 500)}`);
+
+    // Parse JSON — format:"json" ensures valid JSON output.
+    // Handle: {"tiles":[...]}, bare [...], {"someName":[...]}, or duplicate "tiles" keys
+    let plans;
+
+    // Strategy 1: Extract ALL tile objects via regex (handles duplicate keys, partial JSON)
+    const tileRegex = /\{[^{}]*"title"\s*:\s*"[^"]*"[^{}]*"viz"\s*:\s*"[^"]*"[^{}]*"agg"\s*:\s*"[^"]*"[^{}]*\}/g;
+    const regexMatches = responseText.match(tileRegex);
+    if (regexMatches && regexMatches.length > 0) {
+      plans = [];
+      for (const m of regexMatches) {
+        try { plans.push(JSON.parse(m)); } catch { /* skip malformed */ }
+      }
+    }
+
+    // Strategy 2: Standard JSON.parse if regex found nothing
+    if (!plans || plans.length === 0) {
+      try {
+        const parsed = JSON.parse(responseText);
+        if (Array.isArray(parsed)) {
+          plans = parsed;
+        } else if (parsed && typeof parsed === 'object') {
+          plans = parsed.tiles || Object.values(parsed).find(v => Array.isArray(v));
+        }
+      } catch {
+        // Partial JSON — try to repair and extract array
+        let jsonText = responseText.trim();
+        const arrStart = jsonText.indexOf('[');
+        if (arrStart >= 0) {
+          jsonText = jsonText.substring(arrStart);
+          jsonText = jsonText
+            .replace(/,\s*([}\]])/g, '$1')
+            .replace(/\n/g, ' ');
+          if (!jsonText.endsWith(']')) {
+            const lastBrace = jsonText.lastIndexOf('}');
+            if (lastBrace > 0) jsonText = jsonText.substring(0, lastBrace + 1) + ']';
+          }
+          try { plans = JSON.parse(jsonText); } catch { /* will throw below */ }
+        }
+      }
+    }
+
+    if (!Array.isArray(plans) || plans.length === 0) {
+      throw new Error('No valid tile plans in response');
+    }
+
+    // Validate, auto-correct, and sanitize each plan
+    const validPlans = [];
+    const rejected = [];
+    const VIZ_ALIASES = { histogram: 'categoricalBarChart', bar: 'barChart', line: 'lineChart', area: 'areaChart', pie: 'pieChart', donut: 'donutChart', scatter: 'scatterplot', geo: 'choroplethMap', map: 'choroplethMap', geoMap: 'choroplethMap', meter: 'meterBar', record: 'recordList', band: 'bandChart', hc: 'honeycomb' };
+
+    for (const plan of plans) {
+      if (!plan.title || !plan.viz || !plan.agg) { rejected.push(`${plan.title||'?'}: missing title/viz/agg`); continue; }
+
+      // Auto-correct viz aliases
+      if (!VALID_VIZ_TYPES.has(plan.viz) && VIZ_ALIASES[plan.viz]) {
+        plan.viz = VIZ_ALIASES[plan.viz];
+      }
+      if (!VALID_VIZ_TYPES.has(plan.viz)) { rejected.push(`${plan.title}: bad viz "${plan.viz}"`); continue; }
+      if (!DQL_AGG_TEMPLATES[plan.agg]) { rejected.push(`${plan.title}: bad agg "${plan.agg}"`); continue; }
+
+      // Auto-correct type mismatches: numeric agg on string field → count_by + donut
+      if (FIELD_REQUIRED_AGGS.has(plan.agg) && plan.field && discoveredFieldMap) {
+        const info = discoveredFieldMap.get(plan.field);
+        if (info) {
+          if (NUMERIC_ONLY_AGGS.has(plan.agg) && info.type !== 'numeric') {
+            plan.agg = 'count_by';
+            if (plan.viz === 'singleValue' || plan.viz === 'lineChart' || plan.viz === 'areaChart') plan.viz = 'donutChart';
+          }
+          if (plan.agg === 'count_by' && info.type === 'numeric') {
+            plan.agg = info.category === 'revenue' ? 'sum_by_step' : 'avg_by_step';
+            if (plan.viz === 'donutChart' || plan.viz === 'pieChart') plan.viz = 'categoricalBarChart';
+          }
+        }
+      }
+
+      // Validate field requirements
+      if (FIELD_REQUIRED_AGGS.has(plan.agg)) {
+        if (!plan.field) { rejected.push(`${plan.title}: agg "${plan.agg}" needs field`); continue; }
+        if (discoveredFieldMap && !discoveredFieldMap.has(plan.field)) { rejected.push(`${plan.title}: field "${plan.field}" not in discovered fields`); continue; }
+        if (NUMERIC_ONLY_AGGS.has(plan.agg)) {
+          const info = discoveredFieldMap?.get(plan.field);
+          if (info && info.type !== 'numeric') { rejected.push(`${plan.title}: numeric agg on string field "${plan.field}"`); continue; }
+        }
+        if (plan.agg === 'count_by' || plan.agg === 'geo_region') {
+          const info = discoveredFieldMap?.get(plan.field);
+          if (info && info.type === 'numeric') { rejected.push(`${plan.title}: ${plan.agg} on numeric field "${plan.field}"`); continue; }
+        }
+      }
+
+      validPlans.push({
+        title: String(plan.title).substring(0, 100),
+        viz: plan.viz,
+        field: plan.field || null,
+        agg: plan.agg
+      });
+    }
+
+    console.log(`[AI Dashboard] ✅ Tile plan: ${validPlans.length} valid from ${plans.length} generated`);
+    if (rejected.length > 0) {
+      console.log(`[AI Dashboard] ⚠️ Rejected ${rejected.length} tiles: ${rejected.join(' | ')}`);
+    }
+
+    if (validPlans.length < 3) {
+      throw new Error(`Only ${validPlans.length} valid tiles — insufficient for dashboard`);
+    }
+
+    // Log GenAI span for tile plan generation (streaming — estimate tokens from text length)
+    const tilePlanDuration = performance.now() - tilePlanStartTime;
+    await logGenAISpan(createGenAISpan(prompt, responseText, OLLAMA_MODEL, Math.ceil(prompt.length / 4), Math.ceil(responseText.length / 4), tilePlanDuration), 'tile_plan_generation');
+
+    return validPlans;
+  } catch (err) {
+    console.warn(`[AI Dashboard] ⚠️ Tile plan generation failed: ${err.message}`);
+    return null;
+  }
+}
+
+/**
+ * Build a dashboard tile object from a tile plan.
+ */
+function buildTileFromPlan(plan) {
+  const Q_SETTINGS = { maxResultRecords: 1000, defaultScanLimitGbytes: 500, maxResultMegaBytes: 1, defaultSamplingRatio: 10, enableSampling: false };
+  const DAVIS_OFF = { enabled: false, davisVisualization: { isAvailable: true } };
+
+  const templateFn = DQL_AGG_TEMPLATES[plan.agg];
+  if (!templateFn) throw new Error(`Unknown agg template: ${plan.agg}`);
+  const dql = FIELD_REQUIRED_AGGS.has(plan.agg) ? templateFn(plan.field || 'orderTotal') : templateFn();
+
+  // Build viz settings — some types need field-specific config
+  let vizSettings = getVizSettingsForType(plan.viz);
+
+  if (plan.viz === 'gauge' || plan.viz === 'meterBar') {
+    const recordField = plan.agg === 'gauge_field' ? 'value' : 'rate';
+    vizSettings = {
+      gauge: { label: plan.title, recordField, min: 0, max: plan.agg === 'gauge_field' ? 'auto' : 100,
+        thresholds: [{ value: 95, color: '#2AB06F' }, { value: 85, color: '#EEA53C' }, { value: 0, color: '#C62239' }]
+      }
+    };
+  } else if (plan.viz === 'choroplethMap') {
+    vizSettings = {
+      choroplethMap: {
+        baseLayer: { type: 'world' },
+        dataMapping: { regionField: plan.field ? `additionalfields.${plan.field}` : null, valueField: 'count' },
+        colorPalette: { type: 'sequential', steps: 5, minColor: '#E8F5E9', maxColor: '#1B5E20' }
+      }
+    };
+  }
+
+  return {
+    title: plan.title,
+    type: 'data',
+    query: dql,
+    visualization: plan.viz,
+    visualizationSettings: vizSettings,
+    querySettings: Q_SETTINGS,
+    davis: DAVIS_OFF
+  };
+}
+
+
+/**
+ * MAIN FUNCTION: Generate a prompt-driven dashboard from selected sections.
+ * This is the new MCP custom prompt path — it replaces the always-proven-template approach.
+ */
+async function generatePromptDrivenDashboard(journeyData, skills, customPrompt, options = {}) {
+  const { company, journeyType, industry, steps } = journeyData;
+  const { isBespoke = false } = options;
+  const detected = detectPayloadFields(journeyData);
+
+  // Collect data signals for context
+  const dataSignals = [];
+  if (detected.hasRevenue) dataSignals.push('revenue');
+  if (detected.hasLoyalty) dataSignals.push('loyalty');
+  if (detected.hasLTV) dataSignals.push('lifetime value');
+  if (detected.hasChurnRisk) dataSignals.push('churn risk');
+  if (detected.hasConversion) dataSignals.push('conversion');
+  if (detected.hasEngagement) dataSignals.push('engagement');
+  if (detected.hasSatisfaction) dataSignals.push('satisfaction');
+  if (detected.hasNPS) dataSignals.push('NPS');
+  if (detected.hasRetention) dataSignals.push('retention');
+  if (detected.hasPricing) dataSignals.push('pricing');
+  if (detected.hasFraud) dataSignals.push('fraud');
+  if (detected.hasCompliance) dataSignals.push('compliance');
+  if (detected.hasRisk) dataSignals.push('risk');
+  if (detected.hasOperational) dataSignals.push('operations');
+
+  console.log(`[AI Dashboard] 🎯 PROMPT-DRIVEN generation for "${customPrompt.substring(0, 80)}"`);
+  console.log(`[AI Dashboard] 📊 Company: ${company}, Journey: ${journeyType}, Signals: ${dataSignals.join(', ') || 'standard'}`);
+
+  // STEP 1: Ask Ollama which sections to include
+  const selection = await selectSectionsWithOllama(customPrompt, company, journeyType, industry, dataSignals);
+
+  // Enforce minimum richness — always include KPIs + overview + customer metrics
+  const essentialSections = ['executive_kpis', 'journey_overview', 'customer_dynamic'];
+  for (const essential of essentialSections) {
+    if (!selection.sections.includes(essential)) {
+      selection.sections.push(essential);
+    }
+  }
+  // Only pad if Ollama/keyword gave very few sections (< 5)
+  // This preserves focused dashboards while preventing near-empty ones
+  if (selection.sections.length < 5) {
+    const padSections = ['performance_sla', 'filtered_view', 'error_analysis', 'trend_analysis', 'golden_signals_traffic', 'golden_signals_latency', 'observability', 'geographic_view'];
+    for (const pad of padSections) {
+      if (selection.sections.length >= 5) break;
+      if (!selection.sections.includes(pad)) {
+        selection.sections.push(pad);
+      }
+    }
+  }
+
+  console.log(`[AI Dashboard] ✅ Selected ${selection.sections.length} sections: ${selection.sections.join(', ')}`);
+  console.log(`[AI Dashboard] 📝 Title: "${selection.title}", Focus: "${selection.focus}"`);
+
+  // STEP 2: Gather tile pools from proven template builders
+  const journeyTiles = getJourneyOverviewTiles(company);
+  const filteredTiles = getFilteredViewTiles(company);
+  const perfTiles = getPerformanceTiles(company);
+  const goldenTiles = getGoldenSignalTiles();
+  const obsTiles = getObservabilityTiles();
+  const sectionHeaders = getSectionHeaders();
+
+  // Dynamic tiles from payload
+  const dynamicTiles = generateDynamicFieldTiles(detected, company, journeyType);
+
+  // STEP 2b: Discover which additionalfields actually exist in Grail for this company/journey
+  // Proxy sends {name, type}[] — build a Map of fieldName → {type, category} for tile generation
+  // This prevents null-value tiles AND enables type-aware DQL (sum vs countBy)
+  // Works with ANY field name — real customers may have "status", "productSKU", "warrantyType", etc.
+
+  // Smart label: convert camelCase/PascalCase/snake_case → readable "Title Case"
+  function smartLabel(fieldName) {
+    return fieldName
+      .replace(/([a-z])([A-Z])/g, '$1 $2')   // camelCase → "camel Case"
+      .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2') // XMLParser → "XML Parser"
+      .replace(/_/g, ' ')                      // snake_case → "snake case"
+      .replace(/\b\w/g, c => c.toUpperCase()); // Title Case
+  }
+
+  // Auto-categorize unknown fields by name heuristics
+  const CATEGORY_HINTS = {
+    revenue:      /price|cost|revenue|total|value|amount|profit|margin|discount|tax|shipping|order|spend|fee|payment|invoice/i,
+    customer:     /customer|lifetime|ltv|clv|acquisition|retention|loyalty|member|tier|status/i,
+    conversion:   /convert|conversion|funnel|cart|abandon|checkout|signup|register/i,
+    satisfaction: /nps|satisfaction|promoter|rating|score|feedback|survey|csat/i,
+    operations:   /process|time|duration|latency|queue|throughput|efficiency|utilization|performance|response/i,
+    risk:         /risk|fraud|compliance|security|threat|alert|incident/i,
+    channel:      /channel|device|browser|platform|source|medium|campaign|referr/i,
+    segment:      /segment|group|cohort|category|type|class|level|plan|subscription/i,
+    product:      /product|sku|item|catalog|inventory|stock|brand|model|variant/i,
+    market:       /market|region|location|country|geo|territory|zone|area/i,
+  };
+  function guessCategory(fieldName) {
+    for (const [cat, regex] of Object.entries(CATEGORY_HINTS)) {
+      if (regex.test(fieldName)) return cat;
+    }
+    return 'unknown';
+  }
+
+  // Build metadata for a discovered field, using FIELD_CATALOG if known, else heuristics
+  function buildFieldMeta(name, discoveredType) {
+    const catalogEntry = FIELD_CATALOG[name];
+    if (catalogEntry) {
+      return {
+        type: discoveredType || catalogEntry.type,
+        category: catalogEntry.category,
+        label: catalogEntry.label,
+        agg: catalogEntry.agg,
+        viz: catalogEntry.viz,
+        kpi: catalogEntry.kpi,
+      };
+    }
+    // Unknown field — infer everything from the name + discovered type
+    const type = discoveredType || 'string';
+    const category = guessCategory(name);
+    return {
+      type,
+      category,
+      label: smartLabel(name),
+      agg: type === 'numeric' ? (category === 'revenue' ? 'sum' : 'avg') : null,
+      viz: type === 'numeric' ? 'categoricalBarChart' : 'donutChart',
+      kpi: type === 'numeric' && /total|revenue|value|cost|price/i.test(name),
+    };
+  }
+
+  let discoveredFieldMap = null; // null = couldn't discover, fall back to catalog defaults
+
+  if (Array.isArray(journeyData.discoveredFields)) {
+    discoveredFieldMap = new Map();
+    for (const f of journeyData.discoveredFields) {
+      const name = typeof f === 'string' ? f : f.name;
+      const discoveredType = typeof f === 'object' ? f.type : null;
+      const meta = buildFieldMeta(name, discoveredType);
+      // Carry forward sample values from Grail discovery for Ollama context
+      if (typeof f === 'object' && f.sampleValue !== undefined) {
+        meta.sampleValue = f.sampleValue;
+      }
+      discoveredFieldMap.set(name, meta);
+    }
+    console.log(`[AI Dashboard] 🔎 Proxy-discovered ${discoveredFieldMap.size} fields: ${[...discoveredFieldMap.entries()].map(([k,v]) => `${k}(${v.type}/${v.category}${v.sampleValue !== undefined ? '='+v.sampleValue : ''})`).join(', ')}`);
+  } else {
+    // Fallback: try local query — returns Set of field names + .records with full bizevent payloads
+    const localFields = await discoverBizEventFields(company, journeyType);
+    if (localFields) {
+      discoveredFieldMap = new Map();
+      for (const name of localFields) {
+        discoveredFieldMap.set(name, buildFieldMeta(name, null));
+      }
+      // Carry forward the raw bizevent records so Ollama can see actual data
+      if (localFields.records && localFields.records.length > 0) {
+        discoveredFieldMap._bizEventRecords = localFields.records;
+      }
+      console.log(`[AI Dashboard] 🔎 Local discovery: ${discoveredFieldMap.size} fields, ${(localFields.records || []).length} bizevent records`);
+    } else {
+      console.log(`[AI Dashboard] 🔎 Field discovery skipped (no credentials) — using catalog defaults`);
+    }
+  }
+
+  // Fallback: use additionalFields from the request payload when Grail discovery yields nothing
+  if ((!discoveredFieldMap || discoveredFieldMap.size === 0) && journeyData.additionalFields && Object.keys(journeyData.additionalFields).length > 0) {
+    discoveredFieldMap = new Map();
+    for (const [name, value] of Object.entries(journeyData.additionalFields)) {
+      const inferredType = typeof value === 'number' ? 'numeric' : 'string';
+      discoveredFieldMap.set(name, buildFieldMeta(name, inferredType));
+    }
+    console.log(`[AI Dashboard] 🔎 Payload-inferred ${discoveredFieldMap.size} fields from additionalFields: ${[...discoveredFieldMap.keys()].join(', ')}`);
+  }
+
+  // STEP 2c: Determine prompt focus categories for tile prioritization
+  // Skip focus filtering for bespoke prompts — they already target the right fields
+  const promptLower = customPrompt.toLowerCase();
+  let focusCategories = null; // null = show all categories
+  if (!isBespoke) {
+    for (const [keyword, categories] of Object.entries(FOCUS_CATEGORY_MAP)) {
+      if (promptLower.includes(keyword)) {
+        if (!focusCategories) focusCategories = new Set();
+        for (const cat of categories) focusCategories.add(cat);
+      }
+    }
+  }
+  if (focusCategories) {
+    console.log(`[AI Dashboard] 🎯 Prompt focus categories: ${[...focusCategories].join(', ')}`);
+  }
+
+  // Map section IDs to tile+layout entries
+  const tilePools = {
+    journey_overview: journeyTiles,
+    filtered_view: filteredTiles,
+    performance: perfTiles,
+    golden_signals: goldenTiles,
+    observability: obsTiles
+  };
+
+  // STEP 3: Compose the dashboard from selected sections
+  const dynatraceUrl = process.env.DT_ENVIRONMENT_URL || process.env.DYNATRACE_URL || 'https://your-environment.apps.dynatrace.com';
+  const signals = dataSignals.map(s => `📊 ${s.charAt(0).toUpperCase() + s.slice(1)}`).join(' | ') || '🔧 Services';
+
+  const dashboard = {
+    version: 21,
+    variables: sortVariablesByDependency(getProvenVariables(company)),
+    tiles: {},
+    layouts: {},
+    importedWithCode: false,
+    settings: { defaultTimeframe: { value: { from: 'now()-24h', to: 'now()' }, enabled: true } },
+    annotations: []
+  };
+
+  let idx = 0;
+  let currentY = 0;
+
+  // Helper to add a tile with auto-layout
+  const addTile = (tileObj, w = 12, h = 4) => {
+    const tile = { ...tileObj };
+    delete tile._tag;
+    delete tile._widgetType;
+    delete tile._purpose;
+    dashboard.tiles[idx] = tile;
+    dashboard.layouts[idx] = { x: 0, y: currentY, w, h };
+    idx++;
+    return idx - 1;
+  };
+
+  const addTileAt = (tileObj, x, y, w, h) => {
+    const tile = { ...tileObj };
+    delete tile._tag;
+    delete tile._widgetType;
+    delete tile._purpose;
+    dashboard.tiles[idx] = tile;
+    dashboard.layouts[idx] = { x, y, w, h };
+    idx++;
+    return idx - 1;
+  };
+
+  const addMarkdown = (content, w = 24, h = 2) => {
+    dashboard.tiles[idx] = { title: '', type: 'markdown', content };
+    dashboard.layouts[idx] = { x: 0, y: currentY, w, h };
+    idx++;
+    currentY += h;
+  };
+
+  const addSectionHeader = (text, h = 1) => {
+    dashboard.tiles[idx] = { title: '', type: 'markdown', content: `### ${text}` };
+    dashboard.layouts[idx] = { x: 0, y: currentY, w: 24, h };
+    idx++;
+    currentY += h;
+  };
+
+  // ── HEADER (always included) ──
+  const focusLine = selection.focus ? `\n**Focus:** ${selection.focus}` : '';
+  addMarkdown(
+    `# ${selection.title}\n## ${company} | ${journeyType} Journey | ${industry || 'Business Observability'}${focusLine}\n**Data Signals:** ${signals}\n---`,
+    24, 3
+  );
+
+  // Journey flow (always included)
+  const stepsText = (steps || []).map(s => `\`${typeof s === 'string' ? s : (s.name || s.stepName)}\``).join(' → ') || '`Step 1` → `Step 2` → `Step 3`';
+  addMarkdown(`**Journey Flow:** ${stepsText}`, 24, 2);
+
+  // ── BESPOKE TILE GENERATION (Hybrid: AI selects sections + designs tiles from real Grail data) ──
+  // Ollama sees actual field names + sample values from Grail, picks viz/agg combos.
+  // DQL is built from validated templates, not from Ollama — reliability guaranteed.
+  // Falls back to section-based layout if Ollama tile gen fails or returns too few tiles.
+  let tilePlans = null;
+  if (discoveredFieldMap && discoveredFieldMap.size > 0) {
+    tilePlans = await generateTilePlanWithOllama(customPrompt, company, journeyType, industry, discoveredFieldMap, dataSignals);
+  }
+
+  if (tilePlans && tilePlans.length >= 3) {
+    // BESPOKE LAYOUT — Ollama designed each tile from real Grail field data
+    // ══════════════════════════════════════════════════════════════════════
+    console.log(`[AI Dashboard] 🎨 Bespoke Ollama layout: ${tilePlans.length} unique tiles`);
+
+    // Sort tiles by visual group: KPIs first, then charts, then full-width (table/heatmap/geo/records)
+    const sortedPlans = [...tilePlans].sort((a, b) => {
+      const KPI_SET = new Set(['singleValue', 'gauge', 'meterBar']);
+      const FULL_SET = new Set(['table', 'heatmap', 'recordList', 'choroplethMap']);
+      const groupOrder = (p) => KPI_SET.has(p.viz) ? 0 : FULL_SET.has(p.viz) ? 2 : 1;
+      return groupOrder(a) - groupOrder(b);
+    });
+
+    let lastGroup = null;
+    let kpiCol = 0;
+    let chartCol = 0;
+
+    const flushKpiRow = () => { if (kpiCol > 0) { currentY += 3; kpiCol = 0; } };
+    const flushChartRow = () => { if (chartCol > 0) { currentY += 4; chartCol = 0; } };
+
+    const GROUP_HEADERS = {
+      kpi: '📊 Key Performance Indicators',
+      chart: '📈 Analysis & Trends',
+      fullwidth: '📋 Detailed Views'
+    };
+
+    const transitionTo = (group) => {
+      if (group !== lastGroup) {
+        if (lastGroup === 'kpi') flushKpiRow();
+        if (lastGroup === 'chart') flushChartRow();
+        addSectionHeader(GROUP_HEADERS[group]);
+        lastGroup = group;
+      }
+    };
+
+    for (const plan of sortedPlans) {
+      let tile;
+      try {
+        tile = buildTileFromPlan(plan);
+      } catch (tileErr) {
+        console.warn(`[AI Dashboard] ⚠️ Failed to build tile "${plan.title}": ${tileErr.message}`);
+        continue;
+      }
+      const KPI_VIZ = new Set(['singleValue', 'gauge', 'meterBar']);
+      const FULLWIDTH_VIZ = new Set(['table', 'heatmap', 'recordList', 'choroplethMap']);
+      if (KPI_VIZ.has(plan.viz)) {
+        transitionTo('kpi');
+        addTileAt(tile, kpiCol * 6, currentY, 6, 3);
+        kpiCol++;
+        if (kpiCol >= 4) { currentY += 3; kpiCol = 0; }
+      } else if (FULLWIDTH_VIZ.has(plan.viz)) {
+        transitionTo('fullwidth');
+        const { w, h } = getTileDimensions(plan.viz);
+        addTileAt(tile, 0, currentY, w, h);
+        currentY += h;
+      } else {
+        transitionTo('chart');
+        const { w, h } = getTileDimensions(plan.viz);
+        addTileAt(tile, chartCol * 12, currentY, w, h);
+        chartCol++;
+        if (chartCol >= 2) { currentY += h; chartCol = 0; }
+      }
+    }
+    flushKpiRow();
+    flushChartRow();
+
+  } else {
+    // ══════════════════════════════════════════════════════════════════════
+    // FALLBACK: Section-based layout (Ollama tile gen failed or unavailable)
+    // ══════════════════════════════════════════════════════════════════════
+    console.log(`[AI Dashboard] ⚡ Falling back to section-based layout`);
+
+  // Shared query/davis settings for all section tiles
+  const Q_SETTINGS = { maxResultRecords: 1000, defaultScanLimitGbytes: 500, maxResultMegaBytes: 1, defaultSamplingRatio: 10, enableSampling: false };
+  const DAVIS_OFF = { enabled: false, davisVisualization: { isAvailable: true } };
+
+  // ── SELECTED SECTIONS (fallback) ──
+  for (const sectionId of selection.sections) {
+    const catalog = SECTION_CATALOG[sectionId];
+    if (!catalog) continue;
+
+    // Section header
+    addSectionHeader(`📌 ${catalog.label}`);
+
+    if (sectionId === 'executive_kpis') {
+      // 4 KPI cards in a row
+      addTileAt(journeyTiles.total_volume, 0, currentY, 6, 3);
+      addTileAt(journeyTiles.success_rate, 6, currentY, 6, 3);
+      addTileAt(journeyTiles.total_revenue, 12, currentY, 6, 3);
+      addTileAt(journeyTiles.total_errors, 18, currentY, 6, 3);
+      currentY += 3;
+
+      // Gauge row: Success Rate gauge + Error Rate gauge (visual percentage indicators)
+      addTileAt({
+        title: '🎯 Success Rate', type: 'data',
+        query: `fetch bizevents | filter event.kind == "BIZ_EVENT" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize total = count(), successful = countIf(isNull(additionalfields.hasError) or additionalfields.hasError == false) | fieldsAdd rate = round((toDouble(successful) / toDouble(total)) * 100, decimals:1)`,
+        visualization: 'gauge',
+        visualizationSettings: {
+          gauge: { label: 'Success %', recordField: 'rate', min: 0, max: 100,
+            thresholds: [{ value: 95, color: '#2AB06F' }, { value: 85, color: '#EEA53C' }, { value: 0, color: '#C62239' }]
+          }
+        },
+        querySettings: Q_SETTINGS, davis: DAVIS_OFF
+      }, 0, currentY, 12, 4);
+      addTileAt({
+        title: '⚡ Error Rate', type: 'data',
+        query: `fetch bizevents | filter event.kind == "BIZ_EVENT" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize total = count(), errors = countIf(additionalfields.hasError == true) | fieldsAdd rate = round((toDouble(errors) / toDouble(total)) * 100, decimals:1)`,
+        visualization: 'gauge',
+        visualizationSettings: {
+          gauge: { label: 'Error %', recordField: 'rate', min: 0, max: 100,
+            thresholds: [{ value: 0, color: '#2AB06F' }, { value: 5, color: '#EEA53C' }, { value: 15, color: '#C62239' }]
+          }
+        },
+        querySettings: Q_SETTINGS, davis: DAVIS_OFF
+      }, 12, currentY, 12, 4);
+      currentY += 4;
+
+    } else if (sectionId === 'journey_overview') {
+      addTileAt(journeyTiles.step_metrics, 0, currentY, 24, 6);
+      currentY += 6;
+      addTileAt(journeyTiles.volume_over_time, 0, currentY, 12, 4);
+      addTileAt(journeyTiles.events_by_step, 12, currentY, 12, 4);
+      currentY += 4;
+
+      // Honeycomb: Step Health overview — each step as a node, colored by success rate
+      addTileAt({
+        title: '🐝 Step Health Overview', type: 'data',
+        query: `fetch bizevents | filter event.kind == "BIZ_EVENT" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize total = count(), successful = countIf(isNull(additionalfields.hasError) or additionalfields.hasError == false), by: {json.stepName} | fieldsAdd success_rate = round((toDouble(successful) / toDouble(total)) * 100, decimals:1) | fields json.stepName, success_rate`,
+        visualization: 'honeycomb',
+        visualizationSettings: {
+          honeycomb: { dataMappings: { value: 'success_rate', label: 'json.stepName' }, colorPalette: 'green-to-red-inverted', shape: 'hexagon', showLabels: true },
+          legend: { position: 'auto', showLegend: true }
+        },
+        querySettings: Q_SETTINGS, davis: DAVIS_OFF
+      }, 0, currentY, 24, 5);
+      currentY += 5;
+
+    } else if (sectionId === 'filtered_view') {
+      addTileAt(filteredTiles.filtered_events, 0, currentY, 6, 3);
+      addTileAt(filteredTiles.filtered_revenue, 6, currentY, 6, 3);
+      addTileAt(filteredTiles.filtered_aov, 12, currentY, 6, 3);
+      addTileAt(filteredTiles.filtered_p90, 18, currentY, 6, 3);
+      currentY += 3;
+      addTileAt(filteredTiles.filtered_volume_trend, 0, currentY, 12, 4);
+      addTileAt(filteredTiles.filtered_events_by_step, 12, currentY, 12, 4);
+      currentY += 4;
+
+    } else if (sectionId === 'performance_sla') {
+      addTileAt(perfTiles.step_performance, 0, currentY, 12, 5);
+      addTileAt(perfTiles.sla_compliance, 12, currentY, 12, 5);
+      currentY += 5;
+      addTileAt(perfTiles.hourly_pattern, 0, currentY, 12, 4);
+
+      // MeterBar: SLA target compliance rate — visual progress bar
+      addTileAt({
+        title: '📊 SLA Target Compliance', type: 'data',
+        query: `fetch bizevents | filter event.kind == "BIZ_EVENT" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize total = count(), within_sla = countIf(isNull(additionalfields.hasError) or additionalfields.hasError == false) | fieldsAdd sla_rate = round((toDouble(within_sla) / toDouble(total)) * 100, decimals:1)`,
+        visualization: 'meterBar',
+        visualizationSettings: {
+          meterBar: { recordField: 'sla_rate', min: 0, max: 100, label: 'SLA Compliance %',
+            thresholds: [{ value: 99, color: '#2AB06F' }, { value: 95, color: '#EEA53C' }, { value: 0, color: '#C62239' }]
+          }
+        },
+        querySettings: Q_SETTINGS, davis: DAVIS_OFF
+      }, 12, currentY, 12, 4);
+      currentY += 4;
+
+    } else if (sectionId === 'error_analysis') {
+      addTileAt(perfTiles.error_rate_trend, 0, currentY, 12, 4);
+      addTileAt(perfTiles.errors_by_step, 12, currentY, 12, 4);
+      currentY += 4;
+      addTileAt(perfTiles.error_details, 0, currentY, 24, 4);
+      currentY += 4;
+
+    } else if (sectionId === 'golden_signals_traffic') {
+      addTileAt(goldenTiles.requests, 0, currentY, 8, 5);
+      addTileAt(goldenTiles.requests_success_failed, 8, currentY, 8, 5);
+      addTileAt(goldenTiles.key_requests, 16, currentY, 8, 5);
+      currentY += 5;
+
+    } else if (sectionId === 'golden_signals_latency') {
+      addTileAt(goldenTiles.latency_p50, 0, currentY, 8, 5);
+      addTileAt(goldenTiles.latency_p90, 8, currentY, 8, 5);
+      addTileAt(goldenTiles.latency_p99, 16, currentY, 8, 5);
+      currentY += 5;
+
+    } else if (sectionId === 'golden_signals_errors') {
+      addTileAt(goldenTiles.failed_requests, 0, currentY, 8, 5);
+      addTileAt(goldenTiles.errors_5xx, 8, currentY, 8, 5);
+      addTileAt(goldenTiles.errors_4xx, 16, currentY, 8, 5);
+      currentY += 5;
+
+    } else if (sectionId === 'golden_signals_saturation') {
+      addTileAt(goldenTiles.cpu_usage, 0, currentY, 8, 5);
+      addTileAt(goldenTiles.memory_used, 8, currentY, 8, 5);
+      addTileAt(goldenTiles.gc_suspension, 16, currentY, 8, 5);
+      currentY += 5;
+
+    } else if (sectionId === 'observability') {
+      addTileAt(obsTiles.traces_with_exceptions, 0, currentY, 24, 6);
+      currentY += 6;
+      addTileAt(obsTiles.top_exceptions, 0, currentY, 24, 5);
+      currentY += 5;
+      addTileAt(obsTiles.davis_problems, 0, currentY, 12, 5);
+      addTileAt(obsTiles.log_errors, 12, currentY, 12, 5);
+      currentY += 5;
+
+    } else if (sectionId === 'customer_dynamic') {
+      // ══════════════════════════════════════════════════════════════════
+      // DATA-DRIVEN TILE BUILDER: Uses discoveredFieldMap + FIELD_CATALOG
+      // to generate the right DQL for each field's actual data type.
+      // STRING fields → countBy + donut/pie/bar
+      // NUMERIC fields → sum/avg + singleValue/bar/area
+      // Focus categories from the prompt filter which fields get tiles.
+      // ══════════════════════════════════════════════════════════════════
+
+      const BASE_FILTER = `fetch bizevents | filter event.kind == "BIZ_EVENT" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType)`;
+
+      // Build the list of fields to visualize
+      let fieldsToVisualize = [];
+
+      if (!discoveredFieldMap || discoveredFieldMap.size === 0) {
+        // No proxy discovery — try one more time locally within this section
+        console.log('[AI Dashboard] ⚠️ No discovered fields from proxy — attempting local Grail discovery...');
+        const lastChanceFields = await discoverBizEventFields(company, journeyType, { maxRetries: 0 });
+        if (lastChanceFields && lastChanceFields.size > 0) {
+          discoveredFieldMap = new Map();
+          for (const name of lastChanceFields) {
+            discoveredFieldMap.set(name, buildFieldMeta(name, null));
+          }
+          console.log(`[AI Dashboard] ✅ Last-chance local discovery found ${discoveredFieldMap.size} fields`);
+        } else {
+          console.log('[AI Dashboard] ⚠️ Local discovery also returned nothing — customer_dynamic will show placeholder');
+        }
+      }
+
+      if (discoveredFieldMap && discoveredFieldMap.size > 0) {
+        // We have real discovered fields — use them with their real types
+        for (const [fieldName, info] of discoveredFieldMap) {
+          if (fieldName === 'hasError') continue; // handled in error_analysis section
+          // Apply focus filter: if prompt targets specific categories, only show matching fields
+          if (focusCategories && info.category !== 'unknown' && !focusCategories.has(info.category)) continue;
+          fieldsToVisualize.push({ fieldName, ...info });
+        }
+      }
+
+      if (fieldsToVisualize.length === 0) {
+        addMarkdown('*No additional business metrics found in the bizevent data for this journey. Run a journey simulation to populate business metrics.*', 24, 1);
+      } else {
+        console.log(`[AI Dashboard] 📊 Building ${fieldsToVisualize.length} data-driven tiles from discovered fields`);
+
+        // Smart field classification for optimal visualization selection
+        const isPercentageField = (name) => /rate|score|percentage|ratio|likelihood|compliance|satisfaction/i.test(name);
+        const isLocationField = (name) => /region|country|location|city|state|territory|zone|geo|market/i.test(name);
+        const isTimeField = (name) => /time|duration|latency|wait|response|processing|elapsed/i.test(name);
+
+        // Separate fields by type and characteristics
+        const kpiFields = fieldsToVisualize.filter(f => f.type === 'numeric' && f.kpi);
+        const gaugeFields = fieldsToVisualize.filter(f => f.type === 'numeric' && !f.kpi && isPercentageField(f.fieldName));
+        const timeDistFields = fieldsToVisualize.filter(f => f.type === 'numeric' && !f.kpi && isTimeField(f.fieldName));
+        const otherNumericFields = fieldsToVisualize.filter(f => f.type === 'numeric' && !f.kpi && !isPercentageField(f.fieldName) && !isTimeField(f.fieldName));
+        const locationFields = fieldsToVisualize.filter(f => f.type === 'string' && isLocationField(f.fieldName));
+        const otherStringFields = fieldsToVisualize.filter(f => f.type === 'string' && !isLocationField(f.fieldName));
+
+        // ── KPI ROW: Top numeric KPIs as singleValue cards (max 4) ──
+        if (kpiFields.length > 0) {
+          const topKpis = kpiFields.slice(0, 4);
+          const kpiWidth = Math.floor(24 / topKpis.length);
+          topKpis.forEach((f, i) => {
+            const aggFn = f.agg === 'sum' ? `sum(additionalfields.${f.fieldName})` : `avg(additionalfields.${f.fieldName})`;
+            addTileAt({
+              title: f.label, type: 'data',
+              query: `${BASE_FILTER} | summarize value = ${aggFn}`,
+              visualization: 'singleValue',
+              visualizationSettings: {},
+              querySettings: Q_SETTINGS, davis: DAVIS_OFF
+            }, i * kpiWidth, currentY, kpiWidth, 3);
+          });
+          currentY += 3;
+        }
+
+        // ── GAUGE ROW: Percentage/rate/score fields as gauges (max 3 per row) ──
+        if (gaugeFields.length > 0) {
+          let col = 0;
+          for (const f of gaugeFields) {
+            const aggFn = `avg(additionalfields.${f.fieldName})`;
+            const isPercent = /rate|percentage|ratio|likelihood|compliance/i.test(f.fieldName);
+            const maxVal = isPercent ? 100 : (/score/i.test(f.fieldName) ? 100 : 10);
+            addTileAt({
+              title: `🎯 ${f.label}`, type: 'data',
+              query: `${BASE_FILTER} | summarize value = ${aggFn}`,
+              visualization: 'gauge',
+              visualizationSettings: {
+                gauge: { label: f.label, recordField: 'value', min: 0, max: maxVal,
+                  thresholds: maxVal === 100
+                    ? [{ value: 80, color: '#2AB06F' }, { value: 50, color: '#EEA53C' }, { value: 0, color: '#C62239' }]
+                    : [{ value: maxVal * 0.8, color: '#2AB06F' }, { value: maxVal * 0.5, color: '#EEA53C' }, { value: 0, color: '#C62239' }]
+                }
+              },
+              querySettings: Q_SETTINGS, davis: DAVIS_OFF
+            }, col * 8, currentY, 8, 4);
+            col++;
+            if (col >= 3) { col = 0; currentY += 4; }
+          }
+          if (col > 0) currentY += 4;
+        }
+
+        // ── HISTOGRAM ROW: Time/duration fields as histograms (distribution view) ──
+        if (timeDistFields.length > 0) {
+          addMarkdown('#### ⏱️ Distribution Analysis', 24, 1);
+          let col = 0;
+          for (const f of timeDistFields) {
+            addTileAt({
+              title: `📊 ${f.label} Distribution`, type: 'data',
+              query: `${BASE_FILTER} | filter isNotNull(additionalfields.${f.fieldName}) | fields value = additionalfields.${f.fieldName}`,
+              visualization: 'histogram',
+              visualizationSettings: {
+                histogram: { dataMappings: { value: 'value' } },
+                legend: { position: 'auto', showLegend: true }
+              },
+              querySettings: Q_SETTINGS, davis: DAVIS_OFF
+            }, col * 12, currentY, 12, 5);
+            col++;
+            if (col >= 2) { col = 0; currentY += 5; }
+          }
+          if (col > 0) currentY += 5;
+        }
+
+        // ── NUMERIC CHART ROWS: Bar charts grouped by step (3 per row) ──
+        const remainingNumeric = [...kpiFields.slice(4), ...otherNumericFields];
+        if (remainingNumeric.length > 0) {
+          let col = 0;
+          for (const f of remainingNumeric) {
+            const aggFn = f.agg === 'sum' ? `sum(additionalfields.${f.fieldName})` : `avg(additionalfields.${f.fieldName})`;
+            const p90 = f.agg === 'avg' && isTimeField(f.fieldName)
+              ? `, P90 = percentile(additionalfields.${f.fieldName}, 90)` : '';
+            addTileAt({
+              title: f.label, type: 'data',
+              query: `${BASE_FILTER} | summarize Value = ${aggFn}${p90}, Events = count(), by: {json.stepName} | sort Value desc`,
+              visualization: 'categoricalBarChart',
+              visualizationSettings: {
+                categoryAxis: { label: { label: 'Journey Step', showLabel: true }, tickLayout: 'horizontal' },
+                numericAxis: { label: { showLabel: true }, scale: 'linear' },
+                legend: { position: 'auto', showLegend: true },
+                layout: { groupMode: 'grouped', position: 'horizontal' }
+              },
+              querySettings: Q_SETTINGS, davis: DAVIS_OFF
+            }, col * 8, currentY, 8, 5);
+            col++;
+            if (col >= 3) { col = 0; currentY += 5; }
+          }
+          if (col > 0) currentY += 5;
+        }
+
+        // ── SCATTERPLOT: Correlation between two numeric fields (when 2+ available) ──
+        const allNumeric = [...kpiFields, ...gaugeFields, ...otherNumericFields];
+        if (allNumeric.length >= 2) {
+          const xField = allNumeric[0];
+          const yField = allNumeric[1];
+          addTileAt({
+            title: `🔬 ${xField.label} vs ${yField.label} Correlation`, type: 'data',
+            query: `${BASE_FILTER} | filter isNotNull(additionalfields.${xField.fieldName}) AND isNotNull(additionalfields.${yField.fieldName}) | fields x = additionalfields.${xField.fieldName}, y = additionalfields.${yField.fieldName}, step = json.stepName | limit 500`,
+            visualization: 'scatterplot',
+            visualizationSettings: {
+              scatterplot: { dataMappings: { x: 'x', y: 'y', color: 'step' } },
+              legend: { position: 'auto', showLegend: true }
+            },
+            querySettings: Q_SETTINGS, davis: DAVIS_OFF
+          }, 0, currentY, 24, 5);
+          currentY += 5;
+        }
+
+        // ── REVENUE TREND: Revenue category fields as timeseries area chart ──
+        const revenueField = fieldsToVisualize.find(f => f.category === 'revenue' && f.type === 'numeric');
+        if (revenueField) {
+          addTileAt({
+            title: `📈 ${revenueField.label} Trend Over Time`, type: 'data',
+            query: `${BASE_FILTER} | makeTimeseries revenue = ${revenueField.agg}(additionalfields.${revenueField.fieldName}), volume = count(), bins:30`,
+            visualization: 'areaChart',
+            visualizationSettings: {
+              chartSettings: { gapPolicy: 'connect', seriesOverrides: [
+                { seriesId: ['revenue'], override: { color: '#2AB06F' } },
+                { seriesId: ['volume'], override: { color: '#4FD5E0' } }
+              ]},
+              thresholds: [], unitsOverrides: []
+            },
+            querySettings: Q_SETTINGS, davis: DAVIS_OFF
+          }, 0, currentY, 24, 5);
+          currentY += 5;
+        }
+
+        // ── LOCATION FIELDS: PieChart for geographic/location string fields ──
+        if (locationFields.length > 0) {
+          addMarkdown('#### 🌍 Geographic Breakdown', 24, 1);
+          let col = 0;
+          for (const f of locationFields) {
+            addTileAt({
+              title: f.label, type: 'data',
+              query: `${BASE_FILTER} | filter isNotNull(additionalfields.${f.fieldName}) | summarize Count = count(), by: {additionalfields.${f.fieldName}} | sort Count desc`,
+              visualization: 'pieChart',
+              visualizationSettings: {
+                legend: { position: 'auto', showLegend: true },
+                pieChart: { labelsVisible: true }
+              },
+              querySettings: Q_SETTINGS, davis: DAVIS_OFF
+            }, col * 8, currentY, 8, 5);
+            col++;
+            if (col >= 3) { col = 0; currentY += 5; }
+          }
+          if (col > 0) currentY += 5;
+        }
+
+        // ── STRING DIMENSION ROWS: Donut charts (standard), Honeycomb for high-cardinality ──
+        if (otherStringFields.length > 0) {
+          addMarkdown('#### 📊 Breakdown by Dimension', 24, 1);
+          let col = 0;
+          for (const f of otherStringFields) {
+            // Honeycomb for fields likely to have many values (IDs, names, status codes)
+            const isHighCardinality = /name|id|code|sku|product|item|model|brand|variant/i.test(f.fieldName);
+            const viz = isHighCardinality ? 'honeycomb' : (f.viz || 'donutChart');
+            const vizSettings = isHighCardinality
+              ? { honeycomb: { dataMappings: { value: 'Count', label: `additionalfields.${f.fieldName}` }, colorPalette: 'blue-green', shape: 'hexagon', showLabels: true }, legend: { position: 'auto', showLegend: true } }
+              : { legend: { position: 'auto', showLegend: true } };
+            addTileAt({
+              title: f.label, type: 'data',
+              query: `${BASE_FILTER} | filter isNotNull(additionalfields.${f.fieldName}) | summarize Count = count(), by: {additionalfields.${f.fieldName}} | sort Count desc`,
+              visualization: viz,
+              visualizationSettings: vizSettings,
+              querySettings: Q_SETTINGS, davis: DAVIS_OFF
+            }, col * 8, currentY, 8, 5);
+            col++;
+            if (col >= 3) { col = 0; currentY += 5; }
+          }
+          if (col > 0) currentY += 5;
+        }
+
+        console.log(`[AI Dashboard] 📊 Customer Dynamic: ${kpiFields.length} KPIs + ${gaugeFields.length} gauges + ${timeDistFields.length} histograms + ${remainingNumeric.length} bar charts + ${locationFields.length} pie/geo + ${otherStringFields.length} dimension charts`);
+      }
+
+    } else if (sectionId === 'geographic_view') {
+      // Heatmap: Step × Hour activity matrix — always available
+      addTileAt({
+        title: '🗺️ Journey Activity Heatmap (Step × Hour)',
+        type: 'data',
+        query: `fetch bizevents | filter event.kind == "BIZ_EVENT" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | fieldsAdd hour = formatTimestamp(timestamp, format: "HH") | summarize count = count(), by: {json.stepName, hour} | sort hour asc`,
+        visualization: 'heatmap',
+        visualizationSettings: {
+          dataMapping: { xAxis: null, yAxis: null, bucketValue: null },
+          axes: {
+            xAxis: { label: 'Hour of Day', showLabel: true },
+            yAxis: { label: 'Journey Step', showLabel: true }
+          },
+          legend: { position: 'auto', showLegend: true }
+        },
+        querySettings: Q_SETTINGS, davis: DAVIS_OFF
+      }, 0, currentY, 12, 6);
+
+      // PieChart: Region distribution — proportional breakdown
+      addTileAt({
+        title: '🌍 Event Distribution by Region',
+        type: 'data',
+        query: `fetch bizevents | filter event.kind == "BIZ_EVENT" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | filter isNotNull(additionalfields.region) | summarize Events = count(), by: {additionalfields.region} | sort Events desc`,
+        visualization: 'pieChart',
+        visualizationSettings: {
+          legend: { position: 'auto', showLegend: true },
+          pieChart: { labelsVisible: true }
+        },
+        querySettings: Q_SETTINGS, davis: DAVIS_OFF
+      }, 12, currentY, 12, 6);
+      currentY += 6;
+
+      // RecordList: Recent individual journey events — drill-down into raw records
+      addTileAt({
+        title: '📋 Recent Journey Events',
+        type: 'data',
+        query: `fetch bizevents | filter event.kind == "BIZ_EVENT" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | sort timestamp desc | limit 20 | fields timestamp, json.stepName, json.journeyStatus, additionalfields.region, additionalfields.deviceType, additionalfields.channel`,
+        visualization: 'recordList',
+        visualizationSettings: {},
+        querySettings: Q_SETTINGS, davis: DAVIS_OFF
+      }, 0, currentY, 24, 5);
+      currentY += 5;
+
+    } else if (sectionId === 'trend_analysis') {
+      // Row 1: Hourly pattern + volume bar chart
+      addTileAt(perfTiles.hourly_pattern, 0, currentY, 12, 4);
+      addTileAt({
+        title: '📊 Event Volume Distribution',
+        type: 'data',
+        query: `fetch bizevents | filter event.kind == "BIZ_EVENT" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | summarize count = count(), by: {json.stepName} | sort count desc`,
+        visualization: 'categoricalBarChart',
+        visualizationSettings: {
+          categoryAxis: { label: { label: 'Journey Step', showLabel: true }, tickLayout: 'horizontal' },
+          numericAxis: { label: { showLabel: true }, scale: 'linear' },
+          legend: { position: 'auto', showLegend: true },
+          layout: { groupMode: 'stacked', position: 'horizontal' }
+        },
+        querySettings: Q_SETTINGS, davis: DAVIS_OFF
+      }, 12, currentY, 12, 4);
+      currentY += 4;
+
+      // Row 2: Processing time trend (avg+p90 line) + success/failure area
+      addTileAt({
+        title: '⏱️ Processing Time Trend',
+        type: 'data',
+        query: `fetch bizevents | filter event.kind == "BIZ_EVENT" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | makeTimeseries avg_processing = avg(additionalfields.processingTime), p90_processing = percentile(additionalfields.processingTime, 90), bins:30`,
+        visualization: 'lineChart',
+        visualizationSettings: {
+          chartSettings: { gapPolicy: 'connect', seriesOverrides: [{ seriesId: ['avg_processing'], override: { color: '#4FD5E0' } }, { seriesId: ['p90_processing'], override: { color: '#EEA53C' } }] },
+          thresholds: [], unitsOverrides: []
+        },
+        querySettings: Q_SETTINGS, davis: DAVIS_OFF
+      }, 0, currentY, 12, 4);
+      addTileAt({
+        title: '📉 Success vs Failure Trend',
+        type: 'data',
+        query: `fetch bizevents | filter event.kind == "BIZ_EVENT" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | makeTimeseries success = countIf(json.journeyStatus == "Success"), failed = countIf(json.journeyStatus == "Failed"), bins:30`,
+        visualization: 'areaChart',
+        visualizationSettings: {
+          chartSettings: { gapPolicy: 'connect', seriesOverrides: [{ seriesId: ['success'], override: { color: '#2AB06F' } }, { seriesId: ['failed'], override: { color: '#C62239' } }] },
+          thresholds: [], unitsOverrides: []
+        },
+        querySettings: Q_SETTINGS, davis: DAVIS_OFF
+      }, 12, currentY, 12, 4);
+      currentY += 4;
+
+      // Row 3: Processing time band chart (min/avg/max range) + processing time histogram
+      addTileAt({
+        title: '📐 Processing Time Range (Min / Avg / Max)',
+        type: 'data',
+        query: `fetch bizevents | filter event.kind == "BIZ_EVENT" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | makeTimeseries min_time = min(additionalfields.processingTime), avg_time = avg(additionalfields.processingTime), max_time = max(additionalfields.processingTime), bins:30`,
+        visualization: 'bandChart',
+        visualizationSettings: {
+          chartSettings: { gapPolicy: 'connect' },
+          thresholds: [], unitsOverrides: []
+        },
+        querySettings: Q_SETTINGS, davis: DAVIS_OFF
+      }, 0, currentY, 12, 4);
+      addTileAt({
+        title: '📊 Processing Time Distribution',
+        type: 'data',
+        query: `fetch bizevents | filter event.kind == "BIZ_EVENT" | filter json.companyName == $CompanyName | filter in(json.journeyType, $JourneyType) | filter isNotNull(additionalfields.processingTime) | fields processingTime = additionalfields.processingTime`,
+        visualization: 'histogram',
+        visualizationSettings: {
+          histogram: { dataMappings: [{ valueAxis: 'processingTime' }], numberOfBuckets: 20 }
+        },
+        querySettings: Q_SETTINGS, davis: DAVIS_OFF
+      }, 12, currentY, 12, 4);
+      currentY += 4;
+    }
+  }
+
+  } // end fallback else block
+
+  // ── FOOTER (always) ──
+  const generationMethod = tilePlans && tilePlans.length >= 3
+    ? `Bespoke AI (${tilePlans.length} Ollama tiles + ${selection.sections.length} sections, Grail field data)`
+    : `Hybrid AI (${selection.sections.length} sections, proven DQL)`;
+  addMarkdown(
+    `---\n🤖 *Dashboard generated by ${generationMethod} | ${new Date().toISOString().split('T')[0]} | ${Object.keys(dashboard.tiles).length} tiles*`,
+    24, 1
+  );
+
+  // Deep links
+  addMarkdown(getDeepLinksMarkdown(dynatraceUrl).content || '', 24, 5);
+
+  console.log(`[AI Dashboard] ✅ Prompt-driven dashboard: ${Object.keys(dashboard.tiles).length} tiles | ${generationMethod}`);
+
+  // Pre-deploy schema validation
+  const validation = validateDashboardSchema(dashboard);
+  if (!validation.isValid) {
+    console.warn(`[AI Dashboard] ⚠️ Schema validation found ${validation.errors.length} issues — dashboard may need fixes`);
+  }
+
+  return { dashboard, selection, validation };
+}
+
+
+// ============================================================================
 // FULL GENERATION WITH AI - Complete dashboard from scratch
 // ============================================================================
 
-async function generateFullDashboardWithAI(journeyData, skills) {
+async function generateFullDashboardWithAI(journeyData, skills, customPrompt = null) {
   const ollamaAvailable = await checkOllamaAvailable();
   if (!ollamaAvailable) {
     throw new Error(`Ollama not available at ${OLLAMA_ENDPOINT} or model ${OLLAMA_MODEL} not installed`);
@@ -1626,7 +3696,7 @@ async function generateFullDashboardWithAI(journeyData, skills) {
   const { company, industry, journeyType, steps } = journeyData;
   const detected = detectPayloadFields(journeyData);
   
-  console.log(`[AI Dashboard] 🚀 FULL GENERATION for ${industry} - ${journeyType}`);
+  console.log(`[AI Dashboard] 🚀 FULL GENERATION for ${industry} - ${journeyType}${customPrompt ? ' (custom prompt)' : ''}`);
   
   // Build comprehensive prompt for full dashboard generation
   const stepsText = (steps || []).map((s, i) => 
@@ -1648,7 +3718,23 @@ async function generateFullDashboardWithAI(journeyData, skills) {
   if (detected.hasSatisfaction) dataSignalsArray.push('satisfaction/NPS');
   if (detected.hasRetention) dataSignalsArray.push('retention cohorts');
 
-  const generationPrompt = `You are an expert Dynatrace dashboard architect and sales intelligence analyst. Generate a COMPLETELY BESPOKE dashboard JSON for this customer journey.
+  // If there's a custom prompt from the user, inject it as a primary directive
+  const customDirective = customPrompt ? `
+
+USER REQUEST (HIGHEST PRIORITY — shape the entire dashboard around this):
+"${customPrompt}"
+
+Interpret this request and tailor every aspect of the dashboard accordingly:
+- If they ask for C-level/executive: use high-level KPIs, revenue summaries, strategic metrics, minimal technical detail
+- If they ask for operations: focus on error rates, latency, service health, SLAs, incident management
+- If they ask for customer success: focus on journey completion, NPS, churn risk, customer segments, satisfaction
+- If they ask for a specific focus area: prioritize those metrics and tiles
+- Always maintain valid Dynatrace dashboard JSON structure
+` : '';
+
+  const generationPrompt = `You are an expert Dynatrace dashboard architect and sales intelligence analyst. Generate a COMPLETELY BESPOKE dashboard JSON for this customer journey.${customDirective}
+
+${DQL_SYNTAX_RULES}
 
 DOMAIN: ${industry}
 JOURNEY: ${journeyType}
@@ -1768,7 +3854,7 @@ Generate the complete dashboard optimized for ${industry} - ${journeyType}.`;
       result.prompt_eval_count || 0,
       result.eval_count || 0,
       duration
-    ));
+    ), 'full_dashboard_generation');
 
     return dashboard;
   } catch (error) {
@@ -1817,7 +3903,7 @@ async function generateDashboardStructure(journeyData) {
 // AI-POWERED DASHBOARD GENERATION
 // ============================================================================
 
-async function generateDashboardWithAI(journeyData, skills) {
+async function generateDashboardWithAI(journeyData, skills, customPrompt = null) {
   const ollamaAvailable = await checkOllamaAvailable();
   if (!ollamaAvailable) {
     throw new Error(`Ollama not available at ${OLLAMA_ENDPOINT} or model ${OLLAMA_MODEL} not installed`);
@@ -1851,6 +3937,8 @@ async function generateDashboardWithAI(journeyData, skills) {
   if (detected.hasChannel) dataSignals.push('channels');
 
   const prompt = `You are building a BizObs dashboard for ${industry} - ${journeyType}.
+${DQL_SYNTAX_RULES}
+${BIZOBS_FIELD_KNOWLEDGE}
 Steps: ${stepsText}. Data: ${dataSignals.join(', ') || 'standard'}.
 ${fieldPromptText}
 The dashboard uses a proven template with these sections:
@@ -1860,6 +3948,7 @@ The dashboard uses a proven template with these sections:
 4. Golden Signals (TRAFFIC/LATENCY/ERRORS/SATURATION with service-level timeseries)
 5. Traces & Observability (exceptions, Dynatrace Intelligence problems, logs)
 ${dynamicKeys.length > 0 ? `6. Dynamic tiles detected from payload: ${dynamicKeys.join(', ')}` : ''}
+${customPrompt ? `\nUSER REQUEST (IMPORTANT): "${customPrompt}"\nUse this request to influence the dashboard title and insight. Make the title and insight reflect what the user asked for.` : ''}
 Given the industry "${industry}" and journey "${journeyType}", suggest a dashboard title and any industry-specific insights.
 Respond with ONLY this JSON: {"title":"Dashboard Title","insight":"One-sentence insight about this industry journey"}`;
 
@@ -1919,7 +4008,7 @@ Respond with ONLY this JSON: {"title":"Dashboard Title","insight":"One-sentence 
       }
 
       // Log GenAI span
-      await logGenAISpan(createGenAISpan(prompt, responseText, OLLAMA_MODEL, result.prompt_eval_count || 0, result.eval_count || 0, duration));
+      await logGenAISpan(createGenAISpan(prompt, responseText, OLLAMA_MODEL, result.prompt_eval_count || 0, result.eval_count || 0, duration), 'proven_template_generation');
       console.log('[AI Dashboard] 📊 GenAI span logged');
 
       return dashboard;
@@ -1997,28 +4086,53 @@ router.post('/generate', async (req, res) => {
     const skills = await loadDynatraceSkills();
     let dashboard;
     let generationMethod = 'rule-based';
+    let aiSelection = null; // AI-selected title, slug, sections
+
+    const userPrompt = req.body.customPrompt || null;
+    // Use bespoke industry-specific prompt when no custom prompt is provided
+    let customPrompt;
+    let bespokeInfo = null;
+    if (userPrompt) {
+      customPrompt = userPrompt;
+      console.log(`[AI Dashboard] 💬 Custom prompt: "${customPrompt.substring(0, 100)}${customPrompt.length > 100 ? '...' : ''}"`);
+    } else {
+      bespokeInfo = getBespokePrompt(journeyData.industry || journeyData.industryType || '', journeyData.company || 'the company', journeyData.journeyType || 'customer');
+      customPrompt = bespokeInfo.prompt;
+      console.log(`[AI Dashboard] 🏭 Bespoke ${bespokeInfo.group} prompt (${bespokeInfo.matchType}): "${customPrompt.substring(0, 120)}..."`);
+    }
 
     if (useAI) {
+      // ── UNIFIED PROMPT-DRIVEN PATH: always uses section selection for fast, composable dashboards ──
       const ollamaAvailable = await checkOllamaAvailable();
       if (ollamaAvailable) {
         try {
-          console.log(`[AI Dashboard] 🚀 Attempting FULL AI generation (${OLLAMA_MODEL})...`);
-          dashboard = await generateFullDashboardWithAI(journeyData, skills);
-          generationMethod = 'ollama-full-generation';
-        } catch (fullGenError) {
-          console.warn('[AI Dashboard] ⚠️  Full generation failed, trying proven template approach:', fullGenError.message);
+          console.log(`[AI Dashboard] 🎯 Using PROMPT-DRIVEN generation (section selection via ${OLLAMA_MODEL})...`);
+          const result = await generatePromptDrivenDashboard(journeyData, skills, customPrompt, { isBespoke: !!bespokeInfo });
+          dashboard = result.dashboard;
+          aiSelection = result.selection;
+          generationMethod = userPrompt ? 'mcp-prompt-driven' : (bespokeInfo ? `bespoke-${bespokeInfo.matchType}` : 'mcp-auto-prompt');
+        } catch (promptError) {
+          console.warn('[AI Dashboard] ⚠️  Prompt-driven generation failed, falling back to proven template:', promptError.message);
           try {
-            dashboard = await generateDashboardWithAI(journeyData, skills);
+            dashboard = await generateDashboardWithAI(journeyData, skills, customPrompt);
             generationMethod = 'ollama-proven-template';
           } catch (aiError) {
-            console.warn('[AI Dashboard] ⚠️  AI template generation also failed, using rule-based:', aiError.message);
+            console.warn('[AI Dashboard] ⚠️  AI template also failed, using rule-based:', aiError.message);
             dashboard = await generateDashboardStructure(journeyData);
           }
         }
       } else {
-        console.log(`[AI Dashboard] ℹ️  Ollama not available, using rule-based`);
-        dashboard = await generateDashboardStructure(journeyData);
-        generationMethod = 'template';
+        // Ollama down — use keyword-based section selection (no LLM needed)
+        console.log(`[AI Dashboard] ℹ️  Ollama not available, using keyword-based prompt-driven generation`);
+        try {
+          const result = await generatePromptDrivenDashboard(journeyData, skills, customPrompt, { isBespoke: !!bespokeInfo });
+          dashboard = result.dashboard;
+          aiSelection = result.selection;
+          generationMethod = 'prompt-driven-keywords';
+        } catch (err) {
+          dashboard = await generateDashboardStructure(journeyData);
+          generationMethod = 'template';
+        }
       }
     } else {
       dashboard = await generateDashboardStructure(journeyData);
@@ -2033,9 +4147,21 @@ router.post('/generate', async (req, res) => {
     const dynamicCount = dynamicTilesResult ? Object.keys(dynamicTilesResult).length : 0;
 
     // Add versioning to dashboard name based on generation method
-    let dashboardName = `${journeyData.company} - ${journeyData.journeyType} Journey`;
+    // If the AI provided a title via selection, use it; otherwise fall back to generic pattern
+    let dashboardName;
+    if (aiSelection && aiSelection.title) {
+      dashboardName = aiSelection.title;
+    } else {
+      dashboardName = `${journeyData.company} - ${journeyData.journeyType} Journey`;
+    }
     if (generationMethod === 'template') {
       dashboardName += ' [Preset Template]';
+    } else if (generationMethod.startsWith('mcp-prompt') || generationMethod.startsWith('prompt-driven')) {
+      dashboardName += ' [MCP Custom]';
+    } else if (generationMethod.startsWith('bespoke')) {
+      dashboardName += ' [AI Enhanced]';
+    } else if (generationMethod === 'mcp-auto-prompt') {
+      dashboardName += ' [AI Enhanced]';
     } else if (generationMethod.includes('ollama') || generationMethod.includes('ai')) {
       dashboardName += ' [AI Enhanced]';
     }
@@ -2064,6 +4190,7 @@ router.post('/generate', async (req, res) => {
         model: OLLAMA_MODEL,
         company: journeyData.company,
         industry: journeyData.industry,
+        dashboardSlug: (aiSelection && aiSelection.slug) || '',
       } : {
         generatedBy: 'ai-dashboard-generator',
         generationMethod,
@@ -2071,6 +4198,7 @@ router.post('/generate', async (req, res) => {
         company: journeyData.company,
         industry: journeyData.industry,
         journeyType: journeyData.journeyType,
+        dashboardSlug: (aiSelection && aiSelection.slug) || '',
         totalTiles: tileCount,
         dynamicFieldTiles: dynamicCount,
         detectedFields: {
@@ -2094,13 +4222,43 @@ router.post('/generate', async (req, res) => {
       }
     };
 
-    console.log(`[AI Dashboard] ✅ Done: ${tileCount} tiles (${dynamicCount} dynamic) via ${generationMethod}`);
+    console.log(`[AI Dashboard] ✅ Done: ${tileCount} tiles (${dynamicCount} dynamic) via ${generationMethod}${bespokeInfo ? ` [${bespokeInfo.group}]` : ''}`);
+
+    // Auto-save to host filesystem for retrieval by UI
+    const savedDir = path.join(__dirname, '..', 'dashboards', 'saved');
+    try {
+      await fs.mkdir(savedDir, { recursive: true });
+      const sanitizedCompany = (journeyData.company || 'unknown').replace(/[^a-zA-Z0-9-]/g, '-').toLowerCase();
+      const sanitizedJourney = (journeyData.journeyType || 'generic').replace(/[^a-zA-Z0-9-]/g, '-').toLowerCase();
+      const fileId = `${sanitizedCompany}--${sanitizedJourney}`;
+      const savedPayload = {
+        id: fileId,
+        dashboard: dashboardDocument,
+        generationMethod,
+        company: journeyData.company,
+        journeyType: journeyData.journeyType,
+        tileCount,
+        savedAt: new Date().toISOString(),
+      };
+      await fs.writeFile(path.join(savedDir, `${fileId}.json`), JSON.stringify(savedPayload, null, 2));
+      console.log(`[AI Dashboard] 💾 Saved to dashboards/saved/${fileId}.json`);
+    } catch (saveErr) {
+      console.warn('[AI Dashboard] ⚠️  Auto-save failed (non-blocking):', saveErr.message);
+    }
+
+    // Run schema validation on the final dashboard
+    const finalValidation = validateDashboardSchema(dashboardDocument);
 
     res.json({
       success: true,
       dashboard: dashboardDocument,
       generationMethod,
-      message: `Dashboard generated for ${journeyData.company} - ${journeyData.journeyType} (${tileCount} tiles, ${dynamicCount} from detected fields)`
+      validation: {
+        isValid: finalValidation.isValid,
+        errors: finalValidation.errors,
+        warnings: finalValidation.warnings
+      },
+      message: `Dashboard generated for ${journeyData.company} - ${journeyData.journeyType} (${tileCount} tiles, ${dynamicCount} from detected fields)${!finalValidation.isValid ? ' ⚠️ with validation warnings' : ''}`
     });
   } catch (error) {
     console.error('[AI Dashboard] Generation error:', error);
@@ -2178,6 +4336,393 @@ router.post('/preview', async (req, res) => {
     console.error('[AI Dashboard] Preview error:', error);
     res.status(500).json({ error: error.message });
   }
+});
+
+// ── Saved Dashboards API ──────────────────────────────────────────────────────
+const SAVED_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'dashboards', 'saved');
+
+// List all saved dashboards (metadata only — no full content)
+router.get('/saved', async (req, res) => {
+  try {
+    await fs.mkdir(SAVED_DIR, { recursive: true });
+    const files = await fs.readdir(SAVED_DIR);
+    const dashboards = [];
+    for (const file of files) {
+      if (!file.endsWith('.json')) continue;
+      try {
+        const raw = await fs.readFile(path.join(SAVED_DIR, file), 'utf-8');
+        const data = JSON.parse(raw);
+        dashboards.push({
+          id: data.id,
+          company: data.company,
+          journeyType: data.journeyType,
+          tileCount: data.tileCount,
+          generationMethod: data.generationMethod,
+          savedAt: data.savedAt,
+          dashboardName: data.dashboard?.name || `${data.company} - ${data.journeyType}`,
+        });
+      } catch { /* skip corrupt files */ }
+    }
+    dashboards.sort((a, b) => (b.savedAt || '').localeCompare(a.savedAt || ''));
+    res.json({ success: true, dashboards });
+  } catch (err) {
+    console.error('[AI Dashboard] List saved error:', err.message);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Get a specific saved dashboard (full content)
+router.get('/saved/:id', async (req, res) => {
+  try {
+    const id = req.params.id.replace(/[^a-zA-Z0-9-]/g, '');
+    const filePath = path.join(SAVED_DIR, `${id}.json`);
+    const raw = await fs.readFile(filePath, 'utf-8');
+    const data = JSON.parse(raw);
+    res.json({ success: true, ...data });
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      return res.status(404).json({ success: false, error: 'Dashboard not found' });
+    }
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Delete a saved dashboard
+router.delete('/saved/:id', async (req, res) => {
+  try {
+    const id = req.params.id.replace(/[^a-zA-Z0-9-]/g, '');
+    const filePath = path.join(SAVED_DIR, `${id}.json`);
+    await fs.unlink(filePath);
+    res.json({ success: true, message: `Deleted ${id}` });
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      return res.status(404).json({ success: false, error: 'Dashboard not found' });
+    }
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ============================================================================
+// FIELD REPOSITORY — Exposes captured journey field schemas for Ollama/AI
+// Populated automatically as journeys are simulated
+// ============================================================================
+
+router.get('/field-repo', (req, res) => {
+  try {
+    const { company, journey } = req.query;
+    if (company && journey) {
+      const entry = getFields(company, journey);
+      return res.json({ success: true, entry: entry || null });
+    }
+    // Return summary (compact) or full entries
+    if (req.query.full === 'true') {
+      return res.json({ success: true, entries: getAllEntries() });
+    }
+    return res.json({ success: true, summary: getRepoSummary() });
+  } catch (err) {
+    console.error('[field-repo] GET error:', err.message);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ============================================================================
+// FORGE DASHBOARDS — AI TILE GENERATION
+// Ollama analyses discovered bizevent fields and generates DQL tile specs
+// that are specific to the actual deployed journey data.
+// ============================================================================
+
+router.post('/forge-tiles', async (req, res) => {
+  const startTime = Date.now();
+  try {
+    const { fields, preset, companyName, journeyType, timeframe, services } = req.body || {};
+
+    if (!fields || !Array.isArray(fields) || fields.length === 0) {
+      return res.status(400).json({ success: false, error: 'No discovered fields provided' });
+    }
+
+    // Check Ollama availability
+    const isAvailable = await checkOllamaAvailable();
+    if (!isAvailable) {
+      return res.status(503).json({ success: false, error: 'Ollama is not available — model may not be loaded' });
+    }
+
+    // Enrich context from the field repository (captured during journey simulation)
+    let repoContext = '';
+    if (companyName || journeyType) {
+      try {
+        const repoEntry = getFields(companyName || '', journeyType || '');
+        if (repoEntry) {
+          const repoFieldNames = Object.keys(repoEntry.fields || {});
+          const repoServices = repoEntry.services || [];
+          const repoSteps = repoEntry.steps || [];
+          repoContext = `\n\nFIELD REPOSITORY (from ${repoEntry.runCount} previous journey runs, last updated ${repoEntry.lastUpdated}):
+- Known services: ${repoServices.length > 0 ? repoServices.join(', ') : 'n/a'}
+- Known journey steps: ${repoSteps.length > 0 ? repoSteps.join(' → ') : 'n/a'}
+- Repository fields (${repoFieldNames.length}): ${repoFieldNames.map(f => {
+            const info = repoEntry.fields[f];
+            return `${f} (${info.type})${info.sample !== undefined ? ` e.g. ${info.sample}` : ''}`;
+          }).join(', ')}
+Use this as additional context to generate better tiles. Prefer fields that exist in both the live discovery and this repository.`;
+          console.log(`[Forge AI Tiles] 📚 Enriched with field repo (${repoFieldNames.length} fields, ${repoEntry.runCount} runs)`);
+        }
+      } catch (repoErr) {
+        console.warn('[Forge AI Tiles] ⚠️  Field repo lookup failed (non-fatal):', repoErr.message);
+      }
+    }
+
+    // Build field summary for the prompt
+    const fieldSummary = fields.map(f =>
+      `- ${f.name} (${f.type})${f.sampleValue !== undefined ? ` — sample: ${f.sampleValue}` : ''}`
+    ).join('\n');
+
+    const numericFields = fields.filter(f => f.type === 'numeric').map(f => f.name);
+    const categoricalFields = fields.filter(f => f.type === 'string').map(f => f.name);
+
+    // Describe the persona preset so Ollama tailors tiles appropriately
+    const presetDescriptions = {
+      developer: 'Developer/SRE — focus on service health, error rates, latency, throughput, RED metrics, and debugging',
+      operations: 'Operations — focus on infrastructure health, availability, resource saturation, network, and logs',
+      executive: 'Executive/C-Suite — focus on revenue, customer counts, conversion funnels, SLA compliance, and business impact',
+      intelligence: 'Dynatrace Intelligence — focus on problems, root cause analysis, anomalies, and business impact of IT issues',
+    };
+
+    const presetContext = presetDescriptions[preset] || presetDescriptions.executive;
+
+    // The base query will be prepended by the backend — Ollama only produces the suffix
+    const tf = timeframe || 'now()-2h';
+
+    const vizTypes = [
+      'heroMetric — single big number. dqlSuffix: summarize to produce 1 row with 1 field',
+      'timeseries — line chart. dqlSuffix: makeTimeseries ...',
+      'categoricalBar — bar chart. dqlSuffix: summarize ... by:{field} | sort desc | limit 15',
+      'donut — pie chart. dqlSuffix: summarize count = count(), by:{field} | sort count desc | limit 10',
+      'table — data table. dqlSuffix: fields ... | sort ... | limit 25',
+      'honeycomb — heatmap. dqlSuffix: summarize count = count(), by:{field} | sort count desc | limit 20',
+    ];
+
+    const prompt = `You are a Dynatrace DQL expert generating dashboard tiles.
+
+PERSONA: ${presetContext}
+
+Discovered additionalfields on the bizevents:
+${fieldSummary}
+
+Numeric fields: ${numericFields.length > 0 ? numericFields.join(', ') : 'none'}
+Categorical (string) fields: ${categoricalFields.length > 0 ? categoricalFields.join(', ') : 'none'}
+
+${DQL_SYNTAX_RULES}
+
+IMPORTANT RULES:
+- You provide ONLY the dqlSuffix — the pipeline commands AFTER the base fetch+filter. The system prepends the base query automatically.
+- Use pipe separator as: | (a single pipe with spaces)
+- Access additionalfields as: additionalfields.fieldName
+- Convert numeric fields: toDouble(additionalfields.fieldName)
+- Core JSON fields: json.customerId, json.serviceName, json.stepName, json.journeyType, json.companyName, json.hasError, json.stepIndex
+- event.type is the bizevent type
+- For heroMetric: produce 1 row, 1 numeric field via summarize
+- For timeseries: use makeTimeseries
+- For categoricalBar/donut/honeycomb: use summarize ... by:{field}, sort desc, limit
+- For table: use fields to select columns, sort, limit
+- Use round(..., decimals:2) for decimal values
+
+VISUALIZATION TYPES:
+${vizTypes.join('\n')}
+
+Generate 4-6 tiles that leverage the discovered additionalfields for the ${preset} persona.
+
+Return ONLY a JSON array. Each element:
+- id: string starting with "ai-"
+- title: short descriptive string
+- vizType: one of heroMetric, timeseries, categoricalBar, donut, table, honeycomb
+- dqlSuffix: string — the DQL AFTER the base query. Use | as pipe separator. NO fetch statement. NO filter for company/journey. Example: "summarize avg_val = round(avg(toDouble(additionalfields.transactionValue)), decimals:2)"
+- width: 1, 2, or 3
+- icon: one emoji
+- accent: hex color like #00d4aa
+
+Example response:
+[{"id":"ai-avg-val","title":"Avg Transaction","vizType":"heroMetric","dqlSuffix":"summarize avgVal = round(avg(toDouble(additionalfields.transactionValue)), decimals:2)","width":1,"icon":"💰","accent":"#00d4aa"},{"id":"ai-vol-ts","title":"Volume Over Time","vizType":"timeseries","dqlSuffix":"makeTimeseries volume = count()","width":2,"icon":"📈","accent":"#3498db"}]
+
+JSON array only. No markdown. No explanation.${repoContext}`;
+
+    console.log(`[Forge AI Tiles] 🤖 Requesting ${preset} tiles for ${companyName || 'all'}/${journeyType || 'all'} (${fields.length} fields)...`);
+
+    const ollamaResponse = await fetch(`${OLLAMA_ENDPOINT}/api/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: OLLAMA_MODEL,
+        prompt,
+        stream: false,
+        keep_alive: -1,
+        options: {
+          temperature: 0.3,
+          num_predict: 4096,
+        },
+      }),
+      signal: AbortSignal.timeout(120000),
+    });
+
+    if (!ollamaResponse.ok) {
+      const errText = await ollamaResponse.text().catch(() => '');
+      throw new Error(`Ollama returned HTTP ${ollamaResponse.status}: ${errText.substring(0, 200)}`);
+    }
+
+    const ollamaResult = await ollamaResponse.json();
+    const rawText = (ollamaResult.response || '').trim();
+    const elapsed = Date.now() - startTime;
+
+    console.log(`[Forge AI Tiles] ✅ Ollama responded in ${elapsed}ms — tokens: prompt=${ollamaResult.prompt_eval_count || 0}, completion=${ollamaResult.eval_count || 0}`);
+
+    // Export GenAI span for AI Observability
+    const spanAttrs = createGenAISpan(
+      prompt,
+      rawText,
+      OLLAMA_MODEL,
+      ollamaResult.prompt_eval_count || 0,
+      ollamaResult.eval_count || 0,
+      elapsed
+    );
+    await logGenAISpan(spanAttrs, 'forge_tile_generation');
+
+    // Parse the JSON array from Ollama's response
+    let jsonText = rawText;
+
+    // Strip markdown fences if present
+    const fenceMatch = jsonText.match(/```(?:json)?\s*([\s\S]*?)```/);
+    if (fenceMatch) jsonText = fenceMatch[1].trim();
+
+    // Find array boundaries
+    const arrStart = jsonText.indexOf('[');
+    const arrEnd = jsonText.lastIndexOf(']');
+    if (arrStart !== -1 && arrEnd !== -1 && arrEnd > arrStart) {
+      jsonText = jsonText.substring(arrStart, arrEnd + 1);
+    }
+
+    let tiles;
+    try {
+      tiles = JSON.parse(jsonText);
+    } catch (parseErr) {
+      // Attempt repair: replace literal \n inside strings with space, fix trailing commas
+      try {
+        let repaired = jsonText.replace(/,\s*([}\]])/g, '$1');  // trailing commas
+        tiles = JSON.parse(repaired);
+      } catch {
+        console.error(`[Forge AI Tiles] ❌ Failed to parse Ollama JSON:`, rawText.substring(0, 500));
+        return res.status(500).json({ success: false, error: 'Ollama returned invalid JSON', raw: rawText.substring(0, 500) });
+      }
+    }
+
+    if (!Array.isArray(tiles)) {
+      return res.status(500).json({ success: false, error: 'Ollama did not return a JSON array' });
+    }
+
+    // Build the base query to prepend to each tile's dqlSuffix
+    let baseQuery = `fetch bizevents, from:${tf}`;
+    if (companyName) baseQuery += `\n| filter matchesPhrase(json.companyName, "${companyName}")`;
+    if (journeyType) baseQuery += `\n| filter matchesPhrase(json.journeyType, "${journeyType}")`;
+
+    // Validate and sanitize each tile — prepend base query to dqlSuffix
+    const validVizTypes = ['heroMetric', 'timeseries', 'categoricalBar', 'donut', 'table', 'honeycomb', 'sectionBanner', 'impactCard'];
+    const validatedTiles = tiles
+      .filter(t => t && typeof t === 'object' && t.id && t.title && (t.dqlSuffix || t.dql) && t.vizType)
+      .map(t => {
+        const suffix = String(t.dqlSuffix || t.dql || '').trim();
+        // If Ollama returned a full query despite instructions, use it as-is; otherwise prepend base
+        const fullDql = suffix.toLowerCase().startsWith('fetch ')
+          ? suffix
+          : `${baseQuery}\n| ${suffix.replace(/^\|?\s*/, '')}`;
+        return {
+          id: String(t.id).substring(0, 64),
+          title: String(t.title).substring(0, 100),
+          vizType: validVizTypes.includes(t.vizType) ? t.vizType : 'table',
+          dql: fullDql.substring(0, 4000),
+          width: [1, 2, 3].includes(t.width) ? t.width : 1,
+          icon: typeof t.icon === 'string' ? t.icon.substring(0, 4) : '📊',
+          accent: typeof t.accent === 'string' && /^#[0-9a-fA-F]{6}$/.test(t.accent) ? t.accent : '#a78bfa',
+        };
+      });
+
+    console.log(`[Forge AI Tiles] 🎯 Returning ${validatedTiles.length} validated tiles (${tiles.length} raw from Ollama)`);
+
+    res.json({
+      success: true,
+      tiles: validatedTiles,
+      meta: {
+        model: OLLAMA_MODEL,
+        elapsed,
+        promptTokens: ollamaResult.prompt_eval_count || 0,
+        completionTokens: ollamaResult.eval_count || 0,
+        fieldsAnalyzed: fields.length,
+      },
+    });
+  } catch (err) {
+    const elapsed = Date.now() - startTime;
+    console.error(`[Forge AI Tiles] ❌ Error after ${elapsed}ms:`, err.message);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ============================================================================
+// FORGE DASHBOARDS — ASYNC AI TILE GENERATION (job-based for EdgeConnect)
+// The proxy kicks off a job, then polls for results.
+// ============================================================================
+
+const _forgeTileJobs = new Map(); // jobId → { status, tiles, meta, error, startTime }
+
+router.post('/forge-tiles-async', async (req, res) => {
+  const jobId = `forge-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const { fields, preset, companyName, journeyType, timeframe, services } = req.body || {};
+
+  if (!fields || !Array.isArray(fields) || fields.length === 0) {
+    return res.status(400).json({ success: false, error: 'No discovered fields provided' });
+  }
+
+  // Store job as pending and respond immediately
+  _forgeTileJobs.set(jobId, { status: 'running', tiles: null, meta: null, error: null, startTime: Date.now() });
+
+  // Clean up old jobs (keep last 50)
+  if (_forgeTileJobs.size > 50) {
+    const keys = [..._forgeTileJobs.keys()];
+    for (let i = 0; i < keys.length - 50; i++) _forgeTileJobs.delete(keys[i]);
+  }
+
+  res.json({ success: true, jobId });
+
+  // Run Ollama generation in background (after response)
+  try {
+    // Reuse the synchronous endpoint's internal URL to call ourselves
+    const internalUrl = `http://localhost:${process.env.PORT || 8080}/api/ai-dashboard/forge-tiles`;
+    const result = await fetch(internalUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fields, preset, companyName, journeyType, timeframe, services }),
+      signal: AbortSignal.timeout(180000),
+    });
+    const data = await result.json();
+    if (data.success) {
+      _forgeTileJobs.set(jobId, { status: 'complete', tiles: data.tiles, meta: data.meta, error: null, startTime: _forgeTileJobs.get(jobId)?.startTime });
+    } else {
+      _forgeTileJobs.set(jobId, { status: 'failed', tiles: null, meta: null, error: data.error || 'Generation failed', startTime: _forgeTileJobs.get(jobId)?.startTime });
+    }
+  } catch (err) {
+    _forgeTileJobs.set(jobId, { status: 'failed', tiles: null, meta: null, error: err.message, startTime: _forgeTileJobs.get(jobId)?.startTime });
+  }
+});
+
+router.get('/forge-tiles-status/:jobId', (req, res) => {
+  const job = _forgeTileJobs.get(req.params.jobId);
+  if (!job) {
+    return res.status(404).json({ success: false, error: 'Job not found' });
+  }
+  const elapsed = Date.now() - (job.startTime || 0);
+  res.json({
+    success: true,
+    status: job.status,
+    tiles: job.tiles,
+    meta: job.meta,
+    error: job.error,
+    elapsed,
+  });
 });
 
 // Start Ollama warmup scheduler on module load

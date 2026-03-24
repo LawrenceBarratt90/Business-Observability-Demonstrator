@@ -1,0 +1,262 @@
+{
+    "companyName": "Food & Beverage Co",
+    "domain": "https://www.foodbev-co.com",
+    "industryType": "Food & Beverage",
+    "source": "sector-demo",
+    "timestamp": "2026-01-09T15:45:00.000Z",
+    "journeyType": "Online Ordering",
+    "journeyDetail": "Online Ordering Journey",
+    "journeyId": "journey_fnb_ordering_2026",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "id": "a1b2c3d4-9999-4aaa-b999-000000000001",
+    "name": "Food & Beverage - Online Ordering",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "MenuBrowsing",
+            "serviceName": "MenuBrowsingService",
+            "description": "Customer browses digital menu with real-time item availability from kitchen management system. Menu personalised by order history, dietary preferences, and time of day. Allergen information, calorie counts, and ingredient lists displayed. Photos and ratings for each item.",
+            "category": "Discovery",
+            "estimatedDuration": 8,
+            "businessRationale": "Personalised menu recommendations increase average order value by 25%. Allergen transparency prevents liability incidents costing $50K-500K per case. Real-time availability prevents order cancellations.",
+            "substeps": [
+                {
+                    "substepName": "PersonalisedMenuDisplay",
+                    "duration": 5
+                },
+                {
+                    "substepName": "AllergenAndNutritionInfo",
+                    "duration": 3
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "OrderCustomisation",
+            "serviceName": "OrderCustomisationService",
+            "description": "Customer customises items: size, toppings, modifications (no onions, extra sauce), sides, and drinks. Combo meal builder suggests complementary items. Special instructions field for kitchen notes. Running total updates in real-time with each modification.",
+            "category": "Customisation",
+            "estimatedDuration": 5,
+            "businessRationale": "Customisation options increase satisfaction by 30% and order value by 15%. Combo suggestions drive $3-5 incremental revenue per order. Real-time pricing prevents checkout surprise that drives cart abandonment.",
+            "substeps": [
+                {
+                    "substepName": "ItemModificationsAndCombos",
+                    "duration": 3
+                },
+                {
+                    "substepName": "SpecialInstructionsAndPricing",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "CartAndCheckout",
+            "serviceName": "CartAndCheckoutService",
+            "description": "Customer reviews cart, applies promo codes or loyalty rewards, and selects fulfilment method: delivery, pickup, or dine-in. Delivery address verified with estimated delivery time. Tip selection presented. Payment processed through stored payment method or new entry.",
+            "category": "Checkout",
+            "estimatedDuration": 5,
+            "businessRationale": "Cart abandonment rate in food ordering is 40% \u2014 streamlined checkout with saved payments reduces to 18%. Tip prompt increases driver tips by 30%, improving driver retention. Average order value is $25-45.",
+            "substeps": [
+                {
+                    "substepName": "PromoAndLoyaltyRedemption",
+                    "duration": 2
+                },
+                {
+                    "substepName": "FulfilmentAndPayment",
+                    "duration": 3
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "KitchenOrderRouting",
+            "serviceName": "KitchenOrderRoutingService",
+            "description": "Confirmed order routed to kitchen display system (KDS). Items sequenced by cooking time to ensure simultaneous completion. Kitchen capacity manager balances order queue across stations. Priority flagging for time-sensitive orders (scheduled, VIP).",
+            "category": "Preparation",
+            "estimatedDuration": 15,
+            "businessRationale": "Intelligent order sequencing reduces average preparation time by 20%. Simultaneous item completion prevents cold food complaints. Queue balancing prevents bottlenecks during peak hours when orders spike 3-5x.",
+            "substeps": [
+                {
+                    "substepName": "KDSRoutingAndSequencing",
+                    "duration": 5
+                },
+                {
+                    "substepName": "CapacityBalancingAndPriority",
+                    "duration": 10
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "PreparationAndQualityCheck",
+            "serviceName": "PreparationAndQualityCheckService",
+            "description": "Kitchen staff prepares order per recipe standards. Quality check verifies item accuracy, presentation, and temperature. Packaging appropriate for fulfilment method (insulated bags for delivery). Order marked ready and customer/driver notified.",
+            "category": "Preparation",
+            "estimatedDuration": 15,
+            "businessRationale": "Order accuracy directly impacts reviews and repeat business \u2014 1 error in 10 orders drops satisfaction 30%. Quality checks add 90 seconds but prevent $8-12 remake costs and negative reviews.",
+            "substeps": [
+                {
+                    "substepName": "RecipePreparationAndCooking",
+                    "duration": 12
+                },
+                {
+                    "substepName": "QualityCheckAndPackaging",
+                    "duration": 3
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "DeliveryOrPickup",
+            "serviceName": "DeliveryOrPickupService",
+            "description": "For delivery: driver assigned via dispatch algorithm optimising for proximity and route efficiency. Customer tracks driver in real-time. For pickup: customer notified when order is ready with estimated wait time. Digital proof of handover captured.",
+            "category": "Fulfilment",
+            "estimatedDuration": 25,
+            "businessRationale": "Real-time tracking reduces 'where is my order' calls by 80%. Optimal driver assignment reduces delivery time from 45 to 30 minutes. Proof of delivery prevents fraudulent non-receipt claims that cost $15-20 each.",
+            "substeps": [
+                {
+                    "substepName": "DriverAssignOrPickupNotify",
+                    "duration": 10
+                },
+                {
+                    "substepName": "DeliveryTrackingAndHandover",
+                    "duration": 15
+                }
+            ]
+        }
+    ],
+    "additionalFields": {
+        "orderTotal": 28.5,
+        "transactionValue": 28.5,
+        "averageOrderValue": 24.0,
+        "contractValue": 0,
+        "annualRevenue": 1800,
+        "revenuePerCustomer": 1800,
+        "profitMargin": 18.0,
+        "customerLifetimeValue": 5400,
+        "lifetimeValue": 5400,
+        "acquisitionCost": 12,
+        "costPerAcquisition": 12,
+        "conversionProbability": 0.42,
+        "conversionRate": 42,
+        "engagementScore": 72,
+        "timeToConversion": 15,
+        "sessionDuration": 420,
+        "pageViews": 6,
+        "purchaseFrequency": 75,
+        "netPromoterScore": 45,
+        "satisfactionRating": 4.1,
+        "retentionProbability": 0.65,
+        "processingTime": 1800,
+        "operationalCost": 6.5,
+        "efficiencyRating": 78,
+        "discountApplied": 3.5,
+        "shippingCost": 2.99,
+        "channel": [
+            "mobile_app",
+            "website",
+            "aggregator_app",
+            "phone",
+            "kiosk"
+        ],
+        "deviceType": [
+            "mobile",
+            "desktop",
+            "mobile",
+            "mobile",
+            "kiosk"
+        ],
+        "region": [
+            "London",
+            "Manchester",
+            "Birmingham",
+            "Edinburgh",
+            "Bristol"
+        ],
+        "customerSegmentValue": [
+            "frequent_orderer",
+            "lunch_regular",
+            "dinner_treat",
+            "corporate_catering",
+            "family_meal"
+        ],
+        "loyaltyTier": [
+            "Gold Foodie",
+            "Silver",
+            "Bronze",
+            "Corporate",
+            "Family"
+        ],
+        "segment": [
+            "delivery",
+            "collection",
+            "dine_in_order",
+            "catering",
+            "meal_kit"
+        ],
+        "Productname": [
+            "Gourmet Burger Meal Deal",
+            "Sushi Platter Premium",
+            "Family Pizza Bundle",
+            "Office Lunch Box x10",
+            "Weekly Meal Kit 5 Dinners"
+        ],
+        "ProductId": [
+            "FB-OO-001",
+            "FB-OO-002",
+            "FB-OO-003",
+            "FB-OO-004",
+            "FB-OO-005"
+        ],
+        "ProductType": [
+            "fast_casual",
+            "premium_dining",
+            "family_bundle",
+            "corporate_catering",
+            "meal_kit"
+        ],
+        "Price": [
+            18.99,
+            35.0,
+            28.5,
+            85.0,
+            49.99
+        ],
+        "deliveryTimeMinutes": [
+            35,
+            45,
+            40,
+            60,
+            0
+        ],
+        "deliveryMethod": [
+            "rider_delivery",
+            "rider_delivery",
+            "collection",
+            "scheduled_delivery",
+            "subscription_box"
+        ],
+        "cuisineType": [
+            "american",
+            "japanese",
+            "italian",
+            "mixed",
+            "healthy"
+        ],
+        "itemCount": [
+            3,
+            12,
+            4,
+            10,
+            15
+        ],
+        "marketTrend": [
+            "ghost_kitchens",
+            "healthy_eating",
+            "subscription_meals",
+            "sustainable_packaging",
+            "ai_personalisation"
+        ]
+    }
+}

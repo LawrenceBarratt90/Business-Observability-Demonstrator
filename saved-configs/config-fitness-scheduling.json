@@ -1,0 +1,257 @@
+{
+    "companyName": "Fitness",
+    "domain": "https://www.fitness-demo.com",
+    "industryType": "Fitness & Wellness",
+    "journeyType": "Studio Scheduling",
+    "journeyDetail": "Studio Scheduling",
+    "journeyId": "journey_fitness_studio_scheduling",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "ClassDemandPrediction",
+            "serviceName": "ClassDemandPredictionService",
+            "description": "AI predicts class demand by type, time slot, and instructor: analyses historical attendance, seasonal patterns, member demographics, and trending fitness modalities. Projects capacity needs 4 weeks ahead.",
+            "category": "Forecasting",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 15,
+            "businessRationale": "Demand prediction reduces under-filled classes by 35% and over-subscribed classes by 25%. Optimal scheduling maximizes studio revenue per square foot by 20%.",
+            "substeps": [
+                {
+                    "substepName": "DemandForecasting",
+                    "duration": 8
+                },
+                {
+                    "substepName": "CapacityPlanning",
+                    "duration": 7
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "TimetableOptimization",
+            "serviceName": "TimetableOptimizationService",
+            "description": "AI builds optimal class timetables: balances instructor availability, studio capacity, equipment requirements, member preferences, and revenue targets. Avoids cannibalization between competing time slots.",
+            "category": "Scheduling",
+            "estimatedDuration": 30,
+            "businessRationale": "AI timetable optimization increases average class occupancy from 65% to 85%. Eliminating schedule conflicts reduces member frustration and prevents cancellations.",
+            "substeps": [
+                {
+                    "substepName": "ConstraintOptimization",
+                    "duration": 15
+                },
+                {
+                    "substepName": "TimetableGeneration",
+                    "duration": 15
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "BookingManagement",
+            "serviceName": "BookingManagementService",
+            "description": "AI manages class bookings: waitlist optimization, no-show prediction with auto-backfilling, late cancellation enforcement, and dynamic pricing for premium slots. Personalised class recommendations per member.",
+            "category": "Booking",
+            "estimatedDuration": 5,
+            "businessRationale": "AI booking management fills 15% more spots through smart waitlist management. No-show backfilling recovers \u00a33 per empty spot. Personalised recommendations drive 20% more bookings.",
+            "substeps": [
+                {
+                    "substepName": "WaitlistManagement",
+                    "duration": 2
+                },
+                {
+                    "substepName": "NoShowPrediction",
+                    "duration": 3
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "InstructorManagement",
+            "serviceName": "InstructorManagementService",
+            "description": "AI optimises instructor scheduling: manages availability, certifications, teaching preferences, member ratings, and workload balancing. Handles substitute instructor matching for last-minute changes.",
+            "category": "StaffManagement",
+            "estimatedDuration": 15,
+            "businessRationale": "AI instructor matching improves member satisfaction by 15%. Popular instructors drive 30% higher attendance \u2014 AI maximizes their impact across peak time slots.",
+            "substeps": [
+                {
+                    "substepName": "AvailabilityMatching",
+                    "duration": 8
+                },
+                {
+                    "substepName": "SubstituteCoordination",
+                    "duration": 7
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "MemberEngagement",
+            "serviceName": "MemberEngagementService",
+            "description": "AI drives class attendance through personalised communications: class reminders, streak maintenance alerts, new class recommendations based on goals, and social features like buddy class booking.",
+            "category": "Engagement",
+            "estimatedDuration": 1440,
+            "businessRationale": "Personalised engagement increases weekly visits from 2.1 to 2.8 per member. Each additional visit correlates with 25% lower churn probability and \u00a315 in per-visit ancillary revenue.",
+            "substeps": [
+                {
+                    "substepName": "PersonalizedAlerts",
+                    "duration": 720
+                },
+                {
+                    "substepName": "SocialFeatures",
+                    "duration": 720
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "SchedulingReporting",
+            "serviceName": "SchedulingReportingService",
+            "description": "AI reports on scheduling performance: class utilization, instructor ratings, revenue per class, peak/off-peak patterns, and member booking behaviour. Informs timetable adjustments and new class launches.",
+            "category": "Reporting",
+            "estimatedDuration": 60,
+            "businessRationale": "Scheduling analytics identify underperforming classes for replacement. Data-driven new class launches achieve 40% higher attendance in first month vs gut-feel launches.",
+            "substeps": [
+                {
+                    "substepName": "UtilizationAnalysis",
+                    "duration": 30
+                },
+                {
+                    "substepName": "TrendForecasting",
+                    "duration": 30
+                }
+            ]
+        }
+    ],
+    "id": "baa97b59-1dd3-459c-9aa2-7fdd63e24660",
+    "name": "Fitness & Wellness - Studio Scheduling",
+    "timestamp": "2026-03-18T21:35:20.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 59,
+        "transactionValue": 59,
+        "averageOrderValue": 59,
+        "contractValue": 708,
+        "annualRevenue": 5500000,
+        "revenuePerCustomer": 708,
+        "profitMargin": 25,
+        "customerLifetimeValue": 2124,
+        "lifetimeValue": 2124,
+        "acquisitionCost": 85,
+        "costPerAcquisition": 85,
+        "conversionProbability": 0.15,
+        "conversionRate": 15,
+        "engagementScore": 72,
+        "timeToConversion": 7,
+        "sessionDuration": 55,
+        "pageViews": 8,
+        "purchaseFrequency": 12,
+        "netPromoterScore": 48,
+        "satisfactionRating": 4.2,
+        "retentionProbability": 0.68,
+        "processingTime": 5,
+        "operationalCost": 8,
+        "efficiencyRating": 82,
+        "discountApplied": 10,
+        "taxAmount": 11.8,
+        "shippingCost": 0,
+        "channel": [
+            "mobile_app",
+            "website",
+            "reception_desk",
+            "smart_tv",
+            "partner_app"
+        ],
+        "deviceType": [
+            "mobile",
+            "desktop",
+            "tablet",
+            "kiosk",
+            "wearable"
+        ],
+        "region": [
+            "City Centre",
+            "Suburban",
+            "University",
+            "Corporate",
+            "Boutique"
+        ],
+        "customerSegmentValue": [
+            "young_professional",
+            "student",
+            "corporate",
+            "senior",
+            "family"
+        ],
+        "loyaltyTier": [
+            "pay_per_class",
+            "monthly_basic",
+            "monthly_unlimited",
+            "annual_premium",
+            "founding_member"
+        ],
+        "segment": [
+            "hiit",
+            "yoga",
+            "spin",
+            "strength",
+            "pilates"
+        ],
+        "Productname": [
+            "HIIT_Class",
+            "Yoga_Flow",
+            "SpinCycle",
+            "StrengthTraining",
+            "Pilates_Core"
+        ],
+        "ProductId": [
+            "FIT-HIIT-001",
+            "FIT-YOG-002",
+            "FIT-SPN-003",
+            "FIT-STR-004",
+            "FIT-PIL-005"
+        ],
+        "ProductType": [
+            "group_class",
+            "group_class",
+            "studio_class",
+            "group_class",
+            "studio_class"
+        ],
+        "Price": [
+            12,
+            15,
+            14,
+            10,
+            18
+        ],
+        "classCapacity": [
+            25,
+            20,
+            30,
+            15,
+            12
+        ],
+        "avgOccupancy": [
+            85,
+            92,
+            78,
+            70,
+            95
+        ],
+        "instructorRating": [
+            4.5,
+            4.8,
+            4.3,
+            4.1,
+            4.7
+        ],
+        "marketTrend": [
+            "hybrid_fitness",
+            "recovery_wellness",
+            "ai_coaching",
+            "wearable_integration",
+            "community_fitness"
+        ]
+    }
+}

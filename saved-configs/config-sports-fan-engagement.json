@@ -1,0 +1,257 @@
+{
+    "companyName": "Sports",
+    "domain": "https://www.sports-demo.com",
+    "industryType": "Sports & Live Events",
+    "journeyType": "Fan Engagement",
+    "journeyDetail": "Fan Engagement",
+    "journeyId": "journey_sports_fan_engagement",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "FanIdentification",
+            "serviceName": "FanIdentificationService",
+            "description": "AI builds unified fan profiles from ticket purchases, app usage, merchandise, social media, and venue Wi-Fi data. Creates 360-degree view of each fan's preferences, behaviors, and lifetime value.",
+            "category": "Identity",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 2,
+            "businessRationale": "Unified fan profiles enable personalization across all touchpoints. Identified fans spend 2.5x more than anonymous attendees over a season.",
+            "substeps": [
+                {
+                    "substepName": "DataUnification",
+                    "duration": 1
+                },
+                {
+                    "substepName": "ProfileEnrichment",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "PersonalizedContent",
+            "serviceName": "PersonalizedContentService",
+            "description": "AI curates personalized content: match previews, player stats, behind-the-scenes video, fantasy sports insights, and community discussions tailored to each fan's team, players, and interests.",
+            "category": "Content",
+            "estimatedDuration": 3,
+            "businessRationale": "Personalized content increases app engagement by 45% and push notification open rates by 3x. Engaged fans are 60% more likely to attend additional events.",
+            "substeps": [
+                {
+                    "substepName": "ContentCuration",
+                    "duration": 1
+                },
+                {
+                    "substepName": "DeliveryOptimization",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "InVenueExperience",
+            "serviceName": "InVenueExperienceService",
+            "description": "AI enhances matchday experience: wayfinding, queue-time predictions for food/restrooms, seat upgrade offers, instant replay on mobile, and AR overlays. Beacon-triggered personalized welcome messages.",
+            "category": "Experience",
+            "estimatedDuration": 180,
+            "businessRationale": "AI-enhanced venue experience increases per-visit spend by 28%. Shorter perceived wait times and personalized offers directly boost food, beverage, and merchandise revenue.",
+            "substeps": [
+                {
+                    "substepName": "WayfindingAndQueues",
+                    "duration": 60
+                },
+                {
+                    "substepName": "PersonalizedOffers",
+                    "duration": 120
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "LoyaltyProgram",
+            "serviceName": "LoyaltyProgramService",
+            "description": "AI manages fan loyalty: points for attendance, purchases, social sharing, and community contributions. Personalized rewards: meet-and-greets, signed merchandise, early access, and exclusive experiences.",
+            "category": "Loyalty",
+            "estimatedDuration": 10,
+            "businessRationale": "AI-optimized loyalty programs increase renewal rates by 20%. Personalized rewards cost 30% less than generic ones while driving 50% higher satisfaction.",
+            "substeps": [
+                {
+                    "substepName": "PointsCalculation",
+                    "duration": 3
+                },
+                {
+                    "substepName": "RewardPersonalization",
+                    "duration": 7
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "SecondScreenEngagement",
+            "serviceName": "SecondScreenEngagementService",
+            "description": "AI powers second-screen experiences during live events: real-time stats, predictive analytics, social polls, fantasy integration, and gamification. Keeps remote fans engaged through interactive features.",
+            "category": "Digital",
+            "estimatedDuration": 180,
+            "businessRationale": "Second screen engagement extends reach beyond venue capacity. Engaged digital fans generate \u00a315 per match in ad and betting partnership revenue.",
+            "substeps": [
+                {
+                    "substepName": "LiveInteraction",
+                    "duration": 90
+                },
+                {
+                    "substepName": "GamificationEngine",
+                    "duration": 90
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "FanInsightsReporting",
+            "serviceName": "FanInsightsReportingService",
+            "description": "AI compiles fan engagement analytics: attendance patterns, spend per visit, content consumption, loyalty progression, and churn risk scores. Powers sponsorship valuation and fan development strategies.",
+            "category": "Reporting",
+            "estimatedDuration": 60,
+            "businessRationale": "Fan insights inform sponsorship deals worth \u00a350M+ annually. Data-driven sponsorship packages command 40% premium over traditional impressions-based deals.",
+            "substeps": [
+                {
+                    "substepName": "EngagementAnalytics",
+                    "duration": 30
+                },
+                {
+                    "substepName": "SponsorshipValuation",
+                    "duration": 30
+                }
+            ]
+        }
+    ],
+    "id": "c447dbbc-a4cc-4a29-aa0d-eaefa19f69e2",
+    "name": "Sports & Live Events - Fan Engagement",
+    "timestamp": "2026-03-18T21:35:20.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 45,
+        "transactionValue": 45,
+        "averageOrderValue": 45,
+        "contractValue": 0,
+        "annualRevenue": 8500000,
+        "revenuePerCustomer": 180,
+        "profitMargin": 38,
+        "customerLifetimeValue": 1500,
+        "lifetimeValue": 1500,
+        "acquisitionCost": 12,
+        "costPerAcquisition": 12,
+        "conversionProbability": 0.25,
+        "conversionRate": 25,
+        "engagementScore": 76,
+        "timeToConversion": 1,
+        "sessionDuration": 45,
+        "pageViews": 25,
+        "purchaseFrequency": 15,
+        "netPromoterScore": 58,
+        "satisfactionRating": 4.2,
+        "retentionProbability": 0.78,
+        "processingTime": 1,
+        "operationalCost": 1.5,
+        "efficiencyRating": 88,
+        "discountApplied": 5,
+        "taxAmount": 9,
+        "shippingCost": 5.99,
+        "channel": [
+            "mobile_app",
+            "website",
+            "in_venue",
+            "social_media",
+            "email"
+        ],
+        "deviceType": [
+            "mobile",
+            "desktop",
+            "tablet",
+            "smartwatch",
+            "connected_tv"
+        ],
+        "region": [
+            "Local",
+            "Regional",
+            "National",
+            "International",
+            "Digital-Only"
+        ],
+        "customerSegmentValue": [
+            "hardcore_fan",
+            "casual_fan",
+            "family",
+            "corporate",
+            "tourist"
+        ],
+        "loyaltyTier": [
+            "general",
+            "silver_member",
+            "gold_member",
+            "platinum_member",
+            "founding_member"
+        ],
+        "segment": [
+            "matchday_experience",
+            "merchandise",
+            "food_beverage",
+            "digital_content",
+            "hospitality"
+        ],
+        "Productname": [
+            "Team_Jersey",
+            "Match_Programme",
+            "Stadium_Tour",
+            "VIP_Experience",
+            "Fan_Membership"
+        ],
+        "ProductId": [
+            "FAN-JER-001",
+            "FAN-PRG-002",
+            "FAN-TUR-003",
+            "FAN-VIP-004",
+            "FAN-MEM-005"
+        ],
+        "ProductType": [
+            "merchandise",
+            "publication",
+            "experience",
+            "hospitality",
+            "membership"
+        ],
+        "Price": [
+            85,
+            12,
+            25,
+            250,
+            99
+        ],
+        "attendanceCount": [
+            12,
+            5,
+            20,
+            3,
+            0
+        ],
+        "socialShares": [
+            8,
+            2,
+            15,
+            1,
+            25
+        ],
+        "fantasyPoints": [
+            1250,
+            800,
+            2100,
+            450,
+            3500
+        ],
+        "marketTrend": [
+            "fan_tokens",
+            "ar_experience",
+            "cashless_venue",
+            "esports_crossover",
+            "global_fandom"
+        ]
+    }
+}

@@ -1,0 +1,20 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dt-sfm-critical-incident-agent
+  namespace: internal
+  title: Dynatrace SFM Critical Incident Agent
+  description: >
+    Internal production incident response agent — coordinates critical incident
+    handling for Dynatrace platform operations including tenant analysis,
+    cluster triage, and escalation runbooks.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace-internal-sfm/agents/dt-sfm-critical-incident-agent
+spec:
+  type: ai-agent
+  lifecycle: experimental
+  owner: capability/site-reliability-engineering-sre
+  system: default/self-monitoring-platform
+  product-architect: user:default/thomas.fischl
+  product-manager: user:default/andreas.deuschl

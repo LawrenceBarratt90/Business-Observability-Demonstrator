@@ -9,6 +9,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { config } from '../../utils/config.js';
 import { createLogger } from '../../utils/logger.js';
+import { withGenAISpan } from '../../utils/otelTracing.js';
 
 const log = createLogger('librarian');
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -34,17 +35,30 @@ const EMBED_MODEL = process.env.EMBED_MODEL || 'nomic-embed-text';
 
 async function getEmbedding(text: string): Promise<number[]> {
   try {
-    const res = await fetch(`${config.ollama.endpoint}/api/embeddings`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: EMBED_MODEL, prompt: text }),
-      signal: AbortSignal.timeout(15_000),
-    });
+    return await withGenAISpan(
+      {
+        operation: 'embeddings',
+        model: EMBED_MODEL,
+        messages: [{ role: 'user', content: text.substring(0, 512) }],
+      },
+      async () => {
+        const res = await fetch(`${config.ollama.endpoint}/api/embeddings`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model: EMBED_MODEL, prompt: text }),
+          signal: AbortSignal.timeout(15_000),
+        });
 
-    if (!res.ok) throw new Error(`Embed ${res.status}`);
-    const data = await res.json() as { embedding?: number[] };
-    if (data.embedding?.length) return data.embedding;
-    throw new Error('No embedding returned');
+        if (!res.ok) throw new Error(`Embed ${res.status}`);
+        const data = await res.json() as { embedding?: number[] };
+        if (data.embedding?.length) return data.embedding;
+        throw new Error('No embedding returned');
+      },
+      (result) => ({
+        content: `[embedding vector: ${result.length} dimensions]`,
+        totalDurationMs: 0,
+      }),
+    );
   } catch {
     // Fallback: deterministic bag‑of‑words hash vector
     return bowVector(text);

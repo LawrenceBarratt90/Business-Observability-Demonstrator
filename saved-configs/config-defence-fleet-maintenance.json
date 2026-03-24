@@ -1,0 +1,279 @@
+{
+    "companyName": "Defence Systems",
+    "domain": "https://www.defence-systems.gov",
+    "industryType": "Defence & Aerospace",
+    "journeyType": "Fleet Maintenance",
+    "journeyDetail": "Predictive Military Fleet Maintenance",
+    "journeyId": "journey_fleet_maintenance_da0b91dc",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "FleetHealthAssessment",
+            "serviceName": "FleetHealthService",
+            "description": "AI aggregates sensor data from aircraft, vehicles, and vessels. Predictive models calculate remaining useful life for critical components.",
+            "category": "Monitoring",
+            "estimatedDuration": 24,
+            "businessRationale": "Predictive maintenance reduces unplanned downtime by 45% and extends asset life by 20%. Each grounded aircraft costs $50K-500K/day.",
+            "substeps": [
+                {
+                    "substepName": "SensorDataAggregation",
+                    "duration": 8
+                },
+                {
+                    "substepName": "PredictiveModelling",
+                    "duration": 8
+                },
+                {
+                    "substepName": "RULCalculation",
+                    "duration": 8
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "MaintenancePrioritization",
+            "serviceName": "PrioritizationService",
+            "description": "AI prioritises maintenance tasks by operational readiness impact, safety criticality, and resource availability. Generates optimised maintenance schedules.",
+            "category": "Planning",
+            "estimatedDuration": 8,
+            "businessRationale": "Smart prioritisation ensures highest-readiness assets are always available. Random scheduling leaves 15-25% of fleet unavailable.",
+            "substeps": [
+                {
+                    "substepName": "ReadinessImpactScoring",
+                    "duration": 3
+                },
+                {
+                    "substepName": "SafetyPriority",
+                    "duration": 2
+                },
+                {
+                    "substepName": "ScheduleOptimization",
+                    "duration": 3
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "PartsForecasting",
+            "serviceName": "PartsService",
+            "description": "AI predicts spare parts demand based on fleet usage patterns, component failure rates, and maintenance schedules. Pre-positions parts at forward locations.",
+            "category": "Logistics",
+            "estimatedDuration": 48,
+            "businessRationale": "Parts availability drives 60% of maintenance delays. AI forecasting reduces stockout rates from 12% to 3%.",
+            "substeps": [
+                {
+                    "substepName": "DemandPrediction",
+                    "duration": 16
+                },
+                {
+                    "substepName": "InventoryOptimization",
+                    "duration": 16
+                },
+                {
+                    "substepName": "ForwardPositioning",
+                    "duration": 16
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "MaintenanceExecution",
+            "serviceName": "MaintenanceExecService",
+            "description": "AI-assisted maintenance using AR work instructions, torque validation, and automated inspection. Digital sign-off with photographic evidence.",
+            "category": "Operations",
+            "estimatedDuration": 72,
+            "businessRationale": "AI-guided maintenance reduces errors by 30% and completion time by 20%. Digital records ensure airworthiness compliance.",
+            "substeps": [
+                {
+                    "substepName": "WorkExecution",
+                    "duration": 36
+                },
+                {
+                    "substepName": "QualityInspection",
+                    "duration": 24
+                },
+                {
+                    "substepName": "DigitalSignoff",
+                    "duration": 12
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "ReadinessVerification",
+            "serviceName": "ReadinessService",
+            "description": "Post-maintenance functional testing, calibration verification, and airworthiness/seaworthiness certification. AI validates all checklist items completed.",
+            "category": "Certification",
+            "estimatedDuration": 8,
+            "businessRationale": "Thorough verification prevents maintenance-induced failures, which account for 12% of military aviation incidents.",
+            "substeps": [
+                {
+                    "substepName": "FunctionalTest",
+                    "duration": 4
+                },
+                {
+                    "substepName": "CalibrationCheck",
+                    "duration": 2
+                },
+                {
+                    "substepName": "CertificationRelease",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "FleetReadinessReport",
+            "serviceName": "ReadinessReportService",
+            "description": "Fleet-wide readiness dashboard updated. Maintenance backlog, parts status, and readiness rates reported to command. AI flags emerging fleet-wide issues.",
+            "category": "Analytics",
+            "estimatedDuration": 4,
+            "businessRationale": "Accurate readiness reporting enables operational planning. A 5% improvement in fleet readiness dramatically expands operational capability.",
+            "substeps": [
+                {
+                    "substepName": "ReadinessCalculation",
+                    "duration": 2
+                },
+                {
+                    "substepName": "BacklogAnalysis",
+                    "duration": 1
+                },
+                {
+                    "substepName": "CommandBriefing",
+                    "duration": 1
+                }
+            ]
+        }
+    ],
+    "id": "dbc8331b-d0d0-4683-b432-a3a8a3162e80",
+    "name": "Defence & Aerospace - Fleet Maintenance",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 750000,
+        "transactionValue": 750000,
+        "averageOrderValue": 450000,
+        "contractValue": 50000000,
+        "annualRevenue": 0,
+        "revenuePerCustomer": 0,
+        "profitMargin": 0,
+        "customerLifetimeValue": 0,
+        "lifetimeValue": 0,
+        "acquisitionCost": 0,
+        "costPerAcquisition": 0,
+        "conversionProbability": 1.0,
+        "conversionRate": 100,
+        "engagementScore": 92,
+        "timeToConversion": 0,
+        "sessionDuration": 3600,
+        "pageViews": 15,
+        "purchaseFrequency": 12,
+        "netPromoterScore": 0,
+        "satisfactionRating": 0,
+        "retentionProbability": 1.0,
+        "processingTime": 4320,
+        "operationalCost": 450000,
+        "efficiencyRating": 78,
+        "fleetReadiness": 0.87,
+        "mtbf": [
+            2400,
+            1800,
+            3200,
+            1200,
+            4500
+        ],
+        "channel": [
+            "maintenance_portal",
+            "hangar_terminal",
+            "flight_line_tablet",
+            "parts_system",
+            "command_dashboard"
+        ],
+        "deviceType": [
+            "desktop",
+            "ruggedised_terminal",
+            "tablet",
+            "barcode_scanner",
+            "desktop"
+        ],
+        "region": [
+            "RAF Brize Norton",
+            "Ramstein AB",
+            "Pearl Harbor",
+            "Darwin AU",
+            "NATO Sigonella"
+        ],
+        "customerSegmentValue": [
+            "fast_jet",
+            "rotary_wing",
+            "transport",
+            "maritime",
+            "ground_vehicle"
+        ],
+        "loyaltyTier": [
+            "Priority 1",
+            "Priority 2",
+            "Scheduled",
+            "Routine",
+            "Depot"
+        ],
+        "segment": [
+            "aircraft",
+            "helicopter",
+            "naval_vessel",
+            "armoured_vehicle",
+            "UAV"
+        ],
+        "Productname": [
+            "F-35 Engine Module",
+            "Chinook Gearbox",
+            "Frigate Gas Turbine",
+            "Challenger Powerpack",
+            "MQ-9 Sensor Pod"
+        ],
+        "ProductId": [
+            "MNT-FJ-001",
+            "MNT-RW-002",
+            "MNT-NV-003",
+            "MNT-GV-004",
+            "MNT-UA-005"
+        ],
+        "ProductType": [
+            "engine",
+            "transmission",
+            "propulsion",
+            "powerpack",
+            "sensor"
+        ],
+        "Price": [
+            2500000,
+            850000,
+            4200000,
+            650000,
+            1200000
+        ],
+        "componentRUL": [
+            1200,
+            800,
+            2100,
+            450,
+            1800
+        ],
+        "maintenanceType": [
+            "phase",
+            "unscheduled",
+            "depot",
+            "field",
+            "calendar"
+        ],
+        "marketTrend": [
+            "predictive_maintenance",
+            "digital_twin",
+            "additive_manufacturing",
+            "condition_based",
+            "autonomous_inspection"
+        ]
+    }
+}

@@ -1,0 +1,273 @@
+{
+    "companyName": "RoboFleet Technologies",
+    "domain": "https://www.robofleet-tech.com",
+    "industryType": "Robotics & Automation",
+    "journeyType": "Fleet Management",
+    "journeyDetail": "AI-Powered Autonomous Robot Fleet Management",
+    "journeyId": "journey_fleet_management_877fb007",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "FleetDeployment",
+            "serviceName": "FleetDeployService",
+            "description": "AI plans robot fleet deployment: facility mapping, charging station placement, navigation path optimisation, and fleet size calculation based on task demand forecasting.",
+            "category": "Setup",
+            "estimatedDuration": 168,
+            "businessRationale": "Optimal fleet sizing prevents both under-capacity (missed tasks) and over-investment (idle robots). AI sizing reduces capital cost by 20%.",
+            "substeps": [
+                {
+                    "substepName": "FacilityMapping",
+                    "duration": 56
+                },
+                {
+                    "substepName": "ChargingStationPlacement",
+                    "duration": 56
+                },
+                {
+                    "substepName": "FleetSizing",
+                    "duration": 56
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "TaskAllocation",
+            "serviceName": "TaskAllocService",
+            "description": "AI dispatches robots to tasks: priority-based allocation, multi-robot coordination, and dead-heading minimisation. Heterogeneous fleet management (different robot types for different tasks).",
+            "category": "Dispatch",
+            "estimatedDuration": 0.05,
+            "businessRationale": "Optimal task allocation increases fleet throughput by 30-40%. Poor dispatching creates bottlenecks and idle robots simultaneously.",
+            "substeps": [
+                {
+                    "substepName": "PriorityQueuing",
+                    "duration": 0.015
+                },
+                {
+                    "substepName": "MultiRobotCoordination",
+                    "duration": 0.02
+                },
+                {
+                    "substepName": "DeadheadMinimisation",
+                    "duration": 0.015
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "NavigationAndExecution",
+            "serviceName": "NavigationService",
+            "description": "AI manages real-time navigation: SLAM, obstacle avoidance, human-safe path planning, and elevator/door integration. Task execution monitoring with error recovery.",
+            "category": "Operations",
+            "estimatedDuration": 5,
+            "businessRationale": "Safe navigation in human environments is the core technical challenge. A single collision or stuck robot can erode employee trust in the entire programme.",
+            "substeps": [
+                {
+                    "substepName": "SLAMNavigation",
+                    "duration": 2
+                },
+                {
+                    "substepName": "ObstacleAvoidance",
+                    "duration": 1.5
+                },
+                {
+                    "substepName": "TaskExecution",
+                    "duration": 1.5
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "FleetHealthMonitoring",
+            "serviceName": "FleetHealthService",
+            "description": "AI monitors robot health: battery degradation, motor wear, sensor calibration, and software versioning. Predictive maintenance scheduling and spare parts inventory optimisation.",
+            "category": "Monitoring",
+            "estimatedDuration": 0.1,
+            "businessRationale": "Robot downtime costs $500-2000 per day in lost productivity. Predictive maintenance reduces unplanned downtime by 60%.",
+            "substeps": [
+                {
+                    "substepName": "BatteryMonitoring",
+                    "duration": 0.03
+                },
+                {
+                    "substepName": "MotorHealth",
+                    "duration": 0.03
+                },
+                {
+                    "substepName": "SensorCalibration",
+                    "duration": 0.04
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "PerformanceOptimization",
+            "serviceName": "PerfOptService",
+            "description": "AI continuously optimises fleet performance: route learning from repeated tasks, speed/efficiency trade-offs, and inter-robot communication for crowd avoidance.",
+            "category": "Optimisation",
+            "estimatedDuration": 24,
+            "businessRationale": "Robots that learn from experience become 15-25% more efficient over 6 months. Continuous optimisation is what makes robots surpass manual labor ROI.",
+            "substeps": [
+                {
+                    "substepName": "RouteLearning",
+                    "duration": 8
+                },
+                {
+                    "substepName": "SpeedOptimization",
+                    "duration": 8
+                },
+                {
+                    "substepName": "CrowdAvoidance",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "FleetAnalytics",
+            "serviceName": "FleetAnalyticsService",
+            "description": "AI generates fleet reports: tasks completed, utilisation rates, energy consumption, ROI calculation vs manual labor, and expansion recommendations.",
+            "category": "Analytics",
+            "estimatedDuration": 168,
+            "businessRationale": "Clear ROI analytics justify fleet expansion investment. Typical payback period is 12-18 months; analytics prove this to decision-makers.",
+            "substeps": [
+                {
+                    "substepName": "UtilisationReporting",
+                    "duration": 56
+                },
+                {
+                    "substepName": "ROICalculation",
+                    "duration": 56
+                },
+                {
+                    "substepName": "ExpansionRecommendation",
+                    "duration": 56
+                }
+            ]
+        }
+    ],
+    "id": "e52a2715-5865-4f17-8173-586bb543c4b5",
+    "name": "Robotics & Automation - Fleet Management",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 2000000,
+        "annualRevenue": 150000000,
+        "revenuePerCustomer": 2000000,
+        "profitMargin": 20.0,
+        "customerLifetimeValue": 10000000,
+        "lifetimeValue": 10000000,
+        "acquisitionCost": 150000,
+        "costPerAcquisition": 150000,
+        "conversionProbability": 0.25,
+        "conversionRate": 25,
+        "engagementScore": 80,
+        "timeToConversion": 12960,
+        "sessionDuration": 3600,
+        "pageViews": 15,
+        "purchaseFrequency": 365,
+        "netPromoterScore": 48,
+        "satisfactionRating": 4.2,
+        "retentionProbability": 0.85,
+        "processingTime": 0.05,
+        "operationalCost": 50000,
+        "efficiencyRating": 82,
+        "fleetUtilisation": 78,
+        "tasksPerRobotPerDay": 120,
+        "channel": [
+            "fleet_dashboard",
+            "mobile_supervisor_app",
+            "API_integration",
+            "SCADA_link",
+            "VR_monitoring"
+        ],
+        "deviceType": [
+            "desktop",
+            "mobile",
+            "server",
+            "HMI_panel",
+            "VR_headset"
+        ],
+        "region": [
+            "US",
+            "Japan",
+            "Germany",
+            "South Korea",
+            "China"
+        ],
+        "customerSegmentValue": [
+            "warehouse_fulfilment",
+            "hospital_logistics",
+            "hotel_service",
+            "retail_inventory",
+            "manufacturing_line"
+        ],
+        "loyaltyTier": [
+            "Enterprise Fleet",
+            "Growth Fleet",
+            "Pilot Fleet",
+            "Evaluation",
+            "Partner"
+        ],
+        "segment": [
+            "AMR_delivery",
+            "cleaning_robot",
+            "inspection_drone",
+            "picking_arm",
+            "security_patrol"
+        ],
+        "Productname": [
+            "AMR Delivery Bot",
+            "Autonomous Cleaning Unit",
+            "Inspection Drone Fleet",
+            "Robotic Picking Arm",
+            "Security Patrol Robot"
+        ],
+        "ProductId": [
+            "ROB-AD-001",
+            "ROB-AC-002",
+            "ROB-ID-003",
+            "ROB-RP-004",
+            "ROB-SP-005"
+        ],
+        "ProductType": [
+            "delivery",
+            "cleaning",
+            "inspection",
+            "picking",
+            "security"
+        ],
+        "Price": [
+            45000,
+            35000,
+            80000,
+            120000,
+            55000
+        ],
+        "mtbf": [
+            8500,
+            6000,
+            4500,
+            10000,
+            7000
+        ],
+        "laborCostReplaced": [
+            65000,
+            45000,
+            80000,
+            70000,
+            60000
+        ],
+        "marketTrend": [
+            "humanoid_robots",
+            "multi_robot_orchestration",
+            "robot_as_a_service",
+            "cobots",
+            "edge_AI_robotics"
+        ]
+    }
+}

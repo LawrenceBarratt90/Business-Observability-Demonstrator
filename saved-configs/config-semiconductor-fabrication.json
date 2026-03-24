@@ -1,0 +1,273 @@
+{
+    "companyName": "ChipVision Semiconductor",
+    "domain": "https://www.chipvision-semi.com",
+    "industryType": "Semiconductor & Chip",
+    "journeyType": "Fabrication Optimization",
+    "journeyDetail": "AI-Optimised Semiconductor Fabrication Process",
+    "journeyId": "journey_fabrication_optimization_d7f60b4b",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "ProcessDesign",
+            "serviceName": "ProcessDesignService",
+            "description": "AI accelerates process development: DOE optimisation, TCAD simulation, and process window characterisation. Technology node scaling from R&D to high-volume manufacturing.",
+            "category": "Design",
+            "estimatedDuration": 4320,
+            "businessRationale": "Process development for a new node costs $1-3B and takes 3-5 years. AI reduces development cycle by 20-30% and finds wider process windows.",
+            "substeps": [
+                {
+                    "substepName": "DOEOptimization",
+                    "duration": 1440
+                },
+                {
+                    "substepName": "TCADSimulation",
+                    "duration": 1440
+                },
+                {
+                    "substepName": "ProcessWindowCharacterisation",
+                    "duration": 1440
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "LithographyControl",
+            "serviceName": "LithoControlService",
+            "description": "AI manages lithography: overlay correction, CD uniformity, and focus/dose optimisation. EUV stochastic defect management. Computational lithography for OPC and mask synthesis.",
+            "category": "Critical Process",
+            "estimatedDuration": 0.5,
+            "businessRationale": "Lithography is the most critical and expensive step ($150M+ per EUV tool). A 1nm overlay error at 3nm node kills yield.",
+            "substeps": [
+                {
+                    "substepName": "OverlayCorrection",
+                    "duration": 0.15
+                },
+                {
+                    "substepName": "CDUniformity",
+                    "duration": 0.15
+                },
+                {
+                    "substepName": "EUVDefectManagement",
+                    "duration": 0.2
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "EtchAndDeposition",
+            "serviceName": "EtchDepService",
+            "description": "AI controls etch profiles, deposition thickness, and selectivity. Multi-step etch recipes with endpoint detection. ALD and CVD process optimisation for atomic-level control.",
+            "category": "Processing",
+            "estimatedDuration": 0.3,
+            "businessRationale": "Etch and deposition account for 60% of processing steps. Atomic-level uniformity across 300mm wafers determines device performance.",
+            "substeps": [
+                {
+                    "substepName": "EtchProfileControl",
+                    "duration": 0.1
+                },
+                {
+                    "substepName": "DepositionThickness",
+                    "duration": 0.1
+                },
+                {
+                    "substepName": "EndpointDetection",
+                    "duration": 0.1
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "MetrologyAndInspection",
+            "serviceName": "MetrologyService",
+            "description": "AI optimises metrology sampling: smart sampling based on process risk, virtual metrology from tool sensors, and real-time SPC. Measurement recipe optimisation.",
+            "category": "Quality",
+            "estimatedDuration": 1,
+            "businessRationale": "100% metrology is impossible (too slow/expensive). AI smart sampling achieves equivalent defect detection at 30% of measurement cost.",
+            "substeps": [
+                {
+                    "substepName": "SmartSampling",
+                    "duration": 0.3
+                },
+                {
+                    "substepName": "VirtualMetrology",
+                    "duration": 0.3
+                },
+                {
+                    "substepName": "SPCOptimization",
+                    "duration": 0.4
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "FabScheduling",
+            "serviceName": "FabScheduleService",
+            "description": "AI manages fab scheduling: lot dispatching, tool allocation, maintenance window optimisation, and WIP management. Cycle time reduction through bottleneck identification.",
+            "category": "Operations",
+            "estimatedDuration": 24,
+            "businessRationale": "A leading-edge fab has $20B+ in capital equipment. Every hour of tool idle time = $10K-50K in lost output. AI scheduling maximises output.",
+            "substeps": [
+                {
+                    "substepName": "LotDispatching",
+                    "duration": 8
+                },
+                {
+                    "substepName": "ToolAllocation",
+                    "duration": 8
+                },
+                {
+                    "substepName": "CycleTimeOptimization",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "FabAnalytics",
+            "serviceName": "FabAnalyticsService",
+            "description": "AI generates fab performance reports: wafers out, cycle time, tool utilisation, and cost per wafer layer. Competitive benchmarking and capacity planning for next-gen nodes.",
+            "category": "Analytics",
+            "estimatedDuration": 168,
+            "businessRationale": "Fab analytics drive $billions in planning decisions. Output per tool per day determines whether the $20B fab investment delivers returns.",
+            "substeps": [
+                {
+                    "substepName": "OutputTracking",
+                    "duration": 56
+                },
+                {
+                    "substepName": "CostAnalysis",
+                    "duration": 56
+                },
+                {
+                    "substepName": "CapacityPlanning",
+                    "duration": 56
+                }
+            ]
+        }
+    ],
+    "id": "a642e71a-5445-43e6-addd-6fc213d5b331",
+    "name": "Semiconductor & Chip - Fabrication Optimization",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 100000000,
+        "annualRevenue": 40000000000,
+        "revenuePerCustomer": 500000000,
+        "profitMargin": 45.0,
+        "customerLifetimeValue": 5000000000,
+        "lifetimeValue": 5000000000,
+        "acquisitionCost": 0,
+        "costPerAcquisition": 0,
+        "conversionProbability": 1.0,
+        "conversionRate": 100,
+        "engagementScore": 95,
+        "timeToConversion": 0,
+        "sessionDuration": 28800,
+        "pageViews": 60,
+        "purchaseFrequency": 365,
+        "netPromoterScore": 0,
+        "satisfactionRating": 0,
+        "retentionProbability": 1.0,
+        "processingTime": 2880,
+        "operationalCost": 15000000000,
+        "efficiencyRating": 85,
+        "cycleTime": 60,
+        "wafersOutPerWeek": 15000,
+        "channel": [
+            "MES_system",
+            "engineering_workstation",
+            "executive_dashboard",
+            "customer_design_portal",
+            "remote_monitoring"
+        ],
+        "deviceType": [
+            "SCADA",
+            "desktop",
+            "desktop",
+            "desktop",
+            "mobile"
+        ],
+        "region": [
+            "Hsinchu TW",
+            "Hwaseong KR",
+            "Chandler AZ US",
+            "Dresden DE",
+            "Kumamoto JP"
+        ],
+        "customerSegmentValue": [
+            "fabless_design_house",
+            "IDM_customer",
+            "government_contract",
+            "automotive_chip",
+            "AI_accelerator"
+        ],
+        "loyaltyTier": [
+            "Strategic Customer",
+            "Key Account",
+            "Volume Customer",
+            "Emerging",
+            "R&D Partner"
+        ],
+        "segment": [
+            "logic_advanced",
+            "logic_mature",
+            "memory",
+            "analog_mixed",
+            "MEMS_sensor"
+        ],
+        "Productname": [
+            "3nm Logic Process",
+            "7nm Logic Process",
+            "Advanced DRAM Process",
+            "28nm Mature Node",
+            "Power Management Process"
+        ],
+        "ProductId": [
+            "FAB-3N-001",
+            "FAB-7N-002",
+            "FAB-DR-003",
+            "FAB-28-004",
+            "FAB-PM-005"
+        ],
+        "ProductType": [
+            "leading_edge_logic",
+            "advanced_logic",
+            "memory",
+            "mature_logic",
+            "specialty"
+        ],
+        "Price": [
+            20000,
+            8000,
+            5000,
+            2000,
+            3000
+        ],
+        "toolUtilisation": [
+            0.92,
+            0.88,
+            0.9,
+            0.85,
+            0.82
+        ],
+        "processSteps": [
+            1000,
+            500,
+            300,
+            200,
+            150
+        ],
+        "marketTrend": [
+            "3nm_ramp",
+            "chiplet_packaging",
+            "EUV_high_NA",
+            "silicon_photonics",
+            "CFET_transistor"
+        ]
+    }
+}

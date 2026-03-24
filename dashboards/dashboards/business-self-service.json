@@ -1,0 +1,622 @@
+{
+  "version": 21,
+  "variables": [
+    {
+      "key": "CompanyName",
+      "visible": true,
+      "type": "query",
+      "version": 2,
+      "editable": true,
+      "input": "fetch bizevents\n| summarize companies = collectDistinct(companyName)\n| expand companies\n| sort companies\n| fields companies",
+      "multiple": false,
+      "defaultValue": ["*"]
+    },
+    {
+      "key": "JourneyType",
+      "visible": true,
+      "type": "query",
+      "version": 2,
+      "editable": true,
+      "input": "fetch bizevents\n| filter if(\"$CompanyName\" != \"*\", companyName == $CompanyName, else: true)\n| summarize journeys = collectDistinct(journeyType)\n| expand journeys\n| sort journeys\n| fields journeys",
+      "multiple": true,
+      "defaultValue": ["*"]
+    },
+    {
+      "key": "Service",
+      "visible": true,
+      "type": "query",
+      "version": 2,
+      "editable": true,
+      "input": "fetch bizevents\n| filter if(\"$CompanyName\" != \"*\", companyName == $CompanyName, else: true)\n| summarize services = collectDistinct(serviceName)\n| expand services\n| sort services\n| fields services",
+      "multiple": true,
+      "defaultValue": ["*"]
+    },
+    {
+      "key": "ServiceID",
+      "visible": false,
+      "type": "query",
+      "version": 1,
+      "editable": true,
+      "input": "fetch dt.entity.service\n| filter in(entity.name, array($Service))\n| dedup id\n| fields id\n| limit 50",
+      "multiple": true,
+      "defaultValue": ["*"]
+    }
+  ],
+  "tiles": {
+    "0": {
+      "content": "## 💼 Business Self-Service Dashboard — $CompanyName\nReal-time business observability powered by **Dynatrace BizObs Forge**. Track revenue, orders, customer journeys and the business impact of technical issues.\n\n**TO START:** Select your Company, Journey Type and Services from the dropdowns above. All tiles auto-populate from your business events.",
+      "type": "markdown"
+    },
+    "1": {
+      "content": "## 💰 Revenue",
+      "type": "markdown"
+    },
+    "2": {
+      "title": "Total Revenue",
+      "type": "data",
+      "query": "fetch bizevents\n| filter if(\"$CompanyName\" != \"*\", companyName == $CompanyName, else: true)\n| filter if(\"$JourneyType\" != \"*\", in(journeyType, array($JourneyType)), else: true)\n| filter event.type == \"com.bizobs.checkout.success\" or event.type == \"com.bizobs.order.completed\" or matchesPhrase(event.type, \"checkout_success\") or matchesPhrase(event.type, \"order\")\n| summarize totalRevenue = sum(totalAmount)",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "singleValue": {
+          "alignment": "center",
+          "autoscale": true,
+          "colorThresholdTarget": "value",
+          "label": "Total Revenue",
+          "prefixIcon": "MoneyIcon",
+          "recordField": "totalRevenue",
+          "showLabel": true,
+          "trend": { "isVisible": true, "trendType": "auto" }
+        },
+        "thresholds": [
+          {
+            "field": "totalRevenue",
+            "id": 1,
+            "isEnabled": true,
+            "rules": [
+              { "color": "#0D9C29", "comparator": ">", "id": 0, "value": 0 }
+            ]
+          }
+        ]
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 1, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "3": {
+      "title": "Total Orders",
+      "type": "data",
+      "query": "fetch bizevents\n| filter if(\"$CompanyName\" != \"*\", companyName == $CompanyName, else: true)\n| filter if(\"$JourneyType\" != \"*\", in(journeyType, array($JourneyType)), else: true)\n| filter event.type == \"com.bizobs.checkout.success\" or event.type == \"com.bizobs.order.completed\" or matchesPhrase(event.type, \"checkout_success\") or matchesPhrase(event.type, \"order\")\n| summarize totalOrders = countDistinct(orderId)",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "singleValue": {
+          "alignment": "center",
+          "autoscale": true,
+          "colorThresholdTarget": "value",
+          "label": "Total Orders",
+          "prefixIcon": "ShoppingCartIcon",
+          "recordField": "totalOrders",
+          "showLabel": true,
+          "trend": { "isVisible": true, "trendType": "auto" }
+        },
+        "thresholds": [
+          {
+            "field": "totalOrders",
+            "id": 1,
+            "isEnabled": true,
+            "rules": [
+              { "color": { "Default": "var(--dt-colors-charts-categorical-color-01-default, #134fc9)" }, "comparator": ">", "id": 0, "value": 0 }
+            ]
+          }
+        ]
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 1, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "4": {
+      "title": "Failed Transactions",
+      "type": "data",
+      "query": "fetch bizevents\n| filter if(\"$CompanyName\" != \"*\", companyName == $CompanyName, else: true)\n| filter if(\"$JourneyType\" != \"*\", in(journeyType, array($JourneyType)), else: true)\n| filter event.type == \"com.bizobs.checkout.failure\" or matchesPhrase(event.type, \"checkout_failure\") or matchesPhrase(event.type, \"error\")\n| summarize failedOrders = count()",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "singleValue": {
+          "alignment": "center",
+          "autoscale": true,
+          "colorThresholdTarget": "value",
+          "label": "Failed Transactions",
+          "prefixIcon": "CriticalIcon",
+          "recordField": "failedOrders",
+          "showLabel": true,
+          "trend": { "isVisible": true, "trendType": "auto" }
+        },
+        "thresholds": [
+          {
+            "field": "failedOrders",
+            "id": 1,
+            "isEnabled": true,
+            "rules": [
+              { "color": "#0D9C29", "comparator": "=", "id": 0, "value": 0 },
+              { "color": { "Default": "var(--dt-colors-charts-status-warning-default, #eca440)" }, "comparator": ">", "id": 1, "value": 0 },
+              { "color": "#AE132D", "comparator": ">=", "id": 2, "value": 10 }
+            ]
+          }
+        ]
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 1, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "5": {
+      "title": "Avg Order Value",
+      "type": "data",
+      "query": "fetch bizevents\n| filter if(\"$CompanyName\" != \"*\", companyName == $CompanyName, else: true)\n| filter if(\"$JourneyType\" != \"*\", in(journeyType, array($JourneyType)), else: true)\n| filter event.type == \"com.bizobs.checkout.success\" or event.type == \"com.bizobs.order.completed\" or matchesPhrase(event.type, \"checkout_success\") or matchesPhrase(event.type, \"order\")\n| summarize avgOrderValue = avg(totalAmount)",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "singleValue": {
+          "alignment": "center",
+          "autoscale": true,
+          "colorThresholdTarget": "value",
+          "label": "Avg Order Value",
+          "prefixIcon": "TrendUpIcon",
+          "recordField": "avgOrderValue",
+          "showLabel": true,
+          "trend": { "isVisible": true, "trendType": "auto" }
+        },
+        "thresholds": [
+          {
+            "field": "avgOrderValue",
+            "id": 1,
+            "isEnabled": true,
+            "rules": [
+              { "color": "#0D9C29", "comparator": ">", "id": 0, "value": 0 }
+            ]
+          }
+        ]
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 1, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "6": {
+      "title": "Revenue Over Time",
+      "type": "data",
+      "query": "fetch bizevents\n| filter if(\"$CompanyName\" != \"*\", companyName == $CompanyName, else: true)\n| filter if(\"$JourneyType\" != \"*\", in(journeyType, array($JourneyType)), else: true)\n| filter event.type == \"com.bizobs.checkout.success\" or event.type == \"com.bizobs.order.completed\" or matchesPhrase(event.type, \"checkout_success\") or matchesPhrase(event.type, \"order\")\n| makeTimeseries revenue = sum(totalAmount), interval: 10m",
+      "visualization": "lineChart",
+      "visualizationSettings": {
+        "chartSettings": {
+          "fieldMapping": {
+            "leftAxisValues": ["revenue"],
+            "timestamp": "timeframe"
+          },
+          "gapPolicy": "connect",
+          "leftYAxisSettings": { "isLabelVisible": true, "label": "Revenue" },
+          "legend": { "hidden": true },
+          "curve": "linear",
+          "colorPalette": "categorical"
+        },
+        "thresholds": [],
+        "unitsOverrides": [
+          { "identifier": "revenue", "unitCategory": "currency", "baseUnit": "usd", "decimals": 0, "delimiter": true }
+        ]
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 1, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "7": {
+      "title": "Order Volume Over Time",
+      "type": "data",
+      "query": "fetch bizevents\n| filter if(\"$CompanyName\" != \"*\", companyName == $CompanyName, else: true)\n| filter if(\"$JourneyType\" != \"*\", in(journeyType, array($JourneyType)), else: true)\n| filter event.type == \"com.bizobs.checkout.success\" or event.type == \"com.bizobs.order.completed\" or matchesPhrase(event.type, \"checkout_success\") or matchesPhrase(event.type, \"order\")\n| makeTimeseries orders = count(), interval: 10m",
+      "visualization": "barChart",
+      "visualizationSettings": {
+        "chartSettings": {
+          "fieldMapping": {
+            "leftAxisValues": ["orders"],
+            "timestamp": "timeframe"
+          },
+          "gapPolicy": "connect",
+          "leftYAxisSettings": { "isLabelVisible": true, "label": "Orders" },
+          "legend": { "hidden": true },
+          "colorPalette": "categorical"
+        },
+        "thresholds": []
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 1, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "8": {
+      "content": "## 🛒 Orders & Conversion",
+      "type": "markdown"
+    },
+    "9": {
+      "title": "Revenue by Journey Type",
+      "type": "data",
+      "query": "fetch bizevents\n| filter if(\"$CompanyName\" != \"*\", companyName == $CompanyName, else: true)\n| filter event.type == \"com.bizobs.checkout.success\" or event.type == \"com.bizobs.order.completed\" or matchesPhrase(event.type, \"checkout_success\") or matchesPhrase(event.type, \"order\")\n| summarize revenue = sum(totalAmount), by: { journeyType }\n| sort revenue desc\n| limit 20",
+      "visualization": "barChart",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "chartSettings": {
+          "categoricalBarChartSettings": {
+            "categoryAxis": ["journeyType"],
+            "categoryAxisLabel": "Journey Type",
+            "categoryAxisTickLayout": "horizontal",
+            "colorPaletteMode": "multi-color",
+            "groupMode": "stacked",
+            "layout": "horizontal",
+            "scale": "absolute",
+            "tooltipVariant": "single",
+            "valueAxis": ["revenue"],
+            "valueAxisLabel": "Revenue"
+          },
+          "colorPalette": "categorical",
+          "legend": { "hidden": false, "position": "bottom" }
+        },
+        "thresholds": [],
+        "unitsOverrides": [
+          { "identifier": "revenue", "unitCategory": "currency", "baseUnit": "usd", "decimals": 0, "delimiter": true }
+        ]
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 1, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "10": {
+      "title": "Orders by Journey Type",
+      "type": "data",
+      "query": "fetch bizevents\n| filter if(\"$CompanyName\" != \"*\", companyName == $CompanyName, else: true)\n| filter event.type == \"com.bizobs.checkout.success\" or event.type == \"com.bizobs.order.completed\" or matchesPhrase(event.type, \"checkout_success\") or matchesPhrase(event.type, \"order\")\n| summarize orders = count(), by: { journeyType }\n| sort orders desc\n| limit 20",
+      "visualization": "pieChart",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "chartSettings": {
+          "circleChartSettings": {
+            "groupingThresholdType": "relative",
+            "groupingThresholdValue": 2,
+            "valueType": "relative"
+          },
+          "colorPalette": "categorical"
+        },
+        "thresholds": []
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 1, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "11": {
+      "content": "## 📊 Journey Breakdown",
+      "type": "markdown"
+    },
+    "12": {
+      "title": "Revenue by Service",
+      "type": "data",
+      "query": "fetch bizevents\n| filter if(\"$CompanyName\" != \"*\", companyName == $CompanyName, else: true)\n| filter if(\"$JourneyType\" != \"*\", in(journeyType, array($JourneyType)), else: true)\n| filter event.type == \"com.bizobs.checkout.success\" or event.type == \"com.bizobs.order.completed\" or matchesPhrase(event.type, \"checkout_success\") or matchesPhrase(event.type, \"order\")\n| summarize revenue = sum(totalAmount), orders = count(), by: { serviceName }\n| fieldsAdd revenueBar = revenue\n| sort revenue desc\n| limit 15",
+      "visualization": "table",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "table": {
+          "columnTypeOverrides": [
+            { "fields": ["revenueBar"], "id": 1001, "value": "meterbar" }
+          ],
+          "columnWidths": {},
+          "enableSparklines": false,
+          "hiddenColumns": [],
+          "rowDensity": "condensed"
+        },
+        "thresholds": [],
+        "unitsOverrides": [
+          { "identifier": "revenue", "unitCategory": "currency", "baseUnit": "usd", "decimals": 2, "delimiter": true }
+        ]
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 1, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "13": {
+      "content": "## 🔥 Technical Impact on Business",
+      "type": "markdown"
+    },
+    "14": {
+      "title": "",
+      "type": "data",
+      "query": "fetch dt.davis.problems\n| filter dt.davis.is_duplicate == false\n| sort timestamp desc\n| expand affected_entity_ids\n| lookup [fetch dt.entity.service], sourceField:affected_entity_ids, lookupField: id, prefix:\"lookup.affected.entity.services\"\n| lookup [fetch dt.entity.process_group_instance], sourceField:affected_entity_ids, lookupField: id, prefix:\"lookup.affected.entity.pgi\"\n| lookup [fetch dt.entity.application], sourceField:affected_entity_ids, lookupField: id, prefix:\"lookup.affected.entity.applications\"\n| lookup [fetch dt.entity.host], sourceField:affected_entity_ids, lookupField: id, prefix:\"lookup.affected.entity.hosts\"\n| summarize {\n    startTime = takeFirst(event.start),\n    endTime = takeFirst(event.end),\n    problemClosedDuration = takeFirst(resolved_problem_duration),\n    status = takeFirst(event.status),\n    event.name = takeFirst(event.name),\n    severityLevel = takeFirst(event.category),\n    rootCause = takeFirst(root_cause_entity_name),\n    rootCauseEntityId = takeFirst(root_cause_entity_id),\n    dt.davis.is_duplicate = takeFirst(dt.davis.is_duplicate),\n    affectedServices = collectDistinct(lookup.affected.entity.servicesentity.name),\n    affectedPGI = collectDistinct(lookup.affected.entity.pgientity.name),\n    affectedApplications = collectDistinct(lookup.affected.entity.applicationsentity.name),\n    affectedHosts = collectDistinct(lookup.affected.entity.hostsentity.name),\n    event.id = takeFirst(event.id)\n  },\n  by:{display_id, event.kind}\n| fieldsAdd currentTime = toTimestamp(now())\n| fields\n    Status = if((status == \"ACTIVE\"), \"🔴 OPEN\", else: if((status == \"CLOSED\"), \"🟢 CLOSED\")),\n    Problem = concat(\"🔥[\", display_id, \" - \", event.name, \"](/ui/apps/dynatrace.davis.problems/problem/\", event.id, \")\"),\n    Severity = severityLevel,\n    Affected = arrayRemoveNulls(arrayConcat(affectedApplications, affectedServices, affectedPGI, affectedHosts)),\n    RootCause = if(isNotNull(rootCause),\n      concat(\"[\", rootCause, \"](/ui/apps/dynatrace.services/explorer?detailsId=\", rootCauseEntityId, \")\"),\n      else: \"\"),\n    StartTime = startTime,\n    Duration = if((status == \"CLOSED\"), problemClosedDuration, else: if((status == \"ACTIVE\"), currentTime - startTime)),\n    event.id,\n    event.kind\n| sort StartTime desc\n| limit 25",
+      "visualization": "table",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "table": {
+          "colorThresholdTarget": "background",
+          "columnTypeOverrides": [
+            { "fields": ["Problem"], "id": 150594, "value": "markdown" },
+            { "fields": ["RootCause"], "id": 150595, "value": "markdown" }
+          ],
+          "columnWidths": {
+            "[\"Problem\"]": 320,
+            "[\"Status\"]": 100,
+            "[\"Affected\"]": 250
+          },
+          "enableSparklines": false,
+          "hiddenColumns": [["event.id"], ["event.kind"], ["Severity"]],
+          "rowDensity": "condensed",
+          "linewrapEnabled": true,
+          "lineWrapIds": [["Problem"], ["RootCause"]]
+        },
+        "thresholds": [
+          {
+            "field": "Status",
+            "id": 1,
+            "isEnabled": true,
+            "rules": [
+              { "color": "#0D9C29", "comparator": "=", "id": 0, "value": "🟢 CLOSED" },
+              { "color": "#AE132D", "comparator": "=", "id": 1, "value": "🔴 OPEN" }
+            ]
+          }
+        ]
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 100, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "15": {
+      "title": "Estimated Revenue at Risk",
+      "type": "data",
+      "query": "fetch bizevents\n| filter if(\"$CompanyName\" != \"*\", companyName == $CompanyName, else: true)\n| filter if(\"$JourneyType\" != \"*\", in(journeyType, array($JourneyType)), else: true)\n| filter event.type == \"com.bizobs.checkout.failure\" or matchesPhrase(event.type, \"checkout_failure\") or matchesPhrase(event.type, \"error\")\n| summarize failedCount = count()\n| lookup [\n    fetch bizevents\n    | filter event.type == \"com.bizobs.checkout.success\" or event.type == \"com.bizobs.order.completed\" or matchesPhrase(event.type, \"checkout_success\") or matchesPhrase(event.type, \"order\")\n    | summarize avgValue = avg(totalAmount)\n  ], fields: { avgValue }\n| fieldsAdd estimatedLoss = failedCount * avgValue\n| fields failedCount, avgValue, estimatedLoss",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "singleValue": {
+          "alignment": "center",
+          "autoscale": true,
+          "colorThresholdTarget": "value",
+          "label": "Est. Revenue at Risk",
+          "prefixIcon": "CriticalIcon",
+          "recordField": "estimatedLoss",
+          "showLabel": true,
+          "trend": { "isVisible": true, "trendType": "auto" }
+        },
+        "thresholds": [
+          {
+            "field": "estimatedLoss",
+            "id": 1,
+            "isEnabled": true,
+            "rules": [
+              { "color": "#0D9C29", "comparator": "=", "id": 0, "value": 0 },
+              { "color": { "Default": "var(--dt-colors-charts-status-warning-default, #eca440)" }, "comparator": ">", "id": 1, "value": 0 },
+              { "color": "#AE132D", "comparator": ">=", "id": 2, "value": 1000 }
+            ]
+          }
+        ],
+        "unitsOverrides": [
+          { "identifier": "estimatedLoss", "unitCategory": "currency", "baseUnit": "usd", "decimals": 0, "delimiter": true }
+        ]
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 1, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "16": {
+      "content": "## 📈 Revenue Trend",
+      "type": "markdown"
+    },
+    "17": {
+      "title": "Success vs Failure Over Time",
+      "type": "data",
+      "query": "fetch bizevents\n| filter if(\"$CompanyName\" != \"*\", companyName == $CompanyName, else: true)\n| filter if(\"$JourneyType\" != \"*\", in(journeyType, array($JourneyType)), else: true)\n| fieldsAdd isSuccess = if(matchesPhrase(event.type, \"success\") or matchesPhrase(event.type, \"completed\"), 1, else: 0)\n| fieldsAdd isFailure = if(matchesPhrase(event.type, \"failure\") or matchesPhrase(event.type, \"error\"), 1, else: 0)\n| makeTimeseries success = sum(isSuccess), failed = sum(isFailure), interval: 10m",
+      "visualization": "barChart",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "chartSettings": {
+          "fieldMapping": {
+            "leftAxisValues": ["success", "failed"],
+            "timestamp": "timeframe"
+          },
+          "gapPolicy": "connect",
+          "legend": { "hidden": true },
+          "seriesOverrides": [
+            { "override": { "color": "#0D9C29" }, "seriesId": ["success"] },
+            { "override": { "color": "#AE132D" }, "seriesId": ["failed"] }
+          ],
+          "tooltip": { "variant": "shared" }
+        },
+        "thresholds": []
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 1, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "18": {
+      "title": "Top Products by Revenue",
+      "type": "data",
+      "query": "fetch bizevents\n| filter if(\"$CompanyName\" != \"*\", companyName == $CompanyName, else: true)\n| filter if(\"$JourneyType\" != \"*\", in(journeyType, array($JourneyType)), else: true)\n| filter event.type == \"com.bizobs.checkout.success\" or event.type == \"com.bizobs.order.completed\" or matchesPhrase(event.type, \"checkout_success\") or matchesPhrase(event.type, \"order\")\n| summarize revenue = sum(totalAmount), quantity = sum(quantity), by: { productName }\n| fieldsAdd revenueBar = revenue\n| sort revenue desc\n| limit 10",
+      "visualization": "table",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "table": {
+          "columnTypeOverrides": [
+            { "fields": ["revenueBar"], "id": 1002, "value": "meterbar" }
+          ],
+          "columnWidths": {},
+          "enableSparklines": false,
+          "hiddenColumns": [],
+          "rowDensity": "condensed",
+          "sortBy": [{ "columnId": "[\"revenue\"]", "direction": "descending" }]
+        },
+        "thresholds": [],
+        "unitsOverrides": [
+          { "identifier": "revenue", "unitCategory": "currency", "baseUnit": "usd", "decimals": 2, "delimiter": true }
+        ]
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 1, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "19": {
+      "content": "## 🏷️ Top Products",
+      "type": "markdown"
+    },
+    "20": {
+      "title": "Top Products by Quantity",
+      "type": "data",
+      "query": "fetch bizevents\n| filter if(\"$CompanyName\" != \"*\", companyName == $CompanyName, else: true)\n| filter if(\"$JourneyType\" != \"*\", in(journeyType, array($JourneyType)), else: true)\n| filter event.type == \"com.bizobs.checkout.success\" or event.type == \"com.bizobs.order.completed\" or matchesPhrase(event.type, \"checkout_success\") or matchesPhrase(event.type, \"order\")\n| summarize quantity = sum(quantity), by: { productName }\n| sort quantity desc\n| limit 10",
+      "visualization": "categoricalBarChart",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "chartSettings": {
+          "categoricalBarChartSettings": {
+            "categoryAxis": ["productName"],
+            "categoryAxisLabel": "Product",
+            "categoryAxisTickLayout": "horizontal",
+            "colorPaletteMode": "multi-color",
+            "groupMode": "stacked",
+            "layout": "horizontal",
+            "scale": "absolute",
+            "tooltipVariant": "single",
+            "valueAxis": ["quantity"],
+            "valueAxisLabel": "Quantity Sold"
+          },
+          "colorPalette": "categorical",
+          "legend": { "hidden": true }
+        },
+        "thresholds": []
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 1, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "21": {
+      "title": "Service Health",
+      "type": "data",
+      "query": "timeseries {requests = sum(dt.service.request.count),\n            errors = sum(dt.service.request.failure_count)},\n            by:{dt.entity.service}\n| fieldsAdd Requests = arraySum(requests),\n            Errors = arraySum(errors)\n| fieldsAdd `Failure Rate` = (Errors / Requests) * 100\n| fieldsAdd Service = entityName(dt.entity.service)\n| fieldsAdd `Analyze` = concat(\"[Open Service](/ui/apps/dynatrace.services/explorer?detailsId=\", dt.entity.service, \")\")\n| fields\n    Status = if(`Failure Rate` >= 2.00, \"🔴\", else: \"🟢\"),\n    Service,\n    `Analyze`,\n    Requests,\n    `Failure Rate`,\n    Errors\n| sort `Failure Rate` desc\n| filterOut matchesPhrase(Service, \"background threads\") or matchesPhrase(Service, \"Health\")\n| limit 20",
+      "visualization": "table",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "table": {
+          "colorThresholdTarget": "background",
+          "columnTypeOverrides": [
+            { "fields": ["Analyze"], "id": 2001, "value": "markdown" }
+          ],
+          "columnWidths": {
+            "[\"Service\"]": 200,
+            "[\"Status\"]": 70
+          },
+          "enableSparklines": false,
+          "hiddenColumns": [["Errors"]],
+          "rowDensity": "condensed"
+        },
+        "thresholds": [
+          {
+            "field": "Failure Rate",
+            "id": 1,
+            "isEnabled": true,
+            "rules": [
+              { "color": "#0D9C29", "comparator": "=", "id": 0, "value": 0 },
+              { "color": { "Default": "var(--dt-colors-charts-status-warning-default, #eca440)" }, "comparator": ">", "id": 1, "value": 0 },
+              { "color": "#AE132D", "comparator": ">=", "id": 2, "value": 2 }
+            ]
+          },
+          {
+            "field": "Requests",
+            "id": 2,
+            "isEnabled": true,
+            "rules": [
+              { "color": { "Default": "var(--dt-colors-charts-categorical-color-07-default, #438fb1)" }, "comparator": ">", "id": 0, "value": 0 }
+            ]
+          }
+        ],
+        "unitsOverrides": [
+          { "identifier": "Failure Rate", "unitCategory": "percentage", "baseUnit": "percent", "decimals": 2 },
+          { "identifier": "Requests", "unitCategory": "unspecified", "baseUnit": "none", "decimals": 0 },
+          { "identifier": "Errors", "unitCategory": "unspecified", "baseUnit": "none", "decimals": 0 }
+        ]
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 100, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "22": {
+      "content": "## 🏥 Service Overview",
+      "type": "markdown"
+    },
+    "23": {
+      "title": "",
+      "type": "data",
+      "query": "data record(a=\"📌 SELECT your Company and Journey Type with the filters above. All tiles update automatically. Click any 🔥 Problem or Service link to drill into Dynatrace.\")",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "singleValue": {
+          "alignment": "center",
+          "autoscale": true,
+          "colorThresholdTarget": "background",
+          "isIconVisible": true,
+          "label": "a",
+          "prefixIcon": "BookmarkIcon",
+          "recordField": "a",
+          "showLabel": false,
+          "sparklineSettings": {}
+        },
+        "thresholds": [
+          {
+            "field": "a",
+            "id": 1,
+            "isEnabled": true,
+            "rules": [
+              { "color": { "Default": "var(--dt-colors-charts-categorical-color-01-default, #134fc9)" }, "comparator": "!=", "id": 0, "value": "0" }
+            ]
+          }
+        ]
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 1, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "24": {
+      "title": "Bizevents Activity Heatmap",
+      "type": "data",
+      "query": "fetch bizevents\n| filter if(\"$CompanyName\" != \"*\", companyName == $CompanyName, else: true)\n| filter if(\"$JourneyType\" != \"*\", in(journeyType, array($JourneyType)), else: true)\n| summarize eventCount = count(), by: { event.type }\n| sort eventCount desc\n| limit 30",
+      "visualization": "honeycomb",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "honeycomb": {
+          "colorMode": "color-palette",
+          "colorPalette": "blue",
+          "dataMappings": {
+            "value": "eventCount"
+          },
+          "displayedFields": ["event.type"],
+          "legend": { "hidden": false, "position": "auto" },
+          "shape": "hexagon",
+          "truncationMode": "middle"
+        },
+        "thresholds": []
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 1, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "25": {
+      "content": "## 🐝 Event Activity",
+      "type": "markdown"
+    }
+  },
+  "layouts": {
+    "0":  { "x": 0,  "y": 0,  "w": 24, "h": 2 },
+    "23": { "x": 0,  "y": 2,  "w": 24, "h": 1 },
+    "1":  { "x": 0,  "y": 3,  "w": 6,  "h": 1 },
+    "2":  { "x": 0,  "y": 4,  "w": 6,  "h": 2 },
+    "3":  { "x": 6,  "y": 4,  "w": 6,  "h": 2 },
+    "4":  { "x": 12, "y": 4,  "w": 6,  "h": 2 },
+    "5":  { "x": 18, "y": 4,  "w": 6,  "h": 2 },
+    "16": { "x": 0,  "y": 6,  "w": 12, "h": 1 },
+    "6":  { "x": 0,  "y": 7,  "w": 12, "h": 4 },
+    "8":  { "x": 12, "y": 6,  "w": 12, "h": 1 },
+    "7":  { "x": 12, "y": 7,  "w": 12, "h": 4 },
+    "17": { "x": 0,  "y": 11, "w": 24, "h": 4 },
+    "11": { "x": 0,  "y": 15, "w": 12, "h": 1 },
+    "9":  { "x": 0,  "y": 16, "w": 12, "h": 4 },
+    "10": { "x": 12, "y": 16, "w": 12, "h": 4 },
+    "19": { "x": 0,  "y": 20, "w": 12, "h": 1 },
+    "18": { "x": 0,  "y": 21, "w": 12, "h": 4 },
+    "20": { "x": 12, "y": 21, "w": 12, "h": 4 },
+    "12": { "x": 0,  "y": 25, "w": 24, "h": 4 },
+    "25": { "x": 0,  "y": 29, "w": 12, "h": 1 },
+    "24": { "x": 0,  "y": 30, "w": 12, "h": 4 },
+    "22": { "x": 12, "y": 29, "w": 12, "h": 1 },
+    "21": { "x": 12, "y": 30, "w": 12, "h": 4 },
+    "13": { "x": 0,  "y": 34, "w": 6,  "h": 1 },
+    "15": { "x": 6,  "y": 34, "w": 6,  "h": 2 },
+    "14": { "x": 0,  "y": 35, "w": 24, "h": 5 }
+  },
+  "settings": {
+    "defaultTimeframe": {
+      "enabled": true,
+      "value": {
+        "from": "now()-24h",
+        "to": "now()"
+      }
+    },
+    "gridLayout": {
+      "mode": "responsive"
+    }
+  },
+  "importedWithCode": false
+}

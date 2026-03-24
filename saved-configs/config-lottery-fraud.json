@@ -1,0 +1,273 @@
+{
+    "companyName": "LotteryTech Gaming",
+    "domain": "https://www.lotterytech-gaming.com",
+    "industryType": "Lottery & Gaming",
+    "journeyType": "Fraud Detection",
+    "journeyDetail": "AI-Powered Lottery Fraud & Integrity Detection",
+    "journeyId": "journey_fraud_detection_7b4faf91",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "TransactionMonitoring",
+            "serviceName": "TransactionMonitorService",
+            "description": "AI monitors every ticket purchase, claim, and payout in real-time. Pattern detection for synthetic identity fraud, retailer manipulation, and insider threats.",
+            "category": "Monitoring",
+            "estimatedDuration": 0.01,
+            "businessRationale": "A single lottery fraud can cost $10M+ and destroy public trust. Real-time monitoring is required by every gaming regulator.",
+            "substeps": [
+                {
+                    "substepName": "PurchasePatterns",
+                    "duration": 0.005
+                },
+                {
+                    "substepName": "ClaimAnalysis",
+                    "duration": 0.003
+                },
+                {
+                    "substepName": "RetailerBehavior",
+                    "duration": 0.002
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "SyndicateDetection",
+            "serviceName": "SyndicateDetectService",
+            "description": "AI identifies suspicious syndicate activity: coordinated bulk purchases, geographic anomalies, and proxy claiming. Network analysis maps relationships between accounts.",
+            "category": "Detection",
+            "estimatedDuration": 0.5,
+            "businessRationale": "Organised fraud syndicates target lotteries globally. Detection prevents $1M-50M in fraudulent claims per incident.",
+            "substeps": [
+                {
+                    "substepName": "NetworkMapping",
+                    "duration": 0.2
+                },
+                {
+                    "substepName": "BulkPurchaseDetection",
+                    "duration": 0.15
+                },
+                {
+                    "substepName": "ProxyClaimAnalysis",
+                    "duration": 0.15
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "RetailerIntegrity",
+            "serviceName": "RetailerIntegrityService",
+            "description": "AI monitors retailer behaviour for ticket cashing irregularities, insider winning claims, and age verification compliance. Retailer risk scoring updated continuously.",
+            "category": "Compliance",
+            "estimatedDuration": 24,
+            "businessRationale": "Retailer fraud accounts for 40% of lottery fraud. Dishonest retailers scanning winning tickets before returning them to customers.",
+            "substeps": [
+                {
+                    "substepName": "CashingPatterns",
+                    "duration": 8
+                },
+                {
+                    "substepName": "InsiderWinMonitoring",
+                    "duration": 8
+                },
+                {
+                    "substepName": "AgeVerification",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "DrawIntegrity",
+            "serviceName": "DrawIntegrityService",
+            "description": "AI verifies draw equipment randomness, monitors draw process via video analytics, and validates results against mathematical expectations. Any anomaly triggers immediate investigation.",
+            "category": "Verification",
+            "estimatedDuration": 1,
+            "businessRationale": "Draw integrity is the foundation of public trust. A compromised draw would end a lottery programme entirely.",
+            "substeps": [
+                {
+                    "substepName": "EquipmentVerification",
+                    "duration": 0.3
+                },
+                {
+                    "substepName": "VideoAnalytics",
+                    "duration": 0.3
+                },
+                {
+                    "substepName": "StatisticalValidation",
+                    "duration": 0.4
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "ClaimVerification",
+            "serviceName": "ClaimVerifService",
+            "description": "AI validates prize claims: ticket authenticity, ownership verification, identity checks (KYC/AML), and prize calculation. Flagged claims routed to investigation team.",
+            "category": "Validation",
+            "estimatedDuration": 4,
+            "businessRationale": "KYC/AML compliance is mandatory for prizes above threshold. Failure to detect money laundering through lottery claims carries regulatory penalties.",
+            "substeps": [
+                {
+                    "substepName": "TicketAuth",
+                    "duration": 1
+                },
+                {
+                    "substepName": "IdentityVerification",
+                    "duration": 2
+                },
+                {
+                    "substepName": "AMLChecks",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "RegulatoryReporting",
+            "serviceName": "RegulatoryReportService",
+            "description": "AI generates fraud reports for gaming commissions, suspicious activity reports (SARs) for financial regulators, and integrity audit trails. Real-time regulator dashboard.",
+            "category": "Reporting",
+            "estimatedDuration": 24,
+            "businessRationale": "Regulators require complete audit trails and timely SAR filing. Non-compliance risks licence revocation worth $100M+ in annual revenue.",
+            "substeps": [
+                {
+                    "substepName": "FraudReporting",
+                    "duration": 8
+                },
+                {
+                    "substepName": "SARFiling",
+                    "duration": 8
+                },
+                {
+                    "substepName": "AuditTrail",
+                    "duration": 8
+                }
+            ]
+        }
+    ],
+    "id": "c5906190-f06a-4295-910d-093a21e68550",
+    "name": "Lottery & Gaming - Fraud Detection",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 5,
+        "transactionValue": 5,
+        "averageOrderValue": 8,
+        "contractValue": 0,
+        "annualRevenue": 3500000000,
+        "revenuePerCustomer": 250,
+        "profitMargin": 35.0,
+        "customerLifetimeValue": 2500,
+        "lifetimeValue": 2500,
+        "acquisitionCost": 5,
+        "costPerAcquisition": 5,
+        "conversionProbability": 0.65,
+        "conversionRate": 65,
+        "engagementScore": 55,
+        "timeToConversion": 5,
+        "sessionDuration": 120,
+        "pageViews": 4,
+        "purchaseFrequency": 52,
+        "netPromoterScore": 25,
+        "satisfactionRating": 3.5,
+        "retentionProbability": 0.72,
+        "processingTime": 0.01,
+        "operationalCost": 0.5,
+        "efficiencyRating": 92,
+        "fraudDetectionRate": 99.2,
+        "falsePositiveRate": 0.3,
+        "channel": [
+            "retail_terminal",
+            "mobile_app",
+            "website",
+            "subscription",
+            "retail_counter"
+        ],
+        "deviceType": [
+            "terminal",
+            "mobile",
+            "desktop",
+            "mobile",
+            "terminal"
+        ],
+        "region": [
+            "California US",
+            "UK",
+            "Ontario CA",
+            "Victoria AU",
+            "Italy"
+        ],
+        "customerSegmentValue": [
+            "regular_player",
+            "occasional",
+            "syndicate",
+            "subscription",
+            "instant_win"
+        ],
+        "loyaltyTier": [
+            "VIP Player",
+            "Regular",
+            "Occasional",
+            "New",
+            "Guest"
+        ],
+        "segment": [
+            "draw_game",
+            "instant_win",
+            "online_instant",
+            "daily_game",
+            "multi_state"
+        ],
+        "Productname": [
+            "National Lottery Draw",
+            "Scratch Card Instant Win",
+            "Online Instant Game",
+            "Daily Numbers",
+            "Mega Millions Entry"
+        ],
+        "ProductId": [
+            "LOT-NL-001",
+            "LOT-SC-002",
+            "LOT-OI-003",
+            "LOT-DN-004",
+            "LOT-MM-005"
+        ],
+        "ProductType": [
+            "draw",
+            "instant",
+            "digital_instant",
+            "daily",
+            "multi_jurisdiction"
+        ],
+        "Price": [
+            2,
+            5,
+            3,
+            1,
+            2
+        ],
+        "jackpotSize": [
+            50000000,
+            500000,
+            100000,
+            25000,
+            200000000
+        ],
+        "winProbability": [
+            7.1e-08,
+            0.041,
+            0.035,
+            0.001,
+            3.3e-09
+        ],
+        "marketTrend": [
+            "digital_lottery",
+            "iLottery",
+            "blockchain_verification",
+            "responsible_gaming_AI",
+            "social_gaming"
+        ]
+    }
+}

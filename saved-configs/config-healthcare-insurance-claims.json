@@ -1,0 +1,279 @@
+{
+    "companyName": "Healthcare",
+    "domain": "https://www.healthcare.com",
+    "industryType": "Healthcare & Life Sciences",
+    "journeyType": "Insurance Claims",
+    "journeyDetail": "Healthcare Insurance Claims Journey",
+    "journeyId": "journey_healthcare_claims_2026",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "ClaimCreation",
+            "serviceName": "ClaimCreationService",
+            "description": "Provider system generates claim from encounter data: diagnosis codes (ICD-10), procedure codes (CPT/HCPCS), provider NPI, patient demographics, and insurance details. Claim formatted as ANSI X12 837P (professional) or 837I (institutional).",
+            "category": "Submission",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 3,
+            "businessRationale": "Automated claim generation from encounter data reduces manual coding errors. Clean claim rates above 95% significantly reduce days in accounts receivable and improve cash flow.",
+            "substeps": [
+                {
+                    "substepName": "EncounterDataExtraction",
+                    "duration": 1
+                },
+                {
+                    "substepName": "CodeAssignmentAndValidation",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "ClaimScrubbing",
+            "serviceName": "ClaimScrubbingService",
+            "description": "Pre-submission edits check claim for errors: missing fields, invalid code combinations, medical necessity rules (LCD/NCD), bundling/unbundling compliance, and modifier usage. Errors returned to coder for correction.",
+            "category": "Validation",
+            "estimatedDuration": 5,
+            "businessRationale": "Claim scrubbing catches 15-20% of errors before submission, preventing costly denials. Each denied claim costs $25-50 to rework. High first-pass rates reduce revenue cycle costs by 30%.",
+            "substeps": [
+                {
+                    "substepName": "RuleEngineValidation",
+                    "duration": 3
+                },
+                {
+                    "substepName": "ErrorCorrectionAndResubmit",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "PayerAdjudication",
+            "serviceName": "PayerAdjudicationService",
+            "description": "Claim transmitted to payer clearinghouse and adjudicated. Payer applies fee schedule, checks medical necessity, processes against patient benefits, and determines allowed amount. Explanation of Benefits (EOB) generated.",
+            "category": "Processing",
+            "estimatedDuration": 720,
+            "businessRationale": "Payer adjudication determines actual reimbursement. Typical processing is 14-30 days. Faster adjudication improves provider cash flow. Denials at this stage require appeals, adding 60-90 days to payment.",
+            "substeps": [
+                {
+                    "substepName": "ClearinghouseTransmission",
+                    "duration": 60
+                },
+                {
+                    "substepName": "PayerProcessingAndEOBGeneration",
+                    "duration": 660
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "RemittanceAndPosting",
+            "serviceName": "RemittanceAndPostingService",
+            "description": "Electronic Remittance Advice (ERA/835) received from payer. Payment posted to patient account: allowed amount, contractual adjustment, co-insurance, deductible applied. Secondary insurance claim triggered if applicable.",
+            "category": "Payment",
+            "estimatedDuration": 10,
+            "businessRationale": "Automated ERA posting reduces manual work and posting errors. Accurate posting determines patient responsibility and triggers secondary billing, preventing revenue leakage.",
+            "substeps": [
+                {
+                    "substepName": "ERAReceiptAndParsing",
+                    "duration": 3
+                },
+                {
+                    "substepName": "PaymentPostingAndAdjustments",
+                    "duration": 7
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "DenialManagement",
+            "serviceName": "DenialManagementService",
+            "description": "Denied or underpaid claims identified and categorised by denial reason code. Appeals prepared with supporting clinical documentation. Reconsideration requests submitted within payer filing limits.",
+            "category": "Recovery",
+            "estimatedDuration": 1440,
+            "businessRationale": "Average denial rate is 5-10% of claims. Successful appeals recover 60-70% of denied revenue. Unworked denials represent direct revenue loss. Denial pattern analysis prevents future denials.",
+            "substeps": [
+                {
+                    "substepName": "DenialCategorizationAndTriage",
+                    "duration": 240
+                },
+                {
+                    "substepName": "AppealPreparationAndSubmission",
+                    "duration": 1200
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "PatientBillingAndCollection",
+            "serviceName": "PatientBillingAndCollectionService",
+            "description": "Patient responsibility calculated after insurance payment. Statement generated and sent. Payment plan options offered for balances over threshold. Online payment portal available. Accounts aged beyond 120 days escalated to collections.",
+            "category": "PatientFinancial",
+            "estimatedDuration": 2880,
+            "businessRationale": "Patient responsibility now averages 30% of healthcare revenue. Clear statements and easy payment options improve collection rates. Early payment plan offering prevents bad debt write-offs.",
+            "substeps": [
+                {
+                    "substepName": "StatementGenerationAndDelivery",
+                    "duration": 480
+                },
+                {
+                    "substepName": "PaymentCollectionAndAging",
+                    "duration": 2400
+                }
+            ]
+        }
+    ],
+    "id": "a1b2c3d4-1111-4aaa-b111-000000000003",
+    "name": "Healthcare - Insurance Claims",
+    "timestamp": "2026-01-09T15:12:43.556Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 4500,
+        "averageOrderValue": 2800,
+        "contractValue": 0,
+        "annualRevenue": 0,
+        "revenuePerCustomer": 4500,
+        "profitMargin": -5.0,
+        "customerLifetimeValue": 28000,
+        "lifetimeValue": 28000,
+        "acquisitionCost": 0,
+        "conversionProbability": 0.82,
+        "conversionRate": 82,
+        "engagementScore": 72,
+        "timeToConversion": 20160,
+        "netPromoterScore": 25,
+        "satisfactionRating": 3.3,
+        "retentionProbability": 0.7,
+        "processingTime": 86400,
+        "operationalCost": 85,
+        "efficiencyRating": 58,
+        "complianceScore": 97,
+        "fraudRisk": [
+            "low",
+            "low",
+            "medium",
+            "low",
+            "high"
+        ],
+        "riskLevel": [
+            "standard",
+            "low",
+            "elevated",
+            "standard",
+            "high"
+        ],
+        "channel": [
+            "provider_edi",
+            "patient_portal",
+            "clearinghouse",
+            "paper_mail",
+            "phone"
+        ],
+        "deviceType": [
+            "desktop",
+            "desktop",
+            "desktop",
+            "desktop",
+            "mobile"
+        ],
+        "region": [
+            "Northeast",
+            "Southeast",
+            "Midwest",
+            "West Coast",
+            "Southwest"
+        ],
+        "customerSegmentValue": [
+            "in_network",
+            "out_of_network",
+            "pre_authorised",
+            "emergency",
+            "specialist_referral"
+        ],
+        "loyaltyTier": [
+            "PPO Premium",
+            "HMO Standard",
+            "EPO Basic",
+            "High Deductible",
+            "Medicare Advantage"
+        ],
+        "segment": [
+            "office_visit",
+            "hospital_stay",
+            "outpatient_surgery",
+            "diagnostic_imaging",
+            "emergency_room"
+        ],
+        "Productname": [
+            "Office Visit Claim (99213)",
+            "Inpatient Stay 3-Day",
+            "Outpatient Arthroscopy",
+            "MRI Brain With Contrast",
+            "ER Level 4 Evaluation"
+        ],
+        "ProductId": [
+            "HC-CL-001",
+            "HC-CL-002",
+            "HC-CL-003",
+            "HC-CL-004",
+            "HC-CL-005"
+        ],
+        "ProductType": [
+            "office_visit",
+            "inpatient",
+            "outpatient_surgery",
+            "diagnostic",
+            "emergency"
+        ],
+        "Price": [
+            185,
+            18000,
+            12000,
+            2500,
+            4500
+        ],
+        "cptCode": [
+            "99213",
+            "99223",
+            "29881",
+            "70553",
+            "99284"
+        ],
+        "icdCode": [
+            "J06.9",
+            "I50.9",
+            "M23.51",
+            "G43.909",
+            "R10.9"
+        ],
+        "allowedAmount": [
+            150,
+            15000,
+            9500,
+            2000,
+            3800
+        ],
+        "patientResponsibility": [
+            35,
+            3000,
+            2500,
+            500,
+            700
+        ],
+        "claimStatus": [
+            "paid",
+            "pending",
+            "denied_resubmit",
+            "in_review",
+            "paid_partial"
+        ],
+        "marketTrend": [
+            "prior_auth_reform",
+            "surprise_billing_protection",
+            "price_transparency",
+            "ai_adjudication",
+            "value_based_care"
+        ]
+    }
+}

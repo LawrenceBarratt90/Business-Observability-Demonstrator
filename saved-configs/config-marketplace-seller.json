@@ -1,0 +1,273 @@
+{
+    "companyName": "MarketplaceX",
+    "domain": "https://www.marketplacex.com",
+    "industryType": "Marketplace & Platform",
+    "journeyType": "Seller Onboarding",
+    "journeyDetail": "AI-Assisted Marketplace Seller Onboarding & Growth",
+    "journeyId": "journey_seller_onboarding_2c6442bc",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "SellerRegistration",
+            "serviceName": "SellerRegService",
+            "description": "AI streamlines seller registration: business verification, tax docs, banking, and category approval. Risk scoring determines verification depth. Fraudulent seller detection.",
+            "category": "Onboarding",
+            "estimatedDuration": 2,
+            "businessRationale": "Seller quality is the marketplace's moat. One fraudulent seller can generate thousands of customer complaints.",
+            "substeps": [
+                {
+                    "substepName": "BusinessVerification",
+                    "duration": 0.5
+                },
+                {
+                    "substepName": "DocumentCapture",
+                    "duration": 0.5
+                },
+                {
+                    "substepName": "RiskScoring",
+                    "duration": 1
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "CatalogueOnboarding",
+            "serviceName": "CatalogueService",
+            "description": "AI assists product listing: auto-categorisation, attribute extraction from images, SEO title/description generation, and competitive pricing guidance.",
+            "category": "Listing",
+            "estimatedDuration": 24,
+            "businessRationale": "Complete, accurate listings get 3x more views. AI-optimised listings reduce seller onboarding from weeks to hours.",
+            "substeps": [
+                {
+                    "substepName": "AutoCategorisation",
+                    "duration": 8
+                },
+                {
+                    "substepName": "ImageAnalysis",
+                    "duration": 8
+                },
+                {
+                    "substepName": "PricingGuidance",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "InventoryAndFulfilment",
+            "serviceName": "InventoryService",
+            "description": "AI forecasts demand per SKU, recommends stock levels, and suggests fulfilment strategy (self-ship vs marketplace fulfilment). Returns reduction through listing quality.",
+            "category": "Operations",
+            "estimatedDuration": 168,
+            "businessRationale": "Stockouts cost 4% of annual revenue. Marketplace fulfilment improves buy box win rate by 30% and conversion by 25%.",
+            "substeps": [
+                {
+                    "substepName": "DemandForecast",
+                    "duration": 56
+                },
+                {
+                    "substepName": "StockOptimization",
+                    "duration": 56
+                },
+                {
+                    "substepName": "FulfilmentStrategy",
+                    "duration": 56
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "PricingOptimization",
+            "serviceName": "PricingOptService",
+            "description": "AI monitors competitor pricing, recommends dynamic price adjustments, and predicts buy box win probability at each price point. Margin protection alerts.",
+            "category": "Revenue",
+            "estimatedDuration": 1,
+            "businessRationale": "Sellers with dynamic pricing win 40% more buy box rotations. Over-discounting destroys margins; AI finds the sweet spot.",
+            "substeps": [
+                {
+                    "substepName": "CompetitorMonitoring",
+                    "duration": 0.3
+                },
+                {
+                    "substepName": "DynamicPricing",
+                    "duration": 0.3
+                },
+                {
+                    "substepName": "BuyBoxPrediction",
+                    "duration": 0.4
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "PerformanceMonitoring",
+            "serviceName": "PerformanceService",
+            "description": "AI tracks seller KPIs: order defect rate, late shipment, cancellation rate, and customer complaints. Performance improvement recommendations. Penalty risk alerts.",
+            "category": "Quality",
+            "estimatedDuration": 24,
+            "businessRationale": "Sellers below performance thresholds lose visibility and can be suspended. Proactive monitoring prevents account health crises.",
+            "substeps": [
+                {
+                    "substepName": "KPITracking",
+                    "duration": 8
+                },
+                {
+                    "substepName": "QualityAlerts",
+                    "duration": 8
+                },
+                {
+                    "substepName": "ImprovementRecs",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "GrowthAndExpansion",
+            "serviceName": "GrowthService",
+            "description": "AI identifies category expansion opportunities, new marketplace launches, and advertising ROI optimisation. Cross-border selling guidance. Brand registry and A+ content.",
+            "category": "Growth",
+            "estimatedDuration": 720,
+            "businessRationale": "Top sellers grow 4x faster with AI guidance. Cross-border expansion can double addressable market overnight.",
+            "substeps": [
+                {
+                    "substepName": "CategoryExpansion",
+                    "duration": 240
+                },
+                {
+                    "substepName": "AdvertisingROI",
+                    "duration": 240
+                },
+                {
+                    "substepName": "CrossBorderGuidance",
+                    "duration": 240
+                }
+            ]
+        }
+    ],
+    "id": "578a25fb-100d-472b-ad2a-185e75f22873",
+    "name": "Marketplace & Platform - Seller Onboarding",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 0,
+        "annualRevenue": 15000000000,
+        "revenuePerCustomer": 120000,
+        "profitMargin": 12.0,
+        "customerLifetimeValue": 480000,
+        "lifetimeValue": 480000,
+        "acquisitionCost": 250,
+        "costPerAcquisition": 250,
+        "conversionProbability": 0.25,
+        "conversionRate": 25,
+        "engagementScore": 65,
+        "timeToConversion": 2880,
+        "sessionDuration": 1200,
+        "pageViews": 18,
+        "purchaseFrequency": 365,
+        "netPromoterScore": 32,
+        "satisfactionRating": 3.8,
+        "retentionProbability": 0.7,
+        "processingTime": 30,
+        "operationalCost": 150,
+        "efficiencyRating": 75,
+        "activeSellers": 2500000,
+        "sellerChurnRate": 15,
+        "channel": [
+            "seller_central",
+            "mobile_seller_app",
+            "API_integration",
+            "bulk_upload",
+            "partner_tools"
+        ],
+        "deviceType": [
+            "desktop",
+            "mobile",
+            "server",
+            "desktop",
+            "desktop"
+        ],
+        "region": [
+            "US",
+            "UK",
+            "Germany",
+            "India",
+            "China"
+        ],
+        "customerSegmentValue": [
+            "enterprise_brand",
+            "SMB_seller",
+            "artisan_maker",
+            "dropshipper",
+            "manufacturer"
+        ],
+        "loyaltyTier": [
+            "Platinum Seller",
+            "Gold Seller",
+            "Silver Seller",
+            "New Seller",
+            "Restricted"
+        ],
+        "segment": [
+            "electronics",
+            "fashion",
+            "home_living",
+            "grocery",
+            "handmade"
+        ],
+        "Productname": [
+            "Seller Analytics Dashboard",
+            "AI Listing Optimizer",
+            "Fulfilment Network Access",
+            "Advertising Suite",
+            "Brand Registry"
+        ],
+        "ProductId": [
+            "SLR-AD-001",
+            "SLR-LO-002",
+            "SLR-FN-003",
+            "SLR-AS-004",
+            "SLR-BR-005"
+        ],
+        "ProductType": [
+            "analytics",
+            "optimization",
+            "fulfilment",
+            "advertising",
+            "brand_protection"
+        ],
+        "Price": [
+            39,
+            99,
+            0,
+            500,
+            0
+        ],
+        "buyBoxWinRate": [
+            0.65,
+            0.45,
+            0.8,
+            0.55,
+            0.72
+        ],
+        "orderDefectRate": [
+            0.005,
+            0.012,
+            0.003,
+            0.018,
+            0.008
+        ],
+        "marketTrend": [
+            "seller_AI_assistants",
+            "unified_commerce",
+            "social_selling",
+            "sustainability_ratings",
+            "cross_border_expansion"
+        ]
+    }
+}

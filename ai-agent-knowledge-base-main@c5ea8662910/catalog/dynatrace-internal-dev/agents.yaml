@@ -1,0 +1,57 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dt-dev-kb-tester-agent
+  namespace: internal
+  title: Knowledge Base Tester Agent
+  description: >
+    Internal agent for end-to-end testing of the knowledge base — validates
+    skill loading, package assembly, and agent behavior in test environments.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace-internal-dev/agents/dt-dev-kb-tester-agent
+spec:
+  type: ai-agent
+  lifecycle: experimental
+  owner: capability/data-intelligence
+  system: default/ai-agent-knowledge-base
+  product-architect: user:default/hans.kohlreiter
+  product-manager: user:default/wolfgang.beer
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: skill-creator-agent
+  namespace: internal
+  title: Skill Creator Agent
+  description: >
+    Internal agent for creating new AI skills — guides through naming
+    conventions, structure requirements, frontmatter schema, and quality gates.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace-internal-dev/agents/skill-creator-agent
+spec:
+  type: ai-agent
+  lifecycle: experimental
+  owner: capability/data-intelligence
+  system: default/ai-agent-knowledge-base
+  product-architect: user:default/hans.kohlreiter
+  product-manager: user:default/wolfgang.beer
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: skill-tester-agent
+  namespace: internal
+  title: Skill Tester Agent
+  description: >
+    Internal agent for validating and testing AI skills against live Dynatrace
+    tenants — runs validation workflows and reports quality findings.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace-internal-dev/agents/skill-tester-agent
+spec:
+  type: ai-agent
+  lifecycle: experimental
+  owner: capability/data-intelligence
+  system: default/ai-agent-knowledge-base
+  product-architect: user:default/hans.kohlreiter
+  product-manager: user:default/wolfgang.beer

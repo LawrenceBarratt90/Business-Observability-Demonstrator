@@ -1,0 +1,273 @@
+{
+    "companyName": "ChargePoint Plus",
+    "domain": "https://www.chargepointplus.com",
+    "industryType": "Electric Vehicle & Charging",
+    "journeyType": "Charging Session",
+    "journeyDetail": "AI-Optimised EV Charging Session Management",
+    "journeyId": "journey_charging_session_71685adb",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "StationDiscovery",
+            "serviceName": "StationDiscoveryService",
+            "description": "AI recommends nearest available chargers considering current charge level, destination, charger speed, pricing, and real-time availability. Route integrated charging planned.",
+            "category": "Search",
+            "estimatedDuration": 0.5,
+            "businessRationale": "Range anxiety is the #1 barrier to EV adoption. Reducing charger search time from 10 minutes to 30 seconds improves driver experience dramatically.",
+            "substeps": [
+                {
+                    "substepName": "AvailabilityCheck",
+                    "duration": 0.2
+                },
+                {
+                    "substepName": "PriceComparison",
+                    "duration": 0.15
+                },
+                {
+                    "substepName": "RouteIntegration",
+                    "duration": 0.15
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "SessionInitiation",
+            "serviceName": "SessionStartService",
+            "description": "Plug-and-charge authentication via ISO 15118 or RFID/app. Payment method verified. Charging speed negotiated between vehicle and charger. Business event: session_started.",
+            "category": "Authentication",
+            "estimatedDuration": 0.25,
+            "businessRationale": "Frictionless start is critical \u2014 15% of public charging attempts fail at authentication. Plug-and-charge eliminates the #1 driver complaint.",
+            "substeps": [
+                {
+                    "substepName": "Authentication",
+                    "duration": 0.1
+                },
+                {
+                    "substepName": "PaymentVerification",
+                    "duration": 0.1
+                },
+                {
+                    "substepName": "SpeedNegotiation",
+                    "duration": 0.05
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "ChargingOptimization",
+            "serviceName": "ChargingOptService",
+            "description": "AI manages charging power curve to maximise battery health while minimising charge time. Temperature monitoring and power sharing across multiple vehicles at the site.",
+            "category": "Execution",
+            "estimatedDuration": 30,
+            "businessRationale": "Optimal charging extends battery life by 15-20% over aggressive fast charging. Power sharing prevents site breaker trips and ensures all vehicles charge.",
+            "substeps": [
+                {
+                    "substepName": "PowerCurveManagement",
+                    "duration": 10
+                },
+                {
+                    "substepName": "BatteryHealthProtection",
+                    "duration": 10
+                },
+                {
+                    "substepName": "PowerSharing",
+                    "duration": 10
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "GridBalancing",
+            "serviceName": "GridBalancingService",
+            "description": "AI balances EV charging demand against grid capacity, renewable energy availability, and time-of-use pricing. V2G bidirectional charging managed for grid services.",
+            "category": "Energy",
+            "estimatedDuration": 30,
+            "businessRationale": "Smart charging reduces energy costs by 20-40%. V2G grid services can generate $500-1500/year per vehicle in ancillary service payments.",
+            "substeps": [
+                {
+                    "substepName": "DemandResponse",
+                    "duration": 10
+                },
+                {
+                    "substepName": "RenewableMatching",
+                    "duration": 10
+                },
+                {
+                    "substepName": "V2GManagement",
+                    "duration": 10
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "SessionCompletion",
+            "serviceName": "SessionCompleteService",
+            "description": "Session ended automatically at target SoC or manually. Energy delivered, time, and cost calculated. Receipt issued. Charger released for next user.",
+            "category": "Billing",
+            "estimatedDuration": 0.5,
+            "businessRationale": "Accurate billing builds trust. Overstay management keeps chargers available \u2014 one blocked charger during peak costs $50-100/hour in lost revenue.",
+            "substeps": [
+                {
+                    "substepName": "EnergyCalculation",
+                    "duration": 0.2
+                },
+                {
+                    "substepName": "BillingGeneration",
+                    "duration": 0.2
+                },
+                {
+                    "substepName": "OverstayManagement",
+                    "duration": 0.1
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "FleetReporting",
+            "serviceName": "FleetReportService",
+            "description": "AI generates fleet charging reports: energy consumed, cost per mile, CO2 avoided, and charger utilisation. Anomaly detection flags faulty chargers and unusual consumption.",
+            "category": "Analytics",
+            "estimatedDuration": 24,
+            "businessRationale": "Fleet managers need cost-per-mile data to justify EV transition. Faulty charger detection prevents revenue loss of $200-500/day per broken unit.",
+            "substeps": [
+                {
+                    "substepName": "ConsumptionReport",
+                    "duration": 8
+                },
+                {
+                    "substepName": "CostAnalysis",
+                    "duration": 8
+                },
+                {
+                    "substepName": "HealthMonitoring",
+                    "duration": 8
+                }
+            ]
+        }
+    ],
+    "id": "d1ecd368-503a-4064-9df4-e2ee4272e801",
+    "name": "Electric Vehicle & Charging - Charging Session",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 12.5,
+        "transactionValue": 12.5,
+        "averageOrderValue": 18.0,
+        "contractValue": 0,
+        "annualRevenue": 45000000,
+        "revenuePerCustomer": 600,
+        "profitMargin": 15.0,
+        "customerLifetimeValue": 5400,
+        "lifetimeValue": 5400,
+        "acquisitionCost": 25,
+        "costPerAcquisition": 25,
+        "conversionProbability": 0.88,
+        "conversionRate": 88,
+        "engagementScore": 75,
+        "timeToConversion": 5,
+        "sessionDuration": 35,
+        "pageViews": 3,
+        "purchaseFrequency": 48,
+        "netPromoterScore": 38,
+        "satisfactionRating": 3.8,
+        "retentionProbability": 0.78,
+        "processingTime": 0.25,
+        "operationalCost": 3.5,
+        "efficiencyRating": 85,
+        "kWhDelivered": 42,
+        "chargerUtilisation": 28,
+        "channel": [
+            "mobile_app",
+            "plug_and_charge",
+            "RFID_card",
+            "contactless_pay",
+            "fleet_portal"
+        ],
+        "deviceType": [
+            "mobile",
+            "vehicle",
+            "card",
+            "terminal",
+            "desktop"
+        ],
+        "region": [
+            "California US",
+            "Norway",
+            "Netherlands",
+            "UK",
+            "China"
+        ],
+        "customerSegmentValue": [
+            "private_driver",
+            "fleet_operator",
+            "ride_hail_driver",
+            "destination_charging",
+            "workplace_charging"
+        ],
+        "loyaltyTier": [
+            "Unlimited",
+            "Plus",
+            "Standard",
+            "Pay-as-you-go",
+            "Guest"
+        ],
+        "segment": [
+            "DC_fast",
+            "Level2_AC",
+            "destination",
+            "workplace",
+            "residential"
+        ],
+        "Productname": [
+            "350kW Ultra-Fast Session",
+            "22kW Destination Charge",
+            "7kW Workplace Charge",
+            "V2G Bidirectional Session",
+            "Fleet Depot Charge"
+        ],
+        "ProductId": [
+            "EV-DC-001",
+            "EV-L2-002",
+            "EV-WP-003",
+            "EV-V2-004",
+            "EV-FL-005"
+        ],
+        "ProductType": [
+            "DC_fast",
+            "AC_Level2",
+            "workplace",
+            "V2G",
+            "fleet_depot"
+        ],
+        "Price": [
+            18.5,
+            8.0,
+            4.5,
+            -2.0,
+            12.0
+        ],
+        "chargingSpeed": [
+            350,
+            22,
+            7,
+            11,
+            150
+        ],
+        "sessionDurationMin": [
+            20,
+            240,
+            480,
+            300,
+            60
+        ],
+        "marketTrend": [
+            "ultra_fast_charging",
+            "V2G_grid_services",
+            "autonomous_charging",
+            "battery_swapping",
+            "solar_canopy_charging"
+        ]
+    }
+}

@@ -1,0 +1,160 @@
+# Asset Ownership & Metadata Registry
+# Registry scope: only channel=dynatrace and channel=dynatrace-internal-sfm
+# Auto-generated fields: channel, release-status, test-environment-url (channel defaults)
+# Manual fields: pm-owner, pa-owner, capability, jira-project
+# release-status values:
+#   - candidate: tracked, but not yet ready to ship broadly (can contain dtctl and other advanced feature)
+#   - planned: approved and intended for release (must only contain dql and no bash or js scripts)
+#   - released: already shipped (everything that is already public, must not have bash or js scripts)
+# See README.md for schema documentation
+#
+# Last generated: 2026-02-27T20:00:16
+schema_version: '1.0'
+assets:
+  skills:
+    dt-app-dashboard:
+      channel: dynatrace
+      pm-owner: holger.weissboeck@dynatrace.com
+      pa-owner: blai.samitier@dynatrace.com
+      capability: Platform Apps
+      jira-project: PAPA
+      release-status: candidate
+      test-environment-url: 'https://umsaywsjuo.dev.apps.dynatracelabs.com'
+    dt-app-frontend:
+      channel: dynatrace
+      pm-owner: bernat.trias@dynatrace.com
+      pa-owner: bernhard.lackner@dynatrace.com
+      capability: Digital Experience Monitoring
+      jira-project: DEM
+      release-status: planned
+      test-environment-url: 'https://umsaywsjuo.dev.apps.dynatracelabs.com'
+    dt-app-notebook:
+      channel: dynatrace
+      pm-owner: holger.weissboeck@dynatrace.com
+      pa-owner: blai.samitier@dynatrace.com
+      capability: Platform Apps
+      jira-project: PAPA
+      release-status: candidate
+      test-environment-url: 'https://umsaywsjuo.dev.apps.dynatracelabs.com'
+    dt-app-services:
+      channel: dynatrace
+      pm-owner: michael.kopp@dynatrace.com
+      pa-owner: andreas.gruber@dynatrace.com
+      capability: Application Observability
+      jira-project: APPOBS
+      release-status: planned
+      test-environment-url: 'https://umsaywsjuo.dev.apps.dynatracelabs.com'
+    dt-app-tracing:
+      channel: dynatrace
+      pm-owner: michael.kopp@dynatrace.com
+      pa-owner: andreas.gruber@dynatrace.com
+      capability: Application Observability
+      jira-project: APPOBS
+      release-status: planned
+      test-environment-url: 'https://umsaywsjuo.dev.apps.dynatracelabs.com'
+    dt-dql-essentials:
+      channel: dynatrace
+      pm-owner: peter.zahrer@dynatrace.com
+      pa-owner: herwig.moser@dynatrace.com
+      capability: Grail
+      jira-project: GRAIL
+      release-status: planned
+      test-environment-url: 'https://umsaywsjuo.dev.apps.dynatracelabs.com'
+    dt-infra-aws:
+      channel: dynatrace
+      pm-owner: lucas.hocker@dynatrace.com
+      pa-owner: isaac.vallhonrat@dynatrace.com
+      capability: Infrastructure Observability
+      jira-project: INFOBS
+      release-status: planned
+      test-environment-url: 'https://umsaywsjuo.dev.apps.dynatracelabs.com'
+    dt-infra-hosts:
+      channel: dynatrace
+      pm-owner: lucas.hocker@dynatrace.com
+      pa-owner: tobias.rauter@dynatrace.com
+      capability: Infrastructure Observability
+      jira-project: INFOBS
+      release-status: planned
+      test-environment-url: 'https://umsaywsjuo.dev.apps.dynatracelabs.com'
+    dt-infra-kubernetes:
+      channel: dynatrace
+      pm-owner: lucas.hocker@dynatrace.com
+      pa-owner: bernhard.aichinger@dynatrace.com
+      capability: Infrastructure Observability
+      jira-project: INFOBS
+      release-status: planned
+      test-environment-url: 'https://umsaywsjuo.dev.apps.dynatracelabs.com'
+    dt-log-analysis:
+      channel: dynatrace
+      pm-owner: michael.kopp@dynatrace.com
+      pa-owner: andreas.gruber@dynatrace.com
+      capability: Application Observability
+      jira-project: APPOBS
+      release-status: planned
+      test-environment-url: 'https://umsaywsjuo.dev.apps.dynatracelabs.com'
+    dt-problem-analysis:
+      channel: dynatrace
+      pm-owner: wolfgang.beer@dynatrace.com
+      pa-owner: hans.kohlreiter@dynatrace.com
+      capability: Data Intelligence
+      jira-project: DI
+      release-status: planned
+      test-environment-url: 'https://umsaywsjuo.dev.apps.dynatracelabs.com'
+    dt-proc-critical-incident:
+      channel: dynatrace
+      pm-owner: andreas.deuschl@dynatrace.com
+      pa-owner: thomas.fischl@dynatrace.com
+      capability: Site Reliability Engineering
+      jira-project: SRE
+      release-status: candidate
+      test-environment-url: 'https://umsaywsjuo.dev.apps.dynatracelabs.com'
+    dt-app-health:
+      channel: dynatrace-internal-sfm
+      pm-owner: holger.weissboeck@dynatrace.com
+      pa-owner: piotr.lewandowski@dynatrace.com
+      capability: Platform Apps
+      jira-project: PAPA
+      release-status: candidate
+      test-environment-url: 'https://gmg80500.dev.apps.dynatracelabs.com/'
+    dt-prod-self-monitoring:
+      channel: dynatrace-internal-sfm
+      pm-owner: andreas.deuschl@dynatrace.com
+      pa-owner: thomas.fischl@dynatrace.com
+      capability: Site Reliability Engineering
+      jira-project: SRE
+      release-status: candidate
+      test-environment-url: 'https://dre63214.apps.dynatrace.com/'
+    dt-prod-tenant-analysis:
+      channel: dynatrace-internal-sfm
+      pm-owner: andreas.deuschl@dynatrace.com
+      pa-owner: thomas.fischl@dynatrace.com
+      capability: Site Reliability Engineering
+      jira-project: SRE
+      release-status: candidate
+      test-environment-url: 'https://dre63214.apps.dynatrace.com/'
+  agents:
+    dt-app-dashboard-agent:
+      channel: dynatrace
+      pm-owner: holger.weissboeck@dynatrace.com
+      pa-owner: blai.samitier@dynatrace.com
+      capability: Platform Apps
+      jira-project: PAPA
+      release-status: candidate
+      test-environment-url: 'https://umsaywsjuo.dev.apps.dynatracelabs.com'
+    dt-dt-main-agent:
+      channel: dynatrace
+      pm-owner: wolfgang.beer@dynatrace.com
+      pa-owner: hans.kohlreiter@dynatrace.com
+      capability: Data Intelligence
+      jira-project: DI
+      release-status: planned
+      test-environment-url: 'https://umsaywsjuo.dev.apps.dynatracelabs.com'
+    dt-sfm-critical-incident-agent:
+      channel: dynatrace-internal-sfm
+      pm-owner: andreas.deuschl@dynatrace.com
+      pa-owner: thomas.fischl@dynatrace.com
+      capability: Site Reliability Engineering
+      jira-project: SRE
+      release-status: candidate
+      test-environment-url: 'https://dre63214.apps.dynatrace.com/'
+  commands: {}

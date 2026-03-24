@@ -1,0 +1,10 @@
+# Never commit credentials or secrets
+auth.json
+*.key
+*.pem
+*secret*
+*credential*
+
+# Build artifacts
+node_modules/
+*.log

@@ -1,0 +1,257 @@
+{
+    "companyName": "Waste",
+    "domain": "https://www.waste-demo.com",
+    "industryType": "Waste Management & Recycling",
+    "journeyType": "Collection Optimization",
+    "journeyDetail": "Collection Optimization",
+    "journeyId": "journey_waste_collection_optimization",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "BinMonitoring",
+            "serviceName": "BinMonitoringService",
+            "description": "IoT sensors monitor fill levels, temperature, and contamination in 50,000+ bins across the city. AI aggregates data every 15 minutes and predicts fill rates based on historical patterns, events, and weather.",
+            "category": "Monitoring",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 1,
+            "businessRationale": "Fill-level monitoring eliminates unnecessary collections of partially empty bins, reducing truck deployments by 30%. Each avoided collection saves \u00a312 in fuel and labour.",
+            "substeps": [
+                {
+                    "substepName": "SensorDataIngestion",
+                    "duration": 0
+                },
+                {
+                    "substepName": "FillPrediction",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "RouteOptimization",
+            "serviceName": "RouteOptimizationService",
+            "description": "AI calculates optimal collection routes daily: considers fill levels, traffic patterns, road restrictions, vehicle capacity, driver hours, and priority areas. Dynamic rerouting when bins fill unexpectedly.",
+            "category": "Planning",
+            "estimatedDuration": 5,
+            "businessRationale": "AI route optimization reduces collection mileage by 25% and fuel consumption by 20%. Optimized routes complete the same work in 30% fewer vehicle-hours.",
+            "substeps": [
+                {
+                    "substepName": "DailyRoutePlanning",
+                    "duration": 3
+                },
+                {
+                    "substepName": "DynamicAdjustment",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "CollectionExecution",
+            "serviceName": "CollectionExecutionService",
+            "description": "AI guides drivers through optimized routes with real-time turn-by-turn navigation. Monitors collection progress, logs bin weights, detects contamination, and reports missed collections automatically.",
+            "category": "Operations",
+            "estimatedDuration": 480,
+            "businessRationale": "Guided collection ensures 99.5% completion rate vs 97% manual. Automatic contamination flagging reduces processing costs by identifying recyclable stream contamination at source.",
+            "substeps": [
+                {
+                    "substepName": "RouteExecution",
+                    "duration": 420
+                },
+                {
+                    "substepName": "DataLogging",
+                    "duration": 60
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "ContaminationDetection",
+            "serviceName": "ContaminationDetectionService",
+            "description": "AI vision systems on collection vehicles identify contamination in recycling bins: wrong materials, hazardous waste, and non-recyclables. Generates educational feedback for households and flags repeat offenders.",
+            "category": "QualityControl",
+            "estimatedDuration": 2,
+            "businessRationale": "Contamination detection improves recycling stream purity from 75% to 92%. Clean recycling streams command 40% higher material value and reduce landfill diversion costs.",
+            "substeps": [
+                {
+                    "substepName": "VisionAnalysis",
+                    "duration": 1
+                },
+                {
+                    "substepName": "FeedbackGeneration",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "FleetManagement",
+            "serviceName": "FleetManagementService",
+            "description": "AI manages collection vehicle fleet: predictive maintenance scheduling, fuel efficiency monitoring, driver behaviour analysis, and fleet replacement planning. Tracks vehicle utilization and recommends fleet right-sizing.",
+            "category": "FleetOps",
+            "estimatedDuration": 1440,
+            "businessRationale": "Predictive fleet maintenance reduces breakdowns by 45% and extends vehicle life by 2 years. Each avoided breakdown prevents service disruption affecting 5,000+ households.",
+            "substeps": [
+                {
+                    "substepName": "MaintenancePrediction",
+                    "duration": 720
+                },
+                {
+                    "substepName": "UtilizationTracking",
+                    "duration": 720
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "CollectionReporting",
+            "serviceName": "CollectionReportingService",
+            "description": "AI generates collection analytics: tonnage by stream, recycling rates, contamination trends, route efficiency, cost per household, and carbon emissions. Powers regulatory compliance and council performance dashboards.",
+            "category": "Reporting",
+            "estimatedDuration": 60,
+            "businessRationale": "Transparent reporting supports regulatory compliance and public accountability. Data-driven recycling campaigns increase participation by 15%, diverting thousands of tonnes from landfill.",
+            "substeps": [
+                {
+                    "substepName": "OperationalMetrics",
+                    "duration": 30
+                },
+                {
+                    "substepName": "RegulatoryReporting",
+                    "duration": 30
+                }
+            ]
+        }
+    ],
+    "id": "a2008a0f-e935-4ecc-b09f-93d025e4a53d",
+    "name": "Waste Management & Recycling - Collection Optimization",
+    "timestamp": "2026-03-18T21:35:20.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 8500000,
+        "annualRevenue": 0,
+        "revenuePerCustomer": 0,
+        "profitMargin": 12,
+        "customerLifetimeValue": 0,
+        "lifetimeValue": 0,
+        "acquisitionCost": 0,
+        "costPerAcquisition": 0,
+        "conversionProbability": 0.99,
+        "conversionRate": 99,
+        "engagementScore": 45,
+        "timeToConversion": 0,
+        "sessionDuration": 0,
+        "pageViews": 0,
+        "purchaseFrequency": 365,
+        "netPromoterScore": 32,
+        "satisfactionRating": 3.5,
+        "retentionProbability": 0.95,
+        "processingTime": 480,
+        "operationalCost": 12,
+        "efficiencyRating": 82,
+        "discountApplied": 0,
+        "taxAmount": 0,
+        "shippingCost": 0,
+        "channel": [
+            "iot_sensor",
+            "driver_app",
+            "citizen_app",
+            "call_centre",
+            "online_portal"
+        ],
+        "deviceType": [
+            "iot_sensor",
+            "mobile",
+            "mobile",
+            "desktop",
+            "tablet"
+        ],
+        "region": [
+            "City Centre",
+            "Residential North",
+            "Residential South",
+            "Commercial East",
+            "Industrial West"
+        ],
+        "customerSegmentValue": [
+            "residential",
+            "commercial",
+            "industrial",
+            "hospitality",
+            "public_building"
+        ],
+        "loyaltyTier": [
+            "n/a",
+            "n/a",
+            "n/a",
+            "n/a",
+            "n/a"
+        ],
+        "segment": [
+            "general_waste",
+            "recycling",
+            "green_waste",
+            "food_waste",
+            "bulky_waste"
+        ],
+        "Productname": [
+            "GeneralWaste_Collection",
+            "Recycling_Collection",
+            "GreenWaste_Collection",
+            "FoodWaste_Collection",
+            "BulkyItem_Collection"
+        ],
+        "ProductId": [
+            "WST-GEN-001",
+            "WST-REC-002",
+            "WST-GRN-003",
+            "WST-FOD-004",
+            "WST-BLK-005"
+        ],
+        "ProductType": [
+            "scheduled_collection",
+            "scheduled_collection",
+            "scheduled_collection",
+            "scheduled_collection",
+            "on_demand"
+        ],
+        "Price": [
+            0,
+            0,
+            0,
+            0,
+            35
+        ],
+        "binFillPercent": [
+            85,
+            72,
+            45,
+            90,
+            0
+        ],
+        "recyclingRate": [
+            42,
+            0,
+            0,
+            0,
+            0
+        ],
+        "tonnagePerWeek": [
+            1200,
+            450,
+            180,
+            280,
+            50
+        ],
+        "marketTrend": [
+            "smart_bins",
+            "circular_economy",
+            "waste_to_energy",
+            "ai_sorting",
+            "zero_waste_city"
+        ]
+    }
+}

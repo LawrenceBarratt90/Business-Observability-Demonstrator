@@ -1,0 +1,271 @@
+{
+    "companyName": "Government Services",
+    "domain": "https://www.gov-services.gov",
+    "industryType": "Government & Public Sector",
+    "source": "sector-demo",
+    "timestamp": "2026-01-09T15:35:00.000Z",
+    "journeyType": "Benefits Claim",
+    "journeyDetail": "Benefits Claim Journey",
+    "journeyId": "journey_gov_benefits_2026",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "id": "a1b2c3d4-7777-4aaa-b777-000000000003",
+    "name": "Government - Benefits Claim",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "BenefitsScreening",
+            "serviceName": "BenefitsScreeningService",
+            "description": "Citizen answers screening questionnaire to identify all benefits they may be eligible for: unemployment, disability, housing assistance, food assistance, childcare subsidy. Single portal screens across multiple programmes simultaneously.",
+            "category": "Screening",
+            "estimatedDuration": 15,
+            "businessRationale": "Integrated screening identifies 2-3 additional programmes per claimant that would otherwise be missed. $60B in benefits go unclaimed annually. Each programme connection generates $2,000-8,000 annually per eligible citizen.",
+            "substeps": [
+                {
+                    "substepName": "MultiProgrammeQuestionnaire",
+                    "duration": 10
+                },
+                {
+                    "substepName": "EligibilityResultsAndGuidance",
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "ClaimSubmission",
+            "serviceName": "ClaimSubmissionService",
+            "description": "Citizen submits claim for selected benefit programme. Personal circumstances documented: employment history, income, household composition, medical condition (if applicable). Supporting documents uploaded with OCR-assisted data extraction.",
+            "category": "Submission",
+            "estimatedDuration": 30,
+            "businessRationale": "OCR data extraction reduces manual entry by 80% and processing time by 3 days. Digital submission enables 24/7 access \u2014 40% of claims are filed outside business hours. Each claim represents a citizen in need.",
+            "substeps": [
+                {
+                    "substepName": "CircumstanceDocumentation",
+                    "duration": 20
+                },
+                {
+                    "substepName": "DocumentUploadWithOCR",
+                    "duration": 10
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "EligibilityDetermination",
+            "serviceName": "EligibilityDeterminationService",
+            "description": "Caseworker reviews claim against programme rules. Income thresholds, asset tests, and categorical eligibility verified. Inter-agency data matching confirms reported information. Complex cases escalated for supervisory review.",
+            "category": "Determination",
+            "estimatedDuration": 2880,
+            "businessRationale": "Automated rule checking handles 60% of determinations without caseworker intervention. Remaining 40% require human judgement. Average determination cost is $150 per claim. Accuracy prevents both fraud and wrongful denial.",
+            "substeps": [
+                {
+                    "substepName": "RuleCheckAndDataMatching",
+                    "duration": 1440
+                },
+                {
+                    "substepName": "CaseworkerReviewAndDecision",
+                    "duration": 1440
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "DecisionNotification",
+            "serviceName": "DecisionNotificationService",
+            "description": "Claimant notified of decision: approved (with benefit amount and duration), denied (with reason and appeal rights), or pending (additional information needed). Approved claims include start date and payment schedule. Multi-channel notification: portal, email, letter.",
+            "category": "Notification",
+            "estimatedDuration": 10,
+            "businessRationale": "Timely notification is a legal requirement \u2014 most programmes mandate decision within 30-45 days. Clear denial reasons reduce appeals by 30%. Multi-channel ensures vulnerable populations receive notification.",
+            "substeps": [
+                {
+                    "substepName": "DecisionLetterGeneration",
+                    "duration": 5
+                },
+                {
+                    "substepName": "MultiChannelDelivery",
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "BenefitPaymentSetup",
+            "serviceName": "BenefitPaymentSetupService",
+            "description": "Approved claimant sets up payment method: direct deposit, prepaid debit card, or cheque. Payment frequency configured per programme rules (weekly, bi-weekly, monthly). Ongoing reporting requirements explained \u2014 income changes, employment status, household changes.",
+            "category": "Setup",
+            "estimatedDuration": 10,
+            "businessRationale": "Direct deposit reduces payment processing cost from $2.50 to $0.10. Prepaid cards serve unbanked populations (15% of claimants). Clear reporting requirements prevent overpayments that cost agencies $20B annually to recover.",
+            "substeps": [
+                {
+                    "substepName": "PaymentMethodAndFrequency",
+                    "duration": 5
+                },
+                {
+                    "substepName": "OngoingReportingRequirements",
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "OngoingComplianceReview",
+            "serviceName": "OngoingComplianceReviewService",
+            "description": "Periodic eligibility reviews conducted per programme schedule. Claimant submits updated income, employment, and household information. Data matching with employer records, tax filings, and other agencies validates continued eligibility. Benefits adjusted or terminated as circumstances change.",
+            "category": "Compliance",
+            "estimatedDuration": 20,
+            "businessRationale": "Regular reviews maintain programme integrity \u2014 identifying 10-15% of cases requiring adjustment. Automated data matching reduces manual review workload by 50%. Timely adjustments prevent large overpayment recoveries that cause hardship.",
+            "substeps": [
+                {
+                    "substepName": "PeriodicReviewAndDataMatch",
+                    "duration": 15
+                },
+                {
+                    "substepName": "BenefitAdjustmentOrContinuation",
+                    "duration": 5
+                }
+            ]
+        }
+    ],
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 0,
+        "annualRevenue": 0,
+        "revenuePerCustomer": 0,
+        "profitMargin": -100.0,
+        "customerLifetimeValue": 0,
+        "lifetimeValue": 0,
+        "acquisitionCost": 0,
+        "conversionProbability": 0.65,
+        "conversionRate": 65,
+        "engagementScore": 72,
+        "timeToConversion": 28800,
+        "netPromoterScore": 18,
+        "satisfactionRating": 2.9,
+        "retentionProbability": 0.85,
+        "processingTime": 2592000,
+        "operationalCost": 250,
+        "efficiencyRating": 42,
+        "complianceScore": 97,
+        "channel": [
+            "gov_uk_portal",
+            "jobcentre_plus",
+            "phone",
+            "citizens_advice",
+            "in_person"
+        ],
+        "deviceType": [
+            "mobile",
+            "desktop",
+            "mobile",
+            "desktop",
+            "desktop"
+        ],
+        "region": [
+            "England",
+            "Scotland",
+            "Wales",
+            "Northern Ireland",
+            "London"
+        ],
+        "customerSegmentValue": [
+            "unemployed",
+            "low_income_working",
+            "disabled",
+            "carer",
+            "pensioner"
+        ],
+        "loyaltyTier": [
+            "Standard",
+            "Vulnerable Priority",
+            "Disability",
+            "Carer Support",
+            "Pension Credit"
+        ],
+        "segment": [
+            "universal_credit",
+            "pip_disability",
+            "carers_allowance",
+            "state_pension",
+            "child_benefit"
+        ],
+        "Productname": [
+            "Universal Credit Application",
+            "PIP Disability Assessment",
+            "Carer's Allowance Claim",
+            "State Pension Application",
+            "Child Benefit Registration"
+        ],
+        "ProductId": [
+            "GOV-BN-201",
+            "GOV-BN-202",
+            "GOV-BN-203",
+            "GOV-BN-204",
+            "GOV-BN-205"
+        ],
+        "ProductType": [
+            "universal_credit",
+            "pip",
+            "carers_allowance",
+            "state_pension",
+            "child_benefit"
+        ],
+        "Price": [
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "weeklyEntitlement": [
+            335,
+            172,
+            81,
+            221,
+            26
+        ],
+        "assessmentRequired": [
+            true,
+            true,
+            false,
+            false,
+            false
+        ],
+        "waitingDays": [
+            5,
+            0,
+            0,
+            0,
+            0
+        ],
+        "backdatingWeeks": [
+            0,
+            0,
+            4,
+            0,
+            12
+        ],
+        "mandatoryReconsideration": [
+            false,
+            true,
+            false,
+            false,
+            false
+        ],
+        "vulnerabilityFlag": [
+            false,
+            true,
+            true,
+            false,
+            false
+        ],
+        "marketTrend": [
+            "digital_welfare",
+            "managed_migration",
+            "health_assessment_reform",
+            "cost_of_living_response",
+            "fraud_error_analytics"
+        ]
+    }
+}

@@ -1,0 +1,68 @@
+{
+  "name": "AI Agent Knowledge Base",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".",
+    "args": {
+      "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}",
+      "MISE_GITHUB_TOKEN": "${localEnv:MISE_GITHUB_TOKEN}"
+    }
+  },
+  
+  // Configure container settings
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "files.eol": "\n",
+        "files.trimTrailingWhitespace": true,
+        "files.insertFinalNewline": true,
+        "typescript.tsdk": "node_modules/typescript/lib",
+        "typescript.enablePromptUseWorkspaceTsdk": true
+      },
+      
+      "extensions": [
+        // Core development
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        
+        // Markdown support
+        "yzhang.markdown-all-in-one",
+        "DavidAnson.vscode-markdownlint",
+        
+        // Git integration
+        "eamodio.gitlens",
+        
+        // JSON/YAML support
+        "redhat.vscode-yaml",
+        
+        // TypeScript
+        "ms-vscode.vscode-typescript-next"
+      ]
+    }
+  },
+  
+  // Mount the workspace
+  "workspaceFolder": "/workspace",
+  
+  // Post-create command to set up the environment
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  
+  // Port forwarding for MCP server (if needed)
+  "forwardPorts": [3000],
+  
+  // Run as non-root user (vscode user is created in Dockerfile)
+  "remoteUser": "vscode",
+  
+  // Environment variables
+  "remoteEnv": {
+    "NODE_ENV": "development",
+    "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}",
+    "MISE_GITHUB_TOKEN": "${localEnv:MISE_GITHUB_TOKEN}"
+  },
+  
+  // Keep container running
+  "shutdownAction": "stopContainer"
+}

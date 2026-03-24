@@ -7,7 +7,42 @@
 
 import http from 'http';
 import crypto from 'crypto';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { getChildServiceMeta } from './service-manager.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const SAVED_CONFIGS_DIR = path.join(__dirname, '..', 'saved-configs');
+
+// Cache for loaded saved configs (keyed by companyName)
+const configCache = new Map();
+
+/**
+ * Load the saved config for a company/journey from saved-configs directory.
+ * Returns the full config object or null if not found.
+ */
+function loadSavedConfig(companyName, journeyType) {
+  const cacheKey = `${companyName}::${journeyType}`;
+  if (configCache.has(cacheKey)) return configCache.get(cacheKey);
+
+  try {
+    const files = fs.readdirSync(SAVED_CONFIGS_DIR).filter(f => f.endsWith('.json'));
+    for (const file of files) {
+      const filepath = path.join(SAVED_CONFIGS_DIR, file);
+      const config = JSON.parse(fs.readFileSync(filepath, 'utf8'));
+      if (config.companyName === companyName && config.journeyType === journeyType) {
+        configCache.set(cacheKey, config);
+        return config;
+      }
+    }
+  } catch (e) {
+    // Ignore read errors
+  }
+  configCache.set(cacheKey, null);
+  return null;
+}
 
 const APP_PORT = process.env.PORT || 8080;
 
@@ -39,23 +74,26 @@ function buildJourneyFromMeta(companyName, services) {
 
   // Get first service's metadata for company-level info
   const firstMeta = meta[0][1];
+  const journeyType = firstMeta.journeyType || 'customer_journey';
 
-  // Build steps array from running services (ordered by service name)
-  const steps = meta.map(([serviceName, svcMeta], idx) => {
-    // Extract step name from service name (remove "Service-Company" suffix)
-    const baseName = serviceName.split('-')[0]; // e.g. "DigitalOnboardingService"
-    const stepName = baseName.replace(/Service$/, '');
+  // Try to load saved config for bespoke fields and step definitions
+  const savedConfig = loadSavedConfig(companyName, journeyType);
 
-    return {
-      stepIndex: idx + 1,
-      stepName,
-      serviceName: baseName,
-      description: `${stepName} step for ${companyName}`,
-      category: idx === 0 ? 'Acquisition' : idx === meta.length - 1 ? 'Revenue' : 'Fulfilment',
-      estimatedDuration: Math.floor(Math.random() * 5) + 2,
-      substeps: [
-        { substepName: `${stepName}Step1`, duration: 2 },
-        { substepName: `${stepName}Step2`, duration: 2 }
+  let steps;
+  let additionalFields = null;
+
+  if (savedConfig && savedConfig.steps && savedConfig.steps.length > 0) {
+    // Use steps from saved config (includes all steps, proper ordering, descriptions)
+    steps = savedConfig.steps.map((step, idx) => ({
+      stepIndex: step.stepIndex || idx + 1,
+      stepName: step.stepName,
+      serviceName: step.serviceName,
+      description: step.description || `${step.stepName} step for ${companyName}`,
+      category: step.category || (idx === 0 ? 'Acquisition' : idx === savedConfig.steps.length - 1 ? 'Revenue' : 'Fulfilment'),
+      estimatedDuration: step.estimatedDuration || Math.floor(Math.random() * 5) + 2,
+      substeps: step.substeps || [
+        { substepName: `${step.stepName}Step1`, duration: 2 },
+        { substepName: `${step.stepName}Step2`, duration: 2 }
       ],
       hasError: false,
       errorSimulationConfig: {
@@ -65,15 +103,50 @@ function buildJourneyFromMeta(companyName, services) {
         likelihood: 0.1,
         shouldSimulateError: false
       }
-    };
-  });
+    }));
+
+    // Load bespoke additionalFields from saved config
+    if (savedConfig.additionalFields && Object.keys(savedConfig.additionalFields).length > 0) {
+      additionalFields = savedConfig.additionalFields;
+    }
+
+    console.log(`⚡ [Auto-Load] Loaded saved config for ${companyName}/${journeyType}: ${steps.length} steps, ${additionalFields ? Object.keys(additionalFields).length : 0} bespoke fields`);
+  } else {
+    // Fallback: build from running service metadata
+    steps = meta.map(([serviceName, svcMeta], idx) => {
+      const baseName = serviceName.split('-')[0];
+      const stepName = baseName.replace(/Service$/, '');
+
+      return {
+        stepIndex: idx + 1,
+        stepName,
+        serviceName: baseName,
+        description: `${stepName} step for ${companyName}`,
+        category: idx === 0 ? 'Acquisition' : idx === meta.length - 1 ? 'Revenue' : 'Fulfilment',
+        estimatedDuration: Math.floor(Math.random() * 5) + 2,
+        substeps: [
+          { substepName: `${stepName}Step1`, duration: 2 },
+          { substepName: `${stepName}Step2`, duration: 2 }
+        ],
+        hasError: false,
+        errorSimulationConfig: {
+          enabled: true,
+          errorType: 'generic_error',
+          httpStatus: 500,
+          likelihood: 0.1,
+          shouldSimulateError: false
+        }
+      };
+    });
+  }
 
   return {
     companyName,
     domain: firstMeta.domain || `https://www.${companyName.toLowerCase().replace(/[^a-z]/g, '')}.com`,
     industryType: firstMeta.industryType || companyName,
-    journeyType: firstMeta.journeyType || 'customer_journey',
-    steps
+    journeyType,
+    steps,
+    additionalFields
   };
 }
 
@@ -91,7 +164,8 @@ function fireJourney(journey, companyName, iterationCount) {
       ...journey,
       journeyId,
       correlationId,
-      journeyStartTime: new Date().toISOString()
+      journeyStartTime: new Date().toISOString(),
+      additionalFields: journey.additionalFields || null
     },
     customerProfile: {
       userId: `user_${companyName.toLowerCase().replace(/\s+/g, '_')}_${iterationCount}`,

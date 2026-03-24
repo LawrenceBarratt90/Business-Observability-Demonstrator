@@ -1,0 +1,267 @@
+{
+    "companyName": "Education",
+    "domain": "https://www.education-hub.com",
+    "industryType": "Education & Learning",
+    "source": "sector-demo",
+    "timestamp": "2026-01-09T15:20:00.000Z",
+    "journeyType": "Student Enrolment",
+    "journeyDetail": "Student Enrolment Journey",
+    "journeyId": "journey_edu_enrolment_2026",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "id": "a1b2c3d4-4444-4aaa-b444-000000000001",
+    "name": "Education - Student Enrolment",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "ProgrammeDiscovery",
+            "serviceName": "ProgrammeDiscoveryService",
+            "description": "Prospective student explores available programmes, entry requirements, tuition fees, and scholarship opportunities. Course comparison tools and virtual campus tours guide decision-making.",
+            "category": "Discovery",
+            "estimatedDuration": 30,
+            "businessRationale": "Initial engagement quality determines conversion from enquiry to application. Institutions converting >15% of visitors achieve optimal enrolment funnels.",
+            "substeps": [
+                {
+                    "substepName": "CourseSearchAndFilter",
+                    "duration": 15
+                },
+                {
+                    "substepName": "RequirementsAndFeesReview",
+                    "duration": 15
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "ApplicationSubmission",
+            "serviceName": "ApplicationSubmissionService",
+            "description": "Student completes online application including personal details, academic history, personal statement, and reference contacts. Document uploads for transcripts, certificates, and identification verified against institution requirements.",
+            "category": "Application",
+            "estimatedDuration": 45,
+            "businessRationale": "Application completion rate averages 62%. Simplified forms and progress-saving reduce abandonment. Each completed application represents $50-200 in future processing cost.",
+            "substeps": [
+                {
+                    "substepName": "PersonalAndAcademicDetails",
+                    "duration": 25
+                },
+                {
+                    "substepName": "DocumentUploadAndVerification",
+                    "duration": 20
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "AdmissionsReview",
+            "serviceName": "AdmissionsReviewService",
+            "description": "Admissions committee evaluates application against programme criteria. Academic transcripts scored, references checked, and personal statements assessed. Conditional or unconditional offers generated.",
+            "category": "Review",
+            "estimatedDuration": 1440,
+            "businessRationale": "Review turnaround time directly impacts yield rate. Institutions responding within 2 weeks see 30% higher acceptance rates than those taking 4+ weeks.",
+            "substeps": [
+                {
+                    "substepName": "AcademicAndReferenceScoring",
+                    "duration": 720
+                },
+                {
+                    "substepName": "OfferDecisionAndNotification",
+                    "duration": 720
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "OfferAcceptance",
+            "serviceName": "OfferAcceptanceService",
+            "description": "Student reviews offer conditions, accepts or declines place, and pays deposit to secure enrolment. Scholarship and financial aid decisions communicated alongside offer. Accommodation allocation initiated for residential students.",
+            "category": "Acceptance",
+            "estimatedDuration": 60,
+            "businessRationale": "Deposit conversion is the critical yield metric. Average yield rates are 30-45% for competitive institutions. Early deposit deadlines and clear communication improve conversion.",
+            "substeps": [
+                {
+                    "substepName": "OfferReviewAndAcceptance",
+                    "duration": 20
+                },
+                {
+                    "substepName": "DepositPaymentAndConfirmation",
+                    "duration": 40
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "EnrolmentRegistration",
+            "serviceName": "EnrolmentRegistrationService",
+            "description": "Accepted student completes formal enrolment: selects modules/courses, registers for timetable, receives student ID, and activates IT credentials. Campus induction and orientation scheduled.",
+            "category": "Registration",
+            "estimatedDuration": 30,
+            "businessRationale": "Smooth registration reduces 'summer melt' \u2014 students who accept but never register. Self-service registration reduces admin cost from $150 to $20 per student.",
+            "substeps": [
+                {
+                    "substepName": "ModuleSelectionAndTimetable",
+                    "duration": 15
+                },
+                {
+                    "substepName": "CredentialActivationAndInduction",
+                    "duration": 15
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "TuitionPaymentSetup",
+            "serviceName": "TuitionPaymentSetupService",
+            "description": "Student configures tuition payment plan: full upfront, instalment schedule, or student loan disbursement linkage. Bursary and scholarship credits applied. Payment gateway processes initial transaction.",
+            "category": "Financial",
+            "estimatedDuration": 20,
+            "businessRationale": "Tuition revenue is the institution's primary income stream. Payment plan flexibility reduces default rates from 8% to 2%. Average tuition recovery per student is $15K-35K annually.",
+            "substeps": [
+                {
+                    "substepName": "PaymentPlanSelection",
+                    "duration": 10
+                },
+                {
+                    "substepName": "InitialPaymentProcessing",
+                    "duration": 10
+                }
+            ]
+        }
+    ],
+    "additionalFields": {
+        "orderTotal": 9250,
+        "transactionValue": 9250,
+        "averageOrderValue": 9250,
+        "contractValue": 27750,
+        "annualRevenue": 9250,
+        "revenuePerCustomer": 27750,
+        "profitMargin": 15.0,
+        "customerLifetimeValue": 45000,
+        "lifetimeValue": 45000,
+        "acquisitionCost": 2500,
+        "costPerAcquisition": 2500,
+        "conversionProbability": 0.35,
+        "conversionRate": 35,
+        "engagementScore": 78,
+        "timeToConversion": 86400,
+        "sessionDuration": 1800,
+        "pageViews": 42,
+        "netPromoterScore": 45,
+        "satisfactionRating": 4.1,
+        "retentionProbability": 0.85,
+        "processingTime": 604800,
+        "operationalCost": 450,
+        "efficiencyRating": 62,
+        "complianceScore": 95,
+        "channel": [
+            "ucas_portal",
+            "direct_application",
+            "clearing",
+            "international_agent",
+            "open_day"
+        ],
+        "deviceType": [
+            "desktop",
+            "mobile",
+            "mobile",
+            "desktop",
+            "tablet"
+        ],
+        "region": [
+            "England",
+            "Scotland",
+            "Wales",
+            "Northern Ireland",
+            "International"
+        ],
+        "customerSegmentValue": [
+            "home_undergraduate",
+            "international_student",
+            "mature_learner",
+            "postgraduate",
+            "clearing_student"
+        ],
+        "loyaltyTier": [
+            "Standard",
+            "International Premium",
+            "Returning Learner",
+            "Postgrad Plus",
+            "Clearing Fast Track"
+        ],
+        "segment": [
+            "first_year_ug",
+            "postgraduate_taught",
+            "phd_research",
+            "foundation_year",
+            "exchange_student"
+        ],
+        "Productname": [
+            "BSc Computer Science",
+            "MSc Business Analytics",
+            "PhD Engineering Research",
+            "Foundation Year Science",
+            "Semester Abroad Exchange"
+        ],
+        "ProductId": [
+            "EDU-UG-001",
+            "EDU-PG-002",
+            "EDU-PHD-003",
+            "EDU-FY-004",
+            "EDU-EX-005"
+        ],
+        "ProductType": [
+            "undergraduate",
+            "postgraduate",
+            "doctoral",
+            "foundation",
+            "exchange"
+        ],
+        "Price": [
+            9250,
+            12500,
+            4500,
+            9250,
+            0
+        ],
+        "tuitionFee": [
+            9250,
+            12500,
+            4500,
+            9250,
+            0
+        ],
+        "accommodationRequired": [
+            true,
+            true,
+            false,
+            true,
+            true
+        ],
+        "scholarshipApplied": [
+            false,
+            true,
+            true,
+            false,
+            false
+        ],
+        "entryQualification": [
+            "A_levels_ABB",
+            "2_1_degree",
+            "masters_distinction",
+            "BTEC_DMM",
+            "partner_university"
+        ],
+        "studentLoanApplied": [
+            true,
+            true,
+            false,
+            true,
+            false
+        ],
+        "marketTrend": [
+            "international_recruitment",
+            "degree_apprenticeships",
+            "online_learning",
+            "student_experience",
+            "employability_focus"
+        ]
+    }
+}

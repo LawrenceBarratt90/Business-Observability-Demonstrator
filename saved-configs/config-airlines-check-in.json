@@ -1,0 +1,264 @@
+{
+    "companyName": "Airlines Group",
+    "domain": "https://www.airlines-group.com",
+    "industryType": "Airlines & Aviation",
+    "source": "sector-demo",
+    "timestamp": "2026-01-09T15:55:00.000Z",
+    "journeyType": "Check-In",
+    "journeyDetail": "Passenger Check-In Journey",
+    "journeyId": "journey_airlines_checkin_2026",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "id": "a1b2c3d4-1111-4aaa-b111-000000000002",
+    "name": "Airlines - Check-In",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "CheckInInitiation",
+            "serviceName": "CheckInInitiationService",
+            "description": "Online check-in opens 24-48 hours before departure. Passenger receives push notification and email with check-in link. System validates booking status, payment completion, and travel document requirements. Multi-passenger check-in supports families and groups.",
+            "category": "Initiation",
+            "estimatedDuration": 3,
+            "businessRationale": "Online check-in adoption is 70-85% \u2014 each online check-in saves $3 in airport counter costs. Early check-in engagement is a key ancillary revenue moment. Group check-in reduces processing time by 60% for families.",
+            "substeps": [
+                {
+                    "substepName": "CheckInNotificationAndValidation",
+                    "duration": 2
+                },
+                {
+                    "substepName": "MultiPassengerGrouping",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "SeatConfirmation",
+            "serviceName": "SeatConfirmationService",
+            "description": "Passenger views seat map with real-time availability. Pre-selected seats confirmed or new selection made. Premium seat upsell offered (exit row, extra legroom, front cabin). Auto-assign option for passengers without preference. Adjacent seating for families prioritised.",
+            "category": "Seating",
+            "estimatedDuration": 5,
+            "businessRationale": "Seat selection revenue averages $5-15 per passenger. Exit row and extra legroom seats yield $20-60 premium. Family seating compliance is a regulatory trend \u2014 proactive assignment prevents complaints and potential fines.",
+            "substeps": [
+                {
+                    "substepName": "SeatMapAndSelection",
+                    "duration": 3
+                },
+                {
+                    "substepName": "PremiumSeatUpsell",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "DocumentVerification",
+            "serviceName": "DocumentVerificationService",
+            "description": "For international flights, passport/visa details verified against booking API data. Travel document scanning via smartphone camera with OCR extraction. TIMATIC database checked for entry requirements. Health document verification (vaccination certificates) where required.",
+            "category": "Verification",
+            "estimatedDuration": 5,
+            "businessRationale": "Document-related denied boardings cost airlines $3,500+ per incident (rebooking, accommodation, fines). Mobile OCR verification catches 95% of discrepancies pre-airport. TIMATIC integration prevents 80% of documentation issues.",
+            "substeps": [
+                {
+                    "substepName": "PassportScanAndOCR",
+                    "duration": 3
+                },
+                {
+                    "substepName": "TIMATICAndHealthDocCheck",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "BaggageDeclaration",
+            "serviceName": "BaggageDeclarationService",
+            "description": "Passenger declares checked baggage count and weight. Excess baggage fees calculated with online discount vs airport rate. Bag tag generation for home printing or mobile display. Special baggage (sports equipment, musical instruments) declared with handling instructions.",
+            "category": "Baggage",
+            "estimatedDuration": 5,
+            "businessRationale": "Online baggage purchase saves $5-10 vs airport price, incentivising early declaration. Pre-declaration enables accurate load planning improving fuel efficiency. Special baggage pre-notification reduces gate delays.",
+            "substeps": [
+                {
+                    "substepName": "BagCountAndExcessFees",
+                    "duration": 3
+                },
+                {
+                    "substepName": "BagTagAndSpecialBaggage",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "BoardingPassGeneration",
+            "serviceName": "BoardingPassGenerationService",
+            "description": "Mobile boarding pass generated with QR code containing PNR, flight, seat, and passenger data. Apple Wallet and Google Pay integration for easy access. Paper boarding pass options for airport kiosk printing. Boarding group assignment displayed with gate and boarding time.",
+            "category": "Pass",
+            "estimatedDuration": 2,
+            "businessRationale": "Mobile boarding pass adoption reduces airport kiosk infrastructure costs by 30%. Wallet integration ensures pass availability even without app. Boarding group communication reduces gate crowding and improves on-time departure.",
+            "substeps": [
+                {
+                    "substepName": "QRCodeAndWalletIntegration",
+                    "duration": 1
+                },
+                {
+                    "substepName": "BoardingGroupAndGateInfo",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "AirportGuidanceAndNotifications",
+            "serviceName": "AirportGuidanceAndNotificationsService",
+            "description": "Post check-in, passenger receives terminal map with personalised path: security, lounge (eligible passengers), gate. Real-time gate change and delay notifications pushed. Estimated security wait times displayed. Connecting flight information and minimum connection time alerts.",
+            "category": "Guidance",
+            "estimatedDuration": 5,
+            "businessRationale": "Proactive gate change notifications prevent missed flights saving $2,000+ per rebooking. Security wait time estimates reduce passenger anxiety and improve Net Promoter Score. Connection alerts prevent misconnects costing $500+ each.",
+            "substeps": [
+                {
+                    "substepName": "TerminalMapAndSecurityWait",
+                    "duration": 3
+                },
+                {
+                    "substepName": "GateChangeAndConnectionAlerts",
+                    "duration": 2
+                }
+            ]
+        }
+    ],
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 35,
+        "averageOrderValue": 28,
+        "contractValue": 0,
+        "annualRevenue": 0,
+        "revenuePerCustomer": 2200,
+        "profitMargin": 85.0,
+        "customerLifetimeValue": 15000,
+        "lifetimeValue": 15000,
+        "acquisitionCost": 0,
+        "conversionProbability": 0.95,
+        "conversionRate": 95,
+        "engagementScore": 62,
+        "timeToConversion": 10,
+        "netPromoterScore": 42,
+        "satisfactionRating": 4.0,
+        "retentionProbability": 0.72,
+        "processingTime": 120,
+        "operationalCost": 2.5,
+        "efficiencyRating": 92,
+        "complianceScore": 96,
+        "channel": [
+            "mobile_app",
+            "online_check_in",
+            "airport_kiosk",
+            "airport_desk",
+            "auto_check_in"
+        ],
+        "deviceType": [
+            "mobile",
+            "desktop",
+            "kiosk",
+            "desktop",
+            "mobile"
+        ],
+        "region": [
+            "Europe",
+            "North America",
+            "Asia Pacific",
+            "Middle East",
+            "Africa"
+        ],
+        "customerSegmentValue": [
+            "tech_savvy",
+            "standard_passenger",
+            "assistance_needed",
+            "premium_passenger",
+            "group_leader"
+        ],
+        "loyaltyTier": [
+            "Platinum",
+            "Blue",
+            "Silver",
+            "Gold",
+            "Blue"
+        ],
+        "segment": [
+            "standard_check_in",
+            "seat_upgrade",
+            "extra_baggage",
+            "lounge_access",
+            "fast_track"
+        ],
+        "Productname": [
+            "Online Check-In Standard",
+            "Premium Seat Upgrade",
+            "Extra 23kg Bag",
+            "Day Lounge Pass",
+            "Fast Track Security"
+        ],
+        "ProductId": [
+            "AIR-CI-101",
+            "AIR-CI-102",
+            "AIR-CI-103",
+            "AIR-CI-104",
+            "AIR-CI-105"
+        ],
+        "ProductType": [
+            "standard_checkin",
+            "seat_upgrade",
+            "extra_baggage",
+            "lounge_pass",
+            "fast_track"
+        ],
+        "Price": [
+            0,
+            85,
+            35,
+            45,
+            15
+        ],
+        "checkInTiming": [
+            "24h_before",
+            "48h_before",
+            "3h_before",
+            "24h_before",
+            "auto_72h"
+        ],
+        "seatAssigned": [
+            "12A_window",
+            "3C_extra_leg",
+            "28F_standard",
+            "1A_first",
+            "15D_middle"
+        ],
+        "boardingGroup": [
+            3,
+            1,
+            4,
+            1,
+            5
+        ],
+        "specialAssistance": [
+            false,
+            false,
+            true,
+            false,
+            false
+        ],
+        "travelDocumentVerified": [
+            true,
+            true,
+            true,
+            true,
+            true
+        ],
+        "marketTrend": [
+            "biometric_boarding",
+            "auto_check_in",
+            "digital_wallet",
+            "bag_tag_self_print",
+            "touchless_journey"
+        ]
+    }
+}

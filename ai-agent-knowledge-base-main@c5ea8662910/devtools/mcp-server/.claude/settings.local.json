@@ -1,0 +1,11 @@
+{
+  "enabledMcpjsonServers": [
+    "kb-mcp-proxy",
+    "dql-knowledgebase"
+  ],
+  "permissions": {
+    "allow": [
+      "Bash(dtest doc:*)"
+    ]
+  }
+}

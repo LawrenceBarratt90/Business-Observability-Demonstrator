@@ -1,0 +1,257 @@
+{
+    "companyName": "Water",
+    "domain": "https://www.water-demo.com",
+    "industryType": "Water & Wastewater",
+    "journeyType": "Leak Detection",
+    "journeyDetail": "Leak Detection",
+    "journeyId": "journey_water_leak_detection",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "NetworkMonitoring",
+            "serviceName": "NetworkMonitoringService",
+            "description": "AI monitors distribution network via 15,000+ pressure and flow sensors, smart meters, and acoustic loggers. Builds real-time hydraulic model of the entire network to detect anomalies.",
+            "category": "Monitoring",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 1,
+            "businessRationale": "Continuous network monitoring reduces leak detection time from weeks to hours. The average utility loses 20% of treated water to leaks \u2014 each 1% reduction saves \u00a3800K annually.",
+            "substeps": [
+                {
+                    "substepName": "SensorIngestion",
+                    "duration": 0
+                },
+                {
+                    "substepName": "HydraulicModeling",
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "LeakDetection",
+            "serviceName": "LeakDetectionService",
+            "description": "AI detects leaks using night-flow analysis, pressure transient detection, acoustic signal processing, and satellite/drone imagery. Distinguishes genuine leaks from legitimate demand changes with 95% accuracy.",
+            "category": "Detection",
+            "estimatedDuration": 60,
+            "businessRationale": "AI leak detection finds 40% more leaks than traditional methods. Early detection prevents small leaks becoming major bursts, avoiding \u00a350K-\u00a3500K repair costs per incident.",
+            "substeps": [
+                {
+                    "substepName": "AnomalyDetection",
+                    "duration": 30
+                },
+                {
+                    "substepName": "LeakConfirmation",
+                    "duration": 30
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "LeakLocalization",
+            "serviceName": "LeakLocalizationService",
+            "description": "AI pinpoints leak location to within 3 metres using acoustic correlation, pressure wave analysis, and network topology. Prioritises by volume lost, infrastructure criticality, and repair accessibility.",
+            "category": "Localization",
+            "estimatedDuration": 120,
+            "businessRationale": "Precise leak localization reduces detection-to-repair time by 50%. Eliminating trial-and-error excavation saves \u00a35,000 per repair in unnecessary digging costs.",
+            "substeps": [
+                {
+                    "substepName": "AcousticCorrelation",
+                    "duration": 60
+                },
+                {
+                    "substepName": "PriorityRanking",
+                    "duration": 60
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "RepairDispatch",
+            "serviceName": "RepairDispatchService",
+            "description": "AI schedules repair crews: considers leak severity, traffic impact, parts availability, crew skills, and optimal dig timing. Generates work orders with precise location, expected pipe material, and recommended repair method.",
+            "category": "Dispatch",
+            "estimatedDuration": 30,
+            "businessRationale": "Optimised dispatch reduces average repair time from 5 days to 2 days. Faster repairs save 150,000 litres of water per leak and reduce customer supply interruptions.",
+            "substeps": [
+                {
+                    "substepName": "CrewScheduling",
+                    "duration": 15
+                },
+                {
+                    "substepName": "WorkOrderGeneration",
+                    "duration": 15
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "PressureManagement",
+            "serviceName": "PressureManagementService",
+            "description": "AI manages District Metered Area (DMA) pressures: reduces excess pressure during low demand to minimise leak flow rates and new burst risk. Dynamic pressure optimisation maintains minimum service levels.",
+            "category": "Optimization",
+            "estimatedDuration": 1440,
+            "businessRationale": "AI pressure management reduces leakage by 15% and new burst frequency by 30%. Pressure optimisation extends pipe network life, deferring \u00a3100M in replacement capital.",
+            "substeps": [
+                {
+                    "substepName": "PressureAnalysis",
+                    "duration": 720
+                },
+                {
+                    "substepName": "ValveControl",
+                    "duration": 720
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "LeakageReporting",
+            "serviceName": "LeakageReportingService",
+            "description": "AI generates leakage performance reports: total leakage (megalitres/day), leak detection rate, repair response times, water saved, cost savings, and regulatory performance against targets.",
+            "category": "Reporting",
+            "estimatedDuration": 60,
+            "businessRationale": "Leakage reporting demonstrates regulatory compliance and justifies investment. Meeting leakage targets avoids regulatory fines of \u00a310M+ and protects licence to operate.",
+            "substeps": [
+                {
+                    "substepName": "PerformanceMetrics",
+                    "duration": 30
+                },
+                {
+                    "substepName": "RegulatoryDashboard",
+                    "duration": 30
+                }
+            ]
+        }
+    ],
+    "id": "1d24a62f-6432-42ea-8614-19648544037a",
+    "name": "Water & Wastewater - Leak Detection",
+    "timestamp": "2026-03-18T21:35:20.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 5000000,
+        "annualRevenue": 0,
+        "revenuePerCustomer": 0,
+        "profitMargin": 0,
+        "customerLifetimeValue": 0,
+        "lifetimeValue": 0,
+        "acquisitionCost": 0,
+        "costPerAcquisition": 0,
+        "conversionProbability": 0.95,
+        "conversionRate": 95,
+        "engagementScore": 90,
+        "timeToConversion": 0,
+        "sessionDuration": 1440,
+        "pageViews": 0,
+        "purchaseFrequency": 365,
+        "netPromoterScore": 0,
+        "satisfactionRating": 0,
+        "retentionProbability": 0.96,
+        "processingTime": 60,
+        "operationalCost": 5000,
+        "efficiencyRating": 88,
+        "discountApplied": 0,
+        "taxAmount": 0,
+        "shippingCost": 0,
+        "channel": [
+            "scada_system",
+            "acoustic_logger",
+            "smart_meter",
+            "satellite_imagery",
+            "field_crew_app"
+        ],
+        "deviceType": [
+            "plc_controller",
+            "acoustic_sensor",
+            "smart_meter",
+            "desktop",
+            "mobile"
+        ],
+        "region": [
+            "DMA North",
+            "DMA South",
+            "DMA East",
+            "DMA West",
+            "DMA Central"
+        ],
+        "customerSegmentValue": [
+            "trunk_main",
+            "distribution_main",
+            "service_pipe",
+            "customer_supply",
+            "hydrant"
+        ],
+        "loyaltyTier": [
+            "n/a",
+            "n/a",
+            "n/a",
+            "n/a",
+            "n/a"
+        ],
+        "segment": [
+            "background_leakage",
+            "reported_burst",
+            "detected_leak",
+            "customer_supply_leak",
+            "trunk_main"
+        ],
+        "Productname": [
+            "AcousticDetection",
+            "SatelliteDetection",
+            "SmartMeter_Analysis",
+            "PressureManagement",
+            "PipeRehab"
+        ],
+        "ProductId": [
+            "LDT-ACO-001",
+            "LDT-SAT-002",
+            "LDT-SMT-003",
+            "LDT-PRS-004",
+            "LDT-RHB-005"
+        ],
+        "ProductType": [
+            "detection",
+            "detection",
+            "analytics",
+            "optimization",
+            "rehabilitation"
+        ],
+        "Price": [
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "leakFlowLitresHr": [
+            500,
+            2000,
+            50,
+            100,
+            5000
+        ],
+        "pipeMaterial": [
+            "cast_iron",
+            "pvc",
+            "ductile_iron",
+            "polyethylene",
+            "asbestos_cement"
+        ],
+        "pipeAgeDays": [
+            18250,
+            7300,
+            14600,
+            3650,
+            25550
+        ],
+        "marketTrend": [
+            "satellite_leak_detection",
+            "ai_acoustic",
+            "smart_dma",
+            "digital_twin",
+            "pipe_rehabilitation"
+        ]
+    }
+}

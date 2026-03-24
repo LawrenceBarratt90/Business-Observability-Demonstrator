@@ -1,0 +1,7 @@
+# Runtime config contract file: runtime/<runtime>.yaml
+# Runtime identity comes from this filename: system-bash.yaml
+
+# Arbitrary aimgr resources to inject for this runtime.
+resources:
+  - skill/self-reflection
+  - skill/dynatrace-control

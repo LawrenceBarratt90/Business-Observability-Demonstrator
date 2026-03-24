@@ -1,0 +1,11 @@
+{
+  "name": "dynatrace-knowledge-base-development",
+  "description": "Core Dynatrace platform skills and development tools for AI agents working with Dynatrace monitoring, observability, and automation",
+  "resources": [
+    "skill/dynatrace-control",
+    "skill/dt-dev-skill-creator",
+    "skill/skill-creator",
+    "skill/skill-validator",
+    "agent/dt-dev-kb-tester-agent"
+  ]
+}

@@ -1,0 +1,362 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dynatrace.com/schemas/dashboard.json",
+  "title": "Dynatrace Dashboard",
+  "description": "Schema for Dynatrace dashboard JSON documents (dashboard-app v21)",
+  "type": "object",
+  "required": [
+    "version",
+    "tiles",
+    "layouts"
+  ],
+  "properties": {
+    "version": {
+      "type": "number",
+      "description": "Dashboard schema version (dashboard-app uses version 21)"
+    },
+    "tiles": {
+      "type": "object",
+      "description": "Map of tile IDs to tile configurations",
+      "additionalProperties": {
+        "$ref": "#/$defs/TileConfig"
+      }
+    },
+    "layouts": {
+      "type": "object",
+      "description": "Map of tile IDs to layout positions",
+      "additionalProperties": {
+        "$ref": "#/$defs/TileLayout"
+      }
+    },
+    "settings": {
+      "$ref": "#/$defs/DashboardSettings"
+    },
+    "variables": {
+      "type": "array",
+      "description": "Dashboard variables",
+      "items": true
+    },
+    "annotations": {
+      "type": "array",
+      "description": "Dashboard annotations",
+      "items": true
+    },
+    "refreshRate": {
+      "type": "number",
+      "description": "Dashboard refresh rate in milliseconds"
+    },
+    "gridColumnsCount": {
+      "type": "number",
+      "description": "Number of grid columns"
+    },
+    "importedWithCode": {
+      "type": "boolean",
+      "description": "Whether dashboard was imported with code"
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "TileConfig": {
+      "description": "Discriminated union of all tile types",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/DataTile"
+        },
+        {
+          "$ref": "#/$defs/CodeTile"
+        },
+        {
+          "$ref": "#/$defs/MarkdownTile"
+        },
+        {
+          "$ref": "#/$defs/SloTile"
+        }
+      ]
+    },
+    "DataTile": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "const": "data"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "query": {
+          "type": "string",
+          "description": "DQL query string"
+        },
+        "visualization": {
+          "type": "string",
+          "description": "Visualization type. Time-series (require timeseries/makeTimeseries): 'lineChart', 'areaChart', 'barChart', 'bandChart'. Categorical (summarize by field): 'categoricalBarChart', 'pieChart', 'donutChart'. Single value/gauge (single numeric record): 'singleValue', 'meterBar', 'gauge'. Tabular/raw (any data): 'table', 'raw', 'recordList'. Distribution/status: 'histogram', 'honeycomb'. Geographic maps: 'choroplethMap' (ISO 3166 codes), 'dotMap', 'connectionMap', 'bubbleMap' (lat/lng fields). Matrix/correlation: 'heatmap', 'scatterplot'.",
+          "enum": [
+            "lineChart",
+            "areaChart",
+            "barChart",
+            "bandChart",
+            "categoricalBarChart",
+            "pieChart",
+            "donutChart",
+            "singleValue",
+            "meterBar",
+            "gauge",
+            "table",
+            "raw",
+            "recordList",
+            "histogram",
+            "honeycomb",
+            "choroplethMap",
+            "dotMap",
+            "connectionMap",
+            "bubbleMap",
+            "heatmap",
+            "scatterplot"
+          ]
+        },
+        "visualizationSettings": {
+          "description": "Visualization-specific settings"
+        },
+        "querySettings": {
+          "description": "Query execution settings"
+        },
+        "customLinkSettings": {
+          "description": "Custom link configuration"
+        },
+        "queryConfig": {
+          "description": "Query configuration"
+        },
+        "davisCopilot": {
+          "description": "Davis Copilot configuration"
+        },
+        "davis": {
+          "description": "Davis AI configuration"
+        },
+        "timeframe": {
+          "$ref": "#/$defs/TileTimeframeSettings"
+        },
+        "segments": {
+          "$ref": "#/$defs/TileSegmentSettings"
+        },
+        "subType": {
+          "type": "string",
+          "description": "NEVER SET THIS FIELD when using plain DQL queries. Only used by structured DQL builders in the Dynatrace UI.",
+          "enum": [
+            "dql-builder-logs",
+            "dql-builder-metrics",
+            "dql-builder-biz-events",
+            "dql-builder-events",
+            "dql-builder-traces",
+            "dql-builder-problems",
+            "dql-builder-user-sessions",
+            "dql-builder-user-events",
+            "dql-builder-security-events",
+            "davis-copilot"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "CodeTile": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "const": "code"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "input": {
+          "type": "string",
+          "description": "Code input (JavaScript or other language)"
+        },
+        "visualization": {
+          "type": "string",
+          "description": "Visualization type for code tile output"
+        },
+        "visualizationSettings": {
+          "description": "Visualization-specific settings"
+        },
+        "customLinkSettings": {
+          "description": "Custom link configuration"
+        }
+      },
+      "additionalProperties": true
+    },
+    "MarkdownTile": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "const": "markdown"
+        },
+        "content": {
+          "type": "string",
+          "description": "Markdown content"
+        }
+      },
+      "additionalProperties": true
+    },
+    "SloTile": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "const": "slo"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "input": {
+          "type": "string",
+          "description": "SLO identifier or query"
+        },
+        "visualizationSettings": {
+          "description": "Visualization-specific settings for SLO display"
+        }
+      },
+      "additionalProperties": true
+    },
+    "TileLayout": {
+      "type": "object",
+      "required": [
+        "x",
+        "y",
+        "w",
+        "h"
+      ],
+      "properties": {
+        "x": {
+          "type": "number",
+          "description": "Horizontal position in grid units"
+        },
+        "y": {
+          "type": "number",
+          "description": "Vertical position in grid units"
+        },
+        "w": {
+          "type": "number",
+          "description": "Width in grid units"
+        },
+        "h": {
+          "type": "number",
+          "description": "Height in grid units"
+        }
+      },
+      "additionalProperties": true
+    },
+    "TileTimeframeSettings": {
+      "type": "object",
+      "properties": {
+        "tileTimeframe": {
+          "$ref": "#/$defs/NormalizedTimeframe"
+        },
+        "tileTimeframeEnabled": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "TileSegmentSettings": {
+      "type": "object",
+      "properties": {
+        "tileSegments": {
+          "type": "array",
+          "items": true
+        },
+        "tileSegmentsEnabled": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "NormalizedTimeframe": {
+      "type": "object",
+      "required": [
+        "from",
+        "to"
+      ],
+      "properties": {
+        "from": {
+          "type": "string",
+          "description": "Start time (ISO 8601 or relative like 'now-1h')"
+        },
+        "to": {
+          "type": "string",
+          "description": "End time (ISO 8601 or relative like 'now')"
+        }
+      },
+      "additionalProperties": true
+    },
+    "DashboardSettings": {
+      "type": "object",
+      "properties": {
+        "gridLayout": {
+          "$ref": "#/$defs/GridLayout"
+        },
+        "defaultTimeframe": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "$ref": "#/$defs/NormalizedTimeframe"
+            },
+            "enabled": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        },
+        "defaultSegments": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "array",
+              "items": true
+            },
+            "enabled": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "GridLayout": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": [
+            "canvas",
+            "responsive"
+          ],
+          "description": "Grid layout mode"
+        },
+        "columnsCount": {
+          "type": "number",
+          "description": "Number of columns in the grid"
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

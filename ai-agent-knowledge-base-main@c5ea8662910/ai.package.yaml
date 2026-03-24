@@ -1,0 +1,26 @@
+resources:
+    - skill/ai-resource-manager
+    - skill/skill-creator
+    - skill/dynatrace-control
+    - skill/dt-dev-skill-creator
+    - package/opencode-coder
+    - skill/skill-validator
+    - package/dynatrace-knowledge-base-development
+    - skill/bitbucket-pr
+    - skill/dt-dql-essentials
+    - skill/dt-app-dashboard
+    - skill/dt-app-frontend
+    - skill/dt-app-notebook
+    - skill/dt-app-services
+    - skill/dt-app-tracing
+    - skill/dt-infra-aws
+    - skill/dt-infra-hosts
+    - skill/dt-infra-kubernetes
+    - skill/dt-log-analysis
+    - skill/dt-problem-analysis
+    - skill/dt-proc-critical-incident
+    - skill/dt-prod-self-monitoring
+    - skill/dt-prod-tenant-analysis
+    - skill/fix-documentation
+    - skill/observability-triage
+    - skill/self-reflection

@@ -1,0 +1,273 @@
+{
+    "companyName": "PublishTech Media",
+    "domain": "https://www.publishtech-media.com",
+    "industryType": "Publishing & Digital Media",
+    "journeyType": "Subscription Management",
+    "journeyDetail": "AI-Optimised Publishing Subscription Lifecycle",
+    "journeyId": "journey_subscription_management_1526c189",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "TrialOnboarding",
+            "serviceName": "TrialOnboardService",
+            "description": "AI optimises trial experience: personalised content recommendations during trial, habit-building nudges, and premium feature sampling. Trial extension for high-engagement users.",
+            "category": "Acquisition",
+            "estimatedDuration": 336,
+            "businessRationale": "Trial-to-paid conversion averages 30% for publishing. AI-optimised trials improve to 45%. Every 1% = thousands of new subscribers.",
+            "substeps": [
+                {
+                    "substepName": "PersonalisedOnboarding",
+                    "duration": 112
+                },
+                {
+                    "substepName": "HabitBuilding",
+                    "duration": 112
+                },
+                {
+                    "substepName": "ConversionTrigger",
+                    "duration": 112
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "SubscriptionConversion",
+            "serviceName": "ConversionService",
+            "description": "AI identifies optimal conversion moment: propensity scoring, personalised offer selection (plan, discount, term), and urgency messaging. Frictionless checkout with saved payment.",
+            "category": "Conversion",
+            "estimatedDuration": 1,
+            "businessRationale": "Converting readers at peak engagement raises subscription rates by 60%. The right offer at the right moment is 5x more effective than a generic popup.",
+            "substeps": [
+                {
+                    "substepName": "PropensityScoring",
+                    "duration": 0.3
+                },
+                {
+                    "substepName": "OfferSelection",
+                    "duration": 0.3
+                },
+                {
+                    "substepName": "CheckoutOptimization",
+                    "duration": 0.4
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "SubscriberNurturing",
+            "serviceName": "NurturingService",
+            "description": "AI nurtures subscribers: personalised content alerts, exclusive content previews, and community features. Reading streaks and achievement badges. Subscriber-only events and perks.",
+            "category": "Engagement",
+            "estimatedDuration": 720,
+            "businessRationale": "Subscribers who read 5+ articles in the first week have 80% 1-year retention. Nurturing builds the reading habit early.",
+            "substeps": [
+                {
+                    "substepName": "ContentAlerts",
+                    "duration": 240
+                },
+                {
+                    "substepName": "ExclusivePreview",
+                    "duration": 240
+                },
+                {
+                    "substepName": "CommunityEngagement",
+                    "duration": 240
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "ChurnPrevention",
+            "serviceName": "ChurnPreventService",
+            "description": "AI predicts churn risk from engagement decline, payment failure signals, and cancellation page visits. Proactive retention offers: plan downgrade, pause, or discount.",
+            "category": "Retention",
+            "estimatedDuration": 24,
+            "businessRationale": "Saving 10% of churning subscribers = 10x ROI on retention spend. A pause option recovers 25% of subscribers about to cancel.",
+            "substeps": [
+                {
+                    "substepName": "ChurnPrediction",
+                    "duration": 8
+                },
+                {
+                    "substepName": "RetentionOffers",
+                    "duration": 8
+                },
+                {
+                    "substepName": "PauseOption",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "PricingOptimization",
+            "serviceName": "PricingService",
+            "description": "AI optimises pricing: elasticity modelling, bundle design, promotional pricing, and geo-specific pricing. Annual vs monthly plan incentives. Family/group plan design.",
+            "category": "Revenue",
+            "estimatedDuration": 168,
+            "businessRationale": "Price sensitivity varies 3x across reader segments. Optimised pricing increases ARPU by 10-20% without increasing churn.",
+            "substeps": [
+                {
+                    "substepName": "ElasticityModelling",
+                    "duration": 56
+                },
+                {
+                    "substepName": "BundleDesign",
+                    "duration": 56
+                },
+                {
+                    "substepName": "GeoSpecificPricing",
+                    "duration": 56
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "SubscriptionAnalytics",
+            "serviceName": "SubAnalyticsService",
+            "description": "AI analyses subscription metrics: MRR growth, churn cohorts, LTV by acquisition source, and engagement-to-revenue correlation. Board reporting with predictive forecasting.",
+            "category": "Analytics",
+            "estimatedDuration": 168,
+            "businessRationale": "Subscription analytics connect editorial quality to business performance. Data-driven publishing companies grow 2x faster than peers.",
+            "substeps": [
+                {
+                    "substepName": "MRRAnalysis",
+                    "duration": 56
+                },
+                {
+                    "substepName": "CohortTracking",
+                    "duration": 56
+                },
+                {
+                    "substepName": "LTVForecasting",
+                    "duration": 56
+                }
+            ]
+        }
+    ],
+    "id": "245fb788-d49c-4db7-abce-a7576dbdf4e0",
+    "name": "Publishing & Digital Media - Subscription Management",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 12.99,
+        "transactionValue": 12.99,
+        "averageOrderValue": 18.5,
+        "contractValue": 0,
+        "annualRevenue": 500000000,
+        "revenuePerCustomer": 180,
+        "profitMargin": 15.0,
+        "customerLifetimeValue": 600,
+        "lifetimeValue": 600,
+        "acquisitionCost": 30,
+        "costPerAcquisition": 30,
+        "conversionProbability": 0.04,
+        "conversionRate": 4,
+        "engagementScore": 68,
+        "timeToConversion": 10080,
+        "sessionDuration": 360,
+        "pageViews": 5,
+        "purchaseFrequency": 12,
+        "netPromoterScore": 38,
+        "satisfactionRating": 3.9,
+        "retentionProbability": 0.75,
+        "processingTime": 5,
+        "operationalCost": 2,
+        "efficiencyRating": 82,
+        "monthlyChurn": 5.5,
+        "trialConversion": 32,
+        "channel": [
+            "website_paywall",
+            "mobile_app",
+            "newsletter_upsell",
+            "social_media_ad",
+            "referral_programme"
+        ],
+        "deviceType": [
+            "desktop",
+            "mobile",
+            "email",
+            "mobile",
+            "desktop"
+        ],
+        "region": [
+            "US",
+            "UK",
+            "India",
+            "Australia",
+            "Canada"
+        ],
+        "customerSegmentValue": [
+            "digital_native",
+            "print_migrator",
+            "student",
+            "corporate",
+            "gifted_subscription"
+        ],
+        "loyaltyTier": [
+            "Lifetime Subscriber",
+            "Annual",
+            "Monthly",
+            "Trial",
+            "Churned"
+        ],
+        "segment": [
+            "individual_digital",
+            "family_plan",
+            "corporate_licence",
+            "student_plan",
+            "group_subscription"
+        ],
+        "Productname": [
+            "Digital All Access",
+            "Print + Digital Bundle",
+            "Corporate Group Licence",
+            "Student Discount Plan",
+            "Gift Subscription"
+        ],
+        "ProductId": [
+            "SUB-DA-001",
+            "SUB-PD-002",
+            "SUB-CG-003",
+            "SUB-SD-004",
+            "SUB-GS-005"
+        ],
+        "ProductType": [
+            "individual",
+            "bundle",
+            "corporate",
+            "student",
+            "gift"
+        ],
+        "Price": [
+            12.99,
+            29.99,
+            99.99,
+            4.99,
+            99.0
+        ],
+        "renewalRate": [
+            0.72,
+            0.8,
+            0.9,
+            0.55,
+            0.25
+        ],
+        "mrrContribution": [
+            50,
+            20,
+            15,
+            8,
+            7
+        ],
+        "marketTrend": [
+            "AI_personalised_paywall",
+            "newsletter_first_strategy",
+            "micro_payments",
+            "community_model",
+            "bundled_news"
+        ]
+    }
+}

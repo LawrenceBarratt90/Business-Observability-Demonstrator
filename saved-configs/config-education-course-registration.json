@@ -1,0 +1,266 @@
+{
+    "companyName": "Education",
+    "domain": "https://www.education-hub.com",
+    "industryType": "Education & Learning",
+    "source": "sector-demo",
+    "timestamp": "2026-01-09T15:20:00.000Z",
+    "journeyType": "Course Registration",
+    "journeyDetail": "Course Registration Journey",
+    "journeyId": "journey_edu_registration_2026",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "id": "a1b2c3d4-4444-4aaa-b444-000000000002",
+    "name": "Education - Course Registration",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "AcademicAdvisorConsultation",
+            "serviceName": "AcademicAdvisorConsultationService",
+            "description": "Student meets academic advisor to review degree progress, prerequisite completion, and recommended course load. Advisor approves course plan and clears registration holds.",
+            "category": "Advisory",
+            "estimatedDuration": 30,
+            "businessRationale": "Advised students have 15% higher graduation rates. Proper prerequisite validation prevents mid-semester drops that waste institutional resources.",
+            "substeps": [
+                {
+                    "substepName": "DegreeAuditReview",
+                    "duration": 15
+                },
+                {
+                    "substepName": "CourseLoadApproval",
+                    "duration": 15
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "CourseSearch",
+            "serviceName": "CourseSearchService",
+            "description": "Student searches course catalogue filtered by department, credit hours, schedule, instructor, and delivery mode. Real-time seat availability displayed. Waitlist options shown for full sections.",
+            "category": "Search",
+            "estimatedDuration": 20,
+            "businessRationale": "Efficient course discovery reduces registration friction. Students who find preferred sections within 10 minutes are 3x more likely to complete registration in one session.",
+            "substeps": [
+                {
+                    "substepName": "CatalogueFilterAndSearch",
+                    "duration": 10
+                },
+                {
+                    "substepName": "SeatAvailabilityCheck",
+                    "duration": 10
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "ScheduleBuilding",
+            "serviceName": "ScheduleBuildingService",
+            "description": "Student builds weekly schedule selecting specific sections. Conflict detection prevents time overlaps. System validates prerequisites, co-requisites, and credit hour limits. Shopping cart holds selected sections temporarily.",
+            "category": "Planning",
+            "estimatedDuration": 25,
+            "businessRationale": "Schedule conflicts are the #1 registration complaint. Automated conflict detection saves 2 hours of advisor time per student and prevents 90% of scheduling errors.",
+            "substeps": [
+                {
+                    "substepName": "SectionSelectionAndConflictCheck",
+                    "duration": 15
+                },
+                {
+                    "substepName": "PrerequisiteValidation",
+                    "duration": 10
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "RegistrationSubmission",
+            "serviceName": "RegistrationSubmissionService",
+            "description": "Student submits final course selections. System performs real-time seat reservation, verifies no holds (financial, disciplinary, academic), and confirms enrolment in each course. Confirmation with CRNs emailed.",
+            "category": "Submission",
+            "estimatedDuration": 5,
+            "businessRationale": "Sub-second registration processing during peak periods prevents overselling. System must handle 5000+ concurrent registrations at term open. Each failed transaction risks student attrition.",
+            "substeps": [
+                {
+                    "substepName": "HoldVerificationAndSeatLock",
+                    "duration": 2
+                },
+                {
+                    "substepName": "ConfirmationAndCRNAssignment",
+                    "duration": 3
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "TextbookAndMaterials",
+            "serviceName": "TextbookAndMaterialsService",
+            "description": "Registered courses trigger automatic textbook list generation. Student selects purchase, rental, or digital options. Campus bookstore and third-party price comparison displayed. Learning management system (LMS) access provisioned.",
+            "category": "Provisioning",
+            "estimatedDuration": 15,
+            "businessRationale": "Bundled textbook purchasing increases bookstore revenue by 35%. LMS pre-provisioning ensures day-one readiness and reduces IT support tickets by 60% at term start.",
+            "substeps": [
+                {
+                    "substepName": "TextbookListAndPricing",
+                    "duration": 10
+                },
+                {
+                    "substepName": "LMSAccessProvisioning",
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "AddDropPeriod",
+            "serviceName": "AddDropPeriodService",
+            "description": "During the first two weeks, students may add or drop courses without academic penalty. Dropped course seats released to waitlisted students automatically. Tuition adjusted based on final credit hours.",
+            "category": "Adjustment",
+            "estimatedDuration": 20,
+            "businessRationale": "Add/drop period manages 15-20% of total registrations. Automated waitlist promotion fills 85% of dropped seats within 24 hours, maximising section utilisation and tuition revenue.",
+            "substeps": [
+                {
+                    "substepName": "CourseAddOrDropProcessing",
+                    "duration": 10
+                },
+                {
+                    "substepName": "WaitlistPromotionAndTuitionAdjust",
+                    "duration": 10
+                }
+            ]
+        }
+    ],
+    "additionalFields": {
+        "orderTotal": 750,
+        "transactionValue": 750,
+        "averageOrderValue": 580,
+        "contractValue": 750,
+        "annualRevenue": 3000,
+        "revenuePerCustomer": 4500,
+        "profitMargin": 35.0,
+        "customerLifetimeValue": 18000,
+        "lifetimeValue": 18000,
+        "acquisitionCost": 85,
+        "conversionProbability": 0.62,
+        "conversionRate": 62,
+        "engagementScore": 70,
+        "timeToConversion": 4320,
+        "sessionDuration": 600,
+        "pageViews": 18,
+        "netPromoterScore": 48,
+        "satisfactionRating": 4.2,
+        "retentionProbability": 0.78,
+        "processingTime": 1200,
+        "operationalCost": 35,
+        "efficiencyRating": 80,
+        "complianceScore": 88,
+        "channel": [
+            "student_portal",
+            "mobile_app",
+            "faculty_advisor",
+            "email_link",
+            "timetable_system"
+        ],
+        "deviceType": [
+            "desktop",
+            "mobile",
+            "desktop",
+            "mobile",
+            "desktop"
+        ],
+        "region": [
+            "Campus Main",
+            "Online",
+            "Satellite Campus",
+            "Partner Institution",
+            "Distance Learning"
+        ],
+        "customerSegmentValue": [
+            "full_time_student",
+            "part_time_student",
+            "professional_development",
+            "corporate_learner",
+            "audit_student"
+        ],
+        "loyaltyTier": [
+            "Enrolled Student",
+            "Continuing Ed",
+            "Professional",
+            "Corporate Partner",
+            "Audit"
+        ],
+        "segment": [
+            "core_module",
+            "elective",
+            "professional_cert",
+            "workshop",
+            "online_course"
+        ],
+        "Productname": [
+            "Advanced Data Analytics Module",
+            "Leadership & Management Elective",
+            "Project Management Professional Cert",
+            "Design Thinking Workshop 2-Day",
+            "Machine Learning Online Course"
+        ],
+        "ProductId": [
+            "EDU-CR-101",
+            "EDU-CR-102",
+            "EDU-CR-103",
+            "EDU-CR-104",
+            "EDU-CR-105"
+        ],
+        "ProductType": [
+            "core_module",
+            "elective",
+            "professional_certificate",
+            "workshop",
+            "online_course"
+        ],
+        "Price": [
+            750,
+            500,
+            1200,
+            350,
+            299
+        ],
+        "creditPoints": [
+            20,
+            10,
+            30,
+            5,
+            15
+        ],
+        "deliveryMode": [
+            "in_person",
+            "hybrid",
+            "in_person",
+            "in_person",
+            "fully_online"
+        ],
+        "prerequisitesMet": [
+            true,
+            true,
+            true,
+            false,
+            true
+        ],
+        "classCapacity": [
+            120,
+            45,
+            30,
+            20,
+            500
+        ],
+        "waitlistPosition": [
+            0,
+            0,
+            5,
+            0,
+            0
+        ],
+        "marketTrend": [
+            "micro_credentials",
+            "hybrid_delivery",
+            "lifelong_learning",
+            "skills_based",
+            "stackable_certificates"
+        ]
+    }
+}

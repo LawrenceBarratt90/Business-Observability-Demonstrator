@@ -1,0 +1,257 @@
+{
+    "companyName": "Consulting",
+    "domain": "https://www.consulting-demo.com",
+    "industryType": "Consulting & Professional Services",
+    "journeyType": "Resource Planning",
+    "journeyDetail": "Resource Planning",
+    "journeyId": "journey_consulting_resource_planning",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "DemandForecasting",
+            "serviceName": "DemandForecastingService",
+            "description": "AI forecasts consulting demand by practice, industry, and geography: analyses pipeline data, seasonal patterns, economic indicators, and client renewal probabilities. Projects resource needs 3-6 months ahead.",
+            "category": "Planning",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 60,
+            "businessRationale": "Accurate demand forecasting improves utilization by 5% (worth \u00a33M annually). Avoid costly bench time and expensive contractor substitution through proactive planning.",
+            "substeps": [
+                {
+                    "substepName": "PipelineAnalysis",
+                    "duration": 30
+                },
+                {
+                    "substepName": "DemandProjection",
+                    "duration": 30
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "SkillsInventory",
+            "serviceName": "SkillsInventoryService",
+            "description": "AI maintains dynamic skills profiles: tracks certifications, project experience, client industry knowledge, language capabilities, and development aspirations for each consultant. Maps skill gaps against demand.",
+            "category": "Inventory",
+            "estimatedDuration": 30,
+            "businessRationale": "Dynamic skills tracking enables precise consultant matching. Firms with AI skill inventories staff 25% faster and achieve 15% higher client satisfaction scores.",
+            "substeps": [
+                {
+                    "substepName": "ProfileMaintenance",
+                    "duration": 15
+                },
+                {
+                    "substepName": "GapAnalysis",
+                    "duration": 15
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "StaffingOptimization",
+            "serviceName": "StaffingOptimizationService",
+            "description": "AI solves the multi-constraint staffing problem: maximise utilisation, match skills to requirements, respect consultant preferences, balance development opportunities, and meet diversity targets simultaneously.",
+            "category": "Optimization",
+            "estimatedDuration": 15,
+            "businessRationale": "AI staffing optimization improves utilization by 8% while improving consultant satisfaction by 12%. Multi-objective optimization finds solutions humans cannot compute.",
+            "substeps": [
+                {
+                    "substepName": "ConstraintSolving",
+                    "duration": 10
+                },
+                {
+                    "substepName": "StaffingRecommendation",
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "CapacityManagement",
+            "serviceName": "CapacityManagementService",
+            "description": "AI manages firm capacity: identifies upcoming bench time, recommends internal assignments, coordinates learning and development, and triggers contractor procurement when demand exceeds internal supply.",
+            "category": "Management",
+            "estimatedDuration": 1440,
+            "businessRationale": "AI capacity management reduces bench time by 30% and contractor spend by 20%. Internal development utilisation turns bench time into billable skill-building.",
+            "substeps": [
+                {
+                    "substepName": "BenchOptimization",
+                    "duration": 720
+                },
+                {
+                    "substepName": "ContractorCoordination",
+                    "duration": 720
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "PerformanceTracking",
+            "serviceName": "PerformanceTrackingService",
+            "description": "AI tracks consultant performance: engagement ratings, utilization, skill development, client feedback, and peer assessments. Identifies high performers, development needs, and flight risks through pattern analysis.",
+            "category": "Performance",
+            "estimatedDuration": 10080,
+            "businessRationale": "AI performance analytics improve talent retention by 15%. Early flight-risk detection enables intervention that saves \u00a3150K in replacement costs per senior consultant.",
+            "substeps": [
+                {
+                    "substepName": "PerformanceAnalysis",
+                    "duration": 5040
+                },
+                {
+                    "substepName": "FlightRiskDetection",
+                    "duration": 5040
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "ResourceReporting",
+            "serviceName": "ResourceReportingService",
+            "description": "AI generates workforce analytics: utilization rates, revenue per consultant, skills coverage, diversity metrics, bench trends, and competitive compensation benchmarks. Powers partnership decision-making.",
+            "category": "Reporting",
+            "estimatedDuration": 120,
+            "businessRationale": "Workforce analytics drive firm profitability. Data-informed promotion and hiring decisions improve partner economics by \u00a3500K annually per practice area.",
+            "substeps": [
+                {
+                    "substepName": "WorkforceAnalytics",
+                    "duration": 60
+                },
+                {
+                    "substepName": "CompensationBenchmarking",
+                    "duration": 60
+                }
+            ]
+        }
+    ],
+    "id": "8ea4a839-629c-43fe-815f-40c79e1d4846",
+    "name": "Consulting & Professional Services - Resource Planning",
+    "timestamp": "2026-03-18T21:35:20.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 0,
+        "annualRevenue": 500000000,
+        "revenuePerCustomer": 0,
+        "profitMargin": 28,
+        "customerLifetimeValue": 0,
+        "lifetimeValue": 0,
+        "acquisitionCost": 0,
+        "costPerAcquisition": 0,
+        "conversionProbability": 0,
+        "conversionRate": 0,
+        "engagementScore": 75,
+        "timeToConversion": 0,
+        "sessionDuration": 480,
+        "pageViews": 0,
+        "purchaseFrequency": 0,
+        "netPromoterScore": 45,
+        "satisfactionRating": 3.9,
+        "retentionProbability": 0.82,
+        "processingTime": 15,
+        "operationalCost": 0,
+        "efficiencyRating": 78,
+        "discountApplied": 0,
+        "taxAmount": 0,
+        "shippingCost": 0,
+        "channel": [
+            "resource_portal",
+            "email_request",
+            "partner_direct",
+            "staffing_tool",
+            "hr_system"
+        ],
+        "deviceType": [
+            "desktop",
+            "laptop",
+            "mobile",
+            "tablet",
+            "desktop"
+        ],
+        "region": [
+            "London",
+            "New York",
+            "Singapore",
+            "Frankfurt",
+            "Sydney"
+        ],
+        "customerSegmentValue": [
+            "partner",
+            "director",
+            "manager",
+            "consultant",
+            "analyst"
+        ],
+        "loyaltyTier": [
+            "n/a",
+            "n/a",
+            "n/a",
+            "n/a",
+            "n/a"
+        ],
+        "segment": [
+            "strategy_practice",
+            "operations_practice",
+            "tech_practice",
+            "people_practice",
+            "financial_practice"
+        ],
+        "Productname": [
+            "Staffing_Platform",
+            "Skills_Tracker",
+            "Capacity_Planner",
+            "Performance_Dashboard",
+            "Demand_Forecaster"
+        ],
+        "ProductId": [
+            "RES-STF-001",
+            "RES-SKL-002",
+            "RES-CAP-003",
+            "RES-PFM-004",
+            "RES-DMD-005"
+        ],
+        "ProductType": [
+            "staffing",
+            "skills",
+            "planning",
+            "analytics",
+            "forecasting"
+        ],
+        "Price": [
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "utilizationTarget": [
+            80,
+            78,
+            82,
+            75,
+            85
+        ],
+        "benchDays": [
+            15,
+            22,
+            8,
+            30,
+            5
+        ],
+        "consultantCount": [
+            250,
+            180,
+            320,
+            150,
+            100
+        ],
+        "marketTrend": [
+            "gig_consulting",
+            "ai_staffing",
+            "skill_marketplace",
+            "remote_delivery",
+            "outcome_pricing"
+        ]
+    }
+}

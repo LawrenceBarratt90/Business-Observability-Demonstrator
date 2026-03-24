@@ -1,0 +1,674 @@
+{
+  "version": 21,
+  "variables": [
+    {
+      "key": "Service",
+      "visible": true,
+      "type": "query",
+      "version": 2,
+      "editable": true,
+      "input": "fetch dt.entity.service\n| filter isNotNull(belongs_to[dt.entity.cloud_application_namespace])\n| fields id, Service = entity.name, namespace = belongs_to[dt.entity.cloud_application_namespace]\n| expand namespace\n| fieldsAdd namespace = entityName(namespace, type:\"dt.entity.cloud_application_namespace\")\n| fields Service\n| dedup Service\n| sort Service",
+      "multiple": true,
+      "defaultValue": ["*"]
+    },
+    {
+      "key": "ServiceID",
+      "visible": false,
+      "type": "query",
+      "version": 1,
+      "editable": true,
+      "input": "fetch dt.entity.service\n| filter in(entity.name, array($Service))\n| dedup id\n| fields id\n| limit 50",
+      "multiple": true,
+      "defaultValue": ["*"]
+    },
+    {
+      "key": "PGI",
+      "visible": false,
+      "type": "query",
+      "version": 1,
+      "editable": true,
+      "input": "timeseries cpu = avg(dt.process.cpu.usage),\n           by: {dt.entity.process_group_instance,\n                dt.entity.process_group}\n| fieldsAdd dt.entity.service = entityAttr(dt.entity.process_group, type:\"dt.entity.process_group\", \"runs\")\n| fieldsAdd dt.entity.service = dt.entity.service[dt.entity.service]\n| filter in(dt.entity.service, array($ServiceID))\n| fields dt.entity.process_group_instance",
+      "multiple": true,
+      "defaultValue": ["*"]
+    }
+  ],
+  "tiles": {
+    "0": {
+      "content": "## 🔧 Developer Self-Service Dashboard\nOne-click access to **service health**, **Davis AI problems**, **distributed traces**, **exceptions**, **key request endpoints** and **resource saturation** for your services.\n\n**TO START:** Select the services you own from the **Service** dropdown above. All tiles auto-populate. **Use Open-With > Davis CoPilot** on any Exception or Log to get AI-powered root cause analysis!",
+      "type": "markdown"
+    },
+    "1": {
+      "title": "",
+      "type": "data",
+      "query": "data record(a=\"SERVICE HEALTH: Open a Service, Analyze Failed Spans, or view Service Failure Analysis\")",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "singleValue": {
+          "alignment": "center",
+          "autoscale": true,
+          "colorThresholdTarget": "background",
+          "isIconVisible": true,
+          "label": "a",
+          "prefixIcon": "ServiceLevelObjectivesIcon",
+          "recordField": "a",
+          "showLabel": false,
+          "sparklineSettings": {}
+        },
+        "thresholds": [
+          { "field": "a", "id": 1, "isEnabled": true, "rules": [
+            { "color": { "Default": "var(--dt-colors-charts-categorical-color-01-default, #134fc9)" }, "comparator": "!=", "id": 0, "value": "0" }
+          ]}
+        ]
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 100, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "2": {
+      "title": "",
+      "type": "data",
+      "query": "timeseries {latency_p50 = median(dt.service.request.response_time),\n           latency_p90 = percentile(dt.service.request.response_time, 90),\n           latency_p99 = percentile(dt.service.request.response_time, 99),\n           requests = sum(dt.service.request.count),\n           errors = sum(dt.service.request.failure_count)},\n           by:{dt.entity.service},\n           filter: in(dt.entity.service, array($ServiceID))\n| lookup [ timeseries http_5xx = sum(dt.service.request.count,default: 0.0),\n           by:{dt.entity.service},\n           filter: (http.response.status_code >= 500 and http.response.status_code <= 599) and\n                   in(dt.entity.service, array($ServiceID))],\n            sourceField:dt.entity.service, lookupField:dt.entity.service, prefix: \"http5xx.\"\n| lookup [ timeseries http_4xx = sum(dt.service.request.count,default: 0.0),\n           by:{dt.entity.service},\n           filter: (http.response.status_code >= 400 and http.response.status_code <= 499) and\n                   in(dt.entity.service, array($ServiceID))],\n            sourceField:dt.entity.service, lookupField:dt.entity.service, prefix: \"http4xx.\"\n| lookup [fetch dt.davis.problems\n  | filter event.status==\"ACTIVE\" and dt.davis.is_duplicate==false\n  | expand affected_entity_ids\n  | summarize {Problems = countDistinct(display_id), event.id = takeFirst(event.id), event.kind = takeFirst(event.kind)},\n    by:{affected_entity_ids}],\n  sourceField:dt.entity.service, lookupField:affected_entity_ids,\n  fields:{Problems, affected_entity_ids, event.id, event.kind}\n| fieldsAdd Latency_p50 = arrayAvg(latency_p50),\n            Latency_p90 = arrayAvg(latency_p90),\n            Latency_p99 = arrayAvg(latency_p99),\n            Requests = arraySum(requests),\n            Errors = arraySum(errors),\n           `5xx` = arraySum(http5xx.http_5xx),\n           `4xx` = arraySum(http4xx.http_4xx)\n| fieldsAdd `Failure Rate` = (Errors/Requests) *100\n| fieldsAdd Service = entityName(dt.entity.service)\n| fieldsAdd `Analyze Service` = concat(\"[\", Service, \"](/ui/apps/dynatrace.services/explorer?detailsId=\", dt.entity.service, \"&detailsFrom=\",$dt_timeframe_from,\"&detailsTo=\",$dt_timeframe_to,\")\")\n| fields\n    Status = if(`Failure Rate` >= 2.00, \"🔴\", else: \"🟢\"),\n    Service,\n    `Analyze Service`,\n    dt.entity.service,\n    Requests,\n    `Failure Rate`,\n    Errors,\n    `5xx` = concat(\"[\",if(isNull(`5xx`), 0, else:`5xx`),\"](/ui/apps/dynatrace.distributedtracing/explorer?filter=dt.entity.service+%3D+\",dt.entity.service,\"+AND+http.response.status_code+%3E%3D+500+AND+http.response.status_code+%3C%3D+599&tf=\",$dt_timeframe_from,\";\",$dt_timeframe_to,\")\"),\n    `4xx` = concat(\"[\",if(isNull(`4xx`), 0, else:`4xx`),\"](/ui/apps/dynatrace.distributedtracing/explorer?filter=dt.entity.service+%3D+\",dt.entity.service,\"+AND+http.response.status_code+%3E%3D+400+AND+http.response.status_code+%3C%3D+499&tf=\",$dt_timeframe_from,\";\",$dt_timeframe_to,\")\"),\n    Latency_p50,\n    Latency_p90,\n    Latency_p99,\n    event.id,\n    event.kind,\n    `Failed Spans` = if(`Failure Rate` > 0, concat(\"[📉Analyze](/ui/apps/dynatrace.distributedtracing/explorer?filter=dt.entity.service+%3D+\",dt.entity.service,\"+AND+request.is_failed+%3D+true&tf=\",$dt_timeframe_from,\";\",$dt_timeframe_to,\")\"), else: \"\"),\n    `Service Failures` = if(`Failure Rate` > 0, concat(\"[📊Analyze](/ui/apps/dynatrace.services/failure-analysis?filter=dt.entity.service+%3D+\",dt.entity.service,\"+&tf=\",$dt_timeframe_from,\";\",$dt_timeframe_to,\")\"), else: \"\")\n| sort `Failure Rate` desc\n| filterOut matchesPhrase(Service, \"background threads\") or matchesPhrase(Service, \"Health\") or matchesPhrase(Service, \"SpringBoot\") or matchesPhrase(Service, \"on port\")",
+      "visualization": "table",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "table": {
+          "colorThresholdTarget": "background",
+          "columnOrder": [
+            "[\"Status\"]", "[\"Service\"]", "[\"Analyze Service\"]", "[\"dt.entity.service\"]",
+            "[\"Requests\"]", "[\"Failure Rate\"]", "[\"Errors\"]", "[\"5xx\"]", "[\"4xx\"]",
+            "[\"Latency_p50\"]", "[\"Latency_p90\"]", "[\"Latency_p99\"]",
+            "[\"event.id\"]", "[\"event.kind\"]", "[\"Failed Spans\"]", "[\"Service Failures\"]"
+          ],
+          "columnTypeOverrides": [
+            { "fields": ["Analyze Service", "Failed Spans", "Service Failures", "5xx", "4xx"], "id": 2974867, "value": "markdown" }
+          ],
+          "columnWidths": {
+            "[\"Service\"]": 200,
+            "[\"Analyze Service\"]": 200,
+            "[\"Status\"]": 70
+          },
+          "enableSparklines": false,
+          "hiddenColumns": [["Status"], ["Service"], ["dt.entity.service"], ["Errors"], ["5xx"], ["4xx"], ["event.id"], ["event.kind"]],
+          "linewrapEnabled": false,
+          "rowDensity": "condensed"
+        },
+        "thresholds": [
+          {
+            "field": "Failure Rate", "id": 1, "isEnabled": true,
+            "rules": [
+              { "color": "#0D9C29", "comparator": "=", "id": 0, "value": 0 },
+              { "color": { "Default": "var(--dt-colors-charts-categorical-color-14-default, #d56b1a)" }, "comparator": ">", "id": 1, "value": 0 },
+              { "color": "#AE132D", "comparator": ">=", "id": 2, "value": 2 }
+            ]
+          },
+          {
+            "field": "Requests", "id": 2, "isEnabled": true,
+            "rules": [
+              { "color": { "Default": "var(--dt-colors-charts-categorical-color-07-default, #438fb1)" }, "comparator": ">", "id": 0, "value": 0 }
+            ]
+          },
+          {
+            "field": "Latency_p50", "id": 3, "isEnabled": true,
+            "rules": [
+              { "color": "#0D9C29", "comparator": ">=", "id": 0, "value": 0 },
+              { "color": { "Default": "var(--dt-colors-charts-status-warning-default, #eca440)" }, "comparator": ">=", "id": 1, "value": 1000000 },
+              { "color": "#AE132D", "comparator": ">=", "id": 2, "value": 2000000 }
+            ]
+          },
+          {
+            "field": "Latency_p90", "id": 4, "isEnabled": true,
+            "rules": [
+              { "color": "#0D9C29", "comparator": ">=", "id": 0, "value": 0 },
+              { "color": { "Default": "var(--dt-colors-charts-status-warning-default, #eca440)" }, "comparator": ">=", "id": 1, "value": 1000000 },
+              { "color": "#AE132D", "comparator": ">=", "id": 2, "value": 2000000 }
+            ]
+          },
+          {
+            "field": "Latency_p99", "id": 5, "isEnabled": true,
+            "rules": [
+              { "color": "#0D9C29", "comparator": ">=", "id": 0, "value": 0 },
+              { "color": { "Default": "var(--dt-colors-charts-status-warning-default, #eca440)" }, "comparator": ">=", "id": 1, "value": 1000000 },
+              { "color": "#AE132D", "comparator": ">=", "id": 2, "value": 2000000 }
+            ]
+          }
+        ],
+        "unitsOverrides": [
+          { "identifier": "Failure Rate", "unitCategory": "percentage", "baseUnit": "percent", "decimals": 2 },
+          { "identifier": "Latency_p50", "unitCategory": "time", "baseUnit": "microsecond", "decimals": 2 },
+          { "identifier": "Latency_p90", "unitCategory": "time", "baseUnit": "microsecond", "decimals": 2 },
+          { "identifier": "Latency_p99", "unitCategory": "time", "baseUnit": "microsecond", "decimals": 2 },
+          { "identifier": "Requests", "unitCategory": "unspecified", "baseUnit": "none", "decimals": 0 },
+          { "identifier": "Errors", "unitCategory": "unspecified", "baseUnit": "none", "decimals": 0 }
+        ]
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 100, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "3": {
+      "title": "",
+      "type": "data",
+      "query": "data record(a=\"PROBLEMS: Open Problem or Root Cause Service\")",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "singleValue": {
+          "alignment": "center",
+          "autoscale": true,
+          "colorThresholdTarget": "background",
+          "isIconVisible": true,
+          "label": "a",
+          "prefixIcon": "DavisAiIcon",
+          "recordField": "a",
+          "showLabel": false,
+          "sparklineSettings": {}
+        },
+        "thresholds": [
+          { "field": "a", "id": 1, "isEnabled": true, "rules": [
+            { "color": { "Default": "var(--dt-colors-charts-categorical-color-01-default, #134fc9)" }, "comparator": "!=", "id": 0, "value": "0" }
+          ]}
+        ]
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 100, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "4": {
+      "title": "",
+      "type": "data",
+      "query": "fetch dt.davis.problems\n| filter dt.davis.is_duplicate == false\n| sort timestamp desc\n| expand affected_entity_ids\n| filter in(affected_entity_ids, array($ServiceID)) or in(affected_entity_ids, array($PGI))\n| lookup [fetch dt.entity.service], sourceField:affected_entity_ids, lookupField: id, prefix:\"lookup.affected.entity.services\"\n| lookup [fetch dt.entity.process_group_instance], sourceField:affected_entity_ids, lookupField: id, prefix:\"lookup.affected.entity.pgi\"\n| lookup [fetch dt.entity.application], sourceField:affected_entity_ids, lookupField: id, prefix:\"lookup.affected.entity.applications\"\n| lookup [fetch dt.entity.host], sourceField:affected_entity_ids, lookupField: id, prefix:\"lookup.affected.entity.hosts\"\n| summarize {\n    startTime = takeFirst(event.start),\n    endTime = takeFirst(event.end),\n    problemClosedDuration = takeFirst(resolved_problem_duration),\n    status = takeFirst(event.status),\n    event.name = takeFirst(event.name),\n    rootCause = takeFirst(root_cause_entity_name),\n    rootCauseEntityId = takeFirst(root_cause_entity_id),\n    affectedServices = collectDistinct(lookup.affected.entity.servicesentity.name),\n    affectedPGI = collectDistinct(lookup.affected.entity.pgientity.name),\n    affectedApplications = collectDistinct(lookup.affected.entity.applicationsentity.name),\n    affectedHosts = collectDistinct(lookup.affected.entity.hostsentity.name),\n    event.id = takeFirst(event.id)\n  },\n  by:{display_id, event.kind}\n| fieldsAdd currentTime = toTimestamp(now())\n| fieldsAdd Description = concat(display_id, \" - \", event.name)\n| fields\n    Status = status,\n    Description = concat(\"🔥[\", Description, \"](/ui/apps/dynatrace.davis.problems/problem/\", event.id, \")\"),\n    Affected = arrayRemoveNulls(arrayConcat(affectedApplications, affectedServices, affectedPGI, affectedHosts)),\n    RootCause = if(isNotNull(rootCause),\n      concat(\"[\", rootCause, \"](/ui/apps/dynatrace.services/explorer?detailsId=\", rootCauseEntityId, \"&detailsFrom=\", startTime, \"&detailsTo=\", endTime, \")\"),\n      else: \"\"),\n    StartTime = startTime,\n    EndTime = if((status == \"ACTIVE\"), \"In Progress\", else: if((status == \"CLOSED\"), endTime)),\n    Duration = if((status == \"CLOSED\"), problemClosedDuration, else: if((status == \"ACTIVE\"), currentTime - startTime)),\n    event.id,\n    event.kind\n| sort StartTime desc",
+      "visualization": "table",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "table": {
+          "colorThresholdTarget": "background",
+          "columnOrder": [
+            "[\"Status\"]", "[\"Description\"]", "[\"Affected\"]", "[\"RootCause\"]",
+            "[\"StartTime\"]", "[\"EndTime\"]", "[\"Duration\"]", "[\"event.id\"]", "[\"event.kind\"]"
+          ],
+          "columnTypeOverrides": [
+            { "fields": ["Description"], "id": 1993631, "value": "markdown" },
+            { "fields": ["RootCause"], "id": 2971089, "value": "markdown" }
+          ],
+          "columnWidths": {
+            "[\"Description\"]": 293,
+            "[\"Affected\"]": 300,
+            "[\"RootCause\"]": 180,
+            "[\"Status\"]": 80,
+            "[\"StartTime\"]": 130
+          },
+          "enableSparklines": false,
+          "hiddenColumns": [["Affected"], ["event.id"], ["event.kind"]],
+          "linewrapEnabled": true,
+          "lineWrapIds": [["Description"], ["RootCause"]],
+          "rowDensity": "condensed",
+          "enableThresholdInRow": false,
+          "selectedColumnForRowThreshold": "Status"
+        },
+        "thresholds": [
+          {
+            "field": "Status", "id": 1, "isEnabled": true,
+            "rules": [
+              { "color": "#0D9C29", "comparator": "=", "id": 0, "value": "CLOSED" },
+              { "color": { "Default": "var(--dt-colors-charts-loglevel-emergency-default, #ae132d)" }, "comparator": "=", "id": 1, "value": "ACTIVE" }
+            ]
+          }
+        ]
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 100, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "5": {
+      "title": "",
+      "type": "data",
+      "query": "data record(a=\"TRAFFIC\")",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "singleValue": {
+          "alignment": "center", "autoscale": true, "colorThresholdTarget": "background",
+          "isIconVisible": true, "label": "a", "prefixIcon": "BarChartIcon", "recordField": "a", "showLabel": false
+        },
+        "thresholds": [
+          { "field": "a", "id": 1, "isEnabled": true, "rules": [
+            { "color": { "Default": "var(--dt-colors-charts-categorical-color-01-default, #134fc9)" }, "comparator": "!=", "id": 0, "value": "0" }
+          ]}
+        ]
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 100, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "6": {
+      "title": "Requests",
+      "type": "data",
+      "query": "timeseries requests = sum(dt.service.request.count),\n           by:{dt.entity.service},\n           filter: in(dt.entity.service, array($ServiceID))\n| fields timeframe, interval, service = entityName(dt.entity.service), requests\n| sort arraySum(requests) desc\n| limit 100",
+      "visualization": "lineChart",
+      "visualizationSettings": {
+        "chartSettings": {
+          "fieldMapping": { "leftAxisValues": ["requests"], "timestamp": "timeframe" },
+          "gapPolicy": "connect",
+          "leftYAxisSettings": { "isLabelVisible": false, "label": "Service request count" },
+          "legend": { "hidden": true },
+          "truncationMode": "middle"
+        },
+        "thresholds": []
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 100, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "7": {
+      "title": "Requests - Success vs Failed",
+      "type": "data",
+      "query": "timeseries total = sum(dt.service.request.count, default:0),\n           failed = sum(dt.service.request.failure_count, default:0),\n           nonempty: true,\n           filter: in(dt.entity.service, array($ServiceID))\n| fieldsAdd success = total[] - failed[]\n| fields timeframe, interval, success, failed",
+      "visualization": "barChart",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "chartSettings": {
+          "fieldMapping": { "leftAxisValues": ["success", "failed"], "timestamp": "timeframe" },
+          "gapPolicy": "connect",
+          "legend": { "hidden": true },
+          "seriesOverrides": [
+            { "override": { "color": "#0D9C29" }, "seriesId": ["success"] },
+            { "override": { "color": { "Default": "var(--dt-colors-charts-loglevel-emergency-default, #ae132d)" } }, "seriesId": ["failed"] }
+          ],
+          "tooltip": { "variant": "shared" }
+        },
+        "thresholds": []
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 100, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "8": {
+      "title": "Requests - Key Endpoints",
+      "type": "data",
+      "query": "timeseries requests = sum(dt.service.request.count),\n           by:{endpoint.name},\n           filter: endpoint.name != \"NON_KEY_REQUESTS\" and in(dt.entity.service, array($ServiceID))\n| fields timeframe, interval, endpoint.name, requests\n| sort arraySum(requests) desc\n| limit 100",
+      "visualization": "lineChart",
+      "visualizationSettings": {
+        "chartSettings": {
+          "fieldMapping": { "leftAxisValues": ["requests"], "timestamp": "timeframe" },
+          "gapPolicy": "connect",
+          "leftYAxisSettings": { "isLabelVisible": false, "label": "Service request count" },
+          "legend": { "hidden": true },
+          "truncationMode": "middle"
+        },
+        "thresholds": []
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 100, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "9": {
+      "title": "",
+      "type": "data",
+      "query": "data record(a=\"LATENCY\")",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "singleValue": {
+          "alignment": "center", "autoscale": true, "colorThresholdTarget": "background",
+          "isIconVisible": true, "label": "a", "prefixIcon": "LineChartIcon", "recordField": "a", "showLabel": false
+        },
+        "thresholds": [
+          { "field": "a", "id": 1, "isEnabled": true, "rules": [
+            { "color": { "Default": "var(--dt-colors-charts-categorical-color-01-default, #134fc9)" }, "comparator": "!=", "id": 0, "value": "0" }
+          ]}
+        ]
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 100, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "10": {
+      "title": "Latency_p50",
+      "type": "data",
+      "query": "timeseries latency_p50 = median(dt.service.request.response_time),\n           by:{dt.entity.service},\n           filter: in(dt.entity.service, array($ServiceID))\n| fields timeframe, interval, service = entityName(dt.entity.service), latency_p50\n| sort arrayAvg(latency_p50) desc\n| limit 100",
+      "visualization": "lineChart",
+      "visualizationSettings": {
+        "chartSettings": {
+          "fieldMapping": { "leftAxisValues": ["latency_p50"], "timestamp": "timeframe" },
+          "gapPolicy": "connect",
+          "leftYAxisSettings": { "isLabelVisible": false, "label": "Response time" },
+          "legend": { "hidden": true }
+        },
+        "thresholds": [],
+        "unitsOverrides": [
+          { "identifier": "latency_p50", "unitCategory": "time", "baseUnit": "microsecond", "decimals": 2 }
+        ]
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 100, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "11": {
+      "title": "Latency_p90",
+      "type": "data",
+      "query": "timeseries latency_p90 = percentile(dt.service.request.response_time, 90),\n           by:{dt.entity.service},\n           filter: in(dt.entity.service, array($ServiceID))\n| fields timeframe, interval, service = entityName(dt.entity.service), latency_p90\n| sort arrayAvg(latency_p90) desc\n| limit 100",
+      "visualization": "lineChart",
+      "visualizationSettings": {
+        "chartSettings": {
+          "fieldMapping": { "leftAxisValues": ["latency_p90"], "timestamp": "timeframe" },
+          "gapPolicy": "connect",
+          "leftYAxisSettings": { "isLabelVisible": false, "label": "Response time" },
+          "legend": { "hidden": true }
+        },
+        "thresholds": [],
+        "unitsOverrides": [
+          { "identifier": "latency_p90", "unitCategory": "time", "baseUnit": "microsecond", "decimals": 2 }
+        ]
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 100, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "12": {
+      "title": "Latency_p99",
+      "type": "data",
+      "query": "timeseries latency_p99 = percentile(dt.service.request.response_time, 99),\n           by:{dt.entity.service},\n           filter: in(dt.entity.service, array($ServiceID))\n| fields timeframe, interval, service = entityName(dt.entity.service), latency_p99\n| sort arrayAvg(latency_p99) desc\n| limit 100",
+      "visualization": "lineChart",
+      "visualizationSettings": {
+        "chartSettings": {
+          "fieldMapping": { "leftAxisValues": ["latency_p99"], "timestamp": "timeframe" },
+          "gapPolicy": "connect",
+          "leftYAxisSettings": { "isLabelVisible": false, "label": "Response time" },
+          "legend": { "hidden": true }
+        },
+        "thresholds": [],
+        "unitsOverrides": [
+          { "identifier": "latency_p99", "unitCategory": "time", "baseUnit": "microsecond", "decimals": 2 }
+        ]
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 100, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "13": {
+      "title": "",
+      "type": "data",
+      "query": "data record(a=\"ERRORS\")",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "singleValue": {
+          "alignment": "center", "autoscale": true, "colorThresholdTarget": "background",
+          "isIconVisible": true, "label": "a", "prefixIcon": "CriticalIcon", "recordField": "a", "showLabel": false
+        },
+        "thresholds": [
+          { "field": "a", "id": 1, "isEnabled": true, "rules": [
+            { "color": { "Default": "var(--dt-colors-charts-categorical-color-01-default, #134fc9)" }, "comparator": "!=", "id": 0, "value": "0" }
+          ]}
+        ]
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 100, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "14": {
+      "title": "Failed Requests",
+      "type": "data",
+      "query": "timeseries errors = sum(dt.service.request.failure_count, default:0),\n           nonempty: true,\n           by:{dt.entity.service},\n           filter: in(dt.entity.service, array($ServiceID))\n| fields timeframe, interval, service = entityName(dt.entity.service), errors\n| sort arraySum(errors) desc\n| limit 100",
+      "visualization": "lineChart",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "chartSettings": {
+          "colorPalette": "log-level",
+          "fieldMapping": { "leftAxisValues": ["errors"], "timestamp": "timeframe" },
+          "gapPolicy": "connect",
+          "leftYAxisSettings": { "isLabelVisible": false, "label": "Failure count" },
+          "legend": { "hidden": true }
+        },
+        "thresholds": []
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 100, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "15": {
+      "title": "5xx Errors",
+      "type": "data",
+      "query": "timeseries errors = sum(dt.service.request.count, default:0),\n           nonempty: true,\n           by:{dt.entity.service},\n           filter: http.response.status_code >= 500 and http.response.status_code <= 599 and in(dt.entity.service, array($ServiceID))\n| fields timeframe, interval, service = entityName(dt.entity.service), errors\n| sort arraySum(errors) desc\n| limit 100",
+      "visualization": "lineChart",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "chartSettings": {
+          "colorPalette": "log-level",
+          "fieldMapping": { "leftAxisValues": ["errors"], "timestamp": "timeframe" },
+          "gapPolicy": "connect",
+          "leftYAxisSettings": { "isLabelVisible": false, "label": "5xx count" },
+          "legend": { "hidden": true }
+        },
+        "thresholds": []
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 100, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "16": {
+      "title": "4xx Errors",
+      "type": "data",
+      "query": "timeseries errors = sum(dt.service.request.count, default:0),\n           nonempty: true,\n           by:{dt.entity.service},\n           filter: http.response.status_code >= 400 and http.response.status_code <= 499 and in(dt.entity.service, array($ServiceID))\n| fields timeframe, interval, service = entityName(dt.entity.service), errors\n| sort arraySum(errors) desc\n| limit 100",
+      "visualization": "lineChart",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "chartSettings": {
+          "colorPalette": "log-level",
+          "fieldMapping": { "leftAxisValues": ["errors"], "timestamp": "timeframe" },
+          "gapPolicy": "connect",
+          "leftYAxisSettings": { "isLabelVisible": false, "label": "4xx count" },
+          "legend": { "hidden": true }
+        },
+        "thresholds": []
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 100, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "17": {
+      "title": "",
+      "type": "data",
+      "query": "data record(a=\"SATURATION\")",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "singleValue": {
+          "alignment": "center", "autoscale": true, "colorThresholdTarget": "background",
+          "isIconVisible": true, "label": "a", "prefixIcon": "ContainerIcon", "recordField": "a", "showLabel": false
+        },
+        "thresholds": [
+          { "field": "a", "id": 1, "isEnabled": true, "rules": [
+            { "color": { "Default": "var(--dt-colors-charts-categorical-color-01-default, #134fc9)" }, "comparator": "!=", "id": 0, "value": "0" }
+          ]}
+        ]
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 100, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "18": {
+      "title": "CPU Usage %",
+      "type": "data",
+      "query": "timeseries cpu = avg(dt.process.cpu.usage),\n           by:{dt.entity.process_group_instance},\n           filter: in(dt.entity.process_group_instance, array($PGI))\n| fields timeframe, interval, process = entityName(dt.entity.process_group_instance), cpu\n| sort arrayAvg(cpu) desc\n| limit 100",
+      "visualization": "lineChart",
+      "visualizationSettings": {
+        "chartSettings": {
+          "fieldMapping": { "leftAxisValues": ["cpu"], "timestamp": "timeframe" },
+          "gapPolicy": "connect",
+          "leftYAxisSettings": { "isLabelVisible": true, "label": "CPU %" },
+          "legend": { "hidden": true }
+        },
+        "thresholds": []
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 100, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "19": {
+      "title": "Memory Used",
+      "type": "data",
+      "query": "timeseries memory = avg(dt.process.memory.working_set_size),\n           by:{dt.entity.process_group_instance},\n           filter: in(dt.entity.process_group_instance, array($PGI))\n| fields timeframe, interval, process = entityName(dt.entity.process_group_instance), memory\n| sort arrayAvg(memory) desc\n| limit 100",
+      "visualization": "lineChart",
+      "visualizationSettings": {
+        "chartSettings": {
+          "fieldMapping": { "leftAxisValues": ["memory"], "timestamp": "timeframe" },
+          "gapPolicy": "connect",
+          "leftYAxisSettings": { "isLabelVisible": false, "label": "Memory" },
+          "legend": { "hidden": true }
+        },
+        "thresholds": []
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 100, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "20": {
+      "title": "GC Suspension Time",
+      "type": "data",
+      "query": "timeseries gc_time = avg(dt.runtime.jvm.gc.suspension_time),\n           by:{dt.entity.process_group_instance},\n           filter: in(dt.entity.process_group_instance, array($PGI))\n| append [timeseries gc_time = avg(dt.runtime.clr.gc.suspension_time),\n           by:{dt.entity.process_group_instance},\n           filter: in(dt.entity.process_group_instance, array($PGI))]\n| append [timeseries gc_time = avg(dt.runtime.go.gc.suspension_time),\n           by:{dt.entity.process_group_instance},\n           filter: in(dt.entity.process_group_instance, array($PGI))]\n| append [timeseries gc_time = avg(dt.runtime.nodejs.gc.suspension_time),\n           by:{dt.entity.process_group_instance},\n           filter: in(dt.entity.process_group_instance, array($PGI))]\n| fields timeframe, interval, process = entityName(dt.entity.process_group_instance), gc_time\n| sort arrayAvg(gc_time) desc\n| limit 100",
+      "visualization": "lineChart",
+      "visualizationSettings": {
+        "chartSettings": {
+          "fieldMapping": { "leftAxisValues": ["gc_time"], "timestamp": "timeframe" },
+          "gapPolicy": "connect",
+          "leftYAxisSettings": { "isLabelVisible": false, "label": "GC suspension" },
+          "legend": { "hidden": true }
+        },
+        "thresholds": []
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 100, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "21": {
+      "title": "",
+      "type": "data",
+      "query": "data record(a=\"TRACES WITH EXCEPTIONS: Click on Endpoint to open Trace. Or use Open-With Davis CoPilot to explain Exception\")",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "singleValue": {
+          "alignment": "center", "autoscale": true, "colorThresholdTarget": "background",
+          "label": "a", "prefixIcon": "TracesIcon", "recordField": "a", "showLabel": false,
+          "sparklineSettings": {}
+        },
+        "thresholds": [
+          { "field": "a", "id": 1, "isEnabled": true, "rules": [
+            { "color": { "Default": "var(--dt-colors-charts-categorical-color-01-default, #134fc9)" }, "comparator": "!=", "id": 0, "value": "0" }
+          ]}
+        ]
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 100, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "22": {
+      "title": "",
+      "type": "data",
+      "query": "fetch spans\n| filter in(dt.entity.service, array($ServiceID))\n| fieldsAdd Service = entityName(dt.entity.service)\n| fieldsAdd exception.stacktrace = span.events[][exception.stack_trace]\n| fieldsAdd exception.class = span.events[0][exception.type]\n| fieldsAdd eventname = span.events[0][span_event.name]\n| fieldsAdd exception.message = toString(span.events[][exception.message])\n| fieldsAdd trace_id = toString(trace.id), span_id = toString(span.id)\n| filter eventname == \"exception\"\n| filter isNotNull(span.exit_by_exception_id)\n| fields\n    Time = start_time,\n    start_time,\n    end_time,\n    Service,\n    Endpoint = concat(\"[\", if(isnull(endpoint.name), span.name, else: endpoint.name), \"](/ui/apps/dynatrace.distributedtracing/explorer?cv=a%2Cfalse&sidebar=a%2Cfalse&filter=dt.entity.service+%3D+\", dt.entity.service, \"+AND+trace.id+%3D+\",\n      trace_id, \"&traceId=\", trace_id, \"&spanId=\", span_id, \"&tf=\", $dt_timeframe_from, \";\", $dt_timeframe_to, \"&pb=true\", \"&tt=\", encodeUrl(toString(start_time)), \")\"),\n    ExceptionClass = if(isNotNull(exception.class), exception.class, else: \"N/A\"),\n    ExceptionMessage = concat(\"🤖 \", if(isNotNull(exception.message), exception.message, else: \"N/A\")),\n    Exception = if(isNotNull(exception.stacktrace), exception.stacktrace, else: \"N/A\"),\n    Duration = duration,\n    dt.entity.service,\n    trace.id,\n    span.id\n| sort start_time desc\n| limit 200\n| fieldsAdd prompt=concat(\"Analyze the Exception, Service and Endpoint and tell me how to fix the exception \", ExceptionClass, \":\", ExceptionMessage), execute=true, contexts=array(record(type=\"supplementary\", value=substring(concat(Exception, \" Service\", Endpoint), to:20000)))",
+      "timeframe": { "tileTimeframe": { "from": "now()-24h", "to": "now()" }, "tileTimeframeEnabled": true },
+      "visualization": "table",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "table": {
+          "columnOrder": [
+            "[\"Time\"]", "[\"start_time\"]", "[\"end_time\"]", "[\"Service\"]", "[\"Endpoint\"]",
+            "[\"ExceptionClass\"]", "[\"ExceptionMessage\"]", "[\"Exception\"]", "[\"Duration\"]",
+            "[\"dt.entity.service\"]", "[\"trace.id\"]", "[\"span.id\"]",
+            "[\"prompt\"]", "[\"execute\"]", "[\"contexts\"]"
+          ],
+          "columnTypeOverrides": [
+            { "fields": ["Endpoint"], "id": 339415, "value": "markdown" }
+          ],
+          "columnWidths": {
+            "[\"Endpoint\"]": 244,
+            "[\"Exception\"]": 409,
+            "[\"ExceptionMessage\"]": 500,
+            "[\"Service\"]": 200,
+            "[\"Time\"]": 188
+          },
+          "enableSparklines": false,
+          "hiddenColumns": [
+            ["start_time"], ["end_time"], ["dt.entity.service"],
+            ["trace.id"], ["span.id"], ["prompt"], ["execute"], ["contexts"]
+          ],
+          "linewrapEnabled": true,
+          "lineWrapIds": [["ExceptionMessage"], ["Service"], ["Time"]],
+          "rowDensity": "condensed"
+        },
+        "thresholds": []
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 10, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "23": {
+      "title": "",
+      "type": "data",
+      "query": "data record(a=\"LOGS WITH ERRORS: Use Open-With on a Log to Drill to the Trace — OR — Ask CoPilot to Explain it\")",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "singleValue": {
+          "alignment": "center", "autoscale": true, "colorThresholdTarget": "background",
+          "label": "a", "prefixIcon": "LogsIcon", "recordField": "a", "showLabel": false,
+          "sparklineSettings": {}
+        },
+        "thresholds": [
+          { "field": "a", "id": 1, "isEnabled": true, "rules": [
+            { "color": { "Default": "var(--dt-colors-charts-categorical-color-01-default, #134fc9)" }, "comparator": "!=", "id": 0, "value": "0" }
+          ]}
+        ]
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 100, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    },
+    "24": {
+      "title": "",
+      "type": "data",
+      "query": "fetch logs\n| filter in(dt.entity.process_group_instance, array($PGI))\n         and isNotNull(trace_id)\n         and in(status, \"WARN\", \"ERROR\")\n| parse content, \"JSON:jsonContent\"\n| fields\n    Time = timestamp,\n    Status = status,\n    timestamp,\n    Content = if(isNull(jsonContent), content, else: jsonContent),\n    Process = entityName(dt.entity.process_group_instance),\n    Host = entityName(dt.entity.host),\n    trace_id,\n    span_id,\n    `Trace Context` = if(isNotNull(trace_id), concat(endpoint.name, \" [📉Analyze](/ui/apps/dynatrace.distributedtracing/explorer?cv=a%2Cfalse&l=true&sidebar=a%2Cfalse&filter=trace.id+%3D+\",\n      trace_id, \"&traceId=\", trace_id, \"&tf=\", $dt_timeframe_from, \";\", $dt_timeframe_to, \"&pb=true\", \"&tt=\", encodeUrl(toString(timestamp)), \")\"), else: \"no trace\"),\n    dt.source_entity\n| sort timestamp desc\n| limit 500\n| fieldsAdd prompt=concat(\"Analyze the Log and Stacktrace and explain what it means for my service and how to fix it \", Status, \":\", Content), execute=true, contexts=array(record(type=\"supplementary\", value=substring(toString(Content), to:20000)))",
+      "visualization": "table",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "table": {
+          "columnOrder": [
+            "[\"Time\"]", "[\"Status\"]", "[\"timestamp\"]", "[\"Content\"]",
+            "[\"Process\"]", "[\"Host\"]", "[\"trace_id\"]", "[\"span_id\"]",
+            "[\"Trace Context\"]", "[\"dt.source_entity\"]", "[\"prompt\"]", "[\"execute\"]", "[\"contexts\"]"
+          ],
+          "columnTypeOverrides": [
+            { "fields": ["Content"], "id": 339416, "value": "log-content" },
+            { "fields": ["Trace Context"], "id": 1897380, "value": "markdown" }
+          ],
+          "columnWidths": {
+            "[\"Content\"]": 600,
+            "[\"Trace Context\"]": 250
+          },
+          "enableSparklines": false,
+          "hiddenColumns": [
+            ["timestamp"], ["Process"], ["Host"], ["trace_id"], ["span_id"],
+            ["dt.source_entity"], ["prompt"], ["execute"], ["contexts"]
+          ],
+          "linewrapEnabled": true,
+          "lineWrapIds": [["Content"]],
+          "rowDensity": "condensed"
+        },
+        "thresholds": []
+      },
+      "querySettings": { "maxResultRecords": 1000, "defaultScanLimitGbytes": 500, "maxResultMegaBytes": 10, "defaultSamplingRatio": 10, "enableSampling": false },
+      "davis": { "enabled": false, "davisVisualization": { "isAvailable": true } }
+    }
+  },
+  "layouts": {
+    "0":  { "x": 0,  "y": 0,  "w": 24, "h": 2 },
+    "1":  { "x": 0,  "y": 2,  "w": 13, "h": 1 },
+    "2":  { "x": 0,  "y": 3,  "w": 13, "h": 4 },
+    "3":  { "x": 13, "y": 2,  "w": 11, "h": 1 },
+    "4":  { "x": 13, "y": 3,  "w": 11, "h": 4 },
+    "5":  { "x": 0,  "y": 7,  "w": 8,  "h": 1 },
+    "6":  { "x": 0,  "y": 8,  "w": 8,  "h": 3 },
+    "7":  { "x": 8,  "y": 8,  "w": 8,  "h": 3 },
+    "8":  { "x": 16, "y": 8,  "w": 8,  "h": 3 },
+    "9":  { "x": 0,  "y": 11, "w": 8,  "h": 1 },
+    "10": { "x": 0,  "y": 12, "w": 8,  "h": 3 },
+    "11": { "x": 8,  "y": 12, "w": 8,  "h": 3 },
+    "12": { "x": 16, "y": 12, "w": 8,  "h": 3 },
+    "13": { "x": 0,  "y": 15, "w": 8,  "h": 1 },
+    "14": { "x": 0,  "y": 16, "w": 8,  "h": 3 },
+    "15": { "x": 8,  "y": 16, "w": 8,  "h": 3 },
+    "16": { "x": 16, "y": 16, "w": 8,  "h": 3 },
+    "17": { "x": 0,  "y": 19, "w": 8,  "h": 1 },
+    "18": { "x": 0,  "y": 20, "w": 8,  "h": 3 },
+    "19": { "x": 8,  "y": 20, "w": 8,  "h": 3 },
+    "20": { "x": 16, "y": 20, "w": 8,  "h": 3 },
+    "21": { "x": 0,  "y": 23, "w": 24, "h": 1 },
+    "22": { "x": 0,  "y": 24, "w": 24, "h": 5 },
+    "23": { "x": 0,  "y": 29, "w": 24, "h": 1 },
+    "24": { "x": 0,  "y": 30, "w": 24, "h": 7 }
+  },
+  "settings": {
+    "defaultTimeframe": {
+      "enabled": true,
+      "value": {
+        "from": "now()-24h",
+        "to": "now()"
+      }
+    },
+    "gridLayout": {
+      "mode": "responsive"
+    }
+  },
+  "importedWithCode": false
+}

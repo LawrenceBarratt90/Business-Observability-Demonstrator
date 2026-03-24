@@ -1,0 +1,40 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dt-prod-self-monitoring
+  namespace: internal
+  title: Dynatrace Production Self-Monitoring Skill
+  description: >
+    Production monitoring skill for Dynatrace platform health — Grail ingest
+    and query health, PPX monitoring, cluster health dashboards, and incident
+    triage workflows.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace-internal-sfm/skills/dt-prod-self-monitoring
+spec:
+  type: ai-skill
+  lifecycle: experimental
+  owner: capability/site-reliability-engineering-sre
+  system: default/self-monitoring-platform
+  product-architect: user:default/thomas.fischl
+  product-manager: user:default/andreas.deuschl
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dt-prod-tenant-analysis
+  namespace: internal
+  title: Dynatrace Production Tenant Analysis Skill
+  description: >
+    Tenant analysis skill for Dynatrace production operations — ID-to-customer
+    mapping, cluster location resolution, payment status, and tenant
+    troubleshooting procedures.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace-internal-sfm/skills/dt-prod-tenant-analysis
+spec:
+  type: ai-skill
+  lifecycle: experimental
+  owner: capability/site-reliability-engineering-sre
+  system: default/self-monitoring-platform
+  product-architect: user:default/thomas.fischl
+  product-manager: user:default/andreas.deuschl

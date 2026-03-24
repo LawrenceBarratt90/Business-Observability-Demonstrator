@@ -1,0 +1,265 @@
+{
+    "companyName": "Legal Partners",
+    "domain": "https://www.legal-partners.com",
+    "industryType": "Legal Services",
+    "source": "sector-demo",
+    "timestamp": "2026-01-09T16:00:00.000Z",
+    "journeyType": "Case Intake",
+    "journeyDetail": "Case Intake Journey",
+    "journeyId": "journey_legal_intake_2026",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "id": "a1b2c3d4-1212-4aaa-b121-000000000001",
+    "name": "Legal Services - Case Intake",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "InitialConsultationRequest",
+            "serviceName": "InitialConsultationRequestService",
+            "description": "Prospective client submits enquiry through web form, phone, or referral. Basic case details captured: practice area, matter type, urgency level, and brief fact summary. Conflict of interest pre-check performed against existing client database.",
+            "category": "Enquiry",
+            "estimatedDuration": 10,
+            "businessRationale": "First response time is the #1 factor in client conversion \u2014 firms responding within 1 hour convert 7x more enquiries. Automated conflict checking prevents ethics violations that risk bar sanctions and malpractice claims.",
+            "substeps": [
+                {
+                    "substepName": "EnquirySubmissionAndCapture",
+                    "duration": 5
+                },
+                {
+                    "substepName": "ConflictOfInterestPreCheck",
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "ConsultationScheduling",
+            "serviceName": "ConsultationSchedulingService",
+            "description": "Qualified prospect scheduled for initial consultation with appropriate attorney based on practice area expertise and availability. Calendar integration sends invitation with meeting details (in-person, video, phone). Pre-consultation questionnaire sent for client to provide detailed background.",
+            "category": "Scheduling",
+            "estimatedDuration": 5,
+            "businessRationale": "Attorney-matching by expertise increases engagement rate from 40% to 65%. Pre-consultation questionnaires save 15-20 minutes of billable attorney time per intake. Automated scheduling reduces admin overhead by $30 per booking.",
+            "substeps": [
+                {
+                    "substepName": "AttorneyMatchAndSchedule",
+                    "duration": 3
+                },
+                {
+                    "substepName": "PreConsultationQuestionnaire",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "InitialConsultation",
+            "serviceName": "InitialConsultationService",
+            "description": "Attorney conducts initial consultation: reviews facts, assesses legal merits, identifies applicable laws and precedents. Client goals and risk tolerance discussed. Fee structure explained: hourly, contingency, flat fee, or hybrid. Engagement letter terms outlined.",
+            "category": "Consultation",
+            "estimatedDuration": 60,
+            "businessRationale": "Thorough intake consultations increase client satisfaction by 45% and reduce scope-creep billing disputes by 60%. Clear fee communication upfront prevents the #1 cause of bar complaints \u2014 fee disagreements.",
+            "substeps": [
+                {
+                    "substepName": "FactReviewAndLegalAssessment",
+                    "duration": 40
+                },
+                {
+                    "substepName": "FeeDiscussionAndTermsOutline",
+                    "duration": 20
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "ConflictCheckAndEngagement",
+            "serviceName": "ConflictCheckAndEngagementService",
+            "description": "Full conflict of interest check performed across all firm attorneys and matters. If clear, engagement letter generated with scope of representation, fee arrangement, retainer amount, and client responsibilities. Client reviews, signs (e-signature), and pays retainer.",
+            "category": "Engagement",
+            "estimatedDuration": 30,
+            "businessRationale": "Comprehensive conflict checking is an ethical obligation \u2014 violations lead to disqualification, malpractice suits, and bar discipline. Retainer collection at engagement ensures cash flow \u2014 average retainer is $2,500-10,000 depending on matter.",
+            "substeps": [
+                {
+                    "substepName": "FullConflictCheckAndClearance",
+                    "duration": 15
+                },
+                {
+                    "substepName": "EngagementLetterAndRetainer",
+                    "duration": 15
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "MatterSetup",
+            "serviceName": "MatterSetupService",
+            "description": "New matter created in practice management system. Matter number assigned, billing rates configured, responsible and supervising attorneys designated. Document management folders created. Client portal access provisioned for secure communication and document sharing.",
+            "category": "Setup",
+            "estimatedDuration": 15,
+            "businessRationale": "Proper matter setup prevents billing errors that cost firms 5-10% of revenue in write-offs. Client portals reduce email-based communication (creating privilege waiver risk) and improve client satisfaction by 30%.",
+            "substeps": [
+                {
+                    "substepName": "MatterCreationAndBillingConfig",
+                    "duration": 10
+                },
+                {
+                    "substepName": "ClientPortalProvisioning",
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "StrategyAndPlanDevelopment",
+            "serviceName": "StrategyAndPlanDevelopmentService",
+            "description": "Attorney develops initial case strategy: key legal issues, required evidence, witness list, timeline of critical dates (statute of limitations, filing deadlines). Budget estimate prepared. Strategy memo reviewed with supervising attorney. Client briefed on expected timeline and next steps.",
+            "category": "Strategy",
+            "estimatedDuration": 120,
+            "businessRationale": "Early strategy development prevents missed deadlines (malpractice risk) and sets realistic client expectations. Budget transparency reduces billing surprise complaints by 70%. Supervised strategy review ensures quality and mentoring.",
+            "substeps": [
+                {
+                    "substepName": "LegalResearchAndStrategyMemo",
+                    "duration": 90
+                },
+                {
+                    "substepName": "ClientBriefingAndBudgetEstimate",
+                    "duration": 30
+                }
+            ]
+        }
+    ],
+    "additionalFields": {
+        "orderTotal": 500,
+        "transactionValue": 500,
+        "averageOrderValue": 350,
+        "contractValue": 15000,
+        "annualRevenue": 15000,
+        "revenuePerCustomer": 25000,
+        "profitMargin": 42.0,
+        "customerLifetimeValue": 75000,
+        "lifetimeValue": 75000,
+        "acquisitionCost": 1200,
+        "costPerAcquisition": 1200,
+        "conversionProbability": 0.35,
+        "conversionRate": 35,
+        "engagementScore": 72,
+        "timeToConversion": 7200,
+        "netPromoterScore": 42,
+        "satisfactionRating": 4.0,
+        "retentionProbability": 0.75,
+        "processingTime": 3600,
+        "operationalCost": 250,
+        "efficiencyRating": 62,
+        "complianceScore": 98,
+        "channel": [
+            "website_form",
+            "phone_enquiry",
+            "referral",
+            "legal_aid_portal",
+            "walk_in"
+        ],
+        "deviceType": [
+            "mobile",
+            "mobile",
+            "desktop",
+            "desktop",
+            "desktop"
+        ],
+        "region": [
+            "London",
+            "Southeast",
+            "Northwest",
+            "Midlands",
+            "Scotland"
+        ],
+        "customerSegmentValue": [
+            "private_paying",
+            "legal_aid",
+            "corporate_client",
+            "insurance_referral",
+            "pro_bono"
+        ],
+        "loyaltyTier": [
+            "Premium Client",
+            "Legal Aid",
+            "Corporate Retainer",
+            "Insurance Panel",
+            "Pro Bono"
+        ],
+        "segment": [
+            "personal_injury",
+            "family_law",
+            "employment_dispute",
+            "commercial_litigation",
+            "criminal_defence"
+        ],
+        "Productname": [
+            "Personal Injury Initial Consultation",
+            "Divorce Proceedings Intake",
+            "Employment Tribunal Case",
+            "Commercial Dispute Assessment",
+            "Criminal Defence Consultation"
+        ],
+        "ProductId": [
+            "LEG-CI-001",
+            "LEG-CI-002",
+            "LEG-CI-003",
+            "LEG-CI-004",
+            "LEG-CI-005"
+        ],
+        "ProductType": [
+            "personal_injury",
+            "family_law",
+            "employment",
+            "commercial",
+            "criminal"
+        ],
+        "Price": [
+            0,
+            500,
+            350,
+            750,
+            250
+        ],
+        "feeArrangement": [
+            "no_win_no_fee",
+            "fixed_fee",
+            "hourly_rate",
+            "retainer",
+            "legal_aid"
+        ],
+        "estimatedCaseValue": [
+            25000,
+            0,
+            15000,
+            250000,
+            0
+        ],
+        "conflictCheckPassed": [
+            true,
+            true,
+            true,
+            true,
+            true
+        ],
+        "urgencyLevel": [
+            "standard",
+            "urgent",
+            "standard",
+            "high",
+            "emergency"
+        ],
+        "jurisdictionType": [
+            "england_wales",
+            "england_wales",
+            "employment_tribunal",
+            "high_court",
+            "crown_court"
+        ],
+        "marketTrend": [
+            "legal_tech",
+            "online_dispute_resolution",
+            "ai_triage",
+            "unbundled_services",
+            "fixed_fee_transparency"
+        ]
+    }
+}

@@ -1,0 +1,273 @@
+{
+    "companyName": "OceanTech Shipping",
+    "domain": "https://www.oceantech-shipping.com",
+    "industryType": "Shipping & Maritime",
+    "journeyType": "Voyage Optimization",
+    "journeyDetail": "AI-Powered Maritime Voyage Optimisation",
+    "journeyId": "journey_voyage_optimization_e52ab270",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "VoyagePlanning",
+            "serviceName": "VoyagePlanService",
+            "description": "AI generates optimal voyage plans: weather routing, ocean current exploitation, canal transit scheduling, and fuel consumption minimisation. Multi-port rotation optimisation.",
+            "category": "Planning",
+            "estimatedDuration": 24,
+            "businessRationale": "Fuel accounts for 50-60% of voyage costs. AI voyage optimisation reduces fuel consumption by 5-15% per voyage.",
+            "substeps": [
+                {
+                    "substepName": "WeatherRouting",
+                    "duration": 8
+                },
+                {
+                    "substepName": "CurrentExploitation",
+                    "duration": 8
+                },
+                {
+                    "substepName": "FuelOptimization",
+                    "duration": 8
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "SpeedOptimization",
+            "serviceName": "SpeedOptService",
+            "description": "AI calculates optimal speed profile: just-in-time arrival (virtual arrival), weather-adaptive speed, and fuel-emission trade-offs. CII and EEXI compliance optimisation.",
+            "category": "Operations",
+            "estimatedDuration": 0.5,
+            "businessRationale": "Slowing from 14 to 12 knots reduces fuel consumption by 30%. Just-in-time arrival eliminates waiting at anchor ($20K/day cost).",
+            "substeps": [
+                {
+                    "substepName": "JustInTimeArrival",
+                    "duration": 0.2
+                },
+                {
+                    "substepName": "WeatherAdaptiveSpeed",
+                    "duration": 0.15
+                },
+                {
+                    "substepName": "EmissionCompliance",
+                    "duration": 0.15
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "CargoOptimization",
+            "serviceName": "CargoOptService",
+            "description": "AI optimises cargo operations: stowage planning, stability calculations, stress analysis, and dangerous goods segregation. Container weight distribution and reefer positioning.",
+            "category": "Loading",
+            "estimatedDuration": 8,
+            "businessRationale": "Optimal stowage reduces port time by 10-15% (fewer moves) and ensures vessel stability. Poor stowage has caused vessel capsizing.",
+            "substeps": [
+                {
+                    "substepName": "StowagePlanning",
+                    "duration": 3
+                },
+                {
+                    "substepName": "StabilityCalculation",
+                    "duration": 2.5
+                },
+                {
+                    "substepName": "DGSegregation",
+                    "duration": 2.5
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "FleetPositioning",
+            "serviceName": "FleetPositionService",
+            "description": "AI manages fleet positioning: trade lane optimisation, ballast voyage minimisation, and charter-in/charter-out decisions. Seasonal demand forecasting for fleet allocation.",
+            "category": "Strategy",
+            "estimatedDuration": 168,
+            "businessRationale": "Ballast voyages (empty ships repositioning) account for 40% of all voyages. AI reduces ballast by 15% through smarter fleet positioning.",
+            "substeps": [
+                {
+                    "substepName": "TradeLaneOptimization",
+                    "duration": 56
+                },
+                {
+                    "substepName": "BallastMinimisation",
+                    "duration": 56
+                },
+                {
+                    "substepName": "CharterDecisions",
+                    "duration": 56
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "EmissionsManagement",
+            "serviceName": "EmissionsService",
+            "description": "AI manages carbon emissions: EU ETS compliance, CII rating tracking, and alternative fuel transition planning (LNG, methanol, ammonia). Carbon credit trading optimisation.",
+            "category": "Compliance",
+            "estimatedDuration": 24,
+            "businessRationale": "EU ETS adds $20-50 per tonne CO2 cost. CII non-compliance results in speed restrictions that destroy commercial capacity.",
+            "substeps": [
+                {
+                    "substepName": "EUETSCompliance",
+                    "duration": 8
+                },
+                {
+                    "substepName": "CIITracking",
+                    "duration": 8
+                },
+                {
+                    "substepName": "AlternativeFuelPlanning",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "VoyageAnalytics",
+            "serviceName": "VoyageAnalyticsService",
+            "description": "AI generates voyage reports: actual vs planned performance, fuel efficiency, charter party compliance, and demurrage/despatch calculations. Fleet environmental reporting.",
+            "category": "Analytics",
+            "estimatedDuration": 168,
+            "businessRationale": "Voyage analytics identify $millions in performance improvement opportunities. Charter party disputes cost $10K-100K each; AI evidence prevents disputes.",
+            "substeps": [
+                {
+                    "substepName": "PerformanceComparison",
+                    "duration": 56
+                },
+                {
+                    "substepName": "FuelEfficiency",
+                    "duration": 56
+                },
+                {
+                    "substepName": "CharterCompliance",
+                    "duration": 56
+                }
+            ]
+        }
+    ],
+    "id": "0f95db40-e121-4943-82d0-197769ebf06f",
+    "name": "Shipping & Maritime - Voyage Optimization",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 10000000,
+        "annualRevenue": 5000000000,
+        "revenuePerCustomer": 100000000,
+        "profitMargin": 15.0,
+        "customerLifetimeValue": 1000000000,
+        "lifetimeValue": 1000000000,
+        "acquisitionCost": 0,
+        "costPerAcquisition": 0,
+        "conversionProbability": 1.0,
+        "conversionRate": 100,
+        "engagementScore": 85,
+        "timeToConversion": 0,
+        "sessionDuration": 28800,
+        "pageViews": 35,
+        "purchaseFrequency": 365,
+        "netPromoterScore": 0,
+        "satisfactionRating": 0,
+        "retentionProbability": 1.0,
+        "processingTime": 720,
+        "operationalCost": 3000000000,
+        "efficiencyRating": 72,
+        "fuelSavings": 12,
+        "ciiRating": "B",
+        "channel": [
+            "fleet_management_system",
+            "bridge_ECDIS",
+            "office_chartering",
+            "weather_routing_provider",
+            "emission_registry"
+        ],
+        "deviceType": [
+            "desktop",
+            "bridge_panel",
+            "desktop",
+            "server",
+            "desktop"
+        ],
+        "region": [
+            "Asia-Europe",
+            "Trans-Pacific",
+            "Trans-Atlantic",
+            "Middle East-Asia",
+            "Intra-Asia"
+        ],
+        "customerSegmentValue": [
+            "container_line",
+            "dry_bulk",
+            "tanker_crude",
+            "tanker_product",
+            "LNG_carrier"
+        ],
+        "loyaltyTier": [
+            "Top 10 Operator",
+            "Major Operator",
+            "Regional Operator",
+            "Niche Operator",
+            "Spot Charter"
+        ],
+        "segment": [
+            "container",
+            "dry_bulk",
+            "crude_tanker",
+            "product_tanker",
+            "gas_carrier"
+        ],
+        "Productname": [
+            "Weather Routing AI",
+            "Speed Optimiser",
+            "Cargo Planning Suite",
+            "Fleet Position Optimizer",
+            "Emission Manager"
+        ],
+        "ProductId": [
+            "VOY-WR-001",
+            "VOY-SO-002",
+            "VOY-CP-003",
+            "VOY-FP-004",
+            "VOY-EM-005"
+        ],
+        "ProductType": [
+            "weather_routing",
+            "speed_optimization",
+            "cargo_planning",
+            "fleet_positioning",
+            "emission_management"
+        ],
+        "Price": [
+            3000000,
+            2000000,
+            1500000,
+            5000000,
+            1000000
+        ],
+        "vesselCount": [
+            600,
+            200,
+            150,
+            300,
+            50
+        ],
+        "fuelCostPerDay": [
+            35000,
+            20000,
+            25000,
+            15000,
+            45000
+        ],
+        "marketTrend": [
+            "decarbonisation_2050",
+            "autonomous_ships",
+            "digital_twin_vessel",
+            "alternative_fuels",
+            "just_in_time_arrival"
+        ]
+    }
+}

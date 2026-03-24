@@ -1,0 +1,264 @@
+{
+    "companyName": "Pharma Corp",
+    "domain": "https://www.pharma-corp.com",
+    "industryType": "Pharmaceuticals & Life Sciences",
+    "source": "sector-demo",
+    "timestamp": "2026-01-09T15:50:00.000Z",
+    "journeyType": "Drug Trial Enrolment",
+    "journeyDetail": "Drug Trial Enrolment Journey",
+    "journeyId": "journey_pharma_trial_2026",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "id": "a1b2c3d4-1010-4aaa-b101-000000000001",
+    "name": "Pharmaceuticals - Drug Trial Enrolment",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "TrialDiscovery",
+            "serviceName": "TrialDiscoveryService",
+            "description": "Patient or referring physician searches clinical trial registry for eligible studies. Matching engine scores patient against inclusion/exclusion criteria from trial protocol. Nearby trial sites identified with travel distance calculations.",
+            "category": "Discovery",
+            "estimatedDuration": 20,
+            "businessRationale": "Patient recruitment is the #1 bottleneck in clinical trials \u2014 80% of trials miss enrolment deadlines. Each day of delay costs sponsors $600K-8M. AI matching pre-screens 10x more candidates per hour than manual review.",
+            "substeps": [
+                {
+                    "substepName": "TrialSearchAndCriteriaMatch",
+                    "duration": 12
+                },
+                {
+                    "substepName": "SiteLocationAndDistance",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "PreScreening",
+            "serviceName": "PreScreeningService",
+            "description": "Potential participant completes online pre-screening questionnaire covering medical history, current medications, and key eligibility criteria. Electronic health record (EHR) integration auto-populates where authorised. Pre-screening result determines if patient proceeds to site visit.",
+            "category": "Screening",
+            "estimatedDuration": 30,
+            "businessRationale": "Digital pre-screening eliminates 60% of ineligible candidates before site visit, saving $1,500 per avoided screen failure. EHR integration reduces data entry errors by 85% and questionnaire time by 70%.",
+            "substeps": [
+                {
+                    "substepName": "EligibilityQuestionnaireAndEHR",
+                    "duration": 20
+                },
+                {
+                    "substepName": "PreScreenResultAndNotification",
+                    "duration": 10
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "InformedConsent",
+            "serviceName": "InformedConsentService",
+            "description": "Patient reviews detailed informed consent document explaining trial purpose, procedures, risks, benefits, and alternatives. eConsent platform allows multimedia explanations, knowledge checks, and electronic signature. Consent version control ensures current protocol version used.",
+            "category": "Consent",
+            "estimatedDuration": 45,
+            "businessRationale": "Informed consent is legally and ethically mandatory. eConsent reduces consent errors by 50% and improves patient comprehension scores from 60% to 90%. Version control prevents costly protocol deviations.",
+            "substeps": [
+                {
+                    "substepName": "ConsentDocumentReviewAndQuiz",
+                    "duration": 30
+                },
+                {
+                    "substepName": "ESignatureAndVersionControl",
+                    "duration": 15
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "ScreeningVisit",
+            "serviceName": "ScreeningVisitService",
+            "description": "Patient attends clinical site for comprehensive screening: physical examination, lab work (blood, urine), ECG, medical imaging as required by protocol. Screening data entered into Electronic Data Capture (EDC) system. Eligibility confirmed by investigator.",
+            "category": "Clinical",
+            "estimatedDuration": 180,
+            "businessRationale": "Screening visits cost $2,000-5,000 per patient. Screen failure rate averages 25-30% even after pre-screening. Rapid lab results reduce screening period from 2 weeks to 3 days, accelerating enrolment.",
+            "substeps": [
+                {
+                    "substepName": "PhysicalExamAndLabWork",
+                    "duration": 120
+                },
+                {
+                    "substepName": "EDCEntryAndEligibilityConfirm",
+                    "duration": 60
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "Randomisation",
+            "serviceName": "RandomisationService",
+            "description": "Eligible patient randomised to treatment arm via Interactive Response Technology (IRT). Blinding maintained through drug kit assignment. Stratification factors (age, disease severity, site) balanced across arms. Randomisation number and drug kit number assigned.",
+            "category": "Assignment",
+            "estimatedDuration": 10,
+            "businessRationale": "Proper randomisation is essential for regulatory submission \u2014 FDA rejects trials with randomisation integrity issues. IRT eliminates human error in assignment. Stratification ensures balanced arms for statistical validity.",
+            "substeps": [
+                {
+                    "substepName": "IRTRandomisationAndBlinding",
+                    "duration": 5
+                },
+                {
+                    "substepName": "DrugKitAssignment",
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "BaselineAssessment",
+            "serviceName": "BaselineAssessmentService",
+            "description": "Patient completes baseline efficacy assessments per protocol: disease-specific scales, quality of life questionnaires, biomarker samples. Baseline data establishes comparison point for treatment effect measurement. Patient diary and reporting app configured for ongoing data collection.",
+            "category": "Assessment",
+            "estimatedDuration": 90,
+            "businessRationale": "Accurate baselines are critical \u2014 missing or incomplete baseline data makes the patient evaluable but reduces statistical power. Each non-evaluable patient costs $30K-50K in wasted trial investment. Digital diaries improve compliance from 60% to 92%.",
+            "substeps": [
+                {
+                    "substepName": "EfficacyScalesAndBiomarkers",
+                    "duration": 60
+                },
+                {
+                    "substepName": "PatientDiaryAndAppSetup",
+                    "duration": 30
+                }
+            ]
+        }
+    ],
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 85000,
+        "annualRevenue": 0,
+        "revenuePerCustomer": 85000,
+        "profitMargin": -100.0,
+        "customerLifetimeValue": 250000,
+        "lifetimeValue": 250000,
+        "acquisitionCost": 42000,
+        "conversionProbability": 0.12,
+        "conversionRate": 12,
+        "engagementScore": 72,
+        "timeToConversion": 129600,
+        "netPromoterScore": 35,
+        "satisfactionRating": 3.8,
+        "retentionProbability": 0.68,
+        "processingTime": 2592000,
+        "operationalCost": 15000,
+        "efficiencyRating": 45,
+        "complianceScore": 99,
+        "channel": [
+            "clinical_trial_portal",
+            "physician_referral",
+            "patient_advocacy",
+            "research_site",
+            "digital_recruitment"
+        ],
+        "deviceType": [
+            "desktop",
+            "desktop",
+            "mobile",
+            "desktop",
+            "mobile"
+        ],
+        "region": [
+            "North America",
+            "Europe",
+            "APAC",
+            "LATAM",
+            "Africa"
+        ],
+        "customerSegmentValue": [
+            "treatment_naive",
+            "treatment_experienced",
+            "biomarker_positive",
+            "healthy_volunteer",
+            "paediatric"
+        ],
+        "loyaltyTier": [
+            "Phase I Volunteer",
+            "Phase II Patient",
+            "Phase III Participant",
+            "Long Term Extension",
+            "Compassionate Use"
+        ],
+        "segment": [
+            "phase_1_safety",
+            "phase_2_efficacy",
+            "phase_3_pivotal",
+            "phase_4_post_market",
+            "expanded_access"
+        ],
+        "Productname": [
+            "Oncology Phase III Trial",
+            "Cardiology Phase II Study",
+            "Immunology Phase I First-in-Human",
+            "Neurology Post-Market Study",
+            "Rare Disease Expanded Access"
+        ],
+        "ProductId": [
+            "PH-CT-001",
+            "PH-CT-002",
+            "PH-CT-003",
+            "PH-CT-004",
+            "PH-CT-005"
+        ],
+        "ProductType": [
+            "phase_3",
+            "phase_2",
+            "phase_1",
+            "phase_4",
+            "expanded_access"
+        ],
+        "Price": [
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "trialPhase": [
+            3,
+            2,
+            1,
+            4,
+            0
+        ],
+        "patientScreeningRate": [
+            0.35,
+            0.42,
+            0.55,
+            0.8,
+            0.9
+        ],
+        "informedConsentSigned": [
+            true,
+            true,
+            true,
+            true,
+            true
+        ],
+        "inclusionCriteriaMet": [
+            true,
+            true,
+            true,
+            true,
+            true
+        ],
+        "randomisationArm": [
+            "treatment",
+            "placebo",
+            "treatment",
+            "open_label",
+            "treatment"
+        ],
+        "marketTrend": [
+            "decentralised_trials",
+            "digital_endpoints",
+            "real_world_evidence",
+            "patient_centricity",
+            "adaptive_design"
+        ]
+    }
+}

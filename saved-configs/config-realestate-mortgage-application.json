@@ -1,0 +1,278 @@
+{
+    "companyName": "Real Estate",
+    "domain": "https://www.realestate-hub.com",
+    "industryType": "Real Estate & Property",
+    "source": "sector-demo",
+    "timestamp": "2026-01-09T15:25:00.000Z",
+    "journeyType": "Mortgage Application",
+    "journeyDetail": "Mortgage Application Journey",
+    "journeyId": "journey_realestate_mortgage_2026",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "id": "a1b2c3d4-5555-4aaa-b555-000000000002",
+    "name": "Real Estate - Mortgage Application",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "PreQualification",
+            "serviceName": "PreQualificationService",
+            "description": "Borrower provides income, employment, debts, and credit score estimate for initial borrowing capacity assessment. Multiple loan products compared: fixed, variable, interest-only, FHA/VA. Pre-qualification letter generated.",
+            "category": "Assessment",
+            "estimatedDuration": 20,
+            "businessRationale": "Pre-qualified buyers are taken seriously by sellers \u2014 offers from pre-qualified buyers are accepted 50% more often. Pre-qual also sets realistic budget expectations early.",
+            "substeps": [
+                {
+                    "substepName": "IncomeAndDebtCapture",
+                    "duration": 10
+                },
+                {
+                    "substepName": "LoanProductComparisonAndPreQualLetter",
+                    "duration": 10
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "FullApplicationSubmission",
+            "serviceName": "FullApplicationSubmissionService",
+            "description": "Borrower completes formal mortgage application with detailed financial disclosure. 2 years of tax returns, pay stubs, bank statements, and employment verification uploaded. Application fee collected.",
+            "category": "Application",
+            "estimatedDuration": 60,
+            "businessRationale": "Application completion rate is 72% \u2014 dropoff caused by document complexity. Guided upload with real-time completeness checking reduces abandonment by 25%. Average application fee is $300-500.",
+            "substeps": [
+                {
+                    "substepName": "FinancialDisclosureAndDocUpload",
+                    "duration": 40
+                },
+                {
+                    "substepName": "ApplicationFeeAndSubmission",
+                    "duration": 20
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "UnderwritingReview",
+            "serviceName": "UnderwritingReviewService",
+            "description": "Underwriter evaluates borrower risk: credit report pulled, debt-to-income ratio calculated, employment stability assessed. Property appraisal ordered to confirm collateral value. Conditions listed for any documentation gaps.",
+            "category": "Underwriting",
+            "estimatedDuration": 2880,
+            "businessRationale": "Underwriting is the longest and most critical phase. Average processing is 3-5 weeks. Automated underwriting engines (AUS) can issue approvals in minutes for clean files, reducing cost from $2,000 to $500.",
+            "substeps": [
+                {
+                    "substepName": "CreditAndDTIAnalysis",
+                    "duration": 1440
+                },
+                {
+                    "substepName": "AppraisalAndConditionsList",
+                    "duration": 1440
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "ConditionalApproval",
+            "serviceName": "ConditionalApprovalService",
+            "description": "Underwriter issues conditional approval with list of outstanding conditions. Borrower and loan officer work to satisfy conditions: additional documentation, letter of explanation, or updated pay stubs. Each condition cleared moves file toward final approval.",
+            "category": "Approval",
+            "estimatedDuration": 1440,
+            "businessRationale": "Average file has 8-12 conditions. Each uncleared condition delays closing by 3-5 days. Loan officers clearing conditions within 48 hours close 15 days faster on average.",
+            "substeps": [
+                {
+                    "substepName": "ConditionReviewAndDocCollection",
+                    "duration": 720
+                },
+                {
+                    "substepName": "ConditionClearanceAndResubmit",
+                    "duration": 720
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "FinalApprovalAndClosingDisclosure",
+            "serviceName": "FinalApprovalAndClosingDisclosureService",
+            "description": "All conditions satisfied \u2014 underwriter issues clear-to-close. Closing disclosure (CD) generated showing final loan terms, closing costs, and cash-to-close amount. Borrower reviews 3-day mandatory waiting period before closing.",
+            "category": "Closing",
+            "estimatedDuration": 4320,
+            "businessRationale": "The 3-day CD review period is federally mandated (TRID). Any changes to loan terms restart the clock. Clean CDs prevent costly closing delays \u2014 each day of delay costs borrower ~$50-100 in rate lock extensions.",
+            "substeps": [
+                {
+                    "substepName": "ClearToCloseAndCDGeneration",
+                    "duration": 1440
+                },
+                {
+                    "substepName": "ThreeDayReviewPeriod",
+                    "duration": 2880
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "ClosingAndFunding",
+            "serviceName": "ClosingAndFundingService",
+            "description": "Borrower signs closing documents at title company. Wire transfer of down payment and closing costs verified. Lender funds the loan, deed recorded with county. Keys handed over and mortgage servicing begins.",
+            "category": "Financial",
+            "estimatedDuration": 120,
+            "businessRationale": "Closing day funds transfer averages $250K-500K per transaction. Wire fraud prevention is critical \u2014 losses exceed $1B annually in real estate. Successful closing generates $5K-15K in lender revenue per loan.",
+            "substeps": [
+                {
+                    "substepName": "DocumentSigningAndWireVerification",
+                    "duration": 60
+                },
+                {
+                    "substepName": "LoanFundingAndDeedRecording",
+                    "duration": 60
+                }
+            ]
+        }
+    ],
+    "additionalFields": {
+        "orderTotal": 325000,
+        "transactionValue": 325000,
+        "averageOrderValue": 285000,
+        "contractValue": 485000,
+        "annualRevenue": 12000,
+        "revenuePerCustomer": 45000,
+        "profitMargin": 28.0,
+        "customerLifetimeValue": 180000,
+        "lifetimeValue": 180000,
+        "acquisitionCost": 1500,
+        "conversionProbability": 0.55,
+        "conversionRate": 55,
+        "engagementScore": 78,
+        "timeToConversion": 43200,
+        "netPromoterScore": 32,
+        "satisfactionRating": 3.6,
+        "retentionProbability": 0.8,
+        "processingTime": 604800,
+        "operationalCost": 850,
+        "efficiencyRating": 52,
+        "complianceScore": 97,
+        "fraudRisk": [
+            "low",
+            "low",
+            "medium",
+            "low",
+            "low"
+        ],
+        "riskLevel": [
+            "standard",
+            "low",
+            "elevated",
+            "standard",
+            "low"
+        ],
+        "channel": [
+            "mortgage_broker",
+            "direct_lender",
+            "comparison_site",
+            "estate_agent_referral",
+            "mobile_app"
+        ],
+        "deviceType": [
+            "desktop",
+            "desktop",
+            "desktop",
+            "desktop",
+            "mobile"
+        ],
+        "region": [
+            "London",
+            "Southeast",
+            "Northwest",
+            "Midlands",
+            "Scotland"
+        ],
+        "customerSegmentValue": [
+            "first_time_buyer",
+            "remortgager",
+            "buy_to_let",
+            "home_mover",
+            "shared_ownership"
+        ],
+        "loyaltyTier": [
+            "New Customer",
+            "Existing Customer",
+            "Investor",
+            "Home Mover",
+            "Shared Ownership"
+        ],
+        "segment": [
+            "fixed_rate_2yr",
+            "fixed_rate_5yr",
+            "tracker_variable",
+            "offset_mortgage",
+            "interest_only"
+        ],
+        "Productname": [
+            "2-Year Fixed 4.25%",
+            "5-Year Fixed 3.99%",
+            "Base Rate Tracker +0.75%",
+            "Offset Mortgage 4.15%",
+            "Interest Only BTL 5.25%"
+        ],
+        "ProductId": [
+            "RE-MG-101",
+            "RE-MG-102",
+            "RE-MG-103",
+            "RE-MG-104",
+            "RE-MG-105"
+        ],
+        "ProductType": [
+            "fixed_2yr",
+            "fixed_5yr",
+            "tracker",
+            "offset",
+            "interest_only"
+        ],
+        "Price": [
+            325000,
+            280000,
+            245000,
+            350000,
+            200000
+        ],
+        "ltvPercent": [
+            90,
+            75,
+            80,
+            65,
+            75
+        ],
+        "interestRate": [
+            4.25,
+            3.99,
+            4.5,
+            4.15,
+            5.25
+        ],
+        "mortgageTerm": [
+            25,
+            30,
+            25,
+            20,
+            25
+        ],
+        "monthlyPayment": [
+            1780,
+            1335,
+            1425,
+            1890,
+            875
+        ],
+        "depositAmount": [
+            36000,
+            93000,
+            61000,
+            188000,
+            67000
+        ],
+        "marketTrend": [
+            "rate_sensitivity",
+            "green_mortgage_discount",
+            "digital_mortgage",
+            "stress_test_reform",
+            "shared_ownership_expansion"
+        ]
+    }
+}

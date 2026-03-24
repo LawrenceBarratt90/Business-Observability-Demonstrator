@@ -45,6 +45,7 @@ export function getProvenVariables(company) {
       version: 2,
       editable: true,
       multiple: true,
+      defaultValue: '3420b2ac-f1cf-4b24-b62d-61ba1ba8ed05*',
       input: `fetch bizevents \n| filter json.companyName == $CompanyName\n| fields json.journeyType | dedup json.journeyType`
     },
     {
@@ -54,6 +55,7 @@ export function getProvenVariables(company) {
       version: 2,
       editable: true,
       multiple: true,
+      defaultValue: '3420b2ac-f1cf-4b24-b62d-61ba1ba8ed05*',
       input: `fetch bizevents | filter event.kind == "BIZ_EVENT" | filter in(json.journeyType, $JourneyType) | filter json.companyName == "${company}" | fields json.stepName | dedup json.stepName`
     },
     {
@@ -63,6 +65,7 @@ export function getProvenVariables(company) {
       version: 2,
       editable: true,
       multiple: true,
+      defaultValue: '3420b2ac-f1cf-4b24-b62d-61ba1ba8ed05*',
       input: `fetch bizevents\n| fields json.serviceName, json.companyName, json.journeyType\n| summarize count(),by:{json.companyName, json.journeyType, json.serviceName}\n| filter json.companyName == $CompanyName \n| filter in(json.journeyType, $JourneyType)\n| dedup json.serviceName\n| fields json.serviceName = lower(json.serviceName)\n| filter isNotNull(json.serviceName)`
     },
     {
@@ -72,7 +75,8 @@ export function getProvenVariables(company) {
       version: 2,
       editable: true,
       multiple: true,
-      input: `smartscapeNodes PROCESS\n| lookup [smartscapeNodes SERVICE | fields id, name], sourceField:name, lookupField:name, prefix:"svc."\n| lookup [timeseries cpu = avg(dt.process.cpu.usage), by:{dt.smartscape.process}], sourceField:id, lookupField:dt.smartscape.process, fields:{cpu}\n| filter isNotNull(cpu)\n| fieldsAdd LowerService = lower(process.metadata[DYNATRACE_CLUSTER_ID])\n| filter in(LowerService, $Service)\n| fields id\n| dedup id`
+      defaultValue: '3420b2ac-f1cf-4b24-b62d-61ba1ba8ed05*',
+      input: `smartscapeNodes PROCESS\n| lookup [smartscapeNodes SERVICE | fields id, name], sourceField:name, lookupField:name, prefix:"svc."\n| lookup [timeseries cpu = avg(dt.process.cpu.usage), by:{dt.smartscape.process}], sourceField:id, lookupField:dt.smartscape.process, fields:{cpu}\n| filter isNotNull(cpu)\n| fieldsAdd LowerService = lower(name)\n| filter in(LowerService, $Service)\n| fields id\n| dedup id`
     }
   ];
 }
@@ -99,15 +103,16 @@ const DAVIS_CONFIG = {
 // ============================================================================
 
 const COLORS = {
-  green: '#2ab06f',
-  yellow: '#f5d30f',
-  red: '#dc2626',
-  crimson: '#c62239',
+  // Dynatrace theme-aware CSS variables (adapt to dark/light mode automatically)
+  green: 'var(--dt-colors-charts-status-ideal-default, #2f6862)',
+  yellow: 'var(--dt-colors-charts-status-warning-default, #eea53c)',
+  red: 'var(--dt-colors-charts-status-critical-default, #c62239)',
+  crimson: 'var(--dt-colors-charts-status-critical-default, #c62239)',
   blue: '#478ACA',
   purple: '#7C38A1',
   violet: '#7C3AED',
   orange: '#E87A35',
-  teal: '#2AB06F',
+  teal: 'var(--dt-colors-charts-status-ideal-default, #2f6862)',
   dtIdeal: 'var(--dt-colors-charts-status-ideal-default, #2f6862)',
   dtWarning: 'var(--dt-colors-charts-status-warning-default, #eea53c)',
   dtCritical: 'var(--dt-colors-charts-status-critical-default, #c62239)',

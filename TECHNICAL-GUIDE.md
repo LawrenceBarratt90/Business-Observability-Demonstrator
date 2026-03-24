@@ -438,15 +438,19 @@ These events appear as deployment markers on the affected service in Dynatrace, 
 
 ## Forge UI Pages (AppEngine)
 
-The Dynatrace AppEngine app has 5 pages:
+The Dynatrace AppEngine app has 7 routes:
 
 | Page | Route | Purpose |
 |------|-------|---------|
-| **Home** | `/` | Welcome, Get Started wizard, Template Library, Journey Builder (4-tab flow) |
-| **Services** | `/services` | Live service dashboard with start/stop controls per company |
+| **Home** | `/` | Welcome, Get Started wizard, Template Library, Journey Builder, Active Journeys, Nemesis Chaos modal |
+| **Services** | `/services` | Live service dashboard with start/stop controls per company (accessible via direct URL) |
 | **Chaos Control** | `/chaos` | Select a service, pick a chaos type, inject — with live active faults list |
 | **Fix-It Agent** | `/fixit` | Trigger automated diagnosis and remediation |
 | **Settings** | `/settings` | Configure server IP, API tokens, EdgeConnect credentials |
+| **Demo Guide** | `/demo-guide` | Interactive walkthrough paths for demos (Quick Start, Chaos & Fix-It, Traces, Platform, LiveDebugger) |
+| **Solutions** | `/solutions` | Industry solutions showcase with Dynatrace capability mapping |
+
+> **Note:** The primary navigation is the Home page with 3 tabs: Welcome, Customer Details, Generate Prompts. Chaos control is also accessible via the Nemesis modal on the Home page. Active Journeys shows running services and their status.
 
 > 📸 **Screenshot: Chaos Control Page** — *The Forge UI Chaos Control page showing: the service selector dropdown with a healthcare service selected, the chaos type picker (enable_errors, slow_responses, etc.), the intensity slider, and below it the "Active Faults" list showing one or two injected faults with their target service, type, and a "Revert" button.*
 

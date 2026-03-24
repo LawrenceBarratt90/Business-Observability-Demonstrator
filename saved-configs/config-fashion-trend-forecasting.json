@@ -1,0 +1,273 @@
+{
+    "companyName": "StyleAI Fashion",
+    "domain": "https://www.styleai-fashion.com",
+    "industryType": "Fashion & Apparel",
+    "journeyType": "Trend Forecasting",
+    "journeyDetail": "AI-Driven Fashion Trend Prediction & Merchandising",
+    "journeyId": "journey_trend_forecasting_881ba859",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "SignalDetection",
+            "serviceName": "SignalDetectionService",
+            "description": "AI monitors runway shows, street style, social media, search trends, and cultural shifts. Natural language processing identifies emerging theme clusters 6-12 months ahead.",
+            "category": "Intelligence",
+            "estimatedDuration": 168,
+            "businessRationale": "Trend detection 6 months early enables design lead time. Brands that lead trends achieve 3-5x sell-through vs followers.",
+            "substeps": [
+                {
+                    "substepName": "RunwayAnalysis",
+                    "duration": 40
+                },
+                {
+                    "substepName": "SocialListening",
+                    "duration": 64
+                },
+                {
+                    "substepName": "SearchTrending",
+                    "duration": 64
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "TrendValidation",
+            "serviceName": "ValidationService",
+            "description": "AI validates trend signals against historical adoption curves. Differentiates fads from sustainable trends. Market sizing per trend for different customer segments.",
+            "category": "Analysis",
+            "estimatedDuration": 72,
+            "businessRationale": "Investing in fads wastes design and production budget. Validated trends have 80% chance of commercial success vs 25% for unvalidated.",
+            "substeps": [
+                {
+                    "substepName": "AdoptionModelling",
+                    "duration": 24
+                },
+                {
+                    "substepName": "FadFiltering",
+                    "duration": 24
+                },
+                {
+                    "substepName": "MarketSizing",
+                    "duration": 24
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "AssortmentPlanning",
+            "serviceName": "AssortmentService",
+            "description": "AI translates trend insights into buy plans: SKU count, colour palette, size curve, and price architecture. Regional demand differences factored in.",
+            "category": "Merchandising",
+            "estimatedDuration": 168,
+            "businessRationale": "Optimal assortment drives full-price sell-through from 55% to 75%. Over-buying causes markdowns that erode margin by 15-25%.",
+            "substeps": [
+                {
+                    "substepName": "SKUPlanning",
+                    "duration": 56
+                },
+                {
+                    "substepName": "ColourPalette",
+                    "duration": 56
+                },
+                {
+                    "substepName": "SizeCurveOptimization",
+                    "duration": 56
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "DemandForecasting",
+            "serviceName": "DemandForecastService",
+            "description": "AI predicts demand per SKU by store and channel. Weather adjustments, event calendars, and promotional uplift factored in. Safety stock calculated.",
+            "category": "Planning",
+            "estimatedDuration": 48,
+            "businessRationale": "Demand forecast accuracy directly affects markdowns and stockouts. 5% accuracy improvement = 2% margin improvement on a $100M brand.",
+            "substeps": [
+                {
+                    "substepName": "ChannelForecasting",
+                    "duration": 16
+                },
+                {
+                    "substepName": "WeatherAdjustment",
+                    "duration": 16
+                },
+                {
+                    "substepName": "SafetyStockCalc",
+                    "duration": 16
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "PricingOptimization",
+            "serviceName": "PricingService",
+            "description": "AI sets initial prices, plans markdown cadence, and manages promotional pricing. Competitor price monitoring. Price elasticity modelled per product category.",
+            "category": "Revenue",
+            "estimatedDuration": 24,
+            "businessRationale": "Dynamic pricing improves margin by 3-8%. Markdown optimization prevents leaving money on the table while clearing inventory.",
+            "substeps": [
+                {
+                    "substepName": "InitialPricing",
+                    "duration": 8
+                },
+                {
+                    "substepName": "MarkdownPlanning",
+                    "duration": 8
+                },
+                {
+                    "substepName": "CompetitorMonitoring",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "SeasonReview",
+            "serviceName": "ReviewService",
+            "description": "AI evaluates forecast vs actual performance per trend, category, and store. Lessons learned fed into next season buying. Winner/loser analysis drives repeat or exit decisions.",
+            "category": "Analytics",
+            "estimatedDuration": 48,
+            "businessRationale": "Season review is how buying teams learn. Brands that systematically review improve buy accuracy by 5% per season, compounding over time.",
+            "substeps": [
+                {
+                    "substepName": "PerformanceAnalysis",
+                    "duration": 16
+                },
+                {
+                    "substepName": "LessonsLearned",
+                    "duration": 16
+                },
+                {
+                    "substepName": "NextSeasonRecommendations",
+                    "duration": 16
+                }
+            ]
+        }
+    ],
+    "id": "2a0f8b7b-1690-4fa7-80cb-796cab1cbb66",
+    "name": "Fashion & Apparel - Trend Forecasting",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 85,
+        "transactionValue": 85,
+        "averageOrderValue": 110,
+        "contractValue": 0,
+        "annualRevenue": 120000000,
+        "revenuePerCustomer": 450,
+        "profitMargin": 58.0,
+        "customerLifetimeValue": 2200,
+        "lifetimeValue": 2200,
+        "acquisitionCost": 35,
+        "costPerAcquisition": 35,
+        "conversionProbability": 0.08,
+        "conversionRate": 8,
+        "engagementScore": 72,
+        "timeToConversion": 1440,
+        "sessionDuration": 600,
+        "pageViews": 12,
+        "purchaseFrequency": 5,
+        "netPromoterScore": 45,
+        "satisfactionRating": 4.0,
+        "retentionProbability": 0.55,
+        "processingTime": 10080,
+        "operationalCost": 22,
+        "efficiencyRating": 75,
+        "fullPriceSellThrough": 68,
+        "markdownRate": 32,
+        "channel": [
+            "ecommerce",
+            "flagship_store",
+            "wholesale",
+            "outlet",
+            "marketplace"
+        ],
+        "deviceType": [
+            "mobile",
+            "kiosk",
+            "desktop",
+            "desktop",
+            "mobile"
+        ],
+        "region": [
+            "US",
+            "EU",
+            "Japan",
+            "China",
+            "Middle East"
+        ],
+        "customerSegmentValue": [
+            "fashion_forward",
+            "classic_buyer",
+            "value_hunter",
+            "luxury_aspirant",
+            "gen_z_native"
+        ],
+        "loyaltyTier": [
+            "VIP",
+            "Insider",
+            "Member",
+            "Basic",
+            "New"
+        ],
+        "segment": [
+            "womenswear",
+            "menswear",
+            "accessories",
+            "footwear",
+            "denim"
+        ],
+        "Productname": [
+            "AW26 Oversized Coat",
+            "Resort Linen Blazer",
+            "Chunky Platform Boot",
+            "Leather Bucket Bag",
+            "Wide-Leg Jean"
+        ],
+        "ProductId": [
+            "FSH-CT-001",
+            "FSH-BZ-002",
+            "FSH-BT-003",
+            "FSH-BG-004",
+            "FSH-DN-005"
+        ],
+        "ProductType": [
+            "outerwear",
+            "blazer",
+            "footwear",
+            "bag",
+            "denim"
+        ],
+        "Price": [
+            325,
+            195,
+            185,
+            275,
+            125
+        ],
+        "sellThroughRate": [
+            0.72,
+            0.68,
+            0.8,
+            0.75,
+            0.65
+        ],
+        "trendStrength": [
+            "strong",
+            "emerging",
+            "peak",
+            "mature",
+            "emerging"
+        ],
+        "marketTrend": [
+            "AI_trend_prediction",
+            "real_time_demand_sensing",
+            "circular_fashion",
+            "hyper_personalization",
+            "social_commerce"
+        ]
+    }
+}

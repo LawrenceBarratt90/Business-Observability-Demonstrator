@@ -11,18 +11,18 @@ import { ChaosType } from '../tools/chaos/chaosRecipes.js';
 
 const router = Router();
 
-/* POST /inject — inject chaos by manipulating feature flags */
+/* POST /inject — inject chaos on a single service via feature flags */
 router.post('/inject', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { type, target, intensity, duration, company } = req.body;
+    const { type, target, intensity, duration } = req.body;
     if (!type) { res.status(400).json({ error: 'type is required' }); return; }
+    if (!target) { res.status(400).json({ error: 'target service is required' }); return; }
 
     const result = await injectChaos({
       type: type as ChaosType,
-      target: target || 'default',
+      target,
       intensity: intensity ?? 5,
       durationMs: (duration ?? 60) * 1000,
-      details: company ? { company } : undefined,
     });
     res.json(result);
   } catch (err) {

@@ -1,0 +1,22 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: ai-agent-knowledge-base
+  description: All catalog entities for the AI Agent Knowledge Base system
+spec:
+  targets:
+    # Public skills & agents — dynatrace channel
+    - ./catalog/dynatrace/skills.yaml
+    - ./catalog/dynatrace/agents.yaml
+
+    # Dev skills — dynatrace-dev channel
+    - ./catalog/dynatrace-dev/skills.yaml
+
+    # Internal dev skills & agents — dynatrace-internal-dev channel
+    - ./catalog/dynatrace-internal-dev/skills.yaml
+    - ./catalog/dynatrace-internal-dev/agents.yaml
+
+    # Internal SFM skills & agents — dynatrace-internal-sfm channel
+    - ./catalog/dynatrace-internal-sfm/skills.yaml
+    - ./catalog/dynatrace-internal-sfm/agents.yaml

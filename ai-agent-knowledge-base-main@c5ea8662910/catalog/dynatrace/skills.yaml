@@ -1,0 +1,233 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dt-app-dashboard
+  title: Dynatrace App Dashboard Skill
+  description: >
+    Work with Dynatrace dashboards — create, modify, query, and analyze dashboard
+    JSON including tiles, layouts, DQL queries, variables, and visualizations.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace/skills/dt-app-dashboard
+spec:
+  type: ai-skill
+  lifecycle: experimental
+  owner: capability/platform-apps
+  system: default/data-exploration
+  product-architect: user:default/blai.samitier
+  product-manager: user:default/holger.weissboeck
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dt-app-extensions
+  title: Dynatrace App Extensions Manager Skill
+  description: >
+    Work with Dynatrace extensions — check status, troubleshoot, and manage extension configurations.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace/skills/dt-app-extensions
+spec:
+  type: ai-skill
+  lifecycle: experimental
+  owner: capability/data-acquisition
+  system: default/data-exploration
+  product-architect: user:default/maciej.grynda
+  product-manager: user:default/valentin.ecker
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dt-app-frontend
+  title: Dynatrace App Frontend Skill
+  description: >
+    Build and interact with Dynatrace frontend applications using the App
+    platform framework — covering components, routing, and DEM integration.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace/skills/dt-app-frontend
+spec:
+  type: ai-skill
+  lifecycle: experimental
+  owner: capability/digital-experience-monitoring
+  system: default/real-user-monitoring
+  product-architect: user:default/bernhard.lackner
+  product-manager: user:default/bernat.trias
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dt-app-notebook
+  title: Dynatrace App Notebook Skill
+  description: >
+    Create and manage Dynatrace notebooks — interactive documents combining DQL
+    queries, visualizations, markdown, and collaborative analysis.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace/skills/dt-app-notebook
+spec:
+  type: ai-skill
+  lifecycle: experimental
+  owner: capability/platform-apps
+  system: default/data-exploration
+  product-architect: user:default/blai.samitier
+  product-manager: user:default/holger.weissboeck
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dt-app-services
+  title: Dynatrace App Services Skill
+  description: >
+    Analyze and troubleshoot service performance in Dynatrace — covering
+    service topology, SLOs, error rates, latency, and dependencies.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace/skills/dt-app-services
+spec:
+  type: ai-skill
+  lifecycle: experimental
+  owner: capability/application-observability
+  system: default/services-observability
+  product-architect: user:default/andreas.gruber
+  product-manager: user:default/michael.kopp
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dt-app-tracing
+  title: Dynatrace App Tracing Skill
+  description: >
+    Work with distributed traces in Dynatrace — trace analysis, span exploration,
+    performance root cause identification, and PurePath deep-dives.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace/skills/dt-app-tracing
+spec:
+  type: ai-skill
+  lifecycle: experimental
+  owner: capability/application-observability
+  system: default/distributed-tracing
+  product-architect: user:default/andreas.gruber
+  product-manager: user:default/michael.kopp
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dt-dql-essentials
+  title: Dynatrace DQL Essentials Skill
+  description: >
+    Write, validate, and optimize Dynatrace Query Language (DQL) queries across
+    all Grail data sources — metrics, logs, events, spans, and entities.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace/skills/dt-dql-essentials
+spec:
+  type: ai-skill
+  lifecycle: experimental
+  owner: capability/grail
+  system: default/grail-query
+  product-architect: user:default/herwig.moser
+  product-manager: user:default/peter.zahrer
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dt-infra-aws
+  title: Dynatrace Infrastructure AWS Skill
+  description: >
+    Monitor and analyze AWS infrastructure in Dynatrace — EC2, ECS, Lambda,
+    RDS, and other cloud services using out-of-the-box dashboards and DQL.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace/skills/dt-infra-aws
+spec:
+  type: ai-skill
+  lifecycle: experimental
+  owner: capability/infrastructure-observability
+  system: default/cloud-monitoring
+  product-architect: user:default/isaac.vallhonrat
+  product-manager: user:default/lucas.hocker
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dt-infra-hosts
+  title: Dynatrace Infrastructure Hosts Skill
+  description: >
+    Analyze host health, resource utilization, and performance trends in
+    Dynatrace — covering CPU, memory, disk, and network across all host types.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace/skills/dt-infra-hosts
+spec:
+  type: ai-skill
+  lifecycle: experimental
+  owner: capability/infrastructure-observability
+  system: default/cloud-monitoring
+  product-architect: user:default/tobias.rauter
+  product-manager: user:default/lucas.hocker
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dt-infra-kubernetes
+  title: Dynatrace Infrastructure Kubernetes Skill
+  description: >
+    Monitor Kubernetes clusters, workloads, nodes, and pods in Dynatrace —
+    covering cluster health, resource quotas, pod lifecycle, and container metrics.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace/skills/dt-infra-kubernetes
+spec:
+  type: ai-skill
+  lifecycle: experimental
+  owner: capability/infrastructure-observability
+  system: default/kubernetes-monitoring
+  product-architect: user:default/bernhard.aichinger
+  product-manager: user:default/lucas.hocker
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dt-log-analysis
+  title: Dynatrace Log Analysis Skill
+  description: >
+    Query, parse, and analyze logs in Dynatrace Grail — covering log ingestion,
+    DQL log queries, pattern detection, and log-to-trace correlation.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace/skills/dt-log-analysis
+spec:
+  type: ai-skill
+  lifecycle: experimental
+  owner: capability/application-observability
+  system: default/log-analytics
+  product-architect: user:default/andreas.gruber
+  product-manager: user:default/michael.kopp
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dt-problem-analysis
+  title: Dynatrace Problem Analysis Skill
+  description: >
+    Investigate and analyze Dynatrace problems — RCA workflows, problem
+    events, Davis AI insights, and cross-signal correlation.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace/skills/dt-problem-analysis
+spec:
+  type: ai-skill
+  lifecycle: experimental
+  owner: capability/data-intelligence
+  system: default/anomaly-detection
+  product-architect: user:default/hans.kohlreiter
+  product-manager: user:default/wolfgang.beer
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dt-proc-critical-incident
+  title: Dynatrace Critical Incident Procedure Skill
+  description: >
+    Structured runbooks and procedures for critical incident response on the
+    Dynatrace platform — triage, escalation, mitigation, and post-mortem.
+  annotations:
+    backstage.io/source-location: url:https://bitbucket.lab.dynatrace.org/projects/DSA/repos/ai-agent-knowledge-base/browse/knowledge-base/dynatrace/skills/dt-proc-critical-incident
+spec:
+  type: ai-skill
+  lifecycle: experimental
+  owner: capability/site-reliability-engineering
+  system: default/ai-agent-knowledge-base
+  product-architect: user:default/thomas.fischl
+  product-manager: user:default/andreas.deuschl

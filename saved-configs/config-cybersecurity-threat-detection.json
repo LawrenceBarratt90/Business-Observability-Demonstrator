@@ -1,0 +1,273 @@
+{
+    "companyName": "CyberShield Security",
+    "domain": "https://www.cybershield-security.com",
+    "industryType": "Cybersecurity",
+    "journeyType": "Threat Detection",
+    "journeyDetail": "AI-Powered Continuous Threat Detection & Hunting",
+    "journeyId": "journey_threat_detection_7da71940",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "DataIngestion",
+            "serviceName": "DataIngestionService",
+            "description": "Real-time log collection from endpoints, network devices, cloud workloads, SaaS apps, and identity providers. 50TB+/day normalised and indexed.",
+            "category": "Collection",
+            "estimatedDuration": 0.01,
+            "businessRationale": "Complete data coverage is foundational. Blind spots in telemetry are where attackers hide. Missing one log source can mean missing an entire attack chain.",
+            "substeps": [
+                {
+                    "substepName": "EndpointTelemetry",
+                    "duration": 0.005
+                },
+                {
+                    "substepName": "NetworkFlow",
+                    "duration": 0.003
+                },
+                {
+                    "substepName": "CloudAudit",
+                    "duration": 0.002
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "BehaviourBaselining",
+            "serviceName": "BaselineService",
+            "description": "AI establishes normal behavior baselines for users, devices, and applications. UEBA models learn access patterns, data flows, and operational rhythms.",
+            "category": "Analysis",
+            "estimatedDuration": 720,
+            "businessRationale": "Behaviour baselines enable detection of novel attacks without signatures. Insider threats and compromised credentials are invisible to signature-based detection.",
+            "substeps": [
+                {
+                    "substepName": "UserBaseline",
+                    "duration": 240
+                },
+                {
+                    "substepName": "DeviceBaseline",
+                    "duration": 240
+                },
+                {
+                    "substepName": "ApplicationBaseline",
+                    "duration": 240
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "RuleAndMLDetection",
+            "serviceName": "DetectionEngineService",
+            "description": "Combination of expert-written detection rules (SIGMA/YARA) and ML models. Detects known TTPs, anomalous behavior, and emerging threats. 200+ MITRE ATT&CK techniques covered.",
+            "category": "Detection",
+            "estimatedDuration": 0.02,
+            "businessRationale": "Layered detection catches 95% of attacks vs 60% for rules-only or ML-only. MITRE ATT&CK coverage is the industry benchmark.",
+            "substeps": [
+                {
+                    "substepName": "RuleEngine",
+                    "duration": 0.005
+                },
+                {
+                    "substepName": "MLDetection",
+                    "duration": 0.01
+                },
+                {
+                    "substepName": "CorrelationEngine",
+                    "duration": 0.005
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "ThreatHunting",
+            "serviceName": "HuntingService",
+            "description": "AI-guided hypothesis-driven threat hunting. Identifies previously undetected compromises by analysing historical data against new threat intelligence.",
+            "category": "Proactive",
+            "estimatedDuration": 40,
+            "businessRationale": "Threat hunting discovers 20-30% more breaches than automated detection alone. Average dwell time for undiscovered breaches is 204 days.",
+            "substeps": [
+                {
+                    "substepName": "HypothesisGeneration",
+                    "duration": 12
+                },
+                {
+                    "substepName": "DataExploration",
+                    "duration": 16
+                },
+                {
+                    "substepName": "FindingsValidation",
+                    "duration": 12
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "ThreatIntelligence",
+            "serviceName": "ThreatIntelService",
+            "description": "AI aggregates and correlates threat intelligence from commercial feeds, OSINT, dark web monitoring, and industry ISACs. IOCs automatically deployed to detection stack.",
+            "category": "Intelligence",
+            "estimatedDuration": 24,
+            "businessRationale": "Threat intelligence provides early warning of targeted attacks. Organisations with mature threat intel detect breaches 50% faster.",
+            "substeps": [
+                {
+                    "substepName": "FeedAggregation",
+                    "duration": 8
+                },
+                {
+                    "substepName": "IOCEnrichment",
+                    "duration": 8
+                },
+                {
+                    "substepName": "AutoDeployment",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "DetectionPerformance",
+            "serviceName": "PerformanceService",
+            "description": "AI measures detection coverage, false positive rates, MTTD, and MTTR trends. Gap analysis against MITRE ATT&CK framework. Detection engineering prioritisation.",
+            "category": "Analytics",
+            "estimatedDuration": 168,
+            "businessRationale": "Measuring detection performance drives continuous improvement. Organisations that track MITRE coverage improve detection rates by 25% annually.",
+            "substeps": [
+                {
+                    "substepName": "CoverageAnalysis",
+                    "duration": 56
+                },
+                {
+                    "substepName": "FPReduction",
+                    "duration": 56
+                },
+                {
+                    "substepName": "GapPrioritisation",
+                    "duration": 56
+                }
+            ]
+        }
+    ],
+    "id": "196bedba-673f-47bf-9502-38f7f8ab0703",
+    "name": "Cybersecurity - Threat Detection",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 200000,
+        "transactionValue": 200000,
+        "averageOrderValue": 180000,
+        "contractValue": 600000,
+        "annualRevenue": 35000000,
+        "revenuePerCustomer": 350000,
+        "profitMargin": 45.0,
+        "customerLifetimeValue": 2800000,
+        "lifetimeValue": 2800000,
+        "acquisitionCost": 30000,
+        "costPerAcquisition": 30000,
+        "conversionProbability": 0.48,
+        "conversionRate": 48,
+        "engagementScore": 85,
+        "timeToConversion": 1440,
+        "sessionDuration": 2400,
+        "pageViews": 15,
+        "purchaseFrequency": 12,
+        "netPromoterScore": 52,
+        "satisfactionRating": 4.3,
+        "retentionProbability": 0.9,
+        "processingTime": 0.02,
+        "operationalCost": 45000,
+        "efficiencyRating": 88,
+        "eventsPerSecond": 50000,
+        "falsePositiveRate": 2.8,
+        "channel": [
+            "SIEM_console",
+            "SOAR_playbook",
+            "analyst_workbench",
+            "API_integration",
+            "threat_feed"
+        ],
+        "deviceType": [
+            "desktop",
+            "desktop",
+            "desktop",
+            "server",
+            "desktop"
+        ],
+        "region": [
+            "US",
+            "UK",
+            "Germany",
+            "Japan",
+            "Australia"
+        ],
+        "customerSegmentValue": [
+            "banking",
+            "healthcare",
+            "retail",
+            "government",
+            "tech"
+        ],
+        "loyaltyTier": [
+            "Enterprise SOC",
+            "Managed SOC",
+            "Co-Managed",
+            "DIY",
+            "MSSP"
+        ],
+        "segment": [
+            "endpoint",
+            "network",
+            "cloud",
+            "identity",
+            "email"
+        ],
+        "Productname": [
+            "EDR Platform",
+            "NDR Sensor Network",
+            "Cloud SIEM",
+            "Identity Threat Detection",
+            "Email Security Gateway"
+        ],
+        "ProductId": [
+            "DET-ED-001",
+            "DET-ND-002",
+            "DET-CS-003",
+            "DET-ID-004",
+            "DET-EM-005"
+        ],
+        "ProductType": [
+            "EDR",
+            "NDR",
+            "SIEM",
+            "ITDR",
+            "email_security"
+        ],
+        "Price": [
+            200000,
+            150000,
+            300000,
+            120000,
+            80000
+        ],
+        "detectionCoverage": [
+            0.85,
+            0.78,
+            0.92,
+            0.72,
+            0.88
+        ],
+        "mitreAttackCoverage": [
+            145,
+            120,
+            180,
+            95,
+            60
+        ],
+        "marketTrend": [
+            "XDR_platform",
+            "AI_SOC_analyst",
+            "cloud_native_SIEM",
+            "identity_first_security",
+            "purple_teaming"
+        ]
+    }
+}

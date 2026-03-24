@@ -1,0 +1,257 @@
+{
+    "companyName": "Veterinary",
+    "domain": "https://www.veterinary-demo.com",
+    "industryType": "Veterinary & Animal Health",
+    "journeyType": "Practice Management",
+    "journeyDetail": "Practice Management",
+    "journeyId": "journey_veterinary_practice_management",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "AppointmentBooking",
+            "serviceName": "AppointmentBookingService",
+            "description": "AI manages appointment scheduling: symptom triage to determine urgency, species-specific time allocation, vet-patient matching based on specialisation, and automated reminders. Supports multi-site coordination.",
+            "category": "Scheduling",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 3,
+            "businessRationale": "AI scheduling reduces no-shows by 35% and overbooking by 20%. Species-aware time allocation prevents appointment overrun, improving daily throughput by 15%.",
+            "substeps": [
+                {
+                    "substepName": "SymptomTriage",
+                    "duration": 1
+                },
+                {
+                    "substepName": "ScheduleOptimization",
+                    "duration": 2
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "PatientCheckIn",
+            "serviceName": "PatientCheckInService",
+            "description": "AI-assisted check-in: verifies pet records, vaccination status, insurance coverage, and medication history. Pre-populates consultation notes with presenting complaint and flagged health alerts.",
+            "category": "Registration",
+            "estimatedDuration": 5,
+            "businessRationale": "Digital check-in saves 8 minutes per appointment. Pre-populated histories reduce vet consultation time by 12%, enabling more appointments per day.",
+            "substeps": [
+                {
+                    "substepName": "RecordVerification",
+                    "duration": 2
+                },
+                {
+                    "substepName": "HistoryPreparation",
+                    "duration": 3
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "ClinicalConsultation",
+            "serviceName": "ClinicalConsultationService",
+            "description": "AI assists vet during consultation: differential diagnosis suggestions based on symptoms/breed/age, drug interaction checking, dosage calculation by weight, and treatment protocol recommendations from veterinary databases.",
+            "category": "Clinical",
+            "estimatedDuration": 20,
+            "businessRationale": "AI clinical decision support improves diagnostic accuracy by 15% and reduces prescribing errors by 25%. Evidence-based protocol suggestions standardise care quality across vets.",
+            "substeps": [
+                {
+                    "substepName": "DiagnosisAssist",
+                    "duration": 10
+                },
+                {
+                    "substepName": "TreatmentPlanning",
+                    "duration": 10
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "DiagnosticImaging",
+            "serviceName": "DiagnosticImagingService",
+            "description": "AI analyses X-rays, ultrasounds, and CT scans: detects fractures, masses, foreign bodies, and organ abnormalities with breed-specific reference ranges. Highlights areas of concern for vet review.",
+            "category": "Diagnostics",
+            "estimatedDuration": 15,
+            "businessRationale": "AI imaging analysis reduces diagnostic time by 40% and catches subtle findings missed in 8% of manual reviews. Premium diagnostics increase per-visit revenue by \u00a3120.",
+            "substeps": [
+                {
+                    "substepName": "ImageCapture",
+                    "duration": 5
+                },
+                {
+                    "substepName": "AIAnalysis",
+                    "duration": 10
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "TreatmentDischarge",
+            "serviceName": "TreatmentDischargeService",
+            "description": "AI generates discharge instructions tailored to pet species, breed, and condition. Automated medication dispensing, follow-up scheduling, and owner education materials. Insurance claim pre-submission.",
+            "category": "Discharge",
+            "estimatedDuration": 10,
+            "businessRationale": "Automated discharge reduces admin time by 60%. Clear owner instructions improve treatment compliance by 30%, leading to better outcomes and fewer emergency re-visits.",
+            "substeps": [
+                {
+                    "substepName": "DischargePrep",
+                    "duration": 5
+                },
+                {
+                    "substepName": "InsuranceClaim",
+                    "duration": 5
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "FollowUpCare",
+            "serviceName": "FollowUpCareService",
+            "description": "AI manages post-visit care: recovery monitoring reminders, vaccination due dates, preventive care schedules, and wellness plan recommendations. Identifies patients overdue for checkups and sends proactive outreach.",
+            "category": "ContinuingCare",
+            "estimatedDuration": 43200,
+            "businessRationale": "Proactive follow-up increases annual visit frequency by 0.8 visits per pet. Preventive care reminders drive \u00a385 average revenue per wellness visit.",
+            "substeps": [
+                {
+                    "substepName": "RecoveryMonitoring",
+                    "duration": 21600
+                },
+                {
+                    "substepName": "PreventiveCareAlerts",
+                    "duration": 21600
+                }
+            ]
+        }
+    ],
+    "id": "5fe73019-4f43-4e16-9c02-4543a9697174",
+    "name": "Veterinary & Animal Health - Practice Management",
+    "timestamp": "2026-03-18T21:35:20.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 185,
+        "transactionValue": 185,
+        "averageOrderValue": 185,
+        "contractValue": 0,
+        "annualRevenue": 2200000,
+        "revenuePerCustomer": 480,
+        "profitMargin": 22,
+        "customerLifetimeValue": 4800,
+        "lifetimeValue": 4800,
+        "acquisitionCost": 45,
+        "costPerAcquisition": 45,
+        "conversionProbability": 0.85,
+        "conversionRate": 85,
+        "engagementScore": 72,
+        "timeToConversion": 1,
+        "sessionDuration": 25,
+        "pageViews": 8,
+        "purchaseFrequency": 4,
+        "netPromoterScore": 55,
+        "satisfactionRating": 4.3,
+        "retentionProbability": 0.82,
+        "processingTime": 20,
+        "operationalCost": 65,
+        "efficiencyRating": 78,
+        "discountApplied": 0,
+        "taxAmount": 37,
+        "shippingCost": 0,
+        "channel": [
+            "phone",
+            "website",
+            "mobile_app",
+            "walk_in",
+            "referral"
+        ],
+        "deviceType": [
+            "phone",
+            "desktop",
+            "mobile",
+            "tablet",
+            "in_clinic"
+        ],
+        "region": [
+            "Urban",
+            "Suburban",
+            "Rural",
+            "Town Centre",
+            "Out-of-Town"
+        ],
+        "customerSegmentValue": [
+            "dog_owner",
+            "cat_owner",
+            "exotic_pet",
+            "farm_animal",
+            "multi_pet"
+        ],
+        "loyaltyTier": [
+            "standard",
+            "wellness_plan",
+            "premium_plan",
+            "lifetime_client",
+            "breeder_partner"
+        ],
+        "segment": [
+            "consultation",
+            "surgery",
+            "diagnostics",
+            "preventive_care",
+            "emergency"
+        ],
+        "Productname": [
+            "Consultation",
+            "Vaccination_Package",
+            "Dental_Clean",
+            "Spay_Neuter",
+            "Emergency_Visit"
+        ],
+        "ProductId": [
+            "VET-CON-001",
+            "VET-VAC-002",
+            "VET-DEN-003",
+            "VET-SPN-004",
+            "VET-EMR-005"
+        ],
+        "ProductType": [
+            "consultation",
+            "preventive",
+            "dental",
+            "surgery",
+            "emergency"
+        ],
+        "Price": [
+            55,
+            85,
+            280,
+            350,
+            250
+        ],
+        "species": [
+            "canine",
+            "feline",
+            "rabbit",
+            "avian",
+            "equine"
+        ],
+        "breedRisk": [
+            "low",
+            "medium",
+            "high",
+            "medium",
+            "high"
+        ],
+        "vaccinationStatus": [
+            "current",
+            "overdue",
+            "current",
+            "partial",
+            "current"
+        ],
+        "marketTrend": [
+            "pet_insurance",
+            "telemedicine",
+            "preventive_wellness",
+            "ai_diagnostics",
+            "pet_wearables"
+        ]
+    }
+}

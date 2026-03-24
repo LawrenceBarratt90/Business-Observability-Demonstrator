@@ -1,0 +1,273 @@
+{
+    "companyName": "TalentTech HR",
+    "domain": "https://www.talenttech-hr.com",
+    "industryType": "Human Resources & HRTech",
+    "journeyType": "Employee Engagement",
+    "journeyDetail": "AI-Driven Employee Experience & Engagement",
+    "journeyId": "journey_employee_engagement_9b87dfa6",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "PulseSurveying",
+            "serviceName": "PulseSurveyService",
+            "description": "AI administers continuous pulse surveys, analyses sentiment from free-text responses, and identifies engagement trends by team, location, and demographic.",
+            "category": "Listening",
+            "estimatedDuration": 168,
+            "businessRationale": "Annual surveys are too infrequent to catch disengagement. Continuous listening enables intervention 6-8 weeks earlier.",
+            "substeps": [
+                {
+                    "substepName": "SurveyDelivery",
+                    "duration": 56
+                },
+                {
+                    "substepName": "SentimentAnalysis",
+                    "duration": 56
+                },
+                {
+                    "substepName": "TrendDetection",
+                    "duration": 56
+                }
+            ],
+            "timestamp": "2025-11-21T00:00:00.000Z"
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "EngagementScoring",
+            "serviceName": "EngagementScoreService",
+            "description": "AI calculates engagement scores from survey data, system usage patterns, collaboration metrics, and recognition activity. eNPS tracked by segment.",
+            "category": "Analysis",
+            "estimatedDuration": 24,
+            "businessRationale": "Engaged employees are 21% more productive and 87% less likely to leave. Each disengaged employee costs $34K/year in lost productivity.",
+            "substeps": [
+                {
+                    "substepName": "ScoreCalculation",
+                    "duration": 8
+                },
+                {
+                    "substepName": "SegmentAnalysis",
+                    "duration": 8
+                },
+                {
+                    "substepName": "eNPSTracking",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "ManagerInsights",
+            "serviceName": "ManagerInsightService",
+            "description": "AI provides managers with team engagement insights, intervention recommendations, and coaching prompts. Anonymised feedback themes surfaced. Action planning guided.",
+            "category": "Coaching",
+            "estimatedDuration": 24,
+            "businessRationale": "Manager quality accounts for 70% of engagement variance. Giving managers data and coaching tools improves their team scores by 15-20%.",
+            "substeps": [
+                {
+                    "substepName": "TeamInsightReport",
+                    "duration": 8
+                },
+                {
+                    "substepName": "ActionRecommendation",
+                    "duration": 8
+                },
+                {
+                    "substepName": "CoachingPrompts",
+                    "duration": 8
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "RecognitionAndRewards",
+            "serviceName": "RecognitionService",
+            "description": "AI-powered peer recognition platform with points, badges, and rewards. Social feed for celebrating achievements. Budget allocation optimised by impact.",
+            "category": "Motivation",
+            "estimatedDuration": 720,
+            "businessRationale": "Public recognition is the #1 driver of discretionary effort. Companies with strong recognition programmes have 31% lower voluntary turnover.",
+            "substeps": [
+                {
+                    "substepName": "PeerRecognition",
+                    "duration": 240
+                },
+                {
+                    "substepName": "RewardsFulfilment",
+                    "duration": 240
+                },
+                {
+                    "substepName": "ImpactTracking",
+                    "duration": 240
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "WellbeingSupport",
+            "serviceName": "WellbeingService",
+            "description": "AI monitors burnout indicators: working hours, meeting overload, PTO usage, and sentiment decline. Proactive wellbeing resources pushed. Manager alerts for at-risk individuals.",
+            "category": "Support",
+            "estimatedDuration": 720,
+            "businessRationale": "Burnout costs employers $125-190B annually in healthcare spending. Proactive wellbeing support reduces sick days by 25% and attrition by 15%.",
+            "substeps": [
+                {
+                    "substepName": "BurnoutDetection",
+                    "duration": 240
+                },
+                {
+                    "substepName": "ResourceRecommendation",
+                    "duration": 240
+                },
+                {
+                    "substepName": "ManagerAlerts",
+                    "duration": 240
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "RetentionAnalytics",
+            "serviceName": "RetentionService",
+            "description": "AI predicts flight risk per employee from engagement data, market conditions, tenure patterns, and compensation competitiveness. Retention actions recommended for key talent.",
+            "category": "Analytics",
+            "estimatedDuration": 168,
+            "businessRationale": "Replacing an employee costs 50-200% of salary. Predicting and preventing 10% of voluntary departures saves millions.",
+            "substeps": [
+                {
+                    "substepName": "FlightRiskScoring",
+                    "duration": 56
+                },
+                {
+                    "substepName": "CompetitivenessAnalysis",
+                    "duration": 56
+                },
+                {
+                    "substepName": "RetentionActions",
+                    "duration": 56
+                }
+            ]
+        }
+    ],
+    "id": "2fd0d7ee-7e8c-4750-a68d-3741f42dd53d",
+    "name": "Human Resources & HRTech - Employee Engagement",
+    "timestamp": "2026-03-18T12:00:00.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 250000,
+        "annualRevenue": 20000000,
+        "revenuePerCustomer": 80000,
+        "profitMargin": 65.0,
+        "customerLifetimeValue": 640000,
+        "lifetimeValue": 640000,
+        "acquisitionCost": 12000,
+        "costPerAcquisition": 12000,
+        "conversionProbability": 0.42,
+        "conversionRate": 42,
+        "engagementScore": 82,
+        "timeToConversion": 4320,
+        "sessionDuration": 300,
+        "pageViews": 5,
+        "purchaseFrequency": 52,
+        "netPromoterScore": 55,
+        "satisfactionRating": 4.3,
+        "retentionProbability": 0.9,
+        "processingTime": 60,
+        "operationalCost": 15000,
+        "efficiencyRating": 82,
+        "eNPS": 32,
+        "voluntaryTurnover": 12,
+        "channel": [
+            "employee_app",
+            "web_portal",
+            "slack_integration",
+            "teams_integration",
+            "email"
+        ],
+        "deviceType": [
+            "mobile",
+            "desktop",
+            "desktop",
+            "desktop",
+            "mobile"
+        ],
+        "region": [
+            "US",
+            "UK",
+            "Germany",
+            "India",
+            "Australia"
+        ],
+        "customerSegmentValue": [
+            "enterprise_1000+",
+            "mid_market_500",
+            "growth_200",
+            "startup_50",
+            "remote_first"
+        ],
+        "loyaltyTier": [
+            "Enterprise",
+            "Professional",
+            "Growth",
+            "Starter",
+            "Free"
+        ],
+        "segment": [
+            "engagement",
+            "recognition",
+            "wellbeing",
+            "DEI",
+            "culture"
+        ],
+        "Productname": [
+            "Continuous Listening Platform",
+            "Peer Recognition Engine",
+            "Wellbeing Pulse Monitor",
+            "DEI Analytics Dashboard",
+            "Manager Effectiveness Suite"
+        ],
+        "ProductId": [
+            "HR-CL-001",
+            "HR-PR-002",
+            "HR-WP-003",
+            "HR-DI-004",
+            "HR-ME-005"
+        ],
+        "ProductType": [
+            "survey",
+            "recognition",
+            "wellbeing",
+            "analytics",
+            "coaching"
+        ],
+        "Price": [
+            80000,
+            50000,
+            60000,
+            40000,
+            70000
+        ],
+        "responseRate": [
+            0.78,
+            0,
+            0.65,
+            0,
+            0.72
+        ],
+        "engagementLift": [
+            0.12,
+            0.15,
+            0.08,
+            0.05,
+            0.18
+        ],
+        "marketTrend": [
+            "continuous_listening",
+            "AI_manager_coaching",
+            "burnout_prevention",
+            "skills_marketplace",
+            "people_analytics"
+        ]
+    }
+}

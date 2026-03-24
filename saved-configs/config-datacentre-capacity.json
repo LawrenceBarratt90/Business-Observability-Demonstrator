@@ -1,0 +1,257 @@
+{
+    "companyName": "Data",
+    "domain": "https://www.datacentres-demo.com",
+    "industryType": "Data Centres & Cloud Infrastructure",
+    "journeyType": "Capacity Planning",
+    "journeyDetail": "Capacity Planning",
+    "journeyId": "journey_datacentres_capacity_planning",
+    "journeyStartTime": "2025-11-21T00:00:00.000Z",
+    "steps": [
+        {
+            "stepIndex": 1,
+            "stepName": "DemandForecasting",
+            "serviceName": "DemandForecastingService",
+            "description": "AI forecasts compute, storage, and network capacity demand: analyses workload growth trends, customer pipeline, seasonal patterns, and GPU/AI training demand. Projects capacity needs 6-18 months ahead.",
+            "category": "Planning",
+            "timestamp": "2025-11-21T00:00:00.000Z",
+            "estimatedDuration": 60,
+            "businessRationale": "Accurate forecasting prevents stranded capacity (\u00a350M per over-provisioned hall) and sold-out situations. AI demand models capture non-linear growth from AI workloads 40% earlier.",
+            "substeps": [
+                {
+                    "substepName": "WorkloadAnalysis",
+                    "duration": 30
+                },
+                {
+                    "substepName": "GrowthProjection",
+                    "duration": 30
+                }
+            ]
+        },
+        {
+            "stepIndex": 2,
+            "stepName": "ResourceAllocation",
+            "serviceName": "ResourceAllocationService",
+            "description": "AI optimizes rack, power, and cooling allocation: matches workload characteristics to available infrastructure, manages power density requirements, and ensures compliance with customer SLA commitments.",
+            "category": "Allocation",
+            "estimatedDuration": 15,
+            "businessRationale": "AI allocation improves power utilization efficiency by 12%, recovering \u00a33M annually in stranded power. Optimal rack placement extends facility life by preventing hotspot formation.",
+            "substeps": [
+                {
+                    "substepName": "PowerOptimization",
+                    "duration": 8
+                },
+                {
+                    "substepName": "RackPlacement",
+                    "duration": 7
+                }
+            ]
+        },
+        {
+            "stepIndex": 3,
+            "stepName": "ThermalManagement",
+            "serviceName": "ThermalManagementService",
+            "description": "AI manages cooling systems: optimizes CRAC/CRAH setpoints, manages hot/cold aisle containment, predicts thermal events, and coordinates free cooling with weather conditions. Manages PUE targets.",
+            "category": "Cooling",
+            "estimatedDuration": 1440,
+            "businessRationale": "AI thermal management reduces PUE from 1.6 to 1.3, saving \u00a32M annually in energy costs. Predictive thermal management prevents equipment shutdowns that cost \u00a3100K per hour.",
+            "substeps": [
+                {
+                    "substepName": "ThermalModeling",
+                    "duration": 720
+                },
+                {
+                    "substepName": "CoolingOptimization",
+                    "duration": 720
+                }
+            ]
+        },
+        {
+            "stepIndex": 4,
+            "stepName": "PowerManagement",
+            "serviceName": "PowerManagementService",
+            "description": "AI manages electrical infrastructure: UPS loading, generator testing, PDU utilization, and power chain redundancy. Predicts component failures from electrical signature analysis. Manages renewable energy integration.",
+            "category": "Power",
+            "estimatedDuration": 1440,
+            "businessRationale": "AI power management prevents supply interruptions worth \u00a3500K per minute of downtime. Renewable integration reduces energy costs by 25% and meets corporate sustainability targets.",
+            "substeps": [
+                {
+                    "substepName": "PowerChainMonitoring",
+                    "duration": 720
+                },
+                {
+                    "substepName": "RenewableOptimization",
+                    "duration": 720
+                }
+            ]
+        },
+        {
+            "stepIndex": 5,
+            "stepName": "ScaleOutPlanning",
+            "serviceName": "ScaleOutPlanningService",
+            "description": "AI plans capacity expansion: evaluates build vs buy decisions, models construction timelines, manages vendor procurement, and coordinates customer pre-leasing to de-risk expansion investment.",
+            "category": "Expansion",
+            "estimatedDuration": 43200,
+            "businessRationale": "AI expansion planning reduces time-to-market for new capacity by 6 months. Optimized pre-leasing strategy ensures 70%+ committed utilization before construction completion.",
+            "substeps": [
+                {
+                    "substepName": "CapacityModeling",
+                    "duration": 21600
+                },
+                {
+                    "substepName": "ProcurementCoordination",
+                    "duration": 21600
+                }
+            ]
+        },
+        {
+            "stepIndex": 6,
+            "stepName": "CapacityReporting",
+            "serviceName": "CapacityReportingService",
+            "description": "AI generates capacity reports: utilization rates, power density trends, PUE performance, customer growth projections, expansion timelines, and financial performance per MW of capacity.",
+            "category": "Reporting",
+            "estimatedDuration": 120,
+            "businessRationale": "Capacity reporting informs \u00a3100M+ investment decisions. Revenue per MW trending identifies pricing optimization opportunities and guides portfolio strategy.",
+            "substeps": [
+                {
+                    "substepName": "UtilizationAnalytics",
+                    "duration": 60
+                },
+                {
+                    "substepName": "InvestmentAnalysis",
+                    "duration": 60
+                }
+            ]
+        }
+    ],
+    "id": "03cef3f5-3267-420c-a04a-f452f2996ae5",
+    "name": "Data Centres & Cloud Infrastructure - Capacity Planning",
+    "timestamp": "2026-03-18T21:35:20.000Z",
+    "source": "sector-demo",
+    "additionalFields": {
+        "orderTotal": 0,
+        "transactionValue": 0,
+        "averageOrderValue": 0,
+        "contractValue": 25000000,
+        "annualRevenue": 0,
+        "revenuePerCustomer": 0,
+        "profitMargin": 45,
+        "customerLifetimeValue": 100000000,
+        "lifetimeValue": 100000000,
+        "acquisitionCost": 500000,
+        "costPerAcquisition": 500000,
+        "conversionProbability": 0.6,
+        "conversionRate": 60,
+        "engagementScore": 88,
+        "timeToConversion": 90,
+        "sessionDuration": 0,
+        "pageViews": 0,
+        "purchaseFrequency": 1,
+        "netPromoterScore": 52,
+        "satisfactionRating": 4.3,
+        "retentionProbability": 0.92,
+        "processingTime": 60,
+        "operationalCost": 5000000,
+        "efficiencyRating": 85,
+        "discountApplied": 0,
+        "taxAmount": 0,
+        "shippingCost": 0,
+        "channel": [
+            "direct_sales",
+            "broker",
+            "cloud_marketplace",
+            "partner",
+            "rfp"
+        ],
+        "deviceType": [
+            "desktop",
+            "scada",
+            "mobile",
+            "bms_console",
+            "tablet"
+        ],
+        "region": [
+            "London Docklands",
+            "Amsterdam",
+            "Frankfurt",
+            "Dublin",
+            "Paris"
+        ],
+        "customerSegmentValue": [
+            "hyperscaler",
+            "enterprise",
+            "financial_services",
+            "government",
+            "ai_ml_startup"
+        ],
+        "loyaltyTier": [
+            "single_rack",
+            "quarter_hall",
+            "half_hall",
+            "full_hall",
+            "campus_customer"
+        ],
+        "segment": [
+            "colocation",
+            "wholesale",
+            "managed_hosting",
+            "cloud_connect",
+            "edge_compute"
+        ],
+        "Productname": [
+            "Colocation_Rack",
+            "Wholesale_Hall",
+            "ManagedHosting",
+            "CloudConnect",
+            "EdgePod"
+        ],
+        "ProductId": [
+            "DC-COL-001",
+            "DC-WHL-002",
+            "DC-MNG-003",
+            "DC-CCN-004",
+            "DC-EDG-005"
+        ],
+        "ProductType": [
+            "colocation",
+            "wholesale",
+            "managed",
+            "connectivity",
+            "edge"
+        ],
+        "Price": [
+            1500,
+            150000,
+            3000,
+            500,
+            2500
+        ],
+        "powerDensityKW": [
+            8,
+            15,
+            6,
+            0,
+            20
+        ],
+        "pue": [
+            1.3,
+            1.25,
+            1.4,
+            0,
+            1.35
+        ],
+        "rackCount": [
+            1,
+            500,
+            5,
+            0,
+            4
+        ],
+        "marketTrend": [
+            "ai_gpu_demand",
+            "liquid_cooling",
+            "sustainability",
+            "edge_compute",
+            "modular_dc"
+        ]
+    }
+}

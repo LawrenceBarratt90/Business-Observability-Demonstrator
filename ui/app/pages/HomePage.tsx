@@ -7,7 +7,7 @@ import { Button } from '@dynatrace/strato-components/buttons';
 import { TextInput } from '@dynatrace/strato-components-preview/forms';
 import { TitleBar } from '@dynatrace/strato-components-preview/layouts';
 import Colors from '@dynatrace/strato-design-tokens/colors';
-import { useSettings, useSettingsObjects, useUpdateSettings, useCreateSettings } from '@dynatrace-sdk/react-hooks';
+import { loadAppSettings, saveAppSettings, type AppSettings } from '../services/app-settings';
 import { edgeConnectClient } from '@dynatrace-sdk/client-app-engine-edge-connect';
 
 import { functions } from '@dynatrace-sdk/app-utils';
@@ -16,7 +16,10 @@ import { getEnvironmentUrl } from '@dynatrace-sdk/app-environment';
 import { generateCsuitePrompt, generateJourneyPrompt, PROMPT_DESCRIPTIONS } from '../constants/promptTemplates';
 import { INITIAL_TEMPLATES, InitialTemplate } from '../constants/initialTemplates';
 import { FORGE_LOGO } from '../constants/forgeLogo';
+import { InfoButton } from '../components/InfoButton';
+import appConfig from '../../../app.config.json';
 
+const APP_VERSION = appConfig.app.version;
 const LOCAL_STORAGE_KEY = 'bizobs_api_settings';
 
 // Dynamic tenant URL — works in any environment
@@ -117,15 +120,7 @@ export const HomePage = () => {
     return { host: 'localhost', port: '8080', protocol: 'http' };
   });
 
-  // ── Settings SDK hooks ──────────────────────────────────
-  const SETTINGS_SCHEMA_ID = 'app:my.bizobs.generator.master:api-config';
-  const settingsEffective = useSettings({ schemaId: SETTINGS_SCHEMA_ID, addFields: 'value' });
-  const settingsObjects = useSettingsObjects(
-    { schemaId: SETTINGS_SCHEMA_ID, addFields: 'value,objectId,version' },
-    { autoFetch: true, autoFetchOnUpdate: true },
-  );
-  const updateSettings = useUpdateSettings();
-  const createSettings = useCreateSettings();
+  // ── Settings via shared Document Service ──────────────────────────────────
 
   // Settings modal state
   const [showSettingsModal, setShowSettingsModal] = useState(false);
@@ -194,17 +189,25 @@ export const HomePage = () => {
   const [journeysData, setJourneysData] = useState<RunningService[]>([]);
   const [isLoadingJourneys, setIsLoadingJourneys] = useState(false);
   const [journeysStatus, setJourneysStatus] = useState('');
+  const [journeyAssets, setJourneyAssets] = useState<Record<string, { dashboard: { exists: boolean; id: string; url: string; name?: string }; bizflow: { exists: boolean; name?: string } }>>({});
 
   // Dashboard generation state
   const [dashboardUrl, setDashboardUrl] = useState<string | null>(null);
   const [isGeneratingDashboard, setIsGeneratingDashboard] = useState(false);
 
   // Generate Visuals modal sub-tab state
-  const [visualsSubTab, setVisualsSubTab] = useState<'dashboard' | 'pdf'>('dashboard');
+  const [visualsSubTab, setVisualsSubTab] = useState<'dashboard' | 'saved' | 'pdf'>('dashboard');
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [pdfStatus, setPdfStatus] = useState('');
   const [dashboardStatus, setDashboardStatus] = useState('');
   const [generatedDashboardJson, setGeneratedDashboardJson] = useState<any>(null);
+
+  // Saved dashboards state
+  const [savedDashboards, setSavedDashboards] = useState<any[]>([]);
+  const [isLoadingSavedDashboards, setIsLoadingSavedDashboards] = useState(false);
+
+  // MCP custom prompt state
+  const [mcpDashboardPrompt, setMcpDashboardPrompt] = useState('');
 
   // Dashboard template generation modal state
   const [showGenerateDashboardModal, setShowGenerateDashboardModal] = useState(false);
@@ -229,8 +232,7 @@ export const HomePage = () => {
   const [isRevertingChaos, setIsRevertingChaos] = useState(false);
   const [smartChaosGoal, setSmartChaosGoal] = useState('');
   const [isSmartChaosRunning, setIsSmartChaosRunning] = useState(false);
-  const [injectTargetMode, setInjectTargetMode] = useState<'service' | 'journey'>('service');
-  const [injectForm, setInjectForm] = useState({ type: 'enable_errors', target: '', company: '', intensity: 5, duration: 60 });
+  const [injectForm, setInjectForm] = useState({ type: 'enable_errors', target: '', intensity: 5, duration: 60 });
 
   // Step 2 guided sub-step state
   const [step2Phase, setStep2Phase] = useState<'prompts' | 'response' | 'generate'>(  'prompts');
@@ -260,43 +262,27 @@ export const HomePage = () => {
   });
   const checklistSaveRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const saveChecklistToTenant = useCallback((next: Record<string, boolean>) => {
-    // Debounced save to tenant settings alongside API config
+    // Debounced save to shared Document Service
     if (checklistSaveRef.current) clearTimeout(checklistSaveRef.current);
     checklistSaveRef.current = setTimeout(async () => {
       try {
-        const existingObj = settingsObjects.data?.items?.[0];
-        if (existingObj?.objectId && existingObj?.version) {
-          const currentVal = existingObj.value as any || {};
-          await updateSettings.execute({
-            objectId: existingObj.objectId,
-            optimisticLockingVersion: existingObj.version,
-            body: { value: { ...currentVal, checklistState: JSON.stringify(next) } },
-          });
-          settingsObjects.refetch();
-        }
+        const current = await loadAppSettings();
+        await saveAppSettings({ ...current.settings, checklistState: JSON.stringify(next) });
       } catch { /* silent — localStorage is fallback */ }
     }, 1500);
-  }, [settingsObjects.data, updateSettings]);
+  }, []);
 
-  // Generic helper: merge a partial value into the tenant settings object
+  // Generic helper: merge a partial value into the shared Document
   const tenantFieldSaveRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const saveTenantField = useCallback((partial: Record<string, unknown>, debounceMs = 500) => {
     if (tenantFieldSaveRef.current) clearTimeout(tenantFieldSaveRef.current);
     tenantFieldSaveRef.current = setTimeout(async () => {
       try {
-        const existingObj = settingsObjects.data?.items?.[0];
-        if (existingObj?.objectId && existingObj?.version) {
-          const currentVal = existingObj.value as any || {};
-          await updateSettings.execute({
-            objectId: existingObj.objectId,
-            optimisticLockingVersion: existingObj.version,
-            body: { value: { ...currentVal, ...partial } },
-          });
-          settingsObjects.refetch();
-        }
+        const current = await loadAppSettings();
+        await saveAppSettings({ ...current.settings, ...partial } as AppSettings);
       } catch { /* silent — localStorage is fallback */ }
     }, debounceMs);
-  }, [settingsObjects.data, updateSettings]);
+  }, []);
 
   const toggleCheck = (key: string) => {
     setChecklist(prev => {
@@ -368,86 +354,66 @@ export const HomePage = () => {
         localStorage.setItem(TEMPLATES_STORAGE_KEY, JSON.stringify(initialTemplates));
         saveTenantField({ promptTemplates: JSON.stringify(initialTemplates) });
         console.log(`✅ Loaded ${initialTemplates.length} initial templates`);
-        console.log('[BizObs] App version: v1.4.0');
+        console.log(`[BizObs] App version: v${APP_VERSION}`);
       }
     } catch (error) {
       console.error('Error loading templates:', error);
     }
   }, []);
 
-  // Sync settings from SDK hooks → local state (replaces manual load useEffect)
+  // Sync settings from shared Document → local state
   const settingsLoadedRef = useRef(false);
-  const settingsAvailableRef = useRef<boolean | null>(null);
   useEffect(() => {
     if (settingsLoadedRef.current) return;
-    // Wait for hook to finish loading
-    if (settingsEffective.isLoading) return;
+    settingsLoadedRef.current = true;
 
-    console.log('[BizObs] Settings SDK loaded:', {
-      itemCount: settingsEffective.data?.items?.length ?? 0,
-      isError: settingsEffective.isError,
-      isSuccess: settingsEffective.isSuccess,
-    });
+    loadAppSettings().then(({ settings: loaded, source }) => {
+      console.log('[BizObs] Settings loaded from', source, ':', loaded.apiHost);
 
-    if (settingsEffective.data?.items && settingsEffective.data.items.length > 0) {
-      settingsAvailableRef.current = true;
-      const v = settingsEffective.data.items[0].value as any;
-      console.log('[BizObs] Loaded from tenant:', v);
-      const loaded = {
-        apiHost: v?.apiHost || 'localhost',
-        apiPort: v?.apiPort || '8080',
-        apiProtocol: v?.apiProtocol || 'http',
-        enableAutoGeneration: v?.enableAutoGeneration || false,
-      };
-      // Only overwrite local state if tenant has a real (non-default) value,
-      // otherwise keep the localStorage-initialised value which may already be correct.
-      if (loaded.apiHost !== 'localhost') {
+      if (source !== 'defaults' && loaded.apiHost !== 'localhost') {
         setApiSettingsState({ host: loaded.apiHost, port: loaded.apiPort, protocol: loaded.apiProtocol });
-        setSettingsForm(loaded);
-        // Also sync to localStorage so it stays on next load
+        setSettingsForm({
+          apiHost: loaded.apiHost,
+          apiPort: loaded.apiPort,
+          apiProtocol: loaded.apiProtocol,
+          enableAutoGeneration: loaded.enableAutoGeneration,
+        });
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(loaded));
-        console.log('[BizObs] Applied tenant settings → apiHost:', loaded.apiHost);
+        console.log('[BizObs] Applied shared settings → apiHost:', loaded.apiHost);
       } else {
-        console.log('[BizObs] Tenant has localhost — keeping localStorage values');
+        console.log('[BizObs] Shared doc has localhost — keeping localStorage values');
       }
-      // Restore checklist from tenant settings
-      if (v?.checklistState) {
+
+      // Restore checklist
+      if (loaded.checklistState) {
         try {
-          const restored = JSON.parse(v.checklistState);
+          const restored = JSON.parse(loaded.checklistState);
           if (restored && typeof restored === 'object') {
             setChecklist(restored);
-            localStorage.setItem('bizobs_checklist', v.checklistState);
+            localStorage.setItem('bizobs_checklist', loaded.checklistState);
           }
-        } catch { /* ignore parse error */ }
+        } catch { /* ignore */ }
       }
-      // Restore prompt templates from tenant settings
-      if (v?.promptTemplates) {
+      // Restore prompt templates
+      if (loaded.promptTemplates) {
         try {
-          const restoredTemplates = JSON.parse(v.promptTemplates);
+          const restoredTemplates = JSON.parse(loaded.promptTemplates);
           if (Array.isArray(restoredTemplates) && restoredTemplates.length > 0) {
             setSavedTemplates(restoredTemplates);
             localStorage.setItem(TEMPLATES_STORAGE_KEY, JSON.stringify(restoredTemplates));
-            console.log(`[BizObs] Restored ${restoredTemplates.length} templates from tenant settings`);
+            console.log(`[BizObs] Restored ${restoredTemplates.length} templates from shared doc`);
           }
-        } catch { /* ignore parse error */ }
+        } catch { /* ignore */ }
       }
-      // Restore connectionTested from tenant settings
-      if (v?.connectionTested === true) {
+      // Restore connectionTested
+      if (loaded.connectionTested === true) {
         setConnectionTestedOk(true);
         localStorage.setItem('bizobs_connection_tested', 'true');
       }
-      settingsLoadedRef.current = true;
-      return;
-    }
-
-    // Fallback to localStorage if SDK returns empty or errors
-    if (settingsEffective.isError || (settingsEffective.isSuccess && (!settingsEffective.data?.items || settingsEffective.data.items.length === 0))) {
-      if (settingsEffective.isError) settingsAvailableRef.current = false;
-      else settingsAvailableRef.current = true;
-      console.log('[BizObs] SDK returned empty/error — keeping localStorage values');
-      settingsLoadedRef.current = true;
-    }
-  }, [settingsEffective.isLoading, settingsEffective.data, settingsEffective.isError, settingsEffective.isSuccess]);
+    }).catch(err => {
+      console.warn('[BizObs] Settings load failed:', err);
+    });
+  }, []);
 
   // ── Detect builtin Dynatrace settings via serverless function ──
   // Runs once on load if stale (>1 hour), or when forced via Refresh button
@@ -558,6 +524,26 @@ export const HomePage = () => {
   // Load EdgeConnects on mount for checklist auto-detection
   useEffect(() => { loadEdgeConnects(); }, []);
 
+  // Auto-populate API host from EdgeConnect host patterns on first install
+  const ecAutoPopulatedRef = useRef(false);
+  useEffect(() => {
+    if (ecAutoPopulatedRef.current || edgeConnects.length === 0) return;
+    // Only auto-populate if settings are still at defaults (no user-saved value)
+    const currentHost = apiSettings.host;
+    if (currentHost && currentHost !== 'localhost' && currentHost !== 'bizobs-generator') return;
+    // Extract the first valid host pattern from an online EdgeConnect (prefer online, fallback to any)
+    const onlineEc = edgeConnects.find((ec: any) => (ec.metadata?.instances || []).length > 0) || edgeConnects[0];
+    const patterns: string[] = onlineEc?.hostPatterns || [];
+    const hostIp = patterns.find((p: string) => p && p !== 'localhost' && p !== '127.0.0.1');
+    if (!hostIp) return;
+    ecAutoPopulatedRef.current = true;
+    console.log('[BizObs] Auto-populating API host from EdgeConnect hostPattern:', hostIp);
+    const autoSettings = { apiHost: hostIp, apiPort: '8080', apiProtocol: 'http', enableAutoGeneration: false };
+    setApiSettingsState({ host: hostIp, port: '8080', protocol: 'http' });
+    setSettingsForm(autoSettings);
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(autoSettings));
+  }, [edgeConnects, apiSettings.host]);
+
   const deleteEdgeConnect = async (ecId: string, ecName: string) => {
     if (!confirm(`Delete EdgeConnect "${ecName}"? This cannot be undone.`)) return;
     setIsDeletingEC(ecId);
@@ -654,41 +640,23 @@ export const HomePage = () => {
 
   const saveSettingsFromModal = async () => {
     setIsSavingSettings(true);
-    setSettingsStatus('💾 Saving...');
+    setSettingsStatus('💾 Saving to shared app config...');
 
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(settingsForm));
-    localStorage.setItem('bizobs_api_host', settingsForm.apiHost);
-    localStorage.setItem('bizobs_api_port', settingsForm.apiPort);
+    // Build the full settings payload including tenant-scoped extras
+    const fullSettings: AppSettings = {
+      ...settingsForm,
+      checklistState: JSON.stringify(checklist),
+      promptTemplates: JSON.stringify(savedTemplates),
+      connectionTested: connectionTestedOk,
+    };
 
-    // Only attempt tenant save if the settings API is available
-    if (settingsAvailableRef.current === true) {
-      try {
-        // Merge form fields with tenant-scoped state (templates, checklist, connectionTested)
-        const tenantValue = {
-          ...settingsForm,
-          checklistState: JSON.stringify(checklist),
-          promptTemplates: JSON.stringify(savedTemplates),
-          connectionTested: connectionTestedOk,
-        };
-        const existingObj = settingsObjects.data?.items?.[0];
-        if (existingObj?.objectId && existingObj?.version) {
-          await updateSettings.execute({
-            objectId: existingObj.objectId,
-            optimisticLockingVersion: existingObj.version,
-            body: { value: tenantValue },
-          });
-        } else {
-          await createSettings.execute({
-            body: { schemaId: SETTINGS_SCHEMA_ID, value: tenantValue },
-          });
-        }
-        settingsObjects.refetch();
-        settingsEffective.refetch();
-      } catch {
-        settingsAvailableRef.current = false;
-      }
+    const docSaved = await saveAppSettings(fullSettings);
+
+    if (docSaved) {
+      setSettingsStatus('✅ Settings saved to shared app config (all users will see these)');
+    } else {
+      setSettingsStatus('⚠️ Saved locally only — shared document write failed');
     }
-    setSettingsStatus('✅ Settings saved!');
 
     setApiSettingsState({ host: settingsForm.apiHost, port: settingsForm.apiPort, protocol: settingsForm.apiProtocol });
 
@@ -744,6 +712,54 @@ export const HomePage = () => {
       setSettingsStatus(`❌ ${error.message}`);
     }
     setIsTestingConnection(false);
+  };
+
+  // ── Business Flow Management ──────────────────────────────────
+  const [bizFlows, setBizFlows] = useState<{ objectId: string; name: string; isSmartscapeTopologyEnabled: boolean; stepsCount: number }[]>([]);
+  const [isLoadingBizFlows, setIsLoadingBizFlows] = useState(false);
+  const [isDeletingBizFlows, setIsDeletingBizFlows] = useState(false);
+  const [bizFlowStatus, setBizFlowStatus] = useState('');
+
+  const loadBizFlows = async () => {
+    setIsLoadingBizFlows(true);
+    setBizFlowStatus('⏳ Loading business flows...');
+    try {
+      const result = await callProxyWithRetry({ action: 'list-business-flows', apiHost: '', apiPort: '', apiProtocol: '' }) as any;
+      if (result.success && result.data?.flows) {
+        setBizFlows(result.data.flows);
+        setBizFlowStatus(`Found ${result.data.flows.length} business flow(s)`);
+      } else {
+        setBizFlowStatus(`❌ ${result.error || 'Failed to list business flows'}`);
+      }
+    } catch (err: any) {
+      setBizFlowStatus(`❌ ${err.message}`);
+    }
+    setIsLoadingBizFlows(false);
+  };
+
+  const deleteNonEntityBizFlows = async () => {
+    const toDelete = bizFlows.filter(f => !f.isSmartscapeTopologyEnabled);
+    if (toDelete.length === 0) {
+      setBizFlowStatus('ℹ️ No non-entity business flows to delete');
+      return;
+    }
+    setIsDeletingBizFlows(true);
+    setBizFlowStatus(`🗑️ Deleting ${toDelete.length} non-entity business flow(s)...`);
+    try {
+      const result = await callProxyWithRetry({
+        action: 'delete-business-flows', apiHost: '', apiPort: '', apiProtocol: '',
+        body: { objectIds: toDelete.map(f => f.objectId) },
+      }) as any;
+      if (result.success) {
+        setBizFlowStatus(`✅ Deleted ${result.data?.deletedCount || toDelete.length} business flow(s). Entity flows preserved.`);
+        await loadBizFlows();
+      } else {
+        setBizFlowStatus(`❌ ${result.error}`);
+      }
+    } catch (err: any) {
+      setBizFlowStatus(`❌ ${err.message}`);
+    }
+    setIsDeletingBizFlows(false);
   };
 
   // ── Services Modal Logic ──────────────────────────────────
@@ -868,7 +884,7 @@ export const HomePage = () => {
   const openJourneysModal = async () => {
     setShowJourneysModal(true);
     setJourneysStatus('');
-    await loadJourneysData();
+    await Promise.all([loadJourneysData(), loadDormantServices()]);
   };
 
   const loadJourneysData = async () => {
@@ -878,9 +894,30 @@ export const HomePage = () => {
         { action: 'get-services', apiHost: apiSettings.host, apiPort: apiSettings.port, apiProtocol: apiSettings.protocol }
       ) as any;
       if (result.success && result.data?.childServices) {
-        setJourneysData(result.data.childServices);
-        const count = result.data.childServices.length;
+        const services: RunningService[] = result.data.childServices;
+        setJourneysData(services);
+        const count = services.length;
         setJourneysStatus(count > 0 ? `${count} service(s) across active journeys` : 'No active journeys');
+
+        // Build unique company+journey pairs and check assets
+        if (count > 0) {
+          const pairs = new Map<string, { company: string; journeyType: string }>();
+          services.forEach(s => {
+            const company = s.companyName || 'Unknown';
+            const jType = s.journeyType || 'Unknown';
+            pairs.set(`${company}::${jType}`, { company, journeyType: jType });
+          });
+          try {
+            const assetResult = await callProxyWithRetry({
+              action: 'check-journey-assets',
+              apiHost: '', apiPort: '', apiProtocol: '',
+              body: { journeys: Array.from(pairs.values()) },
+            }) as any;
+            if (assetResult.success && assetResult.data) {
+              setJourneyAssets(assetResult.data);
+            }
+          } catch { /* non-fatal */ }
+        }
       } else {
         setJourneysData([]);
         setJourneysStatus('Could not retrieve journey data');
@@ -949,19 +986,15 @@ export const HomePage = () => {
   };
 
   const injectChaos = async () => {
-    if (injectTargetMode === 'service' && !injectForm.target) { setChaosStatus('⚠️ Select a target service'); return; }
-    if (injectTargetMode === 'journey' && !injectForm.company) { setChaosStatus('⚠️ Select a journey (company)'); return; }
+    if (!injectForm.target) { setChaosStatus('⚠️ Select a target service'); return; }
     setIsInjectingChaos(true);
-    const targetLabel = injectTargetMode === 'service' ? injectForm.target : `${injectForm.company} (all services)`;
-    setChaosStatus(`💉 Injecting chaos on ${targetLabel}...`);
+    setChaosStatus(`💉 Injecting chaos on ${injectForm.target}...`);
     try {
-      const payload = injectTargetMode === 'service'
-        ? { type: injectForm.type, target: injectForm.target, intensity: injectForm.intensity, duration: injectForm.duration }
-        : { type: injectForm.type, target: 'default', company: injectForm.company, intensity: injectForm.intensity, duration: injectForm.duration };
+      const payload = { type: injectForm.type, target: injectForm.target, intensity: injectForm.intensity, duration: injectForm.duration };
       const result = await chaosProxy('chaos-inject', payload);
       if (result.success) {
-        setChaosStatus(`✅ Chaos injected: ${injectForm.type} on ${targetLabel} (intensity ${injectForm.intensity}, ${injectForm.duration}s)`);
-        showToast(`💉 Nemesis injected on ${targetLabel}`, 'warning', 5000);
+        setChaosStatus(`✅ Chaos injected: ${injectForm.type} on ${injectForm.target} (intensity ${injectForm.intensity}, ${injectForm.duration}s)`);
+        showToast(`💉 Nemesis injected on ${injectForm.target}`, 'warning', 5000);
         await loadChaosData();
       } else {
         setChaosStatus(`❌ ${result.data?.error || result.error || 'Injection failed'}`);
@@ -1059,6 +1092,68 @@ export const HomePage = () => {
     setIsLoadingDashboardData(false);
   };
 
+  // Load saved dashboards from EC2 host
+  const loadSavedDashboards = async () => {
+    setIsLoadingSavedDashboards(true);
+    try {
+      const result = await callProxyWithRetry({
+        action: 'list-saved-dashboards',
+        apiHost: apiSettings.host,
+        apiPort: apiSettings.port,
+        apiProtocol: apiSettings.protocol,
+      }) as any;
+      if (result.success && result.dashboards) {
+        setSavedDashboards(result.dashboards);
+      }
+    } catch (err: any) {
+      console.warn('[Saved Dashboards] Failed to load:', err.message);
+    }
+    setIsLoadingSavedDashboards(false);
+  };
+
+  // Deploy a saved dashboard to Dynatrace (re-use MCP deploy)
+  const deploySavedDashboard = async (item: any) => {
+    setDashboardGenerationStatus(`⏳ Deploying saved dashboard: ${item.company} / ${item.journeyType}...`);
+    setVisualsSubTab('dashboard');
+    try {
+      const result = await callProxyWithRetry({
+        action: 'mcp-generate-deploy-dashboard',
+        apiHost: apiSettings.host,
+        apiPort: apiSettings.port,
+        apiProtocol: apiSettings.protocol,
+        body: { company: item.company, journeyType: item.journeyType, useAI: true },
+      }, 5, 3000, setDashboardGenerationStatus) as any;
+      if (result.success && result.data?.dashboardUrl) {
+        const { dashboardUrl, tileCount, alreadyExisted } = result.data;
+        const verb = alreadyExisted ? 'updated' : 'deployed';
+        setDashboardGenerationStatus(`✅ ${tileCount} tiles ${verb} for ${item.company}`);
+        setDashboardUrl(`${TENANT_URL}${dashboardUrl}`);
+        showToast(`📊 Dashboard ${verb}! Click the link to open.`, 'success', 8000);
+      } else {
+        setDashboardGenerationStatus(`❌ ${result.error || 'Deploy failed'}`);
+      }
+    } catch (err: any) {
+      setDashboardGenerationStatus(`❌ ${err.message}`);
+    }
+  };
+
+  // Delete a saved dashboard from EC2 host
+  const deleteSavedDashboard = async (id: string) => {
+    try {
+      await callProxyWithRetry({
+        action: 'delete-saved-dashboard',
+        apiHost: apiSettings.host,
+        apiPort: apiSettings.port,
+        apiProtocol: apiSettings.protocol,
+        body: { dashboardId: id },
+      }) as any;
+      setSavedDashboards(prev => prev.filter(d => d.id !== id));
+      showToast('🗑️ Dashboard removed.', 'info', 3000);
+    } catch (err: any) {
+      console.warn('[Saved Dashboards] Delete failed:', err.message);
+    }
+  };
+
   // Retry helper for EdgeConnect calls — retries with exponential backoff to survive reconnection gaps and timeouts.
   const callProxyWithRetry = async (payload: any, attempts = 5, initialDelayMs = 2000, statusSetter?: (msg: string) => void) => {
     let lastErr: any;
@@ -1082,45 +1177,76 @@ export const HomePage = () => {
     throw lastErr;
   };
 
-  // Shared helper — generates dashboard JSON from backend and auto-downloads it.
+  // Shared helper — generates dashboard via MCP server and deploys directly to Dynatrace.
   // Called both manually (Generate Dashboard button) and automatically after a new journey is created.
-  const autoDownloadDashboard = async (company: string, journeyType: string) => {
+  // When customPrompt is provided, the MCP server uses the prompt_dashboard tool to shape the dashboard via Ollama.
+  const autoDownloadDashboard = async (company: string, journeyType: string, customPrompt?: string) => {
     try {
-      setDashboardStatus('⏳ Generating dashboard...');
-      const generateData = await callProxyWithRetry({
-          action: 'generate-dashboard',
+      const label = customPrompt ? '⏳ AI is crafting your custom dashboard via MCP...' : '⏳ Generating & deploying dashboard via MCP...';
+      setDashboardStatus(label);
+      const bodyPayload: any = { company, journeyType, useAI: true };
+      if (customPrompt) bodyPayload.customPrompt = customPrompt;
+      const result = await callProxyWithRetry({
+          action: 'mcp-generate-deploy-dashboard',
           apiHost: apiSettings.host,
           apiPort: apiSettings.port,
           apiProtocol: apiSettings.protocol,
-          body: { journeyData: { company, journeyType, tenantUrl: TENANT_URL } }
-      }, 5, 2000, setDashboardStatus) as any;
-      let dashboard = null;
-      if (generateData.success && generateData.dashboard) {
-        dashboard = generateData.dashboard;
-      } else if (generateData.success && generateData.data?.dashboard) {
-        dashboard = generateData.data.dashboard;
+          body: bodyPayload
+      }, 3, 5000, setDashboardStatus) as any;
+
+      if (result.success && result.data?.dashboardUrl) {
+        const { dashboardUrl, tileCount, dashboardName, generationMethod, alreadyExisted } = result.data;
+        setGeneratedDashboardJson(null); // No local JSON needed — it's deployed
+        const verb = alreadyExisted ? 'updated' : 'deployed';
+        setDashboardStatus(`✅ ${tileCount} tiles ${verb} for ${company} via ${generationMethod}`);
+        setDashboardUrl(`${TENANT_URL}${dashboardUrl}`);
+        showToast(`📊 Dashboard ${verb}! Click the link to open it in Dynatrace.`, 'success', 8000);
       } else {
-        throw new Error(generateData.error || generateData.data?.error || 'Dashboard generation failed');
+        throw new Error(result.error || result.data?.error || 'MCP dashboard generation failed');
       }
-      setGeneratedDashboardJson(dashboard);
-      const dashboardName = dashboard.name || `${company}-${journeyType}`;
-      const tileCount = dashboard.content?.tiles ? Object.keys(dashboard.content.tiles || {}).length : '?';
-      const exportJson = JSON.stringify(dashboard.content, null, 2);
-      const blob = new Blob([exportJson], { type: 'application/json' });
-      const downloadUrl = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = downloadUrl;
-      a.download = `${dashboardName.replace(/[\s/]+/g, '-').toLowerCase()}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(downloadUrl);
-      setDashboardStatus(`✅ ${tileCount} tiles generated for ${company} — ready to import`);
-      setDashboardUrl(`${TENANT_URL}/ui/apps/dynatrace.dashboards`);
-      showToast(`📥 Dashboard downloaded! Import it via Dynatrace → Dashboards → Upload.`, 'success', 8000);
     } catch (err: any) {
-      console.error('[Dashboard auto-download] ❌', err);
-      showToast(`⚠️ Dashboard auto-download failed: ${err.message}`, 'warning', 6000);
+      console.error('[Dashboard MCP deploy] ❌', err);
+      // Fallback: try the old download approach
+      console.log('[Dashboard] Falling back to download mode...');
+      try {
+        setDashboardStatus('⏳ Falling back to download mode...');
+        const fallbackBody: any = { journeyData: { company, journeyType, tenantUrl: TENANT_URL }, useAI: true };
+        if (customPrompt) fallbackBody.customPrompt = customPrompt;
+        const generateData = await callProxyWithRetry({
+            action: 'generate-dashboard',
+            apiHost: apiSettings.host,
+            apiPort: apiSettings.port,
+            apiProtocol: apiSettings.protocol,
+            body: fallbackBody
+        }, 3, 5000, setDashboardStatus) as any;
+        let dashboard = null;
+        if (generateData.success && generateData.dashboard) {
+          dashboard = generateData.dashboard;
+        } else if (generateData.success && generateData.data?.dashboard) {
+          dashboard = generateData.data.dashboard;
+        } else {
+          throw new Error(generateData.error || generateData.data?.error || 'Dashboard generation failed');
+        }
+        setGeneratedDashboardJson(dashboard);
+        const dashboardName = dashboard.name || `${company}-${journeyType}`;
+        const tileCount = dashboard.content?.tiles ? Object.keys(dashboard.content.tiles || {}).length : '?';
+        const exportJson = JSON.stringify(dashboard.content, null, 2);
+        const blob = new Blob([exportJson], { type: 'application/json' });
+        const downloadUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = `${dashboardName.replace(/[\s/]+/g, '-').toLowerCase()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(downloadUrl);
+        setDashboardStatus(`✅ ${tileCount} tiles generated for ${company} — ready to import`);
+        setDashboardUrl(`${TENANT_URL}/ui/apps/dynatrace.dashboards`);
+        showToast(`📥 Dashboard downloaded! Import it via Dynatrace → Dashboards → Upload.`, 'success', 8000);
+      } catch (fallbackErr: any) {
+        console.error('[Dashboard fallback download] ❌', fallbackErr);
+        showToast(`⚠️ Dashboard failed: ${fallbackErr.message}`, 'warning', 6000);
+      }
     }
   };
   // Auto-deploy a tailored Business Flow to Dynatrace whenever a journey is created.
@@ -1152,20 +1278,26 @@ export const HomePage = () => {
     }
 
     setIsGeneratingDashboard(true);
-    setDashboardGenerationStatus('🚀 Generating dashboard...');
+    const hasPrompt = !!mcpDashboardPrompt.trim();
+    setDashboardGenerationStatus(hasPrompt
+      ? '🧠 AI is crafting your custom dashboard — this may take a minute...'
+      : '🚀 Generating & deploying dashboard via MCP...');
 
     try {
-      // Step 1: Call Node backend to generate dashboard JSON (via proxy to bypass CSP)
-      console.log('[Dashboard] 📊 Calling Node backend via proxy:', {
+      console.log('[Dashboard] 📊 MCP generate+deploy via proxy:', {
         company: dashboardCompanyName,
-        journeyType: dashboardJourneyType
+        journeyType: dashboardJourneyType,
+        customPrompt: hasPrompt ? mcpDashboardPrompt.trim() : undefined,
       });
 
-      // Delegate to shared helper
-      setDashboardGenerationStatus('📥 Preparing download...');
-      await autoDownloadDashboard(dashboardCompanyName, dashboardJourneyType);
-      setDashboardGenerationStatus(`✅ Downloaded! · Import via Dynatrace → Dashboards → Upload`);
-      setTimeout(() => setShowGenerateDashboardModal(false), 8000);
+      // Use the MCP-powered seamless generate+deploy flow
+      await autoDownloadDashboard(
+        dashboardCompanyName,
+        dashboardJourneyType,
+        hasPrompt ? mcpDashboardPrompt.trim() : undefined
+      );
+      setDashboardGenerationStatus(`✅ Dashboard deployed to Dynatrace!`);
+      setTimeout(() => setShowGenerateDashboardModal(false), 5000);
     } catch (error: any) {
       console.error('[Dashboard] ❌ Error:', error);
       setDashboardGenerationStatus(`❌ ${error.message}`);
@@ -1274,13 +1406,7 @@ export const HomePage = () => {
       setGenerationStatus(`✅ Services created successfully! Journey ID: ${jId}`);
       showToast(`Services generated! Journey: ${jId} • Company: ${jCompany}`, 'success', 6000);
 
-      // Auto-trigger dashboard generation in background
-      setDashboardUrl(null);
-      setDashboardStatus('');
-      setGeneratedDashboardJson(null);
-      // Pass the FULL original Copilot JSON to the dashboard generator
-      // so it can build a truly bespoke dashboard based on the actual journey data
-      // (industry, step categories, descriptions, additionalFields, customerProfile, etc.)
+      // Build full steps for business flow deployment
       const journeyConfig = parsedResponse.journey || parsedResponse;
       const fullSteps = (journeyConfig.steps || parsedResponse.steps || []).map((s: any) => ({
         ...s,
@@ -1288,21 +1414,7 @@ export const HomePage = () => {
         serviceName: s.serviceName || s.service,
         companyName: s.companyName || jCompany,
       }));
-      const dashboardPayload = {
-        company: jCompany,
-        journeyType: journeyConfig.journeyType || parsedResponse.journey?.journeyType || domain,
-        industry: journeyConfig.industry || parsedResponse.journey?.industry || domain,
-        steps: fullSteps,
-        additionalFields: journeyConfig.additionalFields || parsedResponse.additionalFields || parsedResponse.journey?.additionalFields || {},
-        customerProfile: journeyConfig.customerProfile || parsedResponse.customerProfile || parsedResponse.journey?.customerProfile || {},
-        traceMetadata: journeyConfig.traceMetadata || parsedResponse.traceMetadata || parsedResponse.journey?.traceMetadata || {},
-      };
-      // Auto-download dashboard for this journey immediately after services are created
-      showToast('📊 Generating your dashboard...', 'info', 3000);
-      autoDownloadDashboard(
-        jCompany,
-        journeyConfig.journeyType || parsedResponse.journey?.journeyType || domain
-      );
+
       // Auto-deploy Business Flow to Dynatrace for this journey
       autoDeployBusinessFlow(
         jCompany,
@@ -1468,6 +1580,26 @@ export const HomePage = () => {
   const userTemplatesByCompany = groupTemplatesByCompany(userTemplates);
 
   const [expandedCompanies, setExpandedCompanies] = useState<Record<string, boolean>>({});
+  const [templateSearch, setTemplateSearch] = useState('');
+
+  // Filter templates by search term (matches company name or template name)
+  const filterBySearch = (grouped: Record<string, PromptTemplate[]>) => {
+    if (!templateSearch.trim()) return grouped;
+    const q = templateSearch.toLowerCase();
+    const result: Record<string, PromptTemplate[]> = {};
+    for (const [company, templates] of Object.entries(grouped)) {
+      if (company.toLowerCase().includes(q)) {
+        result[company] = templates;
+      } else {
+        const matched = templates.filter(t => t.name.toLowerCase().includes(q));
+        if (matched.length) result[company] = matched;
+      }
+    }
+    return result;
+  };
+
+  const filteredPreloaded = filterBySearch(preloadedByCompany);
+  const filteredUserTemplates = filterBySearch(userTemplatesByCompany);
 
   const toggleCompany = (company: string) => {
     setExpandedCompanies(prev => ({
@@ -1548,6 +1680,15 @@ export const HomePage = () => {
         </div>
       )}
 
+      {/* Search */}
+      <div style={{ padding: '8px 12px', borderBottom: `1px solid ${Colors.Border.Neutral.Default}` }}>
+        <TextInput
+          value={templateSearch}
+          onChange={(value: string) => setTemplateSearch(value)}
+          placeholder="🔍 Search templates..."
+        />
+      </div>
+
       {/* Templates List - Separated by Type */}
       <div style={{ flex: 1, overflowY: 'auto', padding: 12 }}>
         {/* App Templates Section */}
@@ -1587,9 +1728,9 @@ export const HomePage = () => {
             </Flex>
           </div>
 
-          {expandedSections.appTemplates && (
+          {(expandedSections.appTemplates || templateSearch.trim()) && (
             <div style={{ paddingLeft: 8 }}>
-              {Object.keys(preloadedByCompany).sort().map(company => (
+              {Object.keys(filteredPreloaded).sort().map(company => (
             <div key={company} style={{ marginBottom: 16 }}>
               {/* Company Header */}
               <div 
@@ -1606,9 +1747,7 @@ export const HomePage = () => {
                 <Flex justifyContent="space-between" alignItems="center">
                   <Flex alignItems="center" gap={8}>
                     <div style={{ fontSize: 16 }}>{expandedCompanies[company] ? '📂' : '📁'}</div>
-                    <a href={getServicesUiUrl(company, preloadedByCompany[company]?.[0]?.originalConfig?.journey?.journeyType)} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} style={{ textDecoration: 'none', color: 'inherit' }}>
-                      <Strong style={{ fontSize: 14, cursor: 'pointer', borderBottom: '1px dashed rgba(0,161,201,0.5)' }}>{company}</Strong>
-                    </a>
+                    <Strong style={{ fontSize: 14 }}>{company}</Strong>
                   </Flex>
                   <div style={{
                     background: Colors.Theme.Primary['70'],
@@ -1618,15 +1757,15 @@ export const HomePage = () => {
                     fontSize: 11,
                     fontWeight: 600
                   }}>
-                    {preloadedByCompany[company].length}
+                    {filteredPreloaded[company].length}
                   </div>
                 </Flex>
               </div>
 
               {/* Templates under this company */}
-              {expandedCompanies[company] && (
+              {(expandedCompanies[company] || templateSearch.trim()) && (
                 <div style={{ paddingLeft: 8 }}>
-                  {preloadedByCompany[company].map(template => (
+                  {filteredPreloaded[company].map(template => (
                     <div 
                       key={template.id}
                       style={{
@@ -1756,9 +1895,9 @@ export const HomePage = () => {
             </Flex>
           </div>
 
-          {expandedSections.myTemplates && (
+          {(expandedSections.myTemplates || templateSearch.trim()) && (
             <div style={{ paddingLeft: 8 }}>
-              {userTemplates.length === 0 ? (
+              {userTemplates.length === 0 && !templateSearch.trim() ? (
                 <div style={{
                   padding: 20,
                   textAlign: 'center',
@@ -1774,7 +1913,7 @@ export const HomePage = () => {
                   </Paragraph>
                 </div>
               ) : (
-                Object.keys(userTemplatesByCompany).sort().map(company => (
+                Object.keys(filteredUserTemplates).sort().map(company => (
                   <div key={company} style={{ marginBottom: 12 }}>
                     {/* Company Header */}
                     <div 
@@ -1791,9 +1930,7 @@ export const HomePage = () => {
                       <Flex justifyContent="space-between" alignItems="center">
                         <Flex alignItems="center" gap={8}>
                           <div style={{ fontSize: 16 }}>{expandedCompanies[`user_${company}`] ? '📂' : '📁'}</div>
-                          <a href={getServicesUiUrl(company, userTemplatesByCompany[company]?.[0]?.originalConfig?.journey?.journeyType)} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} style={{ textDecoration: 'none', color: 'inherit' }}>
-                            <Strong style={{ fontSize: 14, cursor: 'pointer', borderBottom: '1px dashed rgba(0,161,201,0.5)' }}>{company}</Strong>
-                          </a>
+                          <Strong style={{ fontSize: 14 }}>{company}</Strong>
                         </Flex>
                         <div style={{
                           background: Colors.Theme.Primary['70'],
@@ -1803,15 +1940,15 @@ export const HomePage = () => {
                           fontSize: 11,
                           fontWeight: 600
                         }}>
-                          {userTemplatesByCompany[company].length}
+                          {filteredUserTemplates[company].length}
                         </div>
                       </Flex>
                     </div>
 
                     {/* Templates under this company */}
-                    {expandedCompanies[`user_${company}`] && (
+                    {(expandedCompanies[`user_${company}`] || templateSearch.trim()) && (
                       <div style={{ paddingLeft: 8 }}>
-                        {userTemplatesByCompany[company].map(template => (
+                        {filteredUserTemplates[company].map(template => (
                           <div 
                             key={template.id}
                             style={{
@@ -2385,59 +2522,6 @@ export const HomePage = () => {
               </div>
             )}
 
-            {/* Dashboard Generation Status & Link */}
-            {(dashboardStatus || dashboardUrl || isGeneratingDashboard) && (
-              <div style={{
-                marginTop: 12, padding: 14, borderRadius: 10,
-                background: dashboardUrl
-                  ? 'linear-gradient(135deg, rgba(108,44,156,0.08), rgba(0,212,255,0.06))'
-                  : isGeneratingDashboard
-                    ? 'rgba(0,161,201,0.06)'
-                    : dashboardStatus.includes('❌') || dashboardStatus.includes('⚠️')
-                      ? 'rgba(220,160,0,0.06)'
-                      : 'rgba(0,161,201,0.06)',
-                border: `1px solid ${dashboardUrl ? 'rgba(108,44,156,0.3)' : dashboardStatus.includes('❌') ? 'rgba(220,50,47,0.3)' : 'rgba(0,161,201,0.2)'}`,
-              }}>
-                <Flex alignItems="center" gap={8}>
-                  <span style={{ fontSize: 18 }}>{isGeneratingDashboard ? '⏳' : dashboardUrl ? '📊' : dashboardStatus.includes('❌') ? '⚠️' : '📊'}</span>
-                  <div style={{ flex: 1 }}>
-                    <Strong style={{ fontSize: 12, display: 'block', marginBottom: 2 }}>Dashboard</Strong>
-                    <span style={{ fontSize: 12, opacity: 0.85 }}>{dashboardStatus}</span>
-                  </div>
-                  {generatedDashboardJson && (
-                    <button
-                      onClick={downloadDashboardJson}
-                      style={{
-                        display: 'inline-flex', alignItems: 'center', gap: 6,
-                        padding: '8px 16px', borderRadius: 8, fontSize: 13, fontWeight: 700,
-                        background: 'linear-gradient(135deg, rgba(108,44,156,0.9), rgba(0,161,201,0.9))',
-                        color: 'white', cursor: 'pointer',
-                        border: 'none', boxShadow: '0 2px 8px rgba(108,44,156,0.3)',
-                      }}
-                    >
-                      ⬇️ Download JSON
-                    </button>
-                  )}
-                  {dashboardUrl && (
-                    <a
-                      href={dashboardUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        display: 'inline-flex', alignItems: 'center', gap: 6,
-                        padding: '8px 16px', borderRadius: 8, fontSize: 13, fontWeight: 700,
-                        background: 'linear-gradient(135deg, rgba(44,108,156,0.9), rgba(0,161,201,0.9))',
-                        color: 'white', textDecoration: 'none', cursor: 'pointer',
-                        border: 'none', boxShadow: '0 2px 8px rgba(44,108,156,0.3)',
-                      }}
-                    >
-                      � Import in Dynatrace →
-                    </a>
-                  )}
-                </Flex>
-              </div>
-            )}
-
             <Flex justifyContent="space-between" style={{ marginTop: 20 }}>
               <Button onClick={() => setStep2Phase('response')}>← Back to Response</Button>
               <Button onClick={openSettingsModal}>⚙️ API Settings</Button>
@@ -2554,40 +2638,6 @@ export const HomePage = () => {
                 </div>
               </div>
 
-              {/* Services */}
-              <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
-                <button
-                  onClick={openServicesModal}
-                  style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                    width: 140, padding: '8px 0', borderRadius: 8,
-                    background: 'linear-gradient(135deg, rgba(220,50,47,0.12), rgba(220,50,47,0.06))',
-                    border: '1.5px solid rgba(220,50,47,0.4)',
-                    color: '#dc322f', fontWeight: 600, fontSize: 12,
-                    cursor: 'pointer', transition: 'all 0.2s ease',
-                  }}
-                  onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-1px)'; }}
-                  onMouseOut={e => { e.currentTarget.style.transform = 'none'; }}
-                >
-                  <span style={{ fontSize: 14 }}>🖥️</span> Services
-                </button>
-                <div style={{ position: 'relative', display: 'inline-block' }}
-                  onMouseEnter={() => setShowServicesTooltip(true)}
-                  onMouseLeave={() => setShowServicesTooltip(false)}
-                >
-                  <div style={{ width: 18, height: 18, borderRadius: '50%', background: 'rgba(220,50,47,0.12)', border: '1.5px solid rgba(220,50,47,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'help', fontSize: 10, fontWeight: 700, color: '#dc322f' }}>?</div>
-                  {showServicesTooltip && (
-                    <div style={{ position: 'absolute', top: 24, right: 0, width: 260, padding: 12, borderRadius: 10, background: Colors.Background.Surface.Default, border: `1.5px solid ${Colors.Border.Neutral.Default}`, boxShadow: '0 8px 24px rgba(0,0,0,0.25)', zIndex: 10000, fontSize: 12, lineHeight: 1.6 }}>
-                      <Strong style={{ fontSize: 13, marginBottom: 6, display: 'block' }}>🖥️ Services Panel</Strong>
-                      <div>View and manage all running child services generated from your journey configurations.</div>
-                      <div style={{ marginTop: 6 }}><Strong>Running</Strong> — Active services processing traffic</div>
-                      <div><Strong>Dormant</Strong> — Stopped services remembered for quick restart</div>
-                      <div style={{ marginTop: 6, opacity: 0.6 }}>Stop per-company or all at once. Clear dormant to forget them entirely.</div>
-                    </div>
-                  )}
-                </div>
-              </div>
-
               {/* Journeys */}
               <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
                 <button
@@ -2667,7 +2717,6 @@ export const HomePage = () => {
                       <Strong style={{ fontSize: 13, marginBottom: 6, display: 'block' }}>👹 Chaos Nemesis Agent</Strong>
                       <div>Inject faults into running services to test resilience and trigger Dynatrace problem detection.</div>
                       <div style={{ marginTop: 6 }}><Strong>Single Service</Strong> — Target one specific service</div>
-                      <div><Strong>Whole Journey</Strong> — Hit all services for a company at once</div>
                       <div><Strong>Smart Chaos</Strong> — Describe what to break in plain English; AI picks the attack</div>
                       <div style={{ marginTop: 6, opacity: 0.6 }}>All chaos events are recorded as Dynatrace deployment events.</div>
                     </div>
@@ -2675,8 +2724,8 @@ export const HomePage = () => {
                 </div>
               </div>
 
-              {/* Generate Visuals */}
-              <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+              {/* Generate Visuals — hidden for now */}
+              <div style={{ position: 'relative', display: 'none', alignItems: 'center', gap: 3 }}>
                 <button
                   onClick={openGenerateDashboardModal}
                   style={{
@@ -2700,9 +2749,9 @@ export const HomePage = () => {
                   {showDashboardTooltip && (
                     <div style={{ position: 'absolute', top: 24, right: 0, width: 260, padding: 12, borderRadius: 10, background: Colors.Background.Surface.Default, border: `1.5px solid ${Colors.Border.Neutral.Default}`, boxShadow: '0 8px 24px rgba(0,0,0,0.25)', zIndex: 10000, fontSize: 12, lineHeight: 1.6 }}>
                       <Strong style={{ fontSize: 13, marginBottom: 6, display: 'block' }}>🎨 Generate Visuals</Strong>
-                      <div>Create dashboards and executive summary PDFs for your running journeys.</div>
+                      <div>Create dashboards and executive summary documents for your running journeys.</div>
                       <div style={{ marginTop: 6 }}><Strong>Dashboard</Strong> — Generate & download Dynatrace dashboard JSON</div>
-                      <div><Strong>Executive Summary</Strong> — Download a one-page PDF summary</div>
+                      <div><Strong>Executive Summary</Strong> — Download a Word-convertible summary document</div>
                       <div style={{ marginTop: 6, opacity: 0.6 }}>Select a company and journey type to get started.</div>
                     </div>
                   )}
@@ -2710,6 +2759,7 @@ export const HomePage = () => {
               </div>
 
               {/* Demo Guide */}
+              <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
               <Link
                 to="/demo-guide"
                 style={{
@@ -2724,6 +2774,81 @@ export const HomePage = () => {
               >
                 <span style={{ fontSize: 14 }}>📖</span> Demo Guide
               </Link>
+              <InfoButton
+                title="📖 Demo Guide"
+                description="Interactive walkthrough for demoing the BizObs Forge to different audiences."
+                sections={[
+                  { label: '🗺️ Guided Paths', detail: '8 step-by-step demo walkthroughs covering every feature' },
+                  { label: '👥 Persona Demos', detail: '8 persona-tailored flows with talking points and focus areas' },
+                  { label: '🔗 Dynatrace Links', detail: 'Quick-jump links to Services, Traces, GenAI Observability, and more' },
+                ]}
+                footer="Switch between Guided Paths and Persona Demos inside the page."
+                color="#00b4dc"
+              />
+              </div>
+
+              {/* Vertical Solutions */}
+              <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+              <Link
+                to="/solutions"
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                  width: 140, padding: '8px 0', borderRadius: 8,
+                  background: 'linear-gradient(135deg, rgba(39,174,96,0.12), rgba(108,44,156,0.06))',
+                  border: '1.5px solid rgba(39,174,96,0.4)',
+                  color: '#27ae60', fontWeight: 600, fontSize: 12,
+                  cursor: 'pointer', transition: 'all 0.2s ease',
+                  textDecoration: 'none',
+                }}
+              >
+                <span style={{ fontSize: 14 }}>🏢</span> Solutions
+              </Link>
+              <InfoButton
+                title="🏢 Vertical Solutions"
+                description="Industry-specific journey templates with pre-built integrations and KPIs."
+                sections={[
+                  { label: '🏭 Industries', detail: 'Browse sectors like Retail, Healthcare, Financial Services, and more' },
+                  { label: '🔌 Integrations', detail: 'Partner integrations mapped to each industry vertical' },
+                  { label: '📊 KPIs & ROI', detail: 'Business metrics and talking points tailored to each vertical' },
+                ]}
+                footer="Use these templates to quickly generate industry-specific demos."
+                color="#27ae60"
+              />
+              </div>
+
+              {/* Forge Dashboards */}
+              <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+              <Link
+                to="/forge-dashboards"
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                  width: 140, padding: '8px 0', borderRadius: 8,
+                  background: 'linear-gradient(135deg, rgba(52,152,219,0.12), rgba(0,212,255,0.06))',
+                  border: '1.5px solid rgba(52,152,219,0.4)',
+                  color: '#3498db', fontWeight: 600, fontSize: 12,
+                  cursor: 'pointer', transition: 'all 0.2s ease',
+                  textDecoration: 'none',
+                }}
+              >
+                <span style={{ fontSize: 14 }}>📊</span> Dashboards
+              </Link>
+              <InfoButton
+                title="📊 Forge Dashboards"
+                description="Eight persona-based preset dashboards with live DQL-powered tiles."
+                sections={[
+                  { label: '🔧 Developer', detail: 'RED metrics, latency percentiles, errors, traces, logs' },
+                  { label: '⚙️ Operations', detail: 'Host health, CPU/memory, processes, availability' },
+                  { label: '👔 Executive', detail: 'Revenue, SLA, journey funnel, customer churn' },
+                  { label: '🧠 Intelligence', detail: 'Problems, root cause, anomalies, MTTD/MTTR' },
+                  { label: '🤖 GenAI', detail: 'LLM calls, tokens, model latency, embeddings' },
+                  { label: '🔒 Security', detail: 'Security events, attacks, categories, trends, affected entities' },
+                  { label: '📋 SRE', detail: 'Availability, error budget, latency percentiles' },
+                  { label: '📝 Biz Events', detail: 'Event volume, types, errors by service/journey/company' },
+                ]}
+                footer="All tiles run live DQL queries and can be filtered by company, journey, and timeframe."
+                color="#3498db"
+              />
+              </div>
 
               {/* Settings */}
               <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
@@ -2742,22 +2867,17 @@ export const HomePage = () => {
                 >
                   <span style={{ fontSize: 14 }}>⚙️</span> Settings
                 </button>
-                <div style={{ position: 'relative', display: 'inline-block' }}
-                  onMouseEnter={() => setShowSettingsTooltip(true)}
-                  onMouseLeave={() => setShowSettingsTooltip(false)}
-                >
-                  <div style={{ width: 18, height: 18, borderRadius: '50%', background: 'rgba(108,44,156,0.12)', border: '1.5px solid rgba(108,44,156,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'help', fontSize: 10, fontWeight: 700, color: Colors.Theme.Primary['70'] }}>?</div>
-                  {showSettingsTooltip && (
-                    <div style={{ position: 'absolute', top: 24, right: 0, width: 260, padding: 12, borderRadius: 10, background: Colors.Background.Surface.Default, border: `1.5px solid ${Colors.Border.Neutral.Default}`, boxShadow: '0 8px 24px rgba(0,0,0,0.25)', zIndex: 10000, fontSize: 12, lineHeight: 1.6 }}>
-                      <Strong style={{ fontSize: 13, marginBottom: 6, display: 'block' }}>⚙️ API Settings</Strong>
-                      <div>Configure the connection to your BizObs Forge server.</div>
-                      <div style={{ marginTop: 6 }}><Strong>Host</Strong> — IP address or hostname of your server</div>
-                      <div><Strong>Port</Strong> — Server port (default 8080)</div>
-                      <div><Strong>Protocol</Strong> — HTTP for internal, HTTPS for production</div>
-                      <div style={{ marginTop: 6, opacity: 0.6 }}>Use "Test" to verify connectivity before saving.</div>
-                    </div>
-                  )}
-                </div>
+                <InfoButton
+                  title="⚙️ API Settings"
+                  description="Configure the connection to your BizObs Forge server."
+                  sections={[
+                    { label: 'Host', detail: 'IP address or hostname of your server' },
+                    { label: 'Port', detail: 'Server port (default 8080)' },
+                    { label: 'Protocol', detail: 'HTTP for internal, HTTPS for production' },
+                  ]}
+                  footer="Use 'Test' to verify connectivity before saving."
+                  color={Colors.Theme.Primary['70']}
+                />
               </div>
             </Flex>
           </TitleBar.Action>
@@ -2854,15 +2974,12 @@ export const HomePage = () => {
                   </div>
                 </Flex>
                 <Flex alignItems="center" gap={8}>
-                  {/* Tab switcher */}
-                  <button onClick={() => setSettingsTab('config')} style={{ padding: '4px 14px', borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: 'pointer', border: 'none', background: settingsTab === 'config' ? 'rgba(255,255,255,0.25)' : 'transparent', color: 'white', transition: 'all 0.2s' }}>⚙️ Config</button>
-                  <button onClick={() => { setSettingsTab('edgeconnect'); loadEdgeConnects(); }} style={{ padding: '4px 14px', borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: 'pointer', border: 'none', background: settingsTab === 'edgeconnect' ? 'rgba(255,255,255,0.25)' : 'transparent', color: 'white', transition: 'all 0.2s' }}>🔌 EdgeConnect</button>
                   <button onClick={() => setShowSettingsModal(false)} style={{ background: 'none', border: 'none', color: 'white', fontSize: 20, cursor: 'pointer', padding: 4, marginLeft: 8 }}>✕</button>
                 </Flex>
               </Flex>
             </div>
 
-            {settingsTab === 'config' ? (
+            {/* Config */}
             <div style={{ padding: 24 }}>
               {/* Status */}
               {settingsStatus && (
@@ -2912,182 +3029,48 @@ export const HomePage = () => {
                 </Button>
                 <Button onClick={() => { setSettingsForm(DEFAULT_SETTINGS); setSettingsStatus('🔄 Reset to defaults'); }} style={{ flex: 1 }}>🔄 Reset</Button>
               </Flex>
-            </div>
-            ) : (
-            /* ── EdgeConnect Setup Tab ─── */
-            <div style={{ padding: 24 }}>
-              {/* Status */}
-              {ecStatus && (
-                <div style={{ padding: 10, marginBottom: 16, borderRadius: 8, fontSize: 13, fontFamily: 'monospace',
-                  background: ecStatus.includes('✅') ? 'rgba(115,190,40,0.12)' : ecStatus.includes('❌') ? 'rgba(220,50,47,0.12)' : 'rgba(0,161,201,0.12)',
-                  border: `1px solid ${ecStatus.includes('✅') ? Colors.Theme.Success['70'] : ecStatus.includes('❌') ? '#dc322f' : Colors.Theme.Primary['70']}` }}>
-                  {ecStatus}
-                </div>
-              )}
 
-              {/* ── Step 1: Create EdgeConnect ── */}
-              <div style={{ marginBottom: 16, padding: 16, borderRadius: 10, border: `1.5px solid ${Colors.Theme.Primary['70']}`, background: 'rgba(108,44,156,0.04)' }}>
-                <Flex alignItems="flex-start" gap={12}>
-                  <div style={{ width: 28, height: 28, borderRadius: '50%', background: `linear-gradient(135deg, ${Colors.Theme.Primary['70']}, #00d4ff)`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: 14, fontWeight: 700, flexShrink: 0 }}>1</div>
-                  <div style={{ flex: 1 }}>
-                    <Flex alignItems="center" justifyContent="space-between" style={{ marginBottom: 8 }}>
-                      <Strong style={{ fontSize: 14 }}>Create EdgeConnect</Strong>
-                      <a href={`${TENANT_URL}/ui/apps/dynatrace.settings/settings/external-requests/?tab=edge-connect`} target="_blank" rel="noopener noreferrer" style={{ fontSize: 10, color: '#4169e1', textDecoration: 'none', padding: '2px 8px', borderRadius: 4, border: '1px solid rgba(65,105,225,0.25)', background: 'rgba(65,105,225,0.06)', fontWeight: 600 }}>or create manually in Settings →</a>
-                    </Flex>
-                    <Paragraph style={{ fontSize: 12, opacity: 0.7, marginBottom: 12, lineHeight: 1.5 }}>
-                      Enter a name and your server IP. The app will create the EdgeConnect config and <Strong>auto-generate</Strong> OAuth credentials.
-                    </Paragraph>
-
-                    <Flex gap={8} style={{ marginBottom: 12 }}>
-                      <div style={{ flex: 1 }}>
-                        <label style={{ display: 'block', fontSize: 11, fontWeight: 600, marginBottom: 4 }}>Name</label>
-                        <TextInput value={ecName} onChange={(v: string) => setEcName(v)} placeholder="bizobs" />
-                      </div>
-                      <div style={{ flex: 2 }}>
-                        <label style={{ display: 'block', fontSize: 11, fontWeight: 600, marginBottom: 4 }}>Host Pattern / Server IP</label>
-                        <TextInput value={ecHostPattern} onChange={(v: string) => setEcHostPattern(v)} placeholder={settingsForm.apiHost || 'YOUR_SERVER_IP'} />
-                      </div>
-                    </Flex>
-
-                    {settingsForm.apiHost && !ecHostPattern && (
-                      <button onClick={() => setEcHostPattern(settingsForm.apiHost)} style={{ marginBottom: 10, padding: '3px 10px', borderRadius: 6, border: '1px solid rgba(108,44,156,0.3)', background: 'rgba(108,44,156,0.08)', cursor: 'pointer', fontSize: 11, fontWeight: 600 }}>📋 Use saved host: {settingsForm.apiHost}</button>
-                    )}
-
-                    <Button variant="emphasized" onClick={createEdgeConnect} disabled={isCreatingEC} style={{ width: '100%', fontWeight: 600, fontSize: 13 }}>
-                      {isCreatingEC ? '⏳ Creating...' : '🔌 Create EdgeConnect & Generate Credentials'}
-                    </Button>
-
-                    {/* Already have credentials? Manual entry */}
-                    {!ecClientId && !ecClientSecret && (
-                      <div style={{ marginTop: 10, padding: 10, borderRadius: 8, background: 'rgba(0,0,0,0.02)', border: `1px solid ${Colors.Border.Neutral.Default}`, fontSize: 11, opacity: 0.7 }}>
-                        💡 Already created one in Dynatrace Settings? Enter the credentials manually below and skip to Step 2.
-                      </div>
-                    )}
-                  </div>
+              {/* ── Business Flow Management ── */}
+              <div style={{ marginTop: 24, padding: 16, background: 'rgba(0,161,201,0.06)', border: `1px solid ${Colors.Border.Neutral.Default}`, borderRadius: 10 }}>
+                <Flex alignItems="center" justifyContent="space-between" style={{ marginBottom: 12 }}>
+                  <Strong style={{ fontSize: 13 }}>🔄 Business Flows</Strong>
+                  <button onClick={loadBizFlows} disabled={isLoadingBizFlows} style={{ padding: '3px 10px', borderRadius: 6, border: `1px solid ${Colors.Border.Neutral.Default}`, background: 'transparent', cursor: isLoadingBizFlows ? 'wait' : 'pointer', fontSize: 11, fontWeight: 600 }}>
+                    {isLoadingBizFlows ? '⏳ Loading...' : '📋 List Flows'}
+                  </button>
                 </Flex>
-              </div>
-
-              {/* ── Step 2: Generated Credentials + YAML ── */}
-              {isAnyEcOnline && isEcRouteActive ? (
-                /* ── Connected summary ── */
-                <div style={{ marginBottom: 16, padding: 16, borderRadius: 10, border: '1px solid rgba(0,180,0,0.35)', background: 'rgba(0,180,0,0.04)' }}>
-                  <Flex alignItems="flex-start" gap={12}>
-                    <div style={{ width: 28, height: 28, borderRadius: '50%', background: `linear-gradient(135deg, #2e7d32, ${Colors.Theme.Success['70']})`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: 14, fontWeight: 700, flexShrink: 0 }}>✓</div>
-                    <div style={{ flex: 1 }}>
-                      <Strong style={{ fontSize: 14 }}>EdgeConnect Connected</Strong>
-                      <Paragraph style={{ fontSize: 12, opacity: 0.7, marginTop: 4 }}>
-                        Your EdgeConnect is <Strong style={{ color: '#2e7d32' }}>ONLINE</Strong> and routing traffic to <code style={{ fontSize: 11 }}>{ecHostPattern || apiSettings.host}</code>. No further action needed.
-                      </Paragraph>
-                    </div>
-                  </Flex>
-                </div>
-              ) : (
-                /* ── Credentials + YAML (before connection) ── */
-                <div style={{ marginBottom: 16, padding: 16, borderRadius: 10, border: `1px solid ${ecClientId && ecClientSecret ? 'rgba(0,180,0,0.35)' : Colors.Border.Neutral.Default}`, background: ecClientId && ecClientSecret ? 'rgba(0,180,0,0.03)' : 'rgba(0,212,255,0.04)' }}>
-                  <Flex alignItems="flex-start" gap={12}>
-                    <div style={{ width: 28, height: 28, borderRadius: '50%', background: ecClientId && ecClientSecret ? `linear-gradient(135deg, #2e7d32, ${Colors.Theme.Success['70']})` : `linear-gradient(135deg, #00d4ff, ${Colors.Theme.Success['70']})`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: 14, fontWeight: 700, flexShrink: 0 }}>{ecClientId && ecClientSecret ? '✓' : '2'}</div>
-                    <div style={{ flex: 1 }}>
-                      <Strong style={{ fontSize: 14 }}>{ecClientId && ecClientSecret ? 'Credentials Ready — Deploy on Server' : 'Credentials & Deploy'}</Strong>
-
-                      {ecClientId && ecClientSecret ? (
-                        <>
-                          <div style={{ marginTop: 10, marginBottom: 10, padding: 10, borderRadius: 8, background: 'rgba(220,50,47,0.06)', border: '1px solid rgba(220,50,47,0.25)', fontSize: 12 }}>
-                            ⚠️ <Strong>Save the secret now!</Strong> It cannot be retrieved again after you leave this page.
-                          </div>
-
-                          {/* Editable credential fields */}
-                          <Flex gap={8} style={{ marginBottom: 12 }}>
-                            <div style={{ flex: 1 }}>
-                              <label style={{ display: 'block', fontSize: 11, fontWeight: 600, marginBottom: 3 }}>Client ID</label>
-                              <TextInput value={ecClientId} onChange={(v: string) => setEcClientId(v)} placeholder="dt0s10.XXXXXXXX" />
-                            </div>
-                          </Flex>
-                          <div style={{ marginBottom: 12 }}>
-                            <label style={{ display: 'block', fontSize: 11, fontWeight: 600, marginBottom: 3 }}>Client Secret</label>
-                            <TextInput value={ecClientSecret} onChange={(v: string) => setEcClientSecret(v)} placeholder="dt0s10.XXXXXXXX.XXXXX..." />
-                          </div>
-
-                          {/* Generated YAML */}
-                          <div style={{ marginBottom: 10 }}>
-                            <Flex alignItems="center" justifyContent="space-between" style={{ marginBottom: 4 }}>
-                              <Strong style={{ fontSize: 11 }}>📄 edgeConnect.yaml</Strong>
-                              <button onClick={() => { navigator.clipboard.writeText(generateEcYaml()); setEcStatus('📋 YAML copied!'); }} style={{ padding: '2px 8px', borderRadius: 4, border: '1px solid rgba(0,0,0,0.15)', background: 'rgba(255,255,255,0.9)', cursor: 'pointer', fontSize: 10, fontWeight: 600 }}>📋 Copy YAML</button>
-                            </Flex>
-                            <pre style={{ padding: 10, borderRadius: 8, background: 'rgba(0,0,0,0.05)', border: `1px solid ${Colors.Border.Neutral.Default}`, fontSize: 11, lineHeight: 1.5, overflow: 'auto', maxHeight: 180, whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
-{generateEcYaml()}
-                            </pre>
-                          </div>
-
-                          {/* Deploy command */}
-                          <div>
-                            <Flex alignItems="center" justifyContent="space-between" style={{ marginBottom: 4 }}>
-                              <Strong style={{ fontSize: 11 }}>🐳 Run on server</Strong>
-                              <button onClick={() => { navigator.clipboard.writeText(`cd ~/BizObs\\ Generator\\ -\\ Dynatrace\\ AppEngine\\ App/edgeconnect && ./run-edgeconnect.sh`); setEcStatus('📋 Command copied!'); }} style={{ padding: '2px 8px', borderRadius: 4, border: '1px solid rgba(0,0,0,0.15)', background: 'rgba(255,255,255,0.9)', cursor: 'pointer', fontSize: 10, fontWeight: 600 }}>📋 Copy</button>
-                            </Flex>
-                            <pre style={{ padding: 10, borderRadius: 8, background: 'rgba(0,0,0,0.05)', border: `1px solid ${Colors.Border.Neutral.Default}`, fontSize: 11, lineHeight: 1.5, overflow: 'auto', whiteSpace: 'pre-wrap' }}>
-{`# Update the YAML on server, then start EdgeConnect:\ncd ~/BizObs\\ Generator\\ -\\ Dynatrace\\ AppEngine\\ App/edgeconnect\n./run-edgeconnect.sh`}
-                            </pre>
-                          </div>
-                        </>
-                      ) : (
-                        <div style={{ marginTop: 8 }}>
-                          <Paragraph style={{ fontSize: 12, opacity: 0.5, marginBottom: 10 }}>Click "Create EdgeConnect" above, or paste credentials from Dynatrace Settings manually:</Paragraph>
-                          <Flex gap={8} style={{ marginBottom: 8 }}>
-                            <div style={{ flex: 1 }}>
-                              <label style={{ display: 'block', fontSize: 11, fontWeight: 600, marginBottom: 3 }}>Client ID</label>
-                              <TextInput value={ecClientId} onChange={(v: string) => setEcClientId(v)} placeholder="dt0s10.XXXXXXXX" />
-                            </div>
-                          </Flex>
-                          <div>
-                            <label style={{ display: 'block', fontSize: 11, fontWeight: 600, marginBottom: 3 }}>Client Secret</label>
-                            <TextInput value={ecClientSecret} onChange={(v: string) => setEcClientSecret(v)} placeholder="dt0s10.XXXXXXXX.XXXXX..." />
-                          </div>
+                {bizFlowStatus && (
+                  <div style={{ padding: 8, marginBottom: 10, borderRadius: 6, fontSize: 12, fontFamily: 'monospace',
+                    background: bizFlowStatus.includes('✅') ? 'rgba(115,190,40,0.12)' : bizFlowStatus.includes('❌') ? 'rgba(220,50,47,0.12)' : 'rgba(0,161,201,0.08)',
+                    border: `1px solid ${bizFlowStatus.includes('✅') ? Colors.Theme.Success['70'] : bizFlowStatus.includes('❌') ? '#dc322f' : Colors.Border.Neutral.Default}` }}>
+                    {bizFlowStatus}
+                  </div>
+                )}
+                {bizFlows.length > 0 && (
+                  <>
+                    <div style={{ maxHeight: 200, overflow: 'auto', marginBottom: 10 }}>
+                      {bizFlows.map(f => (
+                        <div key={f.objectId} style={{ padding: '6px 10px', marginBottom: 4, borderRadius: 6, fontSize: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                          background: f.isSmartscapeTopologyEnabled ? 'rgba(115,190,40,0.1)' : 'rgba(220,50,47,0.06)',
+                          border: `1px solid ${f.isSmartscapeTopologyEnabled ? 'rgba(115,190,40,0.3)' : 'rgba(220,50,47,0.2)'}` }}>
+                          <span>{f.isSmartscapeTopologyEnabled ? '🟢' : '⚪'} <strong>{f.name}</strong> ({f.stepsCount} steps)</span>
+                          <span style={{ fontSize: 10, fontWeight: 600, padding: '2px 6px', borderRadius: 4,
+                            background: f.isSmartscapeTopologyEnabled ? 'rgba(115,190,40,0.2)' : 'transparent',
+                            color: f.isSmartscapeTopologyEnabled ? '#2e7d32' : '#888' }}>
+                            {f.isSmartscapeTopologyEnabled ? 'ENTITY' : 'non-entity'}
+                          </span>
                         </div>
-                      )}
+                      ))}
                     </div>
-                  </Flex>
-                </div>
-              )}
-
-              {/* ── Step 3: Verify Connection ── */}
-              <div style={{ marginBottom: 16, padding: 16, borderRadius: 10, border: `1px solid ${isAnyEcOnline && isEcRouteActive ? 'rgba(0,180,0,0.35)' : Colors.Border.Neutral.Default}`, background: isAnyEcOnline && isEcRouteActive ? 'rgba(0,180,0,0.04)' : 'rgba(220,50,47,0.02)' }}>
-                <Flex alignItems="flex-start" gap={12}>
-                  <div style={{ width: 28, height: 28, borderRadius: '50%', background: isAnyEcOnline && isEcRouteActive ? `linear-gradient(135deg, #2e7d32, ${Colors.Theme.Success['70']})` : 'linear-gradient(135deg, #dc322f, #b58900)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: 14, fontWeight: 700, flexShrink: 0 }}>{isAnyEcOnline && isEcRouteActive ? '✓' : '3'}</div>
-                  <div style={{ flex: 1 }}>
-                    <Strong style={{ fontSize: 14 }}>Verify & Connect</Strong>
-                    <Paragraph style={{ fontSize: 12, opacity: 0.7, marginTop: 4, marginBottom: 12 }}>
-                      {isAnyEcOnline && isEcRouteActive
-                        ? 'EdgeConnect is online and routing traffic correctly.'
-                        : <>After deploying on your server, check that the EdgeConnect is <Strong>ONLINE</Strong> and routing traffic correctly.</>}
-                    </Paragraph>
-
-                    <Flex gap={8} style={{ marginBottom: 12 }}>
-                      <Button variant="emphasized" onClick={async () => { setEcStatus('⏳ Checking EdgeConnect status...'); await loadEdgeConnects(); await checkEdgeConnectMatch(); setEcStatus(''); }} disabled={isLoadingEC || isCheckingMatch} style={{ flex: 1, fontWeight: 600 }}>
-                        {isLoadingEC || isCheckingMatch ? '⏳ Checking...' : '🔍 Check Connection'}
-                      </Button>
+                    <Flex gap={8}>
+                      <button onClick={deleteNonEntityBizFlows} disabled={isDeletingBizFlows || bizFlows.filter(f => !f.isSmartscapeTopologyEnabled).length === 0}
+                        style={{ flex: 1, padding: '6px 12px', borderRadius: 6, border: '1px solid rgba(220,50,47,0.4)', background: 'rgba(220,50,47,0.08)', cursor: isDeletingBizFlows ? 'wait' : 'pointer', fontSize: 12, fontWeight: 600, color: '#dc322f' }}>
+                        {isDeletingBizFlows ? '🗑️ Deleting...' : `🗑️ Delete ${bizFlows.filter(f => !f.isSmartscapeTopologyEnabled).length} Non-Entity Flow(s)`}
+                      </button>
                     </Flex>
-
-                    {/* Route match result */}
-                    {ecMatchResult && (
-                      <div style={{ padding: 10, borderRadius: 8, fontSize: 12, background: ecMatchResult.matched ? 'rgba(0,180,0,0.08)' : 'rgba(220,160,0,0.08)', border: `1px solid ${ecMatchResult.matched ? 'rgba(0,180,0,0.3)' : 'rgba(220,160,0,0.3)'}` }}>
-                        {ecMatchResult.matched ? (
-                          <span>✅ <Strong>Route active!</Strong> Traffic to <code style={{ fontSize: 11 }}>{ecHostPattern || apiSettings.host}:{apiSettings.port || '8080'}</code> routes through <Strong>{ecMatchResult.name}</Strong> (pattern: <code style={{ fontSize: 11 }}>{ecMatchResult.pattern}</code>)</span>
-                        ) : (
-                          <span>⚠️ <Strong>No route match.</Strong> Ensure the EdgeConnect host pattern includes <code style={{ fontSize: 11 }}>{ecHostPattern || apiSettings.host || 'your server IP'}</code>.</span>
-                        )}
-                      </div>
-                    )}
-
-                    {!isLoadingEC && edgeConnects.length === 0 && !ecMatchResult && (
-                      <div style={{ padding: 12, borderRadius: 8, background: 'rgba(220,160,0,0.06)', border: '1px solid rgba(220,160,0,0.2)', textAlign: 'center', fontSize: 12, opacity: 0.6 }}>
-                        No EdgeConnects found yet. Complete steps 1-2 first.
-                      </div>
-                    )}
-                  </div>
-                </Flex>
+                  </>
+                )}
               </div>
             </div>
-            )}
           </div>
         </div>
       )}
@@ -3286,7 +3269,7 @@ export const HomePage = () => {
                   </div>
                 </Flex>
                 <Flex alignItems="center" gap={8}>
-                  <button onClick={() => loadJourneysData()} disabled={isLoadingJourneys} style={{ background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.3)', color: 'white', borderRadius: 6, padding: '4px 12px', fontSize: 12, cursor: 'pointer' }}>🔄 Refresh</button>
+                  <button onClick={() => { loadJourneysData(); loadDormantServices(); }} disabled={isLoadingJourneys} style={{ background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.3)', color: 'white', borderRadius: 6, padding: '4px 12px', fontSize: 12, cursor: 'pointer' }}>🔄 Refresh</button>
                   <button onClick={() => setShowJourneysModal(false)} style={{ background: 'none', border: 'none', color: 'white', fontSize: 20, cursor: 'pointer', padding: 4 }}>✕</button>
                 </Flex>
               </Flex>
@@ -3357,6 +3340,18 @@ export const HomePage = () => {
                                   </span>
                                 </Flex>
                                 <Flex gap={6}>
+                                  <button
+                                    onClick={() => stopCompanyServices(company)}
+                                    disabled={isStoppingServices}
+                                    style={{
+                                      display: 'inline-flex', alignItems: 'center', gap: 4,
+                                      padding: '4px 10px', borderRadius: 6, fontSize: 11, fontWeight: 600,
+                                      background: 'rgba(220,50,47,0.08)', border: '1px solid rgba(220,50,47,0.25)', color: '#dc322f',
+                                      cursor: isStoppingServices ? 'not-allowed' : 'pointer',
+                                    }}
+                                  >
+                                    {stoppingCompany === company ? '⏳ Stopping...' : `🛑 Stop ${company}`}
+                                  </button>
                                   <a
                                     href={getServicesUiUrl(company)}
                                     target="_blank"
@@ -3364,7 +3359,7 @@ export const HomePage = () => {
                                     style={{
                                       display: 'inline-flex', alignItems: 'center', gap: 4,
                                       padding: '4px 10px', borderRadius: 6, fontSize: 11, fontWeight: 600,
-                                      background: 'rgba(220,50,47,0.08)', border: '1px solid rgba(220,50,47,0.25)', color: '#dc322f',
+                                      background: 'rgba(0,161,201,0.08)', border: '1px solid rgba(0,161,201,0.25)', color: '#00a1c9',
                                       textDecoration: 'none', cursor: 'pointer',
                                     }}
                                   >
@@ -3425,6 +3420,84 @@ export const HomePage = () => {
                                       </Flex>
                                     ))}
                                   </div>
+
+                                  {/* ── Deployment Status ── */}
+                                  {(() => {
+                                    const assetKey = `${company}::${jType}`;
+                                    const asset = journeyAssets[assetKey];
+                                    if (!asset) return null;
+                                    return (
+                                      <div style={{ marginTop: 8, display: 'flex', flexWrap: 'wrap', gap: 6, borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 8 }}>
+                                        {/* Services link */}
+                                        <a
+                                          href={getServicesUiUrl(company, jType)}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          style={{
+                                            display: 'inline-flex', alignItems: 'center', gap: 4,
+                                            padding: '3px 10px', borderRadius: 14, fontSize: 11, fontWeight: 600,
+                                            background: 'rgba(115,190,40,0.1)', border: '1px solid rgba(115,190,40,0.3)', color: Colors.Theme.Success['70'],
+                                            textDecoration: 'none',
+                                          }}
+                                        >
+                                          <span style={{ fontSize: 8 }}>●</span> Services active
+                                        </a>
+
+                                        {/* Dashboard status */}
+                                        {asset.dashboard.exists ? (
+                                          <a
+                                            href={`${TENANT_URL}${asset.dashboard.url}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            title={asset.dashboard.name || asset.dashboard.id}
+                                            style={{
+                                              display: 'inline-flex', alignItems: 'center', gap: 4,
+                                              padding: '3px 10px', borderRadius: 14, fontSize: 11, fontWeight: 600,
+                                              background: 'rgba(108,44,156,0.1)', border: '1px solid rgba(108,44,156,0.3)', color: '#9b59b6',
+                                              textDecoration: 'none',
+                                            }}
+                                          >
+                                            📊 Dashboard deployed
+                                          </a>
+                                        ) : (
+                                          <span style={{
+                                            display: 'inline-flex', alignItems: 'center', gap: 4,
+                                            padding: '3px 10px', borderRadius: 14, fontSize: 11, fontWeight: 600,
+                                            background: 'rgba(220,50,47,0.06)', border: '1px dashed rgba(220,50,47,0.25)', color: '#dc322f',
+                                            opacity: 0.85,
+                                          }}>
+                                            📊 Dashboard not deployed
+                                          </span>
+                                        )}
+
+                                        {/* BizFlow status */}
+                                        {asset.bizflow.exists ? (
+                                          <a
+                                            href={`${TENANT_URL}/ui/apps/dynatrace.biz.flow/`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            style={{
+                                              display: 'inline-flex', alignItems: 'center', gap: 4,
+                                              padding: '3px 10px', borderRadius: 14, fontSize: 11, fontWeight: 600,
+                                              background: 'rgba(0,161,201,0.1)', border: '1px solid rgba(0,161,201,0.3)', color: '#00a1c9',
+                                              textDecoration: 'none',
+                                            }}
+                                          >
+                                            🔄 BizFlow deployed
+                                          </a>
+                                        ) : (
+                                          <span style={{
+                                            display: 'inline-flex', alignItems: 'center', gap: 4,
+                                            padding: '3px 10px', borderRadius: 14, fontSize: 11, fontWeight: 600,
+                                            background: 'rgba(220,50,47,0.06)', border: '1px dashed rgba(220,50,47,0.25)', color: '#dc322f',
+                                            opacity: 0.85,
+                                          }}>
+                                            🔄 BizFlow not deployed
+                                          </span>
+                                        )}
+                                      </div>
+                                    );
+                                  })()}
                                 </div>
                               ))}
                             </div>
@@ -3435,6 +3508,82 @@ export const HomePage = () => {
                   })()}
                 </>
               )}
+
+              {/* ── Actions: Stop All ── */}
+              {journeysData.length > 0 && (
+                <Flex gap={8} style={{ marginTop: 16, paddingTop: 16, borderTop: `1px solid ${Colors.Border.Neutral.Default}` }}>
+                  <Button onClick={stopAllServices} disabled={isStoppingServices} style={{ flex: 1, background: 'rgba(220,50,47,0.15)', color: '#dc322f' }}>
+                    {isStoppingServices ? '🛑 Stopping...' : '🛑 Stop All Services'}
+                  </Button>
+                </Flex>
+              )}
+
+              {/* ── Dormant Services Section ── */}
+              <div style={{ marginTop: 24, borderTop: `1px solid ${Colors.Border.Neutral.Default}`, paddingTop: 20 }}>
+                <Flex alignItems="center" justifyContent="space-between" style={{ marginBottom: 12 }}>
+                  <Flex alignItems="center" gap={8}>
+                    <span style={{ fontSize: 18 }}>💤</span>
+                    <Strong style={{ fontSize: 14 }}>Dormant Services</Strong>
+                    <span style={{ fontSize: 12, opacity: 0.5 }}>({dormantServices.length})</span>
+                  </Flex>
+                  {dormantServices.length > 0 && (
+                    <Button onClick={() => setShowDormantWarning('all')} disabled={isClearingDormant} style={{ fontSize: 12, padding: '4px 14px', background: 'rgba(220,160,0,0.12)', color: '#b58900' }}>
+                      {isClearingDormant ? '🧹 Clearing...' : '🧹 Clear All Dormant'}
+                    </Button>
+                  )}
+                </Flex>
+
+                {isLoadingDormant ? (
+                  <Flex justifyContent="center" style={{ padding: 16 }}><span style={{ fontSize: 20 }}>⏳</span></Flex>
+                ) : dormantServices.length === 0 ? (
+                  <div style={{ textAlign: 'center', padding: 16, opacity: 0.5, fontSize: 13 }}>
+                    No dormant services. Services that are stopped will appear here for quick restart.
+                  </div>
+                ) : (
+                  <>
+                    {(() => {
+                      const groups: Record<string, any[]> = {};
+                      dormantServices.forEach((s: any) => {
+                        const company = s.companyName || 'Unknown';
+                        if (!groups[company]) groups[company] = [];
+                        groups[company].push(s);
+                      });
+                      return Object.entries(groups).map(([company, services]) => (
+                        <div key={`dormant-${company}`} style={{ marginBottom: 12, border: `1px dashed rgba(181,137,0,0.4)`, borderRadius: 10, overflow: 'hidden' }}>
+                          <div style={{ padding: '8px 14px', background: 'rgba(181,137,0,0.06)', borderBottom: `1px dashed rgba(181,137,0,0.3)` }}>
+                            <Flex alignItems="center" justifyContent="space-between">
+                              <Flex alignItems="center" gap={8}>
+                                <span style={{ fontSize: 14 }}>💤</span>
+                                <Strong style={{ fontSize: 13 }}>{company}</Strong>
+                                <span style={{ fontSize: 11, opacity: 0.5 }}>({services.length} dormant)</span>
+                              </Flex>
+                              <Button onClick={() => setShowDormantWarning(company)} disabled={clearingDormantCompany === company} style={{ fontSize: 10, padding: '2px 8px', background: 'rgba(220,160,0,0.1)', color: '#b58900' }}>
+                                {clearingDormantCompany === company ? '⏳...' : '🧹 Clear'}
+                              </Button>
+                            </Flex>
+                          </div>
+                          <div style={{ padding: 10 }}>
+                            {services.map((s: any, idx: number) => (
+                              <Flex key={idx} alignItems="center" justifyContent="space-between" style={{ padding: '5px 8px', borderRadius: 6, marginBottom: 3, background: 'rgba(181,137,0,0.04)' }}>
+                                <Flex alignItems="center" gap={8}>
+                                  <span style={{ fontSize: 10, color: '#b58900' }}>○</span>
+                                  <span style={{ fontSize: 12 }}>{s.baseServiceName || s.serviceName}</span>
+                                  {s.serviceVersion && (
+                                    <span style={{ fontSize: 9, padding: '1px 4px', borderRadius: 3, background: 'rgba(181,137,0,0.1)', color: '#b58900', fontFamily: 'monospace' }}>
+                                      v{s.serviceVersion}
+                                    </span>
+                                  )}
+                                </Flex>
+                                <span style={{ fontSize: 10, opacity: 0.4, fontFamily: 'monospace' }}>port {s.previousPort}</span>
+                              </Flex>
+                            ))}
+                          </div>
+                        </div>
+                      ));
+                    })()}
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -3616,80 +3765,19 @@ export const HomePage = () => {
                   {/* ─── Tab 2: Inject ─── */}
                   {chaosTab === 'inject' && (
                     <div>
-                      {/* Target Mode Toggle */}
+                      {/* Target Service Dropdown */}
                       <div style={{ marginBottom: 16 }}>
-                        <Strong style={{ fontSize: 12, display: 'block', marginBottom: 8 }}>🎯 Target Mode</Strong>
-                        <div style={{ display: 'flex', borderRadius: 8, overflow: 'hidden', border: `1px solid ${Colors.Border.Neutral.Default}` }}>
-                          <button
-                            onClick={() => { setInjectTargetMode('service'); setInjectForm(prev => ({ ...prev, target: '', company: '' })); }}
-                            style={{
-                              flex: 1, padding: '8px 0', border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: injectTargetMode === 'service' ? 700 : 400,
-                              background: injectTargetMode === 'service' ? 'rgba(181,137,0,0.15)' : 'transparent',
-                              color: injectTargetMode === 'service' ? '#b58900' : 'inherit',
-                            }}
-                          >
-                            🔧 Single Service
-                          </button>
-                          <button
-                            onClick={() => { setInjectTargetMode('journey'); setInjectForm(prev => ({ ...prev, target: '', company: '' })); }}
-                            style={{
-                              flex: 1, padding: '8px 0', border: 'none', borderLeft: `1px solid ${Colors.Border.Neutral.Default}`, cursor: 'pointer', fontSize: 13, fontWeight: injectTargetMode === 'journey' ? 700 : 400,
-                              background: injectTargetMode === 'journey' ? 'rgba(181,137,0,0.15)' : 'transparent',
-                              color: injectTargetMode === 'journey' ? '#b58900' : 'inherit',
-                            }}
-                          >
-                            🗺️ Whole Journey
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Target Dropdown — changes based on mode */}
-                      <div style={{ marginBottom: 16 }}>
-                        {injectTargetMode === 'service' ? (
-                          <>
-                            <Strong style={{ fontSize: 12, display: 'block', marginBottom: 6 }}>🔧 Target Service</Strong>
-                            <select
-                              value={injectForm.target}
-                              onChange={e => setInjectForm(prev => ({ ...prev, target: e.target.value }))}
-                              style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: `1px solid ${Colors.Border.Neutral.Default}`, background: Colors.Background.Surface.Default, color: 'inherit', fontSize: 13 }}
-                            >
-                              <option value="">— Select a service —</option>
-                              {runningServices.map((s: any) => (
-                                <option key={s.pid || s.service} value={s.baseServiceName || s.service}>{s.baseServiceName || s.service} ({s.companyName || 'unknown'})</option>
-                              ))}
-                            </select>
-                          </>
-                        ) : (
-                          <>
-                            <Strong style={{ fontSize: 12, display: 'block', marginBottom: 6 }}>🗺️ Target Journey (Company)</Strong>
-                            <select
-                              value={injectForm.company}
-                              onChange={e => setInjectForm(prev => ({ ...prev, company: e.target.value }))}
-                              style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: `1px solid ${Colors.Border.Neutral.Default}`, background: Colors.Background.Surface.Default, color: 'inherit', fontSize: 13 }}
-                            >
-                              <option value="">— Select a journey —</option>
-                              {(() => {
-                                const companies = [...new Set(runningServices.map((s: any) => s.companyName).filter(Boolean))];
-                                return companies.map(c => {
-                                  const count = runningServices.filter((s: any) => s.companyName === c).length;
-                                  return <option key={c} value={c}>{c} ({count} service{count !== 1 ? 's' : ''})</option>;
-                                });
-                              })()}
-                            </select>
-                            {injectForm.company && (
-                              <div style={{ marginTop: 8, padding: '8px 12px', borderRadius: 8, background: 'rgba(181,137,0,0.06)', border: '1px solid rgba(181,137,0,0.2)', fontSize: 11, opacity: 0.8 }}>
-                                👹 Nemesis will target <Strong>all services</Strong> for {injectForm.company}:
-                                <div style={{ marginTop: 4, display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-                                  {runningServices.filter((s: any) => s.companyName === injectForm.company).map((s: any) => (
-                                    <span key={s.pid || s.service} style={{ padding: '1px 6px', borderRadius: 4, background: 'rgba(181,137,0,0.1)', fontFamily: 'monospace', fontSize: 10 }}>
-                                      {s.baseServiceName || s.service}
-                                    </span>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                          </>
-                        )}
+                        <Strong style={{ fontSize: 12, display: 'block', marginBottom: 6 }}>🔧 Target Service</Strong>
+                        <select
+                          value={injectForm.target}
+                          onChange={e => setInjectForm(prev => ({ ...prev, target: e.target.value }))}
+                          style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: `1px solid ${Colors.Border.Neutral.Default}`, background: Colors.Background.Surface.Default, color: 'inherit', fontSize: 13 }}
+                        >
+                          <option value="">— Select a service —</option>
+                          {runningServices.map((s: any) => (
+                            <option key={s.pid || s.service} value={s.baseServiceName || s.service}>{s.baseServiceName || s.service} ({s.companyName || 'unknown'})</option>
+                          ))}
+                        </select>
                       </div>
 
                       {/* Chaos Type */}
@@ -3705,7 +3793,6 @@ export const HomePage = () => {
                           <option value="slow_responses">🐌 Slow Responses — Add latency</option>
                           <option value="disable_circuit_breaker">💥 Disable Circuit Breaker — Remove protection</option>
                           <option value="disable_cache">🗑️ Disable Cache — Increase load</option>
-                          <option value="target_company">🏢 Target Company — Focus on specific company</option>
                           <option value="custom_flag">🏴 Custom Flag — Set any feature flag</option>
                         </select>
                       </div>
@@ -3752,25 +3839,20 @@ export const HomePage = () => {
                       </div>
 
                       {/* Inject Button */}
-                      {(() => {
-                        const hasTarget = injectTargetMode === 'service' ? !!injectForm.target : !!injectForm.company;
-                        return (
-                          <button
-                            onClick={injectChaos}
-                            disabled={isInjectingChaos || !hasTarget}
-                            style={{
-                              width: '100%', padding: '12px 0', borderRadius: 10,
-                              border: '2px solid rgba(181,137,0,0.6)',
-                              background: !hasTarget ? 'rgba(128,128,128,0.1)' : 'linear-gradient(135deg, rgba(181,137,0,0.15), rgba(220,50,47,0.1))',
-                              color: !hasTarget ? 'rgba(128,128,128,0.5)' : '#b58900',
-                              fontWeight: 700, fontSize: 15, cursor: hasTarget ? 'pointer' : 'not-allowed',
-                              transition: 'all 0.2s ease',
-                            }}
-                          >
-                            {isInjectingChaos ? '⏳ Injecting...' : '👹 Unleash Nemesis'}
-                          </button>
-                        );
-                      })()}
+                      <button
+                        onClick={injectChaos}
+                        disabled={isInjectingChaos || !injectForm.target}
+                        style={{
+                          width: '100%', padding: '12px 0', borderRadius: 10,
+                          border: '2px solid rgba(181,137,0,0.6)',
+                          background: !injectForm.target ? 'rgba(128,128,128,0.1)' : 'linear-gradient(135deg, rgba(181,137,0,0.15), rgba(220,50,47,0.1))',
+                          color: !injectForm.target ? 'rgba(128,128,128,0.5)' : '#b58900',
+                          fontWeight: 700, fontSize: 15, cursor: injectForm.target ? 'pointer' : 'not-allowed',
+                          transition: 'all 0.2s ease',
+                        }}
+                      >
+                        {isInjectingChaos ? '⏳ Injecting...' : '👹 Unleash Nemesis'}
+                      </button>
                     </div>
                   )}
 
@@ -3889,7 +3971,7 @@ export const HomePage = () => {
 
 
 
-      {/* ── Generate Visuals Modal (Dashboard + Executive Summary PDF) ─────────────────── */}
+      {/* ── Generate Visuals Modal (Dashboard + Executive Summary) ─────────────────── */}
       {showGenerateDashboardModal && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.55)' }} onClick={() => setShowGenerateDashboardModal(false)} />
@@ -3901,7 +3983,7 @@ export const HomePage = () => {
                   <span style={{ fontSize: 24 }}>🎨</span>
                   <div>
                     <Strong style={{ color: 'white', fontSize: 16 }}>Generate Visuals</Strong>
-                    <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: 12 }}>Dashboards & Executive Summary PDFs</div>
+                    <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: 12 }}>Dashboards & Executive Summary Documents</div>
                   </div>
                 </Flex>
                 <button onClick={() => setShowGenerateDashboardModal(false)} style={{ background: 'none', border: 'none', color: 'white', fontSize: 20, cursor: 'pointer', padding: 4 }}>✕</button>
@@ -3921,6 +4003,18 @@ export const HomePage = () => {
                 }}
               >
                 📊 Dashboard
+              </button>
+              <button
+                onClick={() => { setVisualsSubTab('saved'); loadSavedDashboards(); }}
+                style={{
+                  flex: 1, padding: '12px 0', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: 13,
+                  background: visualsSubTab === 'saved' ? 'rgba(115,190,40,0.1)' : 'transparent',
+                  color: visualsSubTab === 'saved' ? '#73be28' : 'inherit',
+                  borderBottom: visualsSubTab === 'saved' ? '3px solid #73be28' : '3px solid transparent',
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                💾 Saved
               </button>
               <button
                 onClick={() => setVisualsSubTab('pdf')}
@@ -3948,6 +4042,18 @@ export const HomePage = () => {
                       background: dashboardGenerationStatus.includes('✅') ? 'rgba(115,190,40,0.12)' : dashboardGenerationStatus.includes('❌') ? 'rgba(220,50,47,0.12)' : 'rgba(0,161,201,0.12)',
                       border: `1px solid ${dashboardGenerationStatus.includes('✅') ? Colors.Theme.Success['70'] : dashboardGenerationStatus.includes('❌') ? '#dc322f' : Colors.Theme.Primary['70']}` }}>
                       {dashboardGenerationStatus}
+                      {dashboardUrl && dashboardGenerationStatus.includes('✅') && (
+                        <div style={{ marginTop: 8 }}>
+                          <a
+                            href={dashboardUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ color: '#00a1c9', fontWeight: 700, textDecoration: 'none', fontSize: 14 }}
+                          >
+                            📊 Open Dashboard in Dynatrace →
+                          </a>
+                        </div>
+                      )}
                     </div>
                   )}
 
@@ -3961,7 +4067,7 @@ export const HomePage = () => {
                     ) : (
                       <select
                         value={dashboardCompanyName}
-                        onChange={(e) => setDashboardCompanyName(e.target.value)}
+                        onChange={(e) => { setDashboardCompanyName(e.target.value); setDashboardJourneyType(''); }}
                         style={{
                           width: '100%', padding: '10px 14px', borderRadius: 8,
                           border: `1px solid ${Colors.Border.Neutral.Default}`,
@@ -3982,24 +4088,119 @@ export const HomePage = () => {
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 8, color: Colors.Theme.Primary['70'] }}>🗺️ Journey Type</label>
                     {isLoadingDashboardData ? (
                       <div style={{ padding: 12, textAlign: 'center', opacity: 0.6 }}>⏳ Loading journeys...</div>
-                    ) : availableJourneys.length === 0 ? (
-                      <div style={{ padding: 12, textAlign: 'center', opacity: 0.6, fontSize: 12 }}>No journey types found. Deploy services first.</div>
-                    ) : (
-                      <select
-                        value={dashboardJourneyType}
-                        onChange={(e) => setDashboardJourneyType(e.target.value)}
-                        style={{
-                          width: '100%', padding: '10px 14px', borderRadius: 8,
-                          border: `1px solid ${Colors.Border.Neutral.Default}`,
-                          background: Colors.Background.Surface.Default,
-                          color: 'inherit', fontSize: 13, cursor: 'pointer', fontFamily: 'inherit',
-                        }}
-                      >
-                        <option value="">-- Select a journey type --</option>
-                        {availableJourneys.map(journey => (
-                          <option key={journey} value={journey}>{journey}</option>
-                        ))}
-                      </select>
+                    ) : !dashboardCompanyName ? (
+                      <div style={{ padding: 12, textAlign: 'center', opacity: 0.6, fontSize: 12 }}>Select a company first.</div>
+                    ) : (() => {
+                      const filtered = Array.from(new Set(runningServices.filter(s => s.companyName === dashboardCompanyName).map(s => s.journeyType).filter(Boolean))).sort();
+                      return filtered.length === 0 ? (
+                        <div style={{ padding: 12, textAlign: 'center', opacity: 0.6, fontSize: 12 }}>No journey types found for {dashboardCompanyName}.</div>
+                      ) : (
+                        <select
+                          value={dashboardJourneyType}
+                          onChange={(e) => setDashboardJourneyType(e.target.value)}
+                          style={{
+                            width: '100%', padding: '10px 14px', borderRadius: 8,
+                            border: `1px solid ${Colors.Border.Neutral.Default}`,
+                            background: Colors.Background.Surface.Default,
+                            color: 'inherit', fontSize: 13, cursor: 'pointer', fontFamily: 'inherit',
+                          }}
+                        >
+                          <option value="">-- Select a journey type --</option>
+                          {filtered.map(journey => (
+                            <option key={journey} value={journey}>{journey}</option>
+                          ))}
+                        </select>
+                      );
+                    })()}
+                  </div>
+
+                  {/* MCP Dashboard Prompt — Preset Dropdown + Free Text */}
+                  <div style={{ marginBottom: 20 }}>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 8, color: '#6c2c9c' }}>
+                      🧠 Dashboard Focus <span style={{ fontWeight: 400, opacity: 0.6 }}>(select a preset or write your own — each produces a distinct dashboard)</span>
+                    </label>
+
+                    {/* Preset Prompt Dropdown */}
+                    <select
+                      value={mcpDashboardPrompt}
+                      onChange={(e) => setMcpDashboardPrompt(e.target.value)}
+                      style={{
+                        width: '100%', padding: '10px 14px', borderRadius: 8, marginBottom: 10,
+                        border: `1px solid ${mcpDashboardPrompt ? '#6c2c9c' : Colors.Border.Neutral.Default}`,
+                        background: Colors.Background.Surface.Default,
+                        color: 'inherit', fontSize: 13, fontFamily: 'inherit', cursor: 'pointer',
+                      }}
+                    >
+                      <option value="">— Select a dashboard preset (or type your own below) —</option>
+                      <optgroup label="📊 Executive & Leadership">
+                        <option value="Create a C-level executive dashboard focused on revenue impact, customer lifetime value, churn risk, and strategic business KPIs. Use singleValue tiles for headline metrics, donut charts for distribution breakdowns, and area charts showing revenue trends over time. Minimal technical detail — this is for the boardroom.">
+                          C-Level Executive — Revenue & Strategic KPIs
+                        </option>
+                        <option value="Build a CFO financial operations dashboard highlighting total revenue, average order value, revenue by journey step, payment method breakdown, and pricing analysis. Include SLA compliance rates and error-driven revenue loss estimates. Use tables and single-value tiles.">
+                          CFO Financial Operations — Revenue & Pricing
+                        </option>
+                        <option value="Create a board-ready business health dashboard with a high-level journey funnel overview, success rate trends, total event volume, and customer satisfaction scores. Use clean singleValue KPIs and area charts. No infrastructure metrics — purely business outcomes.">
+                          Board Summary — Business Health Overview
+                        </option>
+                      </optgroup>
+                      <optgroup label="👥 Customer Experience">
+                        <option value="Build a customer experience deep-dive dashboard analyzing churn risk, NPS and satisfaction scores, loyalty tier or status distribution, and customer lifetime value. Include segment analysis, device type breakdown, and channel attribution. Use a mix of bar charts, donut charts, and tables. Use whichever field names actually exist in the data.">
+                          Customer 360 — Churn, NPS & Loyalty Deep Dive
+                        </option>
+                        <option value="Create a customer journey funnel dashboard showing step-by-step conversion rates, drop-off analysis by step name, error rate per step, and average processing time. Highlight which steps lose the most customers. Use a table for step metrics and area charts for time trends.">
+                          Journey Funnel — Conversion & Drop-off Analysis
+                        </option>
+                        <option value="Build a customer segmentation dashboard breaking down events by loyalty tier or status, customer segment, device type, browser, and acquisition channel. Show revenue per segment and conversion rates per channel using bar charts and donut charts. Use whichever field names actually exist in the data.">
+                          Customer Segmentation — Tiers, Channels & Devices
+                        </option>
+                      </optgroup>
+                      <optgroup label="⚙️ Operations & SRE">
+                        <option value="Create an SRE reliability dashboard with all four golden signals: traffic (request count), latency (response time with P50/P90/P99), errors (failure count and error flags), and saturation (CPU/memory). Include error message breakdown, step-level error rates, and SLA compliance. Use line charts for time series and tables for details.">
+                          SRE Golden Signals — Traffic, Latency, Errors, Saturation
+                        </option>
+                        <option value="Build an operations error analysis dashboard focused on error rate trends over time, errors by journey step, top error messages, error details table, and service failure counts. Include a heatmap of errors by step and hour. Use line charts, tables, and a heatmap.">
+                          Ops Error Analysis — Error Trends & Root Cause
+                        </option>
+                        <option value="Create a performance and SLA monitoring dashboard showing P90 response times, SLA compliance rates by step, step performance table with success rates, hourly activity patterns, and service-level latency trends. Use line charts for latency, tables for SLA, and a pie chart for hourly patterns.">
+                          Performance & SLA — Latency, Compliance & Patterns
+                        </option>
+                      </optgroup>
+                      <optgroup label="📈 Analytics & Trends">
+                        <option value="Build a trend analysis and forecasting dashboard with hourly activity patterns, volume histograms by step, event volume distribution, step-by-hour heatmap, weekly trend comparison, and geographic or regional distribution. Use heatmaps, pie charts, and area charts for time-series patterns.">
+                          Trend Analysis — Patterns, Heatmaps & Forecasting
+                        </option>
+                        <option value="Create a comprehensive full-stack dashboard including ALL available sections: executive KPIs, journey funnel overview, filtered step drill-downs, performance SLA, error analysis, all four golden signals (traffic, latency, errors, saturation), traces and observability, customer dynamic metrics, geographic view, and trend analysis. This is the complete picture.">
+                          Full Comprehensive — All Sections Combined
+                        </option>
+                        <option value="Build a product and subscription analytics dashboard showing product or plan selection breakdown, pricing analysis, subscription or membership types, conversion probability distribution, and revenue by product. Use bar charts for comparisons and tables for detail. Use whichever field names actually exist in the data.">
+                          Product Analytics — Plans, Subscriptions & Conversions
+                        </option>
+                      </optgroup>
+                    </select>
+
+                    {/* Free-text Custom Prompt */}
+                    <textarea
+                      value={mcpDashboardPrompt}
+                      onChange={(e) => setMcpDashboardPrompt(e.target.value)}
+                      placeholder="Or type a custom prompt: e.g. &quot;Show me churn risk vs revenue by customer segment, with error hotspots per journey step&quot;"
+                      style={{
+                        width: '100%', minHeight: 72, padding: '10px 14px', borderRadius: 8,
+                        border: `1px solid ${mcpDashboardPrompt ? '#6c2c9c' : Colors.Border.Neutral.Default}`,
+                        background: mcpDashboardPrompt ? 'rgba(108,44,156,0.04)' : Colors.Background.Surface.Default,
+                        color: 'inherit', fontSize: 13, fontFamily: 'inherit', resize: 'vertical',
+                        transition: 'border-color 0.2s, background 0.2s',
+                      }}
+                    />
+                    {mcpDashboardPrompt && (
+                      <div style={{ fontSize: 11, marginTop: 4, color: '#6c2c9c', opacity: 0.8 }}>
+                        🎯 AI will use knowledge of bizevents fields (additionalfields.*, json.*, golden signals) to build a tailored dashboard
+                      </div>
+                    )}
+                    {mcpDashboardPrompt && (
+                      <button
+                        onClick={() => setMcpDashboardPrompt('')}
+                        style={{ marginTop: 6, padding: '4px 12px', fontSize: 11, borderRadius: 6, border: '1px solid #ccc', background: 'transparent', color: 'inherit', cursor: 'pointer' }}
+                      >✕ Clear prompt</button>
                     )}
                   </div>
 
@@ -4011,7 +4212,7 @@ export const HomePage = () => {
                       variant="emphasized"
                       style={{ flex: 1, fontWeight: 700 }}
                     >
-                      {isGeneratingDashboard ? '⏳ Generating...' : '📥 Generate & Download'}
+                      {isGeneratingDashboard ? '⏳ Deploying...' : mcpDashboardPrompt ? '🧠 Ask MCP & Deploy' : '🚀 Generate & Deploy'}
                     </Button>
                     <Button onClick={() => setShowGenerateDashboardModal(false)} style={{ flex: 1 }}>Cancel</Button>
                   </Flex>
@@ -4020,19 +4221,86 @@ export const HomePage = () => {
                   <div style={{ marginTop: 16, padding: 12, borderRadius: 8, background: 'rgba(0,161,201,0.08)', border: `1px solid ${Colors.Theme.Primary['70']}`, fontSize: 12, lineHeight: 1.6 }}>
                     <Strong style={{ color: Colors.Theme.Primary['70'], display: 'block', marginBottom: 8 }}>✨ How it works</Strong>
                     <ul style={{ margin: 0, paddingLeft: 20 }}>
-                      <li>Dashboard generates from a 44-tile preset template</li>
-                      <li>Company name &amp; journey type are injected into all DQL queries</li>
-                      <li>JSON file downloads automatically to your browser</li>
-                      <li>Import it: Dynatrace → Dashboards → Upload JSON</li>
+                      <li><strong>Preset prompts</strong> are tuned to produce distinct dashboards — each targets a different audience and data focus</li>
+                      <li>AI knows the full bizevents field schema: <code>additionalfields.*</code>, <code>json.*</code>, golden signals, and DQL query patterns</li>
+                      <li>Each prompt generates a <strong>unique dashboard ID</strong> — different prompts won't overwrite each other</li>
+                      <li>Free-text prompts can reference specific fields like <code>additionalfields.churnRisk</code>, <code>additionalfields.orderTotal</code></li>
+                      <li>Dashboard is deployed directly to Dynatrace — click the link to open it</li>
                     </ul>
                   </div>
                 </>
               )}
 
-              {/* ===== Executive Summary PDF Sub-Tab ===== */}
+              {/* ===== Saved Dashboards Sub-Tab ===== */}
+              {visualsSubTab === 'saved' && (
+                <>
+                  {isLoadingSavedDashboards ? (
+                    <div style={{ padding: 24, textAlign: 'center', opacity: 0.6 }}>⏳ Loading saved dashboards...</div>
+                  ) : savedDashboards.length === 0 ? (
+                    <div style={{ padding: 24, textAlign: 'center', opacity: 0.6, fontSize: 13 }}>
+                      No saved dashboards yet. Generate a dashboard first — it will auto-save here.
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                      <div style={{ fontSize: 12, opacity: 0.6, marginBottom: 4 }}>
+                        {savedDashboards.length} dashboard{savedDashboards.length !== 1 ? 's' : ''} saved on host
+                      </div>
+                      {savedDashboards.map((item: any) => (
+                        <div
+                          key={item.id}
+                          style={{
+                            padding: '12px 16px', borderRadius: 10,
+                            border: `1px solid ${Colors.Border.Neutral.Default}`,
+                            background: 'rgba(0,161,201,0.04)',
+                            transition: 'border-color 0.2s',
+                          }}
+                        >
+                          <Flex justifyContent="space-between" alignItems="center">
+                            <div style={{ flex: 1 }}>
+                              <Strong style={{ fontSize: 13 }}>{item.dashboardName || item.id}</Strong>
+                              <div style={{ fontSize: 11, opacity: 0.6, marginTop: 2 }}>
+                                {item.tileCount} tiles · {item.generationMethod} · {item.savedAt ? new Date(item.savedAt).toLocaleString() : '—'}
+                              </div>
+                            </div>
+                            <Flex gap={6}>
+                              <button
+                                onClick={() => deploySavedDashboard(item)}
+                                title="Deploy to Dynatrace"
+                                style={{
+                                  padding: '6px 12px', borderRadius: 6, border: '1px solid #00a1c9',
+                                  background: 'rgba(0,161,201,0.1)', color: '#00a1c9',
+                                  fontSize: 12, fontWeight: 600, cursor: 'pointer',
+                                }}
+                              >
+                                🚀 Deploy
+                              </button>
+                              <button
+                                onClick={() => deleteSavedDashboard(item.id)}
+                                title="Delete from host"
+                                style={{
+                                  padding: '6px 8px', borderRadius: 6, border: '1px solid rgba(220,50,47,0.3)',
+                                  background: 'rgba(220,50,47,0.08)', color: '#dc322f',
+                                  fontSize: 12, cursor: 'pointer',
+                                }}
+                              >
+                                🗑️
+                              </button>
+                            </Flex>
+                          </Flex>
+                        </div>
+                      ))}
+                      <div style={{ marginTop: 8, padding: 10, borderRadius: 8, background: 'rgba(115,190,40,0.08)', border: '1px solid rgba(115,190,40,0.3)', fontSize: 11, lineHeight: 1.5 }}>
+                        💾 Dashboards are auto-saved to the EC2 host after every generation. Deploy any saved dashboard to your Dynatrace tenant in one click.
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* ===== Executive Summary Document Sub-Tab ===== */}
               {visualsSubTab === 'pdf' && (
                 <>
-                  {/* PDF Status Message */}
+                  {/* Doc Status Message */}
                   {pdfStatus && (
                     <div style={{ padding: 12, marginBottom: 16, borderRadius: 8, fontSize: 13, fontFamily: 'monospace',
                       background: pdfStatus.includes('✅') ? 'rgba(115,190,40,0.12)' : pdfStatus.includes('❌') ? 'rgba(220,50,47,0.12)' : 'rgba(108,44,156,0.12)',
@@ -4042,16 +4310,20 @@ export const HomePage = () => {
                   )}
 
                   <div style={{ marginBottom: 20, padding: 16, borderRadius: 10, background: 'rgba(108,44,156,0.06)', border: '1px solid rgba(108,44,156,0.2)' }}>
-                    <Heading level={5} style={{ marginBottom: 8, color: '#6c2c9c' }}>📄 Executive Summary PDF</Heading>
+                    <Heading level={5} style={{ marginBottom: 8, color: '#6c2c9c' }}>📄 Executive Summary Document</Heading>
                     <Paragraph style={{ fontSize: 13, lineHeight: 1.6, marginBottom: 12 }}>
-                      Generate a professional one-page PDF summary of your business observability journey, including:
+                      Generate a professional executive summary as a clean HTML document you can open in Word or Google Docs:
                     </Paragraph>
                     <ul style={{ margin: 0, paddingLeft: 20, fontSize: 12, lineHeight: 2 }}>
-                      <li><Strong>Company & Journey Overview</Strong> — Name, industry, journey type</li>
-                      <li><Strong>Step-by-Step Breakdown</Strong> — All journey steps with service details</li>
-                      <li><Strong>Business Metrics</Strong> — KPIs, revenue data, conversion metrics</li>
-                      <li><Strong>Dashboard Summary</Strong> — Tile counts, DQL query overview</li>
+                      <li><Strong>Executive Overview</Strong> — Company, industry challenges, journey scope</li>
+                      <li><Strong>Step-by-Step Intelligence</Strong> — Business rationale, substeps, observability mapping</li>
+                      <li><Strong>Why Dynatrace</Strong> — Platform capabilities aligned to this journey</li>
+                      <li><Strong>Value Alignment</Strong> — Objectives and use cases for the account</li>
+                      <li><Strong>Projected Outcomes &amp; Next Steps</Strong> — MTTR, visibility, implementation phases</li>
                     </ul>
+                    <Paragraph style={{ fontSize: 11, color: '#888', marginTop: 8 }}>
+                      💡 Tip: Open the downloaded .html file directly in Microsoft Word or Google Docs, then save as .docx
+                    </Paragraph>
                   </div>
 
                   {/* Company Selector */}
@@ -4064,7 +4336,7 @@ export const HomePage = () => {
                     ) : (
                       <select
                         value={dashboardCompanyName}
-                        onChange={(e) => setDashboardCompanyName(e.target.value)}
+                        onChange={(e) => { setDashboardCompanyName(e.target.value); setDashboardJourneyType(''); }}
                         style={{
                           width: '100%', padding: '10px 14px', borderRadius: 8,
                           border: `1px solid ${Colors.Border.Neutral.Default}`,
@@ -4085,28 +4357,33 @@ export const HomePage = () => {
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 8, color: '#6c2c9c' }}>🗺️ Journey Type</label>
                     {isLoadingDashboardData ? (
                       <div style={{ padding: 12, textAlign: 'center', opacity: 0.6 }}>⏳ Loading journeys...</div>
-                    ) : availableJourneys.length === 0 ? (
-                      <div style={{ padding: 12, textAlign: 'center', opacity: 0.6, fontSize: 12 }}>No journey types found. Deploy services first.</div>
-                    ) : (
-                      <select
-                        value={dashboardJourneyType}
-                        onChange={(e) => setDashboardJourneyType(e.target.value)}
-                        style={{
-                          width: '100%', padding: '10px 14px', borderRadius: 8,
-                          border: `1px solid ${Colors.Border.Neutral.Default}`,
-                          background: Colors.Background.Surface.Default,
-                          color: 'inherit', fontSize: 13, cursor: 'pointer', fontFamily: 'inherit',
-                        }}
-                      >
-                        <option value="">-- Select a journey type --</option>
-                        {availableJourneys.map(journey => (
-                          <option key={journey} value={journey}>{journey}</option>
-                        ))}
-                      </select>
-                    )}
+                    ) : !dashboardCompanyName ? (
+                      <div style={{ padding: 12, textAlign: 'center', opacity: 0.6, fontSize: 12 }}>Select a company first.</div>
+                    ) : (() => {
+                      const filtered = Array.from(new Set(runningServices.filter(s => s.companyName === dashboardCompanyName).map(s => s.journeyType).filter(Boolean))).sort();
+                      return filtered.length === 0 ? (
+                        <div style={{ padding: 12, textAlign: 'center', opacity: 0.6, fontSize: 12 }}>No journey types found for {dashboardCompanyName}.</div>
+                      ) : (
+                        <select
+                          value={dashboardJourneyType}
+                          onChange={(e) => setDashboardJourneyType(e.target.value)}
+                          style={{
+                            width: '100%', padding: '10px 14px', borderRadius: 8,
+                            border: `1px solid ${Colors.Border.Neutral.Default}`,
+                            background: Colors.Background.Surface.Default,
+                            color: 'inherit', fontSize: 13, cursor: 'pointer', fontFamily: 'inherit',
+                          }}
+                        >
+                          <option value="">-- Select a journey type --</option>
+                          {filtered.map(journey => (
+                            <option key={journey} value={journey}>{journey}</option>
+                          ))}
+                        </select>
+                      );
+                    })()}
                   </div>
 
-                  {/* Generate PDF Button */}
+                  {/* Generate Document Button */}
                   <Flex gap={8}>
                     <Button
                       onClick={async () => {
@@ -4115,10 +4392,10 @@ export const HomePage = () => {
                           return;
                         }
                         setIsGeneratingPdf(true);
-                        setPdfStatus('🚀 Generating executive summary PDF...');
+                        setPdfStatus('🚀 Generating executive summary document...');
                         try {
                           const result = await callProxyWithRetry({
-                              action: 'generate-pdf',
+                              action: 'generate-doc',
                               apiHost: apiSettings.host,
                               apiPort: apiSettings.port,
                               apiProtocol: apiSettings.protocol,
@@ -4134,30 +4411,25 @@ export const HomePage = () => {
                                 dashboardData: generatedDashboardJson || {},
                               },
                           }, 5, 2000, setPdfStatus) as any;
-                          if (result.success && result.data?.base64) {
-                            const binaryString = atob(result.data.base64);
-                            const bytes = new Uint8Array(binaryString.length);
-                            for (let i = 0; i < binaryString.length; i++) {
-                              bytes[i] = binaryString.charCodeAt(i);
-                            }
-                            const blob = new Blob([bytes], { type: 'application/pdf' });
+                          if (result.success && result.data?.html) {
+                            const blob = new Blob([result.data.html], { type: 'text/html; charset=utf-8' });
                             const url = URL.createObjectURL(blob);
                             const a = document.createElement('a');
                             a.href = url;
-                            a.download = result.data.filename || `${dashboardCompanyName}-BizObs-Summary.pdf`;
+                            a.download = result.data.filename || `${dashboardCompanyName}-Executive-Summary.html`;
                             document.body.appendChild(a);
                             a.click();
                             document.body.removeChild(a);
                             URL.revokeObjectURL(url);
                             setPdfStatus(`✅ Downloaded ${result.data.filename} (${result.data.sizeKb}KB)`);
-                            showToast(`📄 Executive Summary PDF downloaded!`, 'success', 6000);
+                            showToast(`📄 Executive Summary downloaded!`, 'success', 6000);
                           } else {
-                            throw new Error(result.error || 'PDF generation failed');
+                            throw new Error(result.error || 'Document generation failed');
                           }
                         } catch (err: any) {
-                          console.error('[PDF] ❌', err);
+                          console.error('[Doc] ❌', err);
                           setPdfStatus(`❌ ${err.message}`);
-                          showToast(`❌ PDF generation failed: ${err.message}`, 'error', 5000);
+                          showToast(`❌ Document generation failed: ${err.message}`, 'error', 5000);
                         } finally {
                           setIsGeneratingPdf(false);
                         }
@@ -4166,7 +4438,7 @@ export const HomePage = () => {
                       variant="emphasized"
                       style={{ flex: 1, fontWeight: 700 }}
                     >
-                      {isGeneratingPdf ? '⏳ Generating PDF...' : '📄 Download Executive Summary'}
+                      {isGeneratingPdf ? '⏳ Generating Document...' : '📄 Download Executive Summary'}
                     </Button>
                     <Button onClick={() => setShowGenerateDashboardModal(false)} style={{ flex: 1 }}>Cancel</Button>
                   </Flex>
@@ -4538,7 +4810,7 @@ export const HomePage = () => {
           </button>
         </div>
       )}
-      <div style={{ position: 'fixed', bottom: 4, right: 8, fontSize: 9, color: 'rgba(255,255,255,0.18)', zIndex: 1, pointerEvents: 'none', fontFamily: 'monospace' }}>v1.3.9</div>
+      <div style={{ position: 'fixed', bottom: 4, right: 8, fontSize: 9, color: 'rgba(255,255,255,0.18)', zIndex: 1, pointerEvents: 'none', fontFamily: 'monospace' }}>v{APP_VERSION}</div>
     </Page>
   );
 };

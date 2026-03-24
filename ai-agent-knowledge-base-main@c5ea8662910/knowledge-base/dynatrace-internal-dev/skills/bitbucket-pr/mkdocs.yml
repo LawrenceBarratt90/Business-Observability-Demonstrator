@@ -1,0 +1,11 @@
+site_name: Bitbucket PR Skill
+docs_dir: .
+nav:
+  - Overview: SKILL.md
+  - References:
+      - Create & Update Workflow: references/create-update-workflow.md
+      - Review Workflow: references/review-workflow.md
+      - Feedback Workflow: references/feedback-workflow.md
+
+plugins:
+  - techdocs-core
