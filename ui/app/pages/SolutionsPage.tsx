@@ -6232,42 +6232,36 @@ export const SolutionsPage: React.FC = () => {
               <Strong style={{ fontSize: 13, display: 'block', marginBottom: 12 }}>🗺️ Pre-Built Demo Journeys</Strong>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 12 }}>
                 {current.journeys.map((journey, i) => (
-                  <div key={i} style={{
+                  <Link key={i} to={`/?journey=${encodeURIComponent(journey.name)}&industry=${encodeURIComponent(current.industry)}`} style={{
                     padding: '16px 18px', borderRadius: 12,
                     border: `1px solid ${current.color}25`,
                     background: `linear-gradient(135deg, ${current.color}06, transparent)`,
-                    cursor: 'default',
-                  }}>
+                    cursor: 'pointer',
+                    textDecoration: 'none',
+                    color: 'inherit',
+                    transition: 'all 0.2s ease',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = current.color + '60'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = current.color + '25'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                  >
                     <div style={{ fontSize: 22, marginBottom: 8 }}>{current.icon}</div>
                     <Strong style={{ fontSize: 13, display: 'block', marginBottom: 6 }}>
                       {journey.name}
                     </Strong>
-                    <div style={{ fontSize: 11, color: Colors.Text.Neutral.Subdued, fontFamily: 'monospace' }}>
-                      {journey.configFile}
+                    <div style={{ fontSize: 11, color: Colors.Text.Neutral.Subdued }}>
+                      {current.industry} • Demo Journey
                     </div>
-                    <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <div style={{ marginTop: 10 }}>
                       <div style={{
                         padding: '5px 12px', borderRadius: 6,
-                        background: 'rgba(200,60,60,0.08)', border: '1px solid rgba(200,60,60,0.20)',
-                        fontSize: 11, color: '#c0392b', fontWeight: 600,
+                        background: `${current.color}12`, border: `1px solid ${current.color}30`,
+                        fontSize: 11, color: current.color, fontWeight: 600,
                         display: 'inline-block',
                       }}>
-                        ⬤ Not Configured
-                      </div>
-                      <div
-                        title="This journey needs a config JSON uploaded to the app. Once configured, journey generation will be enabled for this vertical."
-                        style={{
-                          width: 20, height: 20, borderRadius: '50%',
-                          background: 'rgba(100,100,100,0.08)', border: '1px solid rgba(100,100,100,0.18)',
-                          display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          fontSize: 11, color: Colors.Text.Neutral.Subdued, cursor: 'help',
-                          fontWeight: 700,
-                        }}
-                      >
-                        ?
+                        🚀 Launch Demo →
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>

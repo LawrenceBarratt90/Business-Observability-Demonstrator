@@ -6,6 +6,7 @@ const { createService } = require('./service-runner.js');
 const { callService, getServiceNameFromStep, getServicePortFromStep } = require('./child-caller.js');
 const { 
   TracedError, 
+  ChaosError,
   withErrorTracking, 
   errorHandlingMiddleware,
   checkForStepError, 
@@ -697,11 +698,9 @@ function createStepService(serviceName, stepName) {
         const httpStatus = errorInjected.http_status || 500;
         const errorMessage = errorInjected.message || `Feature flag error in ${currentStepName}`;
         
-        // Create a real Error that will be recorded on the span
-        const realError = new Error(errorMessage);
-        realError.name = `FeatureFlagError_${errorInjected.error_type}`;
-        realError.status = httpStatus;
-        realError.httpStatus = httpStatus;
+        // Create a ChaosError with proper class name for Dynatrace exception classification
+        const errorClassName = `FeatureFlagError_${errorInjected.error_type}`;
+        const realError = new ChaosError(errorMessage, errorClassName, httpStatus);
         
         // Add rich context so it shows up in Dynatrace exception details
         console.error(`🚨 [${properServiceName}] FEATURE FLAG EXCEPTION: ${errorMessage}`);

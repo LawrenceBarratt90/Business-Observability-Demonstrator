@@ -326,12 +326,18 @@ export async function startChildService(internalServiceName, scriptPath, portPar
     // spawn the process there so OneAgent reads THAT package.json name instead of the parent's
     const spawnCwd = env._SERVICE_CWD || undefined;
     
-    const child = spawn('node', [`--title=${dynatraceServiceName}`, scriptPath, dynatraceServiceName], {
+    // Resolve otel.cjs path relative to project root for OTel initialization in child processes
+    const otelBootstrap = path.resolve(__dirname, '..', 'otel.cjs');
+    const spawnArgs = fs.existsSync(otelBootstrap)
+      ? [`--require`, otelBootstrap, `--title=${dynatraceServiceName}`, scriptPath, dynatraceServiceName]
+      : [`--title=${dynatraceServiceName}`, scriptPath, dynatraceServiceName];
+    const child = spawn('node', spawnArgs, {
       cwd: spawnCwd,
       env: { 
         ...process.env, 
         SERVICE_NAME: dynatraceServiceName, 
         FULL_SERVICE_NAME: internalServiceName,
+        OTEL_SERVICE_NAME: dynatraceServiceName,
         PORT: port,
         MAIN_SERVER_PORT: process.env.PORT || '8080',
         // Company context for business observability

@@ -261,9 +261,133 @@ Respond with JSON: {"learning":"...","tags":["..."]}`,
   }
 }
 
+/** Analyze full history and generate a structured dashboard summary via Ollama */
+export async function analyzeHistory(): Promise<{
+  summary: string;
+  timeline: { timestamp: string; kind: string; summary: string; agent: string }[];
+  stats: { totalEvents: number; vectorEntries: number; byKind: Record<string, number> };
+  insights: { category: string; title: string; detail: string; severity: 'info' | 'warning' | 'critical' }[];
+  patterns: { pattern: string; frequency: number; recommendation: string }[];
+}> {
+  const allEvents = historyStore.readAll();
+  const stats = getStats();
+
+  // Build timeline (most recent 200)
+  const timeline = allEvents.slice(-200).map(e => ({
+    timestamp: e.timestamp,
+    kind: e.kind,
+    summary: e.summary,
+    agent: e.agent,
+  }));
+
+  // If no events, return empty
+  if (allEvents.length === 0) {
+    return {
+      summary: 'No events recorded yet. Start a journey and inject some chaos to build operational history.',
+      timeline: [],
+      stats,
+      insights: [],
+      patterns: [],
+    };
+  }
+
+  // Build condensed history for LLM analysis
+  const recentEvents = allEvents.slice(-100);
+  const historyText = recentEvents.map(e =>
+    `[${e.timestamp}] [${e.agent}] ${e.kind}: ${e.summary}`
+  ).join('\n');
+
+  try {
+    // Race the LLM call against a 60s timeout for responsive UI
+    const llmPromise = chatJSON<{
+      summary: string;
+      insights: { category: string; title: string; detail: string; severity: 'info' | 'warning' | 'critical' }[];
+      patterns: { pattern: string; frequency: number; recommendation: string }[];
+    }>([
+      {
+        role: 'system',
+        content: `You are an SRE analyst reviewing the operational history of a Business Observability platform.
+The platform uses feature flags (errorInjectionEnabled, slowResponsesEnabled, etc.) for chaos engineering.
+AI agents (Nemesis for chaos, Fix-It for remediation) interact with services.
+
+Analyze the event timeline and provide:
+1. "summary": A 2-3 sentence executive summary of what has happened
+2. "insights": Array of notable findings, each with:
+   - "category": one of "chaos", "remediation", "performance", "reliability", "audit"
+   - "title": short title (5-8 words)
+   - "detail": 1-2 sentence explanation
+   - "severity": "info", "warning", or "critical"
+3. "patterns": Array of recurring patterns detected, each with:
+   - "pattern": description of the pattern
+   - "frequency": estimated occurrence count
+   - "recommendation": actionable recommendation
+
+Respond ONLY with valid JSON matching this schema.`,
+      },
+      {
+        role: 'user',
+        content: `Here are the last ${recentEvents.length} events from ${stats.totalEvents} total:\n\n${historyText}\n\nEvent breakdown: ${JSON.stringify(stats.byKind)}`,
+      },
+    ]);
+
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('LLM analysis timed out')), 65_000)
+    );
+
+    const result = await Promise.race([llmPromise, timeoutPromise]);
+
+    log.info('📚 History analysis complete', { insights: result.insights?.length, patterns: result.patterns?.length });
+
+    return {
+      summary: result.summary || 'Analysis complete.',
+      timeline,
+      stats,
+      insights: Array.isArray(result.insights) ? result.insights : [],
+      patterns: Array.isArray(result.patterns) ? result.patterns : [],
+    };
+  } catch (err) {
+    log.warn('History analysis LLM failed, returning raw stats', { error: String(err) });
+
+    // Fallback: build basic insights without LLM
+    const insights: { category: string; title: string; detail: string; severity: 'info' | 'warning' | 'critical' }[] = [];
+    if (stats.byKind['chaos_injected'] > 0) {
+      insights.push({
+        category: 'chaos',
+        title: 'Chaos Events Detected',
+        detail: `${stats.byKind['chaos_injected']} chaos injection(s) recorded in the system.`,
+        severity: 'warning',
+      });
+    }
+    if (stats.byKind['fix_failed'] > 0) {
+      insights.push({
+        category: 'remediation',
+        title: 'Failed Fixes Detected',
+        detail: `${stats.byKind['fix_failed']} fix attempt(s) failed — review remediation strategies.`,
+        severity: 'critical',
+      });
+    }
+    if (stats.byKind['fix_executed'] > 0) {
+      insights.push({
+        category: 'remediation',
+        title: 'Successful Remediations',
+        detail: `${stats.byKind['fix_executed']} fix(es) executed successfully.`,
+        severity: 'info',
+      });
+    }
+
+    return {
+      summary: `${stats.totalEvents} events recorded across ${Object.keys(stats.byKind).length} event types. LLM analysis unavailable — showing raw data.`,
+      timeline,
+      stats,
+      insights,
+      patterns: [],
+    };
+  }
+}
+
 export default {
   recordChaosEvent, recordChaosRevert, recordProblem,
   recordDiagnosis, recordFix, recordFlagChange,
   searchSimilar, getIncidentTimeline, getRecentHistory,
-  getStats, generateLearning,
+  getStats, generateLearning, analyzeHistory,
 };

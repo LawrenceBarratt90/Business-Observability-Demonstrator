@@ -233,6 +233,43 @@ class TracedError extends Error {
 }
 
 /**
+ * Chaos/Nemesis error classes — proper subclasses so constructor.name 
+ * and error.name are both meaningful for Dynatrace exception classification
+ */
+class ChaosError extends Error {
+  constructor(message, errorType, httpStatus = 500) {
+    super(message);
+    this.name = errorType || 'ChaosError';
+    this.httpStatus = httpStatus;
+    this.status = httpStatus;
+  }
+}
+
+class ServiceUnavailableError extends ChaosError {
+  constructor(message, stepName) {
+    super(message || `${stepName} service temporarily unavailable`, 'ServiceUnavailableError', 503);
+  }
+}
+
+class ServiceTimeoutError extends ChaosError {
+  constructor(message, stepName) {
+    super(message || `${stepName} service timeout after 5000ms`, 'ServiceTimeoutError', 504);
+  }
+}
+
+class ConnectionRefusedError extends ChaosError {
+  constructor(message, stepName) {
+    super(message || `Connection refused by ${stepName}`, 'ConnectionRefusedError', 502);
+  }
+}
+
+class InternalServiceError extends ChaosError {
+  constructor(message, stepName) {
+    super(message || `Internal error in ${stepName} processing`, 'InternalServiceError', 500);
+  }
+}
+
+/**
  * Async function wrapper that catches errors and reports them to Dynatrace
  */
 const withErrorTracking = (serviceName, operation) => {
@@ -365,6 +402,11 @@ const checkForStepError = (payload, errorProfile) => {
 
 module.exports = {
   TracedError,
+  ChaosError,
+  ServiceUnavailableError,
+  ServiceTimeoutError,
+  ConnectionRefusedError,
+  InternalServiceError,
   withErrorTracking,
   errorHandlingMiddleware,
   simulateRandomError,

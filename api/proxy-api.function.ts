@@ -10,7 +10,7 @@ import { documentsClient, environmentSharesClient } from '@dynatrace-sdk/client-
 import { queryExecutionClient } from '@dynatrace-sdk/client-query';
 
 interface ProxyPayload {
-  action: 'simulate-journey' | 'test-connection' | 'get-services' | 'stop-all-services' | 'stop-company-services' | 'get-dormant-services' | 'clear-dormant-services' | 'clear-company-dormant' | 'chaos-get-active' | 'chaos-get-recipes' | 'chaos-inject' | 'chaos-revert' | 'chaos-revert-all' | 'chaos-get-targeted' | 'chaos-remove-target' | 'chaos-smart' | 'ec-create' | 'ec-update-patterns' | 'detect-builtin-settings' | 'deploy-builtin-settings' | 'deploy-workflow' | 'debug-builtin-schema' | 'generate-dashboard' | 'generate-dashboard-async' | 'get-dashboard-status' | 'deploy-dashboard' | 'deploy-ai-dashboard' | 'mcp-generate-deploy-dashboard' | 'list-saved-dashboards' | 'load-saved-dashboard' | 'delete-saved-dashboard' | 'deploy-business-flow' | 'list-business-flows' | 'delete-business-flows' | 'generate-pdf' | 'generate-doc' | 'load-app-settings' | 'save-app-settings' | 'check-journey-assets' | 'create-notebook' | 'execute-dql' | 'forge-ai-tiles' | 'forge-tiles-status' | 'field-repo-get';
+  action: 'simulate-journey' | 'test-connection' | 'get-services' | 'stop-all-services' | 'stop-company-services' | 'get-dormant-services' | 'clear-dormant-services' | 'clear-company-dormant' | 'chaos-get-active' | 'chaos-get-recipes' | 'chaos-inject' | 'chaos-revert' | 'chaos-revert-all' | 'chaos-get-targeted' | 'chaos-remove-target' | 'chaos-smart' | 'ec-create' | 'ec-update-patterns' | 'detect-builtin-settings' | 'deploy-builtin-settings' | 'deploy-workflow' | 'debug-builtin-schema' | 'generate-dashboard' | 'generate-dashboard-async' | 'get-dashboard-status' | 'deploy-dashboard' | 'deploy-ai-dashboard' | 'mcp-generate-deploy-dashboard' | 'list-saved-dashboards' | 'load-saved-dashboard' | 'delete-saved-dashboard' | 'deploy-business-flow' | 'list-business-flows' | 'delete-business-flows' | 'generate-pdf' | 'generate-doc' | 'load-app-settings' | 'save-app-settings' | 'check-journey-assets' | 'create-notebook' | 'execute-dql' | 'forge-ai-tiles' | 'forge-tiles-status' | 'field-repo-get' | 'librarian-history' | 'librarian-stats' | 'librarian-analyze';
   apiHost: string;
   apiPort: string;
   apiProtocol: string;
@@ -1895,6 +1895,54 @@ export default async function (payload: ProxyPayload) {
         return { success: true, id: result.id || 'created' };
       } catch (err: any) {
         return { success: false, error: err.message || 'Failed to create notebook' };
+      }
+    }
+
+    /* ── Librarian Agent: get recent history ── */
+    if (action === 'librarian-history') {
+      try {
+        const { limit } = (payload.body || {}) as { limit?: number };
+        const resp = await fetchWithRetry(`${baseUrl}/api/librarian/history?limit=${limit || 100}`, {
+          method: 'GET',
+          signal: AbortSignal.timeout(15000),
+        });
+        const data = await resp.json();
+        return { success: true, events: data };
+      } catch (err: any) {
+        console.error('[proxy-api] librarian-history error:', err.message);
+        return { success: false, error: err.message || 'Failed to fetch librarian history' };
+      }
+    }
+
+    /* ── Librarian Agent: get stats ── */
+    if (action === 'librarian-stats') {
+      try {
+        const resp = await fetchWithRetry(`${baseUrl}/api/librarian/stats`, {
+          method: 'GET',
+          signal: AbortSignal.timeout(15000),
+        });
+        const data = await resp.json();
+        return { success: true, ...data };
+      } catch (err: any) {
+        console.error('[proxy-api] librarian-stats error:', err.message);
+        return { success: false, error: err.message || 'Failed to fetch librarian stats' };
+      }
+    }
+
+    /* ── Librarian Agent: full Ollama-powered analysis ── */
+    if (action === 'librarian-analyze') {
+      try {
+        console.log('[proxy-api] librarian-analyze: requesting Ollama analysis of operational history');
+        const resp = await fetchWithRetry(`${baseUrl}/api/librarian/analyze`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          signal: AbortSignal.timeout(120000),
+        });
+        const data = await resp.json();
+        return data;
+      } catch (err: any) {
+        console.error('[proxy-api] librarian-analyze error:', err.message);
+        return { success: false, error: err.message || 'Librarian analysis failed' };
       }
     }
 

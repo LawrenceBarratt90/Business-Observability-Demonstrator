@@ -610,9 +610,10 @@ const _requestCounter = _genaiMeter.createCounter('gen_ai.client.operation.count
 
 console.log('[AI Dashboard OTel] ✅ GenAI tracing + metrics using global OTel provider from otel.cjs');
 
-function createGenAISpan(prompt, completion, model, promptTokens, completionTokens, duration) {
+function createGenAISpan(prompt, completion, model, promptTokens, completionTokens, duration, operationName) {
   return {
     'gen_ai.system': 'ollama',
+    'gen_ai.operation.name': operationName || 'chat',
     'gen_ai.request.model': model,
     'gen_ai.response.model': model,
     'gen_ai.prompt.0.content': prompt?.substring(0, 4096) || '',
@@ -623,6 +624,8 @@ function createGenAISpan(prompt, completion, model, promptTokens, completionToke
     'gen_ai.usage.completion_tokens': completionTokens || 0,
     'llm.request.type': 'completion',
     'gen_ai.response.duration_ms': Math.round(duration),
+    'server.address': 'localhost',
+    'server.port': 11434,
     'endpoint': OLLAMA_ENDPOINT
   };
 }
@@ -649,6 +652,9 @@ async function logGenAISpan(spanAttributes, operationName) {
     _tokenCounter.add(completionTokens, { ...metricAttrs, 'gen_ai.token.type': 'output' });
     _requestDuration.record(durationMs, metricAttrs);
     _requestCounter.add(1, metricAttrs);
+
+    // Ensure gen_ai.operation.name is set on the span (required for Dynatrace AI Observability)
+    spanAttributes['gen_ai.operation.name'] = operationName || spanAttributes['gen_ai.operation.name'] || 'chat';
 
     // Export GenAI span to Dynatrace via global tracer
     const spanName = `chat ${model}`;

@@ -10,7 +10,7 @@ import { spawn } from 'child_process';
 import { Server as SocketIOServer } from 'socket.io';
 import cors from 'cors';
 import compression from 'compression';
-import morgan from 'morgan';
+// morgan removed — per-request HTTP logs are redundant with OTel traces
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -374,7 +374,7 @@ async function sendDynatraceEvent(eventType, properties, dtEnvironmentOverride =
       console.log(`[Event API] Targeting entity: ${properties.entitySelector}`);
     }
     
-    console.log('[Event API] Sending event to Dynatrace:', JSON.stringify(eventPayload, null, 2));
+    console.log(`[Event API] Sending ${eventPayload.eventType} event to Dynatrace (${eventPayload.title || 'untitled'})`);
     
     const response = await fetch(`${DT_ENVIRONMENT}/api/v2/events/ingest`, {
       method: 'POST',
@@ -386,7 +386,7 @@ async function sendDynatraceEvent(eventType, properties, dtEnvironmentOverride =
     });
     
     const result = await response.text();
-    console.log('[Event API] Response:', response.status, result);
+    if (!response.ok) console.warn('[Event API] Response:', response.status, result);
     
     return { success: response.ok, status: response.status, body: result };
   } catch (error) {
@@ -485,8 +485,7 @@ function callChildService(serviceName, payload, port, tracingHeaders = {}) {
 // Middleware
 app.use(cors());
 app.use(compression());
-// Request logging for easier debugging
-app.use(morgan('dev'));
+// morgan removed — traces/biz events provide request observability
 app.use(express.json({ limit: '10mb' })); // Increase JSON payload limit
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -543,7 +542,7 @@ const eventService = {
       const { stepName, substeps } = data;
       const correlationId = data.correlationId || uuidv4();
       
-      console.log(`📊 Processing ${eventType} for step: ${stepName}`);
+      // per-step logging removed — covered by traces
       
       if (substeps && substeps.length > 0) {
         // Process each substep through its dedicated service
@@ -574,7 +573,7 @@ const eventService = {
             const result = await callChildService(serviceName, payload, servicePort);
             results.push(result);
             
-            console.log(`✅ ${serviceName} processed successfully`);
+            // per-service success log removed
           } catch (error) {
             console.error(`❌ Error processing ${serviceName}:`, error.message);
             
@@ -633,11 +632,7 @@ const eventService = {
 
 // Socket.IO connection handling
 io.on('connection', (socket) => {
-  console.log('🔌 Client connected:', socket.id);
-  
-  socket.on('disconnect', () => {
-    console.log('🔌 Client disconnected:', socket.id);
-  });
+  socket.on('disconnect', () => {});
 });
 
 // Routes
@@ -779,7 +774,7 @@ app.get('/api/feature_flag', async (req, res) => {
                      service ? `service: ${service}` :
                      'global';
   
-  console.log(`📊 [Feature Flags API] GET all flags (${filterInfo}):`, globalFeatureFlags);
+  // verbose flag dump removed
   
   // If a specific service is requesting, return per-service override if it exists
   // Check BOTH the compound name (service) AND the base name (baseService)
@@ -791,7 +786,7 @@ app.get('/api/feature_flag', async (req, res) => {
     if (!svcOverride && baseService) {
       svcOverride = serviceFeatureFlags[baseService];
       if (svcOverride) {
-        console.log(`🎯 [Feature Flags API] Service "${service || baseService}" matched base service override for "${baseService}":`, svcOverride);
+        // matched base service override log removed
       }
     }
     
@@ -799,12 +794,12 @@ app.get('/api/feature_flag', async (req, res) => {
       // This service has a targeted override — merge it on top of defaults
       effectiveFlags = { ...DEFAULT_FEATURE_FLAGS, ...svcOverride };
       if (service === baseService || !baseService) {
-        console.log(`🎯 [Feature Flags API] Service "${service}" has targeted override:`, svcOverride);
+        // targeted override log removed
       }
     } else {
       // No override for this service — use safe defaults (no elevated error rate)
       effectiveFlags = { ...DEFAULT_FEATURE_FLAGS };
-      console.log(`✅ [Feature Flags API] Service "${service || baseService}" has no override, using defaults`);
+      // no override log removed
     }
   }
   
@@ -1264,14 +1259,7 @@ app.post('/api/internal/bizevent', (req, res) => {
     }
   });
   
-  console.log('[server] Internal business event captured:', {
-    eventType: req.headers['x-biz-event-type'],
-    correlationId: req.headers['x-biz-correlation-id'],
-    stepName: req.headers['x-biz-step-name'],
-    company: req.headers['x-biz-company'],
-    flattenedFieldCount: Object.keys(flattenedFields).length,
-    flattenedFields: flattenedFields
-  });
+  // per-request biz event log removed — data captured via biz events
   
   // Return success - OneAgent will capture this HTTP request/response
   res.status(200).json({ 
@@ -2052,7 +2040,7 @@ app.post('/api/admin/services/restart-all', async (req, res) => {
 
 // Simple test endpoint
 app.get('/api/test', (req, res) => {
-  console.log('[server] Test endpoint called');
+  // test endpoint log removed
   res.json({ status: 'working', timestamp: new Date().toISOString() });
 });
 
@@ -2346,7 +2334,6 @@ app.get('/api/dt-proxy/logs', async (req, res) => {
 });
 
 app.get('/api/health', (req, res) => {
-  console.log('[server] Health check endpoint called');
   const runningServices = getChildServices();
   const metadata = getChildServiceMeta();
   const serviceStatuses = Object.keys(runningServices).map(serviceName => {
@@ -2846,9 +2833,7 @@ app.post('/api/oauth/authorize', async (req, res) => {
 
 // OAuth callback endpoint
 app.get('/api/oauth/callback', async (req, res) => {
-  console.log('[OAuth Callback] === CALLBACK HIT ===');
-  console.log('[OAuth Callback] Query params:', req.query);
-  console.log('[OAuth Callback] Headers:', req.headers);
+  console.log('[OAuth Callback] Callback received');
   
   const { code, state, error: oauthError } = req.query;
   
@@ -2919,8 +2904,6 @@ app.get('/api/oauth/callback', async (req, res) => {
     
     const tokenData = await tokenResponse.json();
     console.log('[OAuth] Access token received successfully (PKCE flow)');
-    console.log('[OAuth] Token starts with:', tokenData.access_token.substring(0, 10));
-    console.log('[OAuth] Expires in:', tokenData.expires_in, 'seconds');
     
     // Store token in session
     session.accessToken = tokenData.access_token;
@@ -3061,21 +3044,18 @@ app.post('/api/dynatrace/deploy-dashboard', async (req, res) => {
     // Check for active OAuth token first (takes precedence)
     let DT_ENVIRONMENT, DT_TOKEN;
     
-    console.log('[dynatrace-deploy] Checking for OAuth token...');
-    console.log('[dynatrace-deploy] activeOAuthToken exists:', !!activeOAuthToken);
-    console.log('[dynatrace-deploy] tokenEnvironment:', tokenEnvironment);
-    console.log('[dynatrace-deploy] Using pre-built dashboard:', usePrebuilt);
+    // OAuth token check
     
     if (activeOAuthToken && tokenEnvironment) {
-      console.log('[dynatrace-deploy] ✅ Using stored OAuth token');
+      // Using stored OAuth token
       DT_ENVIRONMENT = tokenEnvironment;
       DT_TOKEN = activeOAuthToken;
     } else {
-      console.log('[dynatrace-deploy] ⚠️ No OAuth token, checking fallback...');
+      // No OAuth token, checking fallback
       // Fall back to environment variables or headers
       DT_ENVIRONMENT = process.env.DT_ENVIRONMENT || req.headers['x-dt-environment'];
       DT_TOKEN = process.env.DT_PLATFORM_TOKEN || req.headers['x-dt-token'];
-      console.log('[dynatrace-deploy] Fallback - Has environment:', !!DT_ENVIRONMENT, 'Has token:', !!DT_TOKEN);
+      // fallback log removed
     }
     
     const DT_BUDGET = process.env.DT_GRAIL_BUDGET || req.headers['x-dt-budget'] || '500';
@@ -3088,25 +3068,24 @@ app.post('/api/dynatrace/deploy-dashboard', async (req, res) => {
       });
     }
 
-    console.log('[dynatrace-deploy] Environment:', DT_ENVIRONMENT);
-    console.log('[dynatrace-deploy] Token length:', DT_TOKEN.length, 'starts with:', DT_TOKEN.substring(0, 4));
+    // verbose token/env logs removed
     
     // Check if this is a Sprint environment with Platform token
     const isSprintEnvironment = DT_ENVIRONMENT.includes('.sprint.') || DT_ENVIRONMENT.includes('sprint.apps.dynatrace');
     const isPlatformToken = DT_TOKEN.length < 100 && (DT_TOKEN.startsWith('dt0s') || DT_TOKEN.startsWith('dt0c'));
     const isOAuthToken = DT_TOKEN.length > 100 && !DT_TOKEN.startsWith('dt0');
     
-    console.log('[dynatrace-deploy] Detection results:', { isSprintEnvironment, isPlatformToken, isOAuthToken });
+    // detection results log removed
     
     // If Sprint environment + Platform token (not OAuth token), check if OAuth credentials are available
     if (isSprintEnvironment && isPlatformToken && !isOAuthToken) {
-      console.log('[dynatrace-deploy] ⚠️ Sprint + Platform token detected');
+      // sprint + platform token check
       
       // Check if OAuth SSO credentials are in request body (from settings)
       const hasOAuthCreds = req.body.oauthClientId && req.body.oauthClientSecret && req.body.oauthAccountUrn;
       
       if (hasOAuthCreds) {
-        console.log('[dynatrace-deploy] OAuth credentials available - prompting for SSO login');
+        // OAuth credentials available
         return res.json({
           ok: false,
           needsOAuthLogin: true,
@@ -3114,10 +3093,10 @@ app.post('/api/dynatrace/deploy-dashboard', async (req, res) => {
           message: 'Sprint environment requires OAuth SSO authentication'
         });
       } else {
-        console.log('[dynatrace-deploy] No OAuth credentials - will try deployment');
+        // No OAuth credentials, trying deployment
       }
     } else if (isOAuthToken) {
-      console.log('[dynatrace-deploy] ✅ OAuth token detected - proceeding with deployment');
+      // OAuth token detected
     }
     
     // Set environment variables
@@ -3623,12 +3602,7 @@ app.post('/api/dynatrace/deploy-dashboard', async (req, res) => {
   try {
     const { journeyConfig } = req.body;
     
-    console.log('[dynatrace-deploy] Received request');
-    console.log('[dynatrace-deploy] Headers:', {
-      'x-dt-environment': req.headers['x-dt-environment'] ? 'present' : 'missing',
-      'x-dt-token': req.headers['x-dt-token'] ? 'present (length: ' + req.headers['x-dt-token']?.length + ')' : 'missing',
-      'x-dt-budget': req.headers['x-dt-budget'] || 'missing'
-    });
+    // request received
     
     if (!journeyConfig || !journeyConfig.companyName || !journeyConfig.steps) {
       return res.status(400).json({
@@ -3642,13 +3616,7 @@ app.post('/api/dynatrace/deploy-dashboard', async (req, res) => {
     const DT_TOKEN = req.headers['x-dt-token'] || process.env.DT_PLATFORM_TOKEN;
     const DT_BUDGET = req.headers['x-dt-budget'] || process.env.DT_BUDGET || '100';
     
-    console.log('[dynatrace-deploy] Credentials check:', {
-      hasEnvironment: !!DT_ENVIRONMENT,
-      hasToken: !!DT_TOKEN,
-      tokenLength: DT_TOKEN?.length || 0,
-      environmentSource: req.headers['x-dt-environment'] ? 'UI Settings (headers)' : (process.env.DT_ENVIRONMENT ? 'Environment Variables' : 'NOT FOUND'),
-      tokenSource: req.headers['x-dt-token'] ? 'UI Settings (headers)' : (process.env.DT_PLATFORM_TOKEN ? 'Environment Variables' : 'NOT FOUND')
-    });
+    // verbose credential dump removed
     
     if (!DT_ENVIRONMENT || !DT_TOKEN) {
       return res.status(500).json({
@@ -3657,15 +3625,13 @@ app.post('/api/dynatrace/deploy-dashboard', async (req, res) => {
       });
     }
     
-    console.log('[dynatrace-deploy] Checking for Sprint + Platform token combination...');
-    console.log('[dynatrace-deploy] Environment:', DT_ENVIRONMENT);
-    console.log('[dynatrace-deploy] Token length:', DT_TOKEN.length, 'starts with:', DT_TOKEN.substring(0, 4));
+    // sprint/platform token check (verbose logs removed)
     
     // Check if this is a Sprint environment with Platform token (unsupported combination)
     const isSprintEnvironment = DT_ENVIRONMENT.includes('.sprint.') || DT_ENVIRONMENT.includes('sprint.apps.dynatrace');
     const isPlatformToken = DT_TOKEN.length < 100 && (DT_TOKEN.startsWith('dt0s') || DT_TOKEN.startsWith('dt0c'));
     
-    console.log('[dynatrace-deploy] Detection results:', { isSprintEnvironment, isPlatformToken });
+    // detection results log removed
     
     if (isSprintEnvironment && isPlatformToken) {
       console.error('[dynatrace-deploy] ❌ Sprint environment detected with Platform token - OAuth required');
@@ -4774,8 +4740,8 @@ app.use((err, req, res, next) => {
   server.healthMonitor = healthMonitor;
   
   // --- Log rotation (prevents /tmp/bizobs-server.log from growing unbounded) ---
-  const LOG_PATH = '/tmp/bizobs-server.log';
-  const LOG_MAX_BYTES = 50 * 1024 * 1024; // 50 MB
+  const LOG_PATH = path.join(__dirname, 'logs', 'server.log');
+  const LOG_MAX_BYTES = 25 * 1024 * 1024; // 25 MB
   const logRotation = setInterval(async () => {
     try {
       const { stat, readFile, writeFile, unlink } = await import('fs/promises');

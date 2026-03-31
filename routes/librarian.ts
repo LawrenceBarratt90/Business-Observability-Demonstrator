@@ -7,7 +7,7 @@ import {
   recordChaosEvent, recordChaosRevert,
   recordProblem, recordDiagnosis, recordFix, recordFlagChange,
   searchSimilar, getIncidentTimeline, getRecentHistory,
-  getStats, generateLearning,
+  getStats, generateLearning, analyzeHistory,
 } from '../agents/librarian/librarianAgent.js';
 
 const router = Router();
@@ -49,6 +49,16 @@ router.post('/learn', async (req: Request, res: Response): Promise<void> => {
     res.json({ learning });
   } catch (err) {
     res.status(500).json({ error: String(err) });
+  }
+});
+
+/* POST /analyze — full history analysis via Ollama */
+router.post('/analyze', async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const result = await analyzeHistory();
+    res.json({ success: true, ...result });
+  } catch (err) {
+    res.status(500).json({ success: false, error: String(err) });
   }
 });
 

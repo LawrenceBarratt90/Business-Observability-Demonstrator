@@ -105,16 +105,16 @@ function tagOllamaSpan(span, url, host) {
     url.includes("/api/chat") ||
     url.includes("/api/embeddings")
   ) {
+    const model = process.env.OLLAMA_MODEL || "llama3.2";
     span.setAttribute("gen_ai.system", "ollama");
-    span.setAttribute(
-      "gen_ai.request.model",
-      process.env.OLLAMA_MODEL || "llama3.2"
-    );
+    span.setAttribute("gen_ai.operation.name", "chat");
+    span.setAttribute("gen_ai.request.model", model);
+    span.setAttribute("gen_ai.response.model", model);
     span.setAttribute("llm.request.type", "completion");
     span.setAttribute("ai.agent.framework", "bizobs-engine");
-    span.updateName(
-      `chat ${process.env.OLLAMA_MODEL || "llama3.2"}`
-    );
+    span.setAttribute("server.address", "localhost");
+    span.setAttribute("server.port", 11434);
+    span.updateName(`chat ${model}`);
   }
 }
 
@@ -137,7 +137,7 @@ registerInstrumentations({
     // Instruments native fetch() (undici) — required for Node >= 18
     // All Ollama calls use native fetch()
     new UndiciInstrumentation({
-      requestHook: (span, { request }) => {
+      requestHook: (span, request) => {
         const url = String(request.path || request.origin || "");
         const host = String(request.origin || "");
         tagOllamaSpan(span, url, host);
@@ -174,10 +174,13 @@ for (const name of [
   }
 }
 
+// Use env var for service name so child services get their own identity
+const otelServiceName = process.env.OTEL_SERVICE_NAME || process.env.DT_SERVICE_NAME || "bizobs-ai-engine";
+
 const resource = defaultResource()
   .merge(
     resourceFromAttributes({
-      [ATTR_SERVICE_NAME]: "bizobs-ai-engine",
+      [ATTR_SERVICE_NAME]: otelServiceName,
       [ATTR_SERVICE_VERSION]: "2.9.10",
       "deployment.environment": process.env.NODE_ENV || "production",
       "service.namespace": "bizobs",

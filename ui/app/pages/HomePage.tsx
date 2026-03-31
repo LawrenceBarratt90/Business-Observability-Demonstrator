@@ -2544,7 +2544,16 @@ export const HomePage = () => {
               </span>
             </Flex>
           </TitleBar.Title>
-          <TitleBar.Subtitle>AI-powered customer journey simulation &amp; service creation platform</TitleBar.Subtitle>
+          <TitleBar.Subtitle>
+            <span>AI-powered journey simulation &amp; observability — built on </span>
+            <span style={{ fontWeight: 700 }}>Dynatrace SaaS</span>
+            <span>, </span>
+            <span style={{ fontWeight: 700 }}>Grail</span>
+            <span>, </span>
+            <span style={{ fontWeight: 700 }}>DPS</span>
+            <span> &amp; </span>
+            <span style={{ fontWeight: 700 }}>Dynatrace Intelligence</span>
+          </TitleBar.Subtitle>
           <TitleBar.Action>
             <Flex gap={8} alignItems="center">
               {/* Connection Status Indicator — always visible */}
@@ -2724,8 +2733,8 @@ export const HomePage = () => {
                 </div>
               </div>
 
-              {/* Generate Visuals — hidden for now */}
-              <div style={{ position: 'relative', display: 'none', alignItems: 'center', gap: 3 }}>
+              {/* Generate Visuals */}
+              <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
                 <button
                   onClick={openGenerateDashboardModal}
                   style={{
