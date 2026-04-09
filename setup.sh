@@ -364,7 +364,19 @@ step "Step 2/6: Installing packages"
 
 if [ ! -d "$SCRIPT_DIR/node_modules" ]; then
   cd "$SCRIPT_DIR"
-  npm install 2>&1 | tail -3
+  # Use --legacy-peer-deps to avoid eresolve failures with Strato/React peer deps
+  if ! npm install --legacy-peer-deps 2>&1 | tail -5; then
+    warn "npm install failed — retrying with clean slate..."
+    rm -rf node_modules package-lock.json
+    npm install --legacy-peer-deps 2>&1 | tail -5 || fail "npm install failed. Check npm logs above."
+  fi
+fi
+# Verify dt-app is available (needed for deploy step)
+if ! npx dt-app --version &>/dev/null; then
+  warn "dt-app not found — running npm install again..."
+  cd "$SCRIPT_DIR"
+  rm -rf node_modules package-lock.json
+  npm install --legacy-peer-deps 2>&1 | tail -5 || fail "npm install failed. Check npm logs above."
 fi
 ok "npm packages ready"
 
