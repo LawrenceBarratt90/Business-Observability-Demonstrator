@@ -107,7 +107,7 @@ Step 6: Configure from Engine UI    ← Wire everything together (private IP + G
 This is a **single unified repo** — it contains both the Engine (server) and the Engine UI (AppEngine app).
 
 ```bash
-git clone https://github.com/LawrenceBarratt90/Dynatrace-Business-Outcome-Engine.git
+sudo git clone https://github.com/LawrenceBarratt90/Dynatrace-Business-Outcome-Engine.git
 cd Dynatrace-Business-Outcome-Engine
 chmod +x setup.sh
 ./setup.sh
