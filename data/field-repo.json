@@ -3503,22 +3503,22 @@
       {
         "name": "discountApplied",
         "type": "numeric",
-        "sampleValue": 6.09
+        "sampleValue": 7.64
       },
       {
         "name": "channel",
         "type": "string",
-        "sampleValue": "ota_booking"
+        "sampleValue": "mobile_app"
       },
       {
         "name": "deviceType",
         "type": "string",
-        "sampleValue": "desktop"
+        "sampleValue": "mobile"
       },
       {
         "name": "region",
         "type": "string",
-        "sampleValue": "Asia Pacific"
+        "sampleValue": "North America"
       },
       {
         "name": "customerSegmentValue",
@@ -3528,7 +3528,7 @@
       {
         "name": "loyaltyTier",
         "type": "string",
-        "sampleValue": "Basic"
+        "sampleValue": "Gold"
       },
       {
         "name": "segment",
@@ -3553,37 +3553,37 @@
       {
         "name": "Price",
         "type": "numeric",
-        "sampleValue": 3500
+        "sampleValue": 1200
       },
       {
         "name": "flightDuration",
         "type": "numeric",
-        "sampleValue": 720
+        "sampleValue": 780
       },
       {
         "name": "baggageAllowance",
         "type": "string",
-        "sampleValue": "3x32kg"
+        "sampleValue": "hand_only"
       },
       {
         "name": "seatSelection",
         "type": "string",
-        "sampleValue": "paid"
+        "sampleValue": "included"
       },
       {
         "name": "ancillaryRevenue",
         "type": "numeric",
-        "sampleValue": 45
+        "sampleValue": 0
       },
       {
         "name": "carbonOffset",
         "type": "numeric",
-        "sampleValue": 5
+        "sampleValue": 28
       },
       {
         "name": "marketTrend",
         "type": "string",
-        "sampleValue": "ancillary_revenue"
+        "sampleValue": "premium_leisure"
       },
       {
         "name": "browser",
@@ -3623,7 +3623,7 @@
       {
         "name": "shippingCost",
         "type": "numeric",
-        "sampleValue": 16.96
+        "sampleValue": 15.75
       },
       {
         "name": "pricingTier",
@@ -3747,8 +3747,8 @@
       "PreDepartureManagement",
       "ItinerarySharingAndExpenseReport"
     ],
-    "lastUpdated": "2026-04-01T08:19:01.092Z",
-    "runCount": 3
+    "lastUpdated": "2026-04-09T15:07:43.425Z",
+    "runCount": 1468
   },
   "energy & utilities|meter reading & billing": {
     "companyName": "Energy & Utilities",
@@ -15458,7 +15458,7 @@
       {
         "name": "lapTimeSec",
         "type": "numeric",
-        "sampleValue": 88
+        "sampleValue": 89.9
       },
       {
         "name": "lapTimeTargetSec",
@@ -15468,12 +15468,12 @@
       {
         "name": "lapTimeDeltaSec",
         "type": "numeric",
-        "sampleValue": -0.4
+        "sampleValue": 1.6
       },
       {
         "name": "sectorOneTimeSec",
         "type": "numeric",
-        "sampleValue": 27.9
+        "sampleValue": 28.6
       },
       {
         "name": "sectorTwoTimeSec",
@@ -15483,82 +15483,82 @@
       {
         "name": "sectorThreeTimeSec",
         "type": "numeric",
-        "sampleValue": 28.4
+        "sampleValue": 28.7
       },
       {
         "name": "topSpeedMph",
         "type": "numeric",
-        "sampleValue": 208
+        "sampleValue": 209
       },
       {
         "name": "maxGForceLateral",
         "type": "numeric",
-        "sampleValue": 5.4
+        "sampleValue": 4.6
       },
       {
         "name": "maxGForceBraking",
         "type": "numeric",
-        "sampleValue": 5.3
+        "sampleValue": 5.9
       },
       {
         "name": "tyreSurfaceTempFL",
         "type": "numeric",
-        "sampleValue": 98
+        "sampleValue": 106
       },
       {
         "name": "tyreSurfaceTempFR",
         "type": "numeric",
-        "sampleValue": 104
+        "sampleValue": 102
       },
       {
         "name": "tyreSurfaceTempRL",
         "type": "numeric",
-        "sampleValue": 115
+        "sampleValue": 108
       },
       {
         "name": "tyreSurfaceTempRR",
         "type": "numeric",
-        "sampleValue": 110
+        "sampleValue": 107
       },
       {
         "name": "tyrePressurePsiFL",
         "type": "numeric",
-        "sampleValue": 21.6
+        "sampleValue": 21.2
       },
       {
         "name": "tyrePressurePsiFR",
         "type": "numeric",
-        "sampleValue": 21.4
+        "sampleValue": 22.5
       },
       {
         "name": "tyrePressurePsiRL",
         "type": "numeric",
-        "sampleValue": 20.9
+        "sampleValue": 21.5
       },
       {
         "name": "tyrePressurePsiRR",
         "type": "numeric",
-        "sampleValue": 20.4
+        "sampleValue": 21
       },
       {
         "name": "tyreWearPercentFL",
         "type": "numeric",
-        "sampleValue": 42
+        "sampleValue": 18
       },
       {
         "name": "tyreWearPercentFR",
         "type": "numeric",
-        "sampleValue": 72
+        "sampleValue": 44
       },
       {
         "name": "tyreWearPercentRL",
         "type": "numeric",
-        "sampleValue": 26
+        "sampleValue": 6
       },
       {
         "name": "tyreWearPercentRR",
         "type": "numeric",
-        "sampleValue": 28
+        "sampleValue": 40
       },
       {
         "name": "tyreCompound",
@@ -15568,37 +15568,37 @@
       {
         "name": "brakeDiscTempFrontC",
         "type": "numeric",
-        "sampleValue": 750
+        "sampleValue": 900
       },
       {
         "name": "brakeDiscTempRearC",
         "type": "numeric",
-        "sampleValue": 760
+        "sampleValue": 640
       },
       {
         "name": "brakePadWearPercentF",
         "type": "numeric",
-        "sampleValue": 45
+        "sampleValue": 52
       },
       {
         "name": "brakePadWearPercentR",
         "type": "numeric",
-        "sampleValue": 48
+        "sampleValue": 30
       },
       {
         "name": "fuelRemainingKg",
         "type": "numeric",
-        "sampleValue": 72
+        "sampleValue": 105
       },
       {
         "name": "fuelBurnRateKgPerLap",
         "type": "numeric",
-        "sampleValue": 1.76
+        "sampleValue": 1.81
       },
       {
         "name": "ersStateOfChargePercent",
         "type": "numeric",
-        "sampleValue": 18
+        "sampleValue": 84
       },
       {
         "name": "ersDeployKW",
@@ -15608,22 +15608,22 @@
       {
         "name": "ersHarvestKW",
         "type": "numeric",
-        "sampleValue": 40
+        "sampleValue": 80
       },
       {
         "name": "engineRPM",
         "type": "numeric",
-        "sampleValue": 12800
+        "sampleValue": 15000
       },
       {
         "name": "engineTempCoolantC",
         "type": "numeric",
-        "sampleValue": 115
+        "sampleValue": 118
       },
       {
         "name": "engineTempOilC",
         "type": "numeric",
-        "sampleValue": 126
+        "sampleValue": 125
       },
       {
         "name": "gearNumber",
@@ -15643,7 +15643,7 @@
       {
         "name": "pitStopTimeSec",
         "type": "numeric",
-        "sampleValue": 1.92
+        "sampleValue": 1.87
       },
       {
         "name": "pitStopTargetSec",
@@ -15653,27 +15653,27 @@
       {
         "name": "pitCrewReadinessPercent",
         "type": "numeric",
-        "sampleValue": 97
+        "sampleValue": 100
       },
       {
         "name": "positionCar30",
         "type": "numeric",
-        "sampleValue": 8
+        "sampleValue": 3
       },
       {
         "name": "positionCar41",
         "type": "numeric",
-        "sampleValue": 11
+        "sampleValue": 9
       },
       {
         "name": "gapToLeaderSec",
         "type": "numeric",
-        "sampleValue": 2.9
+        "sampleValue": 6.3
       },
       {
         "name": "gapToCarAheadSec",
         "type": "numeric",
-        "sampleValue": 1.2
+        "sampleValue": 2.4
       },
       {
         "name": "overtakeAttempts",
@@ -15683,12 +15683,12 @@
       {
         "name": "overtakeSuccessful",
         "type": "numeric",
-        "sampleValue": 2
+        "sampleValue": 1
       },
       {
         "name": "windSpeedMph",
         "type": "numeric",
-        "sampleValue": 6
+        "sampleValue": 9
       },
       {
         "name": "windDirectionDeg",
@@ -15698,32 +15698,32 @@
       {
         "name": "trackTempC",
         "type": "numeric",
-        "sampleValue": 41
+        "sampleValue": 39
       },
       {
         "name": "ambientTempC",
         "type": "numeric",
-        "sampleValue": 18
+        "sampleValue": 22
       },
       {
         "name": "humidity",
         "type": "numeric",
-        "sampleValue": 65
+        "sampleValue": 55
       },
       {
         "name": "rainProbabilityPercent",
         "type": "numeric",
-        "sampleValue": 0
+        "sampleValue": 10
       },
       {
         "name": "downforceN",
         "type": "numeric",
-        "sampleValue": 14900
+        "sampleValue": 14800
       },
       {
         "name": "dragCoefficientCd",
         "type": "numeric",
-        "sampleValue": 0.91
+        "sampleValue": 0.92
       },
       {
         "name": "suspensionTravelFrontMm",
@@ -15733,47 +15733,47 @@
       {
         "name": "suspensionTravelRearMm",
         "type": "numeric",
-        "sampleValue": 25
+        "sampleValue": 16
       },
       {
         "name": "rideHeightFrontMm",
         "type": "numeric",
-        "sampleValue": 32
+        "sampleValue": 28
       },
       {
         "name": "rideHeightRearMm",
         "type": "numeric",
-        "sampleValue": 57
+        "sampleValue": 62
       },
       {
         "name": "telemetryChannelsActive",
         "type": "numeric",
-        "sampleValue": 310
+        "sampleValue": 312
       },
       {
         "name": "telemetryLatencyMs",
         "type": "numeric",
-        "sampleValue": 35
+        "sampleValue": 52
       },
       {
         "name": "dataRateGbps",
         "type": "numeric",
-        "sampleValue": 1.3
+        "sampleValue": 1.4
       },
       {
         "name": "sensorHealthPercent",
         "type": "numeric",
-        "sampleValue": 99.6
+        "sampleValue": 98.5
       },
       {
         "name": "warRoomEngineersOnline",
         "type": "numeric",
-        "sampleValue": 52
+        "sampleValue": 46
       },
       {
         "name": "simulationRunsCompleted",
         "type": "numeric",
-        "sampleValue": 1150
+        "sampleValue": 750
       },
       {
         "name": "radioTransmissions",
@@ -15783,7 +15783,7 @@
       {
         "name": "safetyCarDeployed",
         "type": "numeric",
-        "sampleValue": 1
+        "sampleValue": 0
       },
       {
         "name": "driverCar",
@@ -15793,32 +15793,32 @@
       {
         "name": "sessionType",
         "type": "string",
-        "sampleValue": "FP2"
+        "sampleValue": "Qualifying"
       },
       {
         "name": "circuitName",
         "type": "string",
-        "sampleValue": "Melbourne"
+        "sampleValue": "Suzuka"
       },
       {
         "name": "channel",
         "type": "string",
-        "sampleValue": "mobile_race_engineer"
+        "sampleValue": "faenza_war_room"
       },
       {
         "name": "deviceType",
         "type": "string",
-        "sampleValue": "tablet_trackside"
+        "sampleValue": "simulator_rig"
       },
       {
         "name": "region",
         "type": "string",
-        "sampleValue": "Suzuka JP"
+        "sampleValue": "Linz, Austria"
       },
       {
         "name": "segment",
         "type": "string",
-        "sampleValue": "strategy"
+        "sampleValue": "power_unit_management"
       },
       {
         "name": "browser",
@@ -15888,12 +15888,12 @@
       {
         "name": "transactionValue",
         "type": "numeric",
-        "sampleValue": 182.77
+        "sampleValue": 237.92
       },
       {
         "name": "orderTotal",
         "type": "numeric",
-        "sampleValue": 149.82
+        "sampleValue": 359.32
       },
       {
         "name": "averageOrderValue",
@@ -15903,7 +15903,7 @@
       {
         "name": "customerLifetimeValue",
         "type": "numeric",
-        "sampleValue": 1395.56
+        "sampleValue": 620.6
       },
       {
         "name": "revenuePerCustomer",
@@ -15918,17 +15918,17 @@
       {
         "name": "discountApplied",
         "type": "numeric",
-        "sampleValue": 17.56
+        "sampleValue": 16.24
       },
       {
         "name": "taxAmount",
         "type": "numeric",
-        "sampleValue": 11.99
+        "sampleValue": 28.75
       },
       {
         "name": "shippingCost",
         "type": "numeric",
-        "sampleValue": 18.57
+        "sampleValue": 6.11
       },
       {
         "name": "pricingTier",
@@ -15948,17 +15948,17 @@
       {
         "name": "contractValue",
         "type": "numeric",
-        "sampleValue": 1879.37
+        "sampleValue": 2201.89
       },
       {
         "name": "annualRevenue",
         "type": "numeric",
-        "sampleValue": 3488.9
+        "sampleValue": 1551.5
       },
       {
         "name": "acquisitionCost",
         "type": "numeric",
-        "sampleValue": 45.78
+        "sampleValue": 30.21
       },
       {
         "name": "retentionProbability",
@@ -15973,7 +15973,7 @@
       {
         "name": "upsellPotential",
         "type": "numeric",
-        "sampleValue": 418.67
+        "sampleValue": 186.18
       },
       {
         "name": "crossSellOpportunity",
@@ -15998,7 +15998,7 @@
       {
         "name": "engagementScore",
         "type": "numeric",
-        "sampleValue": 69.66
+        "sampleValue": 78.84
       },
       {
         "name": "satisfactionRating",
@@ -16018,7 +16018,7 @@
       {
         "name": "timeToConversion",
         "type": "numeric",
-        "sampleValue": 7.27
+        "sampleValue": 9.74
       },
       {
         "name": "competitiveAdvantage",
@@ -16043,7 +16043,7 @@
       {
         "name": "processingTime",
         "type": "numeric",
-        "sampleValue": 17.63
+        "sampleValue": 11.53
       },
       {
         "name": "operationalCost",
@@ -16063,7 +16063,7 @@
       {
         "name": "costPerAcquisition",
         "type": "numeric",
-        "sampleValue": 54.94
+        "sampleValue": 36.25
       },
       {
         "name": "riskLevel",
@@ -16088,12 +16088,12 @@
       {
         "name": "growthPotential",
         "type": "numeric",
-        "sampleValue": 348.89
+        "sampleValue": 155.15
       },
       {
         "name": "futureValue",
         "type": "numeric",
-        "sampleValue": 2093.34
+        "sampleValue": 930.9
       },
       {
         "name": "expansionOpportunity",
@@ -16131,7 +16131,371 @@
       "LinzPitStops",
       "LinzPostRaceDebrief"
     ],
-    "lastUpdated": "2026-04-08T17:12:34.491Z",
-    "runCount": 11081
+    "lastUpdated": "2026-04-09T15:07:43.076Z",
+    "runCount": 16636
+  },
+  "defence systems|fleet maintenance": {
+    "companyName": "Defence Systems",
+    "journeyType": "Fleet Maintenance",
+    "fields": [
+      {
+        "name": "orderTotal",
+        "type": "numeric",
+        "sampleValue": 750000
+      },
+      {
+        "name": "transactionValue",
+        "type": "numeric",
+        "sampleValue": 750000
+      },
+      {
+        "name": "averageOrderValue",
+        "type": "numeric",
+        "sampleValue": 450000
+      },
+      {
+        "name": "contractValue",
+        "type": "numeric",
+        "sampleValue": 50000000
+      },
+      {
+        "name": "annualRevenue",
+        "type": "numeric",
+        "sampleValue": 2747.63
+      },
+      {
+        "name": "revenuePerCustomer",
+        "type": "numeric",
+        "sampleValue": 200
+      },
+      {
+        "name": "profitMargin",
+        "type": "numeric",
+        "sampleValue": 0.15
+      },
+      {
+        "name": "customerLifetimeValue",
+        "type": "numeric",
+        "sampleValue": 1099.05
+      },
+      {
+        "name": "lifetimeValue",
+        "type": "numeric",
+        "sampleValue": 0
+      },
+      {
+        "name": "acquisitionCost",
+        "type": "numeric",
+        "sampleValue": 39.99
+      },
+      {
+        "name": "costPerAcquisition",
+        "type": "numeric",
+        "sampleValue": 47.99
+      },
+      {
+        "name": "conversionProbability",
+        "type": "numeric",
+        "sampleValue": 1
+      },
+      {
+        "name": "conversionRate",
+        "type": "numeric",
+        "sampleValue": 100
+      },
+      {
+        "name": "engagementScore",
+        "type": "numeric",
+        "sampleValue": 92
+      },
+      {
+        "name": "timeToConversion",
+        "type": "numeric",
+        "sampleValue": 7.92
+      },
+      {
+        "name": "sessionDuration",
+        "type": "numeric",
+        "sampleValue": 3600
+      },
+      {
+        "name": "pageViews",
+        "type": "numeric",
+        "sampleValue": 15
+      },
+      {
+        "name": "purchaseFrequency",
+        "type": "numeric",
+        "sampleValue": 12
+      },
+      {
+        "name": "netPromoterScore",
+        "type": "numeric",
+        "sampleValue": 40
+      },
+      {
+        "name": "satisfactionRating",
+        "type": "numeric",
+        "sampleValue": 3.5
+      },
+      {
+        "name": "retentionProbability",
+        "type": "numeric",
+        "sampleValue": 1
+      },
+      {
+        "name": "processingTime",
+        "type": "numeric",
+        "sampleValue": 4320
+      },
+      {
+        "name": "operationalCost",
+        "type": "numeric",
+        "sampleValue": 450000
+      },
+      {
+        "name": "efficiencyRating",
+        "type": "numeric",
+        "sampleValue": 78
+      },
+      {
+        "name": "fleetReadiness",
+        "type": "numeric",
+        "sampleValue": 0.87
+      },
+      {
+        "name": "mtbf",
+        "type": "numeric",
+        "sampleValue": 2400
+      },
+      {
+        "name": "channel",
+        "type": "string",
+        "sampleValue": "hangar_terminal"
+      },
+      {
+        "name": "deviceType",
+        "type": "string",
+        "sampleValue": "ruggedised_terminal"
+      },
+      {
+        "name": "region",
+        "type": "string",
+        "sampleValue": "RAF Brize Norton"
+      },
+      {
+        "name": "customerSegmentValue",
+        "type": "string",
+        "sampleValue": "transport"
+      },
+      {
+        "name": "loyaltyTier",
+        "type": "string",
+        "sampleValue": "Scheduled"
+      },
+      {
+        "name": "segment",
+        "type": "string",
+        "sampleValue": "naval_vessel"
+      },
+      {
+        "name": "Productname",
+        "type": "string",
+        "sampleValue": "Frigate Gas Turbine"
+      },
+      {
+        "name": "ProductId",
+        "type": "string",
+        "sampleValue": "MNT-GV-004"
+      },
+      {
+        "name": "ProductType",
+        "type": "string",
+        "sampleValue": "propulsion"
+      },
+      {
+        "name": "Price",
+        "type": "numeric",
+        "sampleValue": 1200000
+      },
+      {
+        "name": "componentRUL",
+        "type": "numeric",
+        "sampleValue": 1200
+      },
+      {
+        "name": "maintenanceType",
+        "type": "string",
+        "sampleValue": "unscheduled"
+      },
+      {
+        "name": "marketTrend",
+        "type": "string",
+        "sampleValue": "condition_based"
+      },
+      {
+        "name": "browser",
+        "type": "string",
+        "sampleValue": "Chrome"
+      },
+      {
+        "name": "location",
+        "type": "string",
+        "sampleValue": "London, UK"
+      },
+      {
+        "name": "entryChannel",
+        "type": "string",
+        "sampleValue": "organic"
+      },
+      {
+        "name": "customerIntent",
+        "type": "string",
+        "sampleValue": "purchase"
+      },
+      {
+        "name": "loyaltyStatus",
+        "type": "string",
+        "sampleValue": "new"
+      },
+      {
+        "name": "abandonmentRisk",
+        "type": "string",
+        "sampleValue": "high"
+      },
+      {
+        "name": "discountApplied",
+        "type": "numeric",
+        "sampleValue": 5.9
+      },
+      {
+        "name": "taxAmount",
+        "type": "numeric",
+        "sampleValue": 60000
+      },
+      {
+        "name": "shippingCost",
+        "type": "numeric",
+        "sampleValue": 19.7
+      },
+      {
+        "name": "pricingTier",
+        "type": "string",
+        "sampleValue": "Bronze"
+      },
+      {
+        "name": "subscriptionLevel",
+        "type": "string",
+        "sampleValue": "Basic"
+      },
+      {
+        "name": "membershipStatus",
+        "type": "string",
+        "sampleValue": "Regular"
+      },
+      {
+        "name": "churnRisk",
+        "type": "string",
+        "sampleValue": "high"
+      },
+      {
+        "name": "upsellPotential",
+        "type": "numeric",
+        "sampleValue": 329.72
+      },
+      {
+        "name": "crossSellOpportunity",
+        "type": "string",
+        "sampleValue": "high"
+      },
+      {
+        "name": "marketSegment",
+        "type": "string",
+        "sampleValue": "Enterprise"
+      },
+      {
+        "name": "competitiveAdvantage",
+        "type": "string",
+        "sampleValue": "Price"
+      },
+      {
+        "name": "marketShare",
+        "type": "numeric",
+        "sampleValue": 0.05
+      },
+      {
+        "name": "brandLoyalty",
+        "type": "string",
+        "sampleValue": "Low"
+      },
+      {
+        "name": "competitorComparison",
+        "type": "string",
+        "sampleValue": "Better"
+      },
+      {
+        "name": "resourceUtilization",
+        "type": "numeric",
+        "sampleValue": 0.6
+      },
+      {
+        "name": "riskLevel",
+        "type": "string",
+        "sampleValue": "Low"
+      },
+      {
+        "name": "complianceScore",
+        "type": "numeric",
+        "sampleValue": 85
+      },
+      {
+        "name": "fraudRisk",
+        "type": "string",
+        "sampleValue": "high"
+      },
+      {
+        "name": "securityRating",
+        "type": "string",
+        "sampleValue": "A"
+      },
+      {
+        "name": "growthPotential",
+        "type": "numeric",
+        "sampleValue": 274.76
+      },
+      {
+        "name": "futureValue",
+        "type": "numeric",
+        "sampleValue": 1648.57
+      },
+      {
+        "name": "expansionOpportunity",
+        "type": "string",
+        "sampleValue": "Limited"
+      },
+      {
+        "name": "seasonalImpact",
+        "type": "numeric",
+        "sampleValue": 0.1
+      }
+    ],
+    "services": [
+      "FleetHealthService",
+      "PrioritizationService",
+      "PartsService",
+      "MaintenanceExecService",
+      "ReadinessService",
+      "ReadinessReportService"
+    ],
+    "steps": [
+      "FleetHealthAssessment",
+      "MaintenancePrioritization",
+      "PartsForecasting",
+      "MaintenanceExecution",
+      "ReadinessVerification",
+      "FleetReadinessReport"
+    ],
+    "lastUpdated": "2026-04-09T15:07:43.851Z",
+    "runCount": 2632
   }
 }

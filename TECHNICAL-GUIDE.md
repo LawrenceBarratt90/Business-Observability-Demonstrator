@@ -107,8 +107,8 @@ Step 6: Configure from Engine UI    ← Wire everything together (private IP + G
 This is a **single unified repo** — it contains both the Engine (server) and the Engine UI (AppEngine app).
 
 ```bash
-git clone https://github.com/LawrenceBarratt90/Business-Observablity-forge.git
-cd Business-Observablity-forge
+git clone https://github.com/LawrenceBarratt90/Dynatrace-Business-Observability-Demonstrator.git
+cd Dynatrace-Business-Observability-Demonstrator
 npm install
 ```
 
@@ -536,14 +536,14 @@ To completely remove the Engine from a host and start fresh, use the included `u
 ### Uninstall (keep Ollama)
 
 ```bash
-cd /home/ec2-user/Dynatrace-Business-Observability-Forge
+cd /home/ec2-user/Dynatrace-Business-Observability-Demonstrator
 bash uninstall.sh
 ```
 
 ### Uninstall (remove everything including Ollama)
 
 ```bash
-cd /home/ec2-user/Dynatrace-Business-Observability-Forge
+cd /home/ec2-user/Dynatrace-Business-Observability-Demonstrator
 bash uninstall.sh --all
 ```
 
@@ -563,8 +563,8 @@ After uninstalling, clone and run setup:
 
 ```bash
 cd /home/ec2-user
-git clone https://github.com/LawrenceBarratt90/Business-Observablity-forge.git
-cd Business-Observablity-forge
+git clone https://github.com/LawrenceBarratt90/Dynatrace-Business-Observability-Demonstrator.git
+cd Dynatrace-Business-Observability-Demonstrator
 ./setup.sh
 ```
 

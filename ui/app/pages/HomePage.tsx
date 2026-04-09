@@ -2933,6 +2933,28 @@ export const HomePage = () => {
                 />
               </div>
 
+              {/* Feedback */}
+              <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+              <a
+                href="https://forms.office.com/r/bTZPypxQh9"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                  width: 140, padding: '8px 0', borderRadius: 8,
+                  background: 'linear-gradient(135deg, rgba(243,156,18,0.12), rgba(230,126,34,0.06))',
+                  border: '1.5px solid rgba(243,156,18,0.4)',
+                  color: '#f39c12', fontWeight: 600, fontSize: 12,
+                  cursor: 'pointer', transition: 'all 0.2s ease',
+                  textDecoration: 'none',
+                }}
+                onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-1px)'; }}
+                onMouseOut={e => { e.currentTarget.style.transform = 'none'; }}
+              >
+                <span style={{ fontSize: 14 }}>💬</span> Feedback
+              </a>
+              </div>
+
               {/* Start The Race — VCARB car image button + Dashboard link */}
               <Flex alignItems="center" gap={6}>
                 <button
