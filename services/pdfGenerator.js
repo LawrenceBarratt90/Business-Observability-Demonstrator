@@ -115,9 +115,9 @@ export function generateExecutiveSummaryPDF({ journeyData, dashboardData }) {
 
       const doc = new PDFDocument({ size: 'A4', margin: 0, info: {
         Title: `${company} — Dynatrace Intelligence Executive Summary`,
-        Author: 'Dynatrace Intelligence — Business Outcome Engine',
+        Author: 'Dynatrace Intelligence — Business Observability Demonstrator',
         Subject: `${journey} — Comprehensive Executive Overview`,
-        Creator: 'BizObs Engine v4',
+        Creator: 'BizObs Demonstrator v4',
       }});
 
       const buffers = [];
@@ -198,7 +198,7 @@ function drawHeaderBanner(doc, company, domain) {
     .text('Executive Summary', ML, 32);
 
   doc.font('Helvetica').fontSize(8).fillColor(C.faint)
-    .text('Business Outcome Engine', ML, 60);
+    .text('Business Observability Demonstrator', ML, 60);
   doc.font('Helvetica').fontSize(8).fillColor(C.faint)
     .text(formatDate(), ML, 72);
 
@@ -949,7 +949,7 @@ function drawClosingStatement(doc, y, company, journey, ctx) {
 
   // Attribution line
   doc.font('Helvetica').fontSize(7).fillColor(C.faint)
-    .text('Prepared by Dynatrace Intelligence  |  Business Outcome Engine', ML, y, { width: W, align: 'center' });
+    .text('Prepared by Dynatrace Intelligence  |  Business Observability Demonstrator', ML, y, { width: W, align: 'center' });
   y += 10;
   doc.font('Helvetica').fontSize(7).fillColor(C.faint)
     .text(`Report generated ${formatDate()}  |  All data derived from journey configuration`, ML, y, { width: W, align: 'center' });
@@ -980,7 +980,7 @@ function drawFooter(doc, pageNum) {
   doc.rect(0, fy, A4W, 1).fill(C.purple);
 
   doc.font('Helvetica').fontSize(6.5).fillColor(C.faint)
-    .text(`Dynatrace Intelligence  |  Business Outcome Engine  |  Confidential`, ML, fy + 10, { width: W * 0.55 });
+    .text(`Dynatrace Intelligence  |  Business Observability Demonstrator  |  Confidential`, ML, fy + 10, { width: W * 0.55 });
 
   doc.font('Helvetica').fontSize(6.5).fillColor(C.mid)
     .text(`Page ${pageNum || 1}`, ML + W * 0.55, fy + 10, { width: W * 0.15, align: 'center' });

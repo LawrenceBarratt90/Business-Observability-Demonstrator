@@ -1,8 +1,8 @@
 #!/bin/bash
 # ============================================================
-#  Business Outcome Engine — Full Uninstall
+#  Business Observability Demonstrator — Full Uninstall
 # ============================================================
-#  Completely removes the Engine from this host:
+#  Completely removes the Demonstrator from this host:
 #    1. Stops the BizObs server
 #    2. Stops & removes EdgeConnect Docker container + image
 #    3. Removes the log-cleanup cron job
@@ -15,7 +15,7 @@
 #
 #  To reinstall after uninstall:
 #    cd /home/ec2-user
-#    git clone https://github.com/LawrenceBarratt90/Dynatrace-Business-Outcome-Engine.git
+#    git clone https://github.com/LawrenceBarratt90/Business-Observability-Demonstrator.git
 #    cd Dynatrace-Business-Outcome-Engine && ./setup.sh
 # ============================================================
 
@@ -36,12 +36,12 @@ info() { echo -e "  ${RED}→ $1${NC}"; }
 
 echo -e "${BOLD}"
 echo "╔══════════════════════════════════════════════════════════╗"
-echo "║     Business Outcome Engine — Full Uninstall        ║"
+echo "║     Business Observability Demonstrator — Full Uninstall        ║"
 echo "╚══════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
 
 # ── Confirm ─────────────────────────────────────────────────
-echo -e "  ${RED}This will permanently remove the Engine from this host.${NC}"
+echo -e "  ${RED}This will permanently remove the Demonstrator from this host.${NC}"
 if [ "$REMOVE_OLLAMA" = true ]; then
   echo -e "  ${RED}Ollama will also be removed (--all flag).${NC}"
 fi
@@ -154,7 +154,7 @@ echo -e "╚══════════════════════�
 echo ""
 echo -e "  ${BOLD}To reinstall:${NC}"
 echo -e "    cd /home/ec2-user"
-echo -e "    git clone https://github.com/LawrenceBarratt90/Dynatrace-Business-Outcome-Engine.git"
+echo -e "    git clone https://github.com/LawrenceBarratt90/Business-Observability-Demonstrator.git"
 echo -e "    cd Dynatrace-Business-Outcome-Engine"
 echo -e "    ./setup.sh"
 echo ""

@@ -1,8 +1,8 @@
-# Business Outcome Engine — Deployment Guide
+# Business Observability Demonstrator — Deployment Guide
 
 > **Version:** 2.9.28 · **Last updated:** February 2026
 >
-> Deploy the full Business Outcome Engine: Node.js server with Ollama AI, OpenTelemetry instrumentation (traces, metrics, logs), the Dynatrace AppEngine UI, and EdgeConnect tunnel — all connected to your Dynatrace environment.
+> Deploy the full Business Observability Demonstrator: Node.js server with Ollama AI, OpenTelemetry instrumentation (traces, metrics, logs), the Dynatrace AppEngine UI, and EdgeConnect tunnel — all connected to your Dynatrace environment.
 
 ---
 
@@ -15,7 +15,7 @@
                          │  ┌────────────────────────────┐  │
                          │  │   AppEngine UI (React)     │  │
                          │  │   "Business Observability  │  │
-                         │  │    Engine" in Apps menu      │  │
+                         │  │    Demonstrator" in Apps menu      │  │
                          │  └─────────┬──────────────────┘  │
                          │            │ HTTP via EdgeConnect │
                          │  ┌─────────▼──────────────────┐  │
@@ -41,7 +41,7 @@
 │  └────┬───────────┘        └────────────────┘               │
 │       │ --require                                            │
 │  ┌────▼───────────┐   HTTP    ┌──────────────┐              │
-│  │  BizObs Engine │ ◄──────► │  Ollama       │              │
+│  │  BizObs Demonstrator │ ◄──────► │  Ollama       │              │
 │  │  (Node.js)     │  :11434   │  (Local LLM)  │              │
 │  │  :8080         │           └──────────────┘              │
 │  └────────────────┘                                          │
@@ -52,7 +52,7 @@
 
 | Component | What It Does |
 |---|---|
-| **BizObs Engine** | Node.js server — generates business journeys, runs AI agents (Fix-It, Nemesis, Librarian) |
+| **BizObs Demonstrator** | Node.js server — generates business journeys, runs AI agents (Fix-It, Nemesis, Librarian) |
 | **Ollama** | Local LLM runtime — powers AI dashboard generation, chaos analysis, auto-remediation |
 | **otel.cjs** | OpenTelemetry bootstrap — auto-instruments all HTTP calls, ships traces + metrics + logs to Dynatrace |
 | **AppEngine UI** | Dynatrace-embedded React app — the partner-facing UI inside the Dynatrace Apps menu |
@@ -127,7 +127,7 @@ OLLAMA_MODE=disabled
 
 | Port | Purpose | Open To |
 |---|---|---|
-| **8080** | BizObs Engine HTTP API | EdgeConnect (localhost) + your browser for testing |
+| **8080** | BizObs Demonstrator HTTP API | EdgeConnect (localhost) + your browser for testing |
 | **11434** | Ollama API | Localhost only (internal) |
 | **443** | HTTPS outbound to Dynatrace | Outbound only (OTLP export, AppEngine deployment) |
 
@@ -246,8 +246,8 @@ ollama pull llama3.2
 
 ```bash
 cd /home/ec2-user   # or your preferred directory
-git clone https://github.com/LawrenceBarratt90/Dynatrace-Business-Outcome-Engine.git "Dynatrace-Business-Outcome-Engine"
-cd "Business Outcome Engine"
+git clone https://github.com/LawrenceBarratt90/Business-Observability-Demonstrator.git "Business-Observability-Demonstrator"
+cd "Business Observability Demonstrator"
 
 # Install dependencies (the repo does NOT include node_modules — this is required)
 npm install
@@ -386,7 +386,7 @@ You should see in the logs:
 
 ## Step 7 — Deploy the AppEngine UI
 
-The AppEngine UI is a React app that runs inside Dynatrace's Apps menu. It gives partners a Dynatrace-native interface to the BizObs Engine.
+The AppEngine UI is a React app that runs inside Dynatrace's Apps menu. It gives partners a Dynatrace-native interface to the BizObs Demonstrator.
 
 ### 7a. Build and deploy
 
@@ -407,7 +407,7 @@ The `dt-app deploy` command reads `app.config.json` (which you updated in Step 4
 
 1. Open your Dynatrace environment
 2. Go to **Apps** (left sidebar)
-3. Look for **Business Outcome Engine** in the app list
+3. Look for **Business Observability Demonstrator** in the app list
 4. Click it — it should load the UI
 
 > **Note:** The AppEngine UI won't be able to reach the server until EdgeConnect is running (next step).
@@ -416,7 +416,7 @@ The `dt-app deploy` command reads `app.config.json` (which you updated in Step 4
 
 ## Step 8 — Set Up EdgeConnect
 
-EdgeConnect creates a secure tunnel between the Dynatrace platform and your server. Without it, the AppEngine UI can't call the BizObs Engine API.
+EdgeConnect creates a secure tunnel between the Dynatrace platform and your server. Without it, the AppEngine UI can't call the BizObs Demonstrator API.
 
 ### 8a. Create an OAuth Client in Dynatrace
 
@@ -447,7 +447,7 @@ sudo systemctl enable docker
 Edit the `edgeconnect/edgeConnect.yaml`:
 
 ```yaml
-name: bizobs-engine
+name: bizobs-demonstrator
 api_endpoint_host: YOUR_TENANT_ID.apps.dynatrace.com
 oauth:
   client_id: YOUR_OAUTH_CLIENT_ID
@@ -488,7 +488,7 @@ sudo docker ps --filter name=edgeconnect-bizobs
 sudo docker logs edgeconnect-bizobs 2>&1 | tail -20
 ```
 
-You should see the EdgeConnect successfully connecting to your Dynatrace environment. The AppEngine UI should now be able to reach the BizObs Engine.
+You should see the EdgeConnect successfully connecting to your Dynatrace environment. The AppEngine UI should now be able to reach the BizObs Demonstrator.
 
 ---
 
@@ -523,7 +523,7 @@ For auto-start on boot:
 ```bash
 sudo tee /etc/systemd/system/bizobs.service << EOF
 [Unit]
-Description=Business Outcome Engine
+Description=Business Observability Demonstrator
 After=network.target ollama.service
 Wants=ollama.service
 
@@ -576,7 +576,7 @@ sudo systemctl start bizobs
 ### AppEngine UI
 
 1. Go to **Apps** in the Dynatrace sidebar
-2. Open **Business Outcome Engine**
+2. Open **Business Observability Demonstrator**
 3. The UI should connect to the server via EdgeConnect and display the dashboard
 
 ---

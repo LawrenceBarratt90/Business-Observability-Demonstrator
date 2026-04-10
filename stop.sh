@@ -1,8 +1,8 @@
 #!/bin/bash
-# Stop the Business Outcome Engine server
+# Stop the Business Observability Demonstrator server
 cd "$(dirname "$0")"
 
-echo "🛑 Stopping Business Outcome Engine..."
+echo "🛑 Stopping Business Observability Demonstrator..."
 
 # Stop via PID file
 if [[ -f server.pid ]]; then

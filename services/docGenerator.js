@@ -207,7 +207,7 @@ export function generateExecutiveSummaryDoc({ journeyData, dashboardData }) {
 </head>
 <body>
 
-<p class="date">Dynatrace Intelligence &bull; Business Outcome Engine &bull; ${esc(formatDate())}</p>
+<p class="date">Dynatrace Intelligence &bull; Business Observability Demonstrator &bull; ${esc(formatDate())}</p>
 <h1>${esc(company)}</h1>
 <p class="subtitle">Executive Summary &mdash; ${esc(journey)} Journey</p>
 
@@ -493,7 +493,7 @@ critical business objectives.</p>`;
 </div>
 
 <div class="footer">
-  <p>Prepared by Dynatrace Intelligence &bull; Business Outcome Engine</p>
+  <p>Prepared by Dynatrace Intelligence &bull; Business Observability Demonstrator</p>
   <p>Report generated ${esc(formatDate())} &bull; All data derived from journey configuration</p>
   <p style="color:#ccc;">To convert to Word: Open this file in Microsoft Word or Google Docs (File &rarr; Open), then save as .docx</p>
 </div>

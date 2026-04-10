@@ -1,4 +1,4 @@
-# Business Outcome Engine — Quick Start (Plain English)
+# Business Observability Demonstrator — Quick Start (Plain English)
 
 This is the simple version. If you want the full technical reference, see the main README.md.
 
@@ -108,8 +108,8 @@ The app will still work without Ollama — it falls back to rule-based logic ins
 
 ```bash
 cd /home/ec2-user
-git clone https://github.com/LawrenceBarratt90/Dynatrace-Business-Outcome-Engine.git
-cd Dynatrace-Business-Outcome-Engine
+git clone https://github.com/LawrenceBarratt90/Business-Observability-Demonstrator.git
+cd Business-Observability-Demonstrator
 ```
 
 The repo doesn't include `node_modules` — you need to install them first. Then build the TypeScript agents (the server needs the compiled JS in the `dist/` folder):
@@ -216,11 +216,11 @@ npx dt-app build
 npx dt-app deploy
 ```
 
-After it deploys, go to your Dynatrace environment → Apps → you should see **Business Outcome Engine** in the list. It won't fully work yet though — it needs EdgeConnect to reach the server (next step).
+After it deploys, go to your Dynatrace environment → Apps → you should see **Business Observability Demonstrator** in the list. It won't fully work yet though — it needs EdgeConnect to reach the server (next step).
 
 ### 8. Set up EdgeConnect
 
-EdgeConnect is a Docker container that creates a tunnel from Dynatrace to your server. The AppEngine UI uses this tunnel to talk to the BizObs Engine API.
+EdgeConnect is a Docker container that creates a tunnel from Dynatrace to your server. The AppEngine UI uses this tunnel to talk to the BizObs Demonstrator API.
 
 **First, create an OAuth client in Dynatrace:**
 
@@ -242,7 +242,7 @@ sudo systemctl start docker && sudo systemctl enable docker
 Edit `edgeconnect/edgeConnect.yaml` and put in your real values:
 
 ```yaml
-name: bizobs-engine
+name: bizobs-demonstrator
 api_endpoint_host: YOUR_TENANT.apps.dynatrace.com
 oauth:
   client_id: YOUR_OAUTH_CLIENT_ID
@@ -269,7 +269,7 @@ You should see it connect successfully. Now go back to the AppEngine UI in Dynat
 
 Give it a couple of minutes for data to flow, then:
 
-- **Apps** → **Business Outcome Engine** → should load the UI and connect to the server
+- **Apps** → **Business Observability Demonstrator** → should load the UI and connect to the server
 - **Distributed Traces** → click the **Ingested traces** tab → look for traces from `bizobs-ai-engine`
 - **Logs & Events** → filter by `bizobs-ai-engine`
 - **AI Observability** → you should see Ollama LLM calls with model info, latency, and token usage

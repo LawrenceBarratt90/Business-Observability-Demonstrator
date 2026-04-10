@@ -282,31 +282,31 @@ export default async function (payload) {
         if (action === 'detect-builtin-settings') {
             const detected = {};
             const hostIp = body?.hostIp;
-            // 1. BizEvents HTTP incoming capture rule named "Business Outcome Engine"
+            // 1. BizEvents HTTP incoming capture rule named "Business Observability Demonstrator"
             try {
                 const result = await settingsObjectsClient.getSettingsObjects({
                     schemaIds: 'builtin:bizevents.http.incoming',
                     fields: 'objectId,value',
                     pageSize: 50,
                 });
-                detected['biz-events'] = (result.items || []).some((i) => i.value?.ruleName === 'Business Outcome Engine' || i.value?.ruleName === 'Business Observability Generator' || i.value?.ruleName === 'BizObs App');
+                detected['biz-events'] = (result.items || []).some((i) => i.value?.ruleName === 'Business Observability Demonstrator' || i.value?.ruleName === 'Business Outcome Engine' || i.value?.ruleName === 'Business Observability Generator' || i.value?.ruleName === 'BizObs App');
             }
             catch {
                 detected['biz-events'] = false;
             }
-            // 2. OpenPipeline bizevents pipeline named "Business Outcome Engine"
+            // 2. OpenPipeline bizevents pipeline named "Business Observability Demonstrator"
             try {
                 const result = await settingsObjectsClient.getSettingsObjects({
                     schemaIds: 'builtin:openpipeline.bizevents.pipelines',
                     fields: 'objectId,value',
                     pageSize: 50,
                 });
-                detected['openpipeline'] = (result.items || []).some((i) => i.value?.displayName === 'Business Outcome Engine' || i.value?.displayName === 'Business Observability Generator' || i.value?.displayName === 'BizObs Template Pipeline');
+                detected['openpipeline'] = (result.items || []).some((i) => i.value?.displayName === 'Business Observability Demonstrator' || i.value?.displayName === 'Business Outcome Engine' || i.value?.displayName === 'Business Observability Generator' || i.value?.displayName === 'BizObs Template Pipeline');
             }
             catch {
                 detected['openpipeline'] = false;
             }
-            // 3. OpenPipeline bizevents routing — check for "Business Outcome Engine" entry
+            // 3. OpenPipeline bizevents routing — check for "Business Observability Demonstrator" entry
             try {
                 const result = await settingsObjectsClient.getSettingsObjects({
                     schemaIds: 'builtin:openpipeline.bizevents.routing',
@@ -316,7 +316,7 @@ export default async function (payload) {
                 let hasRoute = false;
                 for (const item of result.items || []) {
                     const val = item.value;
-                    if (val.routingEntries?.some(e => e.description === 'Business Outcome Engine' || e.description === 'Business Observability Generator' || e.description === 'BizObs App')) {
+                    if (val.routingEntries?.some(e => e.description === 'Business Observability Demonstrator' || e.description === 'Business Outcome Engine' || e.description === 'Business Observability Generator' || e.description === 'BizObs App')) {
                         hasRoute = true;
                         break;
                     }
@@ -550,7 +550,7 @@ export default async function (payload) {
                             fields: 'objectId,value',
                             pageSize: 50,
                         });
-                        const captureExists = (existing.items || []).some((i) => i.value?.ruleName === 'Business Outcome Engine' || i.value?.ruleName === 'Business Observability Generator' || i.value?.ruleName === 'BizObs App');
+                        const captureExists = (existing.items || []).some((i) => i.value?.ruleName === 'Business Observability Demonstrator' || i.value?.ruleName === 'Business Outcome Engine' || i.value?.ruleName === 'Business Observability Generator' || i.value?.ruleName === 'BizObs App');
                         if (captureExists) {
                             results['biz-events'] = { success: true, error: 'Already exists — no changes needed' };
                         }
@@ -562,7 +562,7 @@ export default async function (payload) {
                                         scope: 'environment',
                                         value: {
                                             enabled: true,
-                                            ruleName: 'Business Outcome Engine',
+                                            ruleName: 'Business Observability Demonstrator',
                                             triggers: [{
                                                     caseSensitive: false,
                                                     source: { dataSource: 'request.path' },
@@ -570,7 +570,7 @@ export default async function (payload) {
                                                     value: '/process',
                                                 }],
                                             event: {
-                                                category: { sourceType: 'constant.string', source: 'Business Outcome Engine' },
+                                                category: { sourceType: 'constant.string', source: 'Business Observability Demonstrator' },
                                                 provider: { sourceType: 'request.body', path: 'companyName' },
                                                 type: { sourceType: 'request.body', path: 'stepName' },
                                                 data: [
@@ -594,7 +594,7 @@ export default async function (payload) {
                             pageSize: 50,
                         });
                         const matchNames = ['bizobs-template-pipeline'];
-                        const matchDisplayNames = ['Business Outcome Engine', 'Business Observability Generator', 'BizObs Template Pipeline'];
+                        const matchDisplayNames = ['Business Observability Demonstrator', 'Business Outcome Engine', 'Business Observability Generator', 'BizObs Template Pipeline'];
                         const matchingPipeline = (existingPipeline.items || []).find((i) => {
                             const v = i.value;
                             if (!v)
@@ -619,7 +619,7 @@ export default async function (payload) {
                                             value: {
                                                 metadataList: [],
                                                 customId: 'bizobs-template-pipeline',
-                                                displayName: 'Business Outcome Engine',
+                                                displayName: 'Business Observability Demonstrator',
                                                 processing: {
                                                     processors: [
                                                         {
@@ -650,8 +650,8 @@ export default async function (payload) {
                                                         {
                                                             id: 'processor_Business_Outcome_Engine_' + Math.floor(Math.random() * 10000),
                                                             type: 'costAllocation',
-                                                            matcher: 'matchesvalue(event.category, "Business Outcome Engine")',
-                                                            description: 'Business Outcome Engine',
+                                                            matcher: 'matchesvalue(event.category, "Business Observability Demonstrator")',
+                                                            description: 'Business Observability Demonstrator',
                                                             enabled: true,
                                                             costAllocation: {
                                                                 value: {
@@ -689,7 +689,7 @@ export default async function (payload) {
                                             const routingItem = existingRouting.items[0];
                                             const routingValue = JSON.parse(JSON.stringify(routingItem.value));
                                             // Check if entry already exists
-                                            const alreadyHasEntry = (routingValue.routingEntries || []).some((e) => e.description === 'Business Outcome Engine' || e.description === 'Business Observability Generator' || e.description === 'BizObs App' || e.pipelineId === newPipelineObjectId);
+                                            const alreadyHasEntry = (routingValue.routingEntries || []).some((e) => e.description === 'Business Observability Demonstrator' || e.description === 'Business Outcome Engine' || e.description === 'Business Observability Generator' || e.description === 'BizObs App' || e.pipelineId === newPipelineObjectId);
                                             if (alreadyHasEntry) {
                                                 results['openpipeline-routing'] = { success: true, error: 'Already exists — no changes needed' };
                                             }
@@ -700,8 +700,8 @@ export default async function (payload) {
                                                     enabled: true,
                                                     pipelineType: 'custom',
                                                     pipelineId: newPipelineObjectId,
-                                                    matcher: 'matchesvalue(event.category, "Business Outcome Engine")',
-                                                    description: 'Business Outcome Engine',
+                                                    matcher: 'matchesvalue(event.category, "Business Observability Demonstrator")',
+                                                    description: 'Business Observability Demonstrator',
                                                 });
                                                 console.log(`[deploy] Routing: adding entry with pipelineId=${newPipelineObjectId}, total entries=${routingValue.routingEntries.length}`);
                                                 await settingsObjectsClient.postSettingsObjects({
@@ -725,8 +725,8 @@ export default async function (payload) {
                                                                     enabled: true,
                                                                     pipelineType: 'custom',
                                                                     pipelineId: newPipelineObjectId,
-                                                                    matcher: 'matchesvalue(event.category, "Business Outcome Engine")',
-                                                                    description: 'Business Outcome Engine',
+                                                                    matcher: 'matchesvalue(event.category, "Business Observability Demonstrator")',
+                                                                    description: 'Business Observability Demonstrator',
                                                                 }],
                                                         },
                                                     }],
@@ -765,9 +765,9 @@ export default async function (payload) {
                             fields: 'objectId,value',
                             pageSize: 50,
                         });
-                        const bizobsPipeline = (pipelineCheck.items || []).find((i) => i.value?.customId === 'bizobs-template-pipeline' || i.value?.displayName === 'Business Outcome Engine' || i.value?.displayName === 'Business Observability Generator' || i.value?.displayName === 'BizObs Template Pipeline');
+                        const bizobsPipeline = (pipelineCheck.items || []).find((i) => i.value?.customId === 'bizobs-template-pipeline' || i.value?.displayName === 'Business Observability Demonstrator' || i.value?.displayName === 'Business Outcome Engine' || i.value?.displayName === 'Business Observability Generator' || i.value?.displayName === 'BizObs Template Pipeline');
                         if (!bizobsPipeline) {
-                            results['openpipeline-routing'] = { success: false, error: 'Pipeline "Business Outcome Engine" must be created first — deploy the Pipeline step before Routing' };
+                            results['openpipeline-routing'] = { success: false, error: 'Pipeline "Business Observability Demonstrator" must be created first — deploy the Pipeline step before Routing' };
                         }
                         else {
                             const pipelineObjectId = bizobsPipeline.objectId;
@@ -781,7 +781,7 @@ export default async function (payload) {
                                 const routingItem = existingRouting.items[0];
                                 const routingValue = JSON.parse(JSON.stringify(routingItem.value));
                                 // Check if entry already exists
-                                const alreadyHasEntry = (routingValue.routingEntries || []).some((e) => e.description === 'Business Outcome Engine' || e.description === 'Business Observability Generator' || e.description === 'BizObs App' || e.pipelineId === pipelineObjectId);
+                                const alreadyHasEntry = (routingValue.routingEntries || []).some((e) => e.description === 'Business Observability Demonstrator' || e.description === 'Business Outcome Engine' || e.description === 'Business Observability Generator' || e.description === 'BizObs App' || e.pipelineId === pipelineObjectId);
                                 if (alreadyHasEntry) {
                                     results['openpipeline-routing'] = { success: true, error: 'Already exists — no changes needed' };
                                 }
@@ -791,8 +791,8 @@ export default async function (payload) {
                                         enabled: true,
                                         pipelineType: 'custom',
                                         pipelineId: pipelineObjectId,
-                                        matcher: 'matchesvalue(event.category, "Business Outcome Engine")',
-                                        description: 'Business Outcome Engine',
+                                        matcher: 'matchesvalue(event.category, "Business Observability Demonstrator")',
+                                        description: 'Business Observability Demonstrator',
                                     });
                                     console.log(`[deploy] Routing standalone: adding entry with pipelineId=${pipelineObjectId}`);
                                     await settingsObjectsClient.postSettingsObjects({
@@ -816,8 +816,8 @@ export default async function (payload) {
                                                         enabled: true,
                                                         pipelineType: 'custom',
                                                         pipelineId: pipelineObjectId,
-                                                        matcher: 'matchesvalue(event.category, "Business Outcome Engine")',
-                                                        description: 'Business Outcome Engine',
+                                                        matcher: 'matchesvalue(event.category, "Business Observability Demonstrator")',
+                                                        description: 'Business Observability Demonstrator',
                                                     }],
                                             },
                                         }],
@@ -1042,7 +1042,7 @@ export default async function (payload) {
         if (action === 'deploy-ai-dashboard') {
             // Deploy the built-in AI Observability dashboard using the Document API
             const DASHBOARD_ID = 'bizobs-ai-observability-dashboard';
-            const DASHBOARD_NAME = '[AI Obs] Ollama — BizObs Engine';
+            const DASHBOARD_NAME = '[AI Obs] Ollama — BizObs Demonstrator';
             try {
                 // Check if dashboard already exists
                 try {

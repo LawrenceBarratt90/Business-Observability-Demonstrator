@@ -50,7 +50,7 @@ const DEMO_PATHS: DemoPath[] = [
     id: 'quick-start',
     icon: '🚀',
     title: 'Quick Start',
-    subtitle: 'Generate services, see them in Dynatrace, explore Engine Dashboards',
+    subtitle: 'Generate services, see them in Dynatrace, explore Demonstrator Dashboards',
     color: '#3498db',
     steps: [
       {
@@ -82,57 +82,57 @@ const DEMO_PATHS: DemoPath[] = [
         dtLink: { label: 'Services', url: `${TENANT_URL}/ui/apps/dynatrace.services` },
       },
       {
-        title: 'Explore Engine Dashboards',
-        action: 'Navigate to this app\'s Engine Dashboards page. Choose from 4 persona-based presets — Developer, Operations, Executive, or Dynatrace Intelligence — each with comprehensive, filterable tiles powered by DQL. Select a company and journey to see live data.',
-        where: 'This app → Engine Dashboards',
+        title: 'Explore Demonstrator Dashboards',
+        action: 'Navigate to this app\'s Demonstrator Dashboards page. Choose from 4 persona-based presets — Developer, Operations, Executive, or Dynatrace Intelligence — each with comprehensive, filterable tiles powered by DQL. Select a company and journey to see live data.',
+        where: 'This app → Demonstrator Dashboards',
         tip: 'Each preset has 20-38 tiles covering heroes, timeseries, bar charts, donuts, tables, honeycomb, and more — all filterable by company, journey, service, and event type.',
       },
     ],
   },
   {
-    id: 'engine-dashboards',
+    id: 'demonstrator-dashboards',
     icon: '📊',
-    title: 'Engine Dashboards Deep Dive',
+    title: 'Demonstrator Dashboards Deep Dive',
     subtitle: 'Four persona-based preset dashboards — Developer, Operations, Executive, Dynatrace Intelligence',
     color: '#27ae60',
     steps: [
       {
-        title: 'Open Engine Dashboards',
-        action: 'Navigate to the Engine Dashboards page from the main nav. You\'ll see a preset selector at the top, company/journey/service filters, and a timeframe picker.',
-        where: 'This app → Engine Dashboards',
+        title: 'Open Demonstrator Dashboards',
+        action: 'Navigate to the Demonstrator Dashboards page from the main nav. You\'ll see a preset selector at the top, company/journey/service filters, and a timeframe picker.',
+        where: 'This app → Demonstrator Dashboards',
       },
       {
         title: 'Developer Preset (~30 tiles)',
         action: 'Select the Developer preset. This shows the RED metrics table (Requests, Errors, Duration per service), latency percentiles (p50/p90/p99), error timeseries, top endpoints, failed spans analyzer, exception breakdown, log analysis, and trace correlation.',
-        where: 'This app → Engine Dashboards → Developer',
+        where: 'This app → Demonstrator Dashboards → Developer',
         tip: 'The RED metrics table is the centerpiece — it shows every service\'s golden signals at a glance. Great for identifying the trouble service during a chaos demo.',
       },
       {
         title: 'Operations Preset (~27 tiles)',
         action: 'Switch to Operations. This covers infrastructure health: host CPU/memory, process resource usage, network I/O, disk saturation, service availability %, and deployment events correlated with problems.',
-        where: 'This app → Engine Dashboards → Operations',
+        where: 'This app → Demonstrator Dashboards → Operations',
       },
       {
         title: 'Executive Preset (~38 tiles)',
         action: 'Switch to Executive for the business view: total revenue, order volume, bounce rate, customer churn %, SLA compliance, journey funnel (step-by-step conversion), IT impact on business KPIs, revenue by service and customer tier, and top customers.',
-        where: 'This app → Engine Dashboards → Executive',
+        where: 'This app → Demonstrator Dashboards → Executive',
         tip: 'This is the money slide for execs. Show revenue trending down when you inject chaos on the payment service — it directly connects technical failures to business impact.',
       },
       {
         title: 'Dynatrace Intelligence Preset (~19 tiles)',
         action: 'Switch to Dynatrace Intelligence. This shows active problems, root cause analysis summaries, anomaly detection timeline, mean time to detect (MTTD), MTTR, problem resolution trends, and Impact analysis by service and business entity.',
-        where: 'This app → Engine Dashboards → Dynatrace Intelligence',
+        where: 'This app → Demonstrator Dashboards → Dynatrace Intelligence',
       },
       {
         title: 'Filter by company and journey',
         action: 'Use the filter dropdowns to scope the dashboard to a specific company or journey. All tiles update dynamically — every DQL query is parametrized with the selected filters.',
-        where: 'This app → Engine Dashboards',
+        where: 'This app → Demonstrator Dashboards',
         tip: 'If you have multiple companies running, filtering to one company shows data isolation. Switch quickly between companies to show multi-tenancy.',
       },
       {
         title: 'Compare before and after chaos',
         action: 'Open the Developer preset with healthy services. Note the baseline metrics. Then inject chaos via Chaos Control, come back, and watch the error rates, latency spikes, and failed span counts climb in real time. Fix the problem with Fix-It, then watch recovery.',
-        where: 'This app → Engine Dashboards + Chaos Control + Fix-It',
+        where: 'This app → Demonstrator Dashboards + Chaos Control + Fix-It',
         tip: 'This is the complete observability loop in one view: healthy → degraded → detected → remediated → recovered — all visible on the dashboard tiles.',
       },
     ],
@@ -328,7 +328,7 @@ const DEMO_PATHS: DemoPath[] = [
         title: 'Verify Ollama is running',
         action: 'Check that the local LLM is available. On the host, run: curl http://localhost:11434/api/tags — you should see the llama3.2 model listed. If Ollama is not running, start it with: sudo systemctl start ollama.',
         where: 'Host terminal',
-        tip: 'The Engine auto-warms Ollama every 8 minutes to keep the model loaded in memory. If it\'s been idle for a while, the first call may be slower.',
+        tip: 'The Demonstrator auto-warms Ollama every 8 minutes to keep the model loaded in memory. If it\'s been idle for a while, the first call may be slower.',
       },
       {
         title: 'Trigger AI agent calls',
@@ -347,7 +347,7 @@ const DEMO_PATHS: DemoPath[] = [
         action: 'The Overview page shows a high-level summary: total LLM calls, average latency, token usage trends, and model distribution. You should see "ollama" as the AI system with the llama3.2 model. Click into any metric to drill down.',
         where: 'Dynatrace → GenAI Observability → Overview',
         dtLink: { label: 'GenAI Observability', url: `${TENANT_URL}/ui/apps/dynatrace.genai.observability/overview` },
-        tip: 'The data comes from OpenTelemetry GenAI semantic conventions (gen_ai.*) that the Engine instruments on every Ollama call.',
+        tip: 'The data comes from OpenTelemetry GenAI semantic conventions (gen_ai.*) that the Demonstrator instruments on every Ollama call.',
       },
       {
         title: 'Drill into individual LLM calls',
@@ -358,7 +358,7 @@ const DEMO_PATHS: DemoPath[] = [
       },
       {
         title: 'View traces with GenAI spans',
-        action: 'Open Distributed Traces and filter for gen_ai.system == "ollama". Each trace shows the full request flow — from the Engine API call, through the AI agent decision logic, to the Ollama HTTP call and back. The GenAI span attributes show model, tokens, and timing.',
+        action: 'Open Distributed Traces and filter for gen_ai.system == "ollama". Each trace shows the full request flow — from the Demonstrator API call, through the AI agent decision logic, to the Ollama HTTP call and back. The GenAI span attributes show model, tokens, and timing.',
         where: 'Dynatrace',
         dtLink: { label: 'Distributed Traces', url: `${TENANT_URL}/ui/apps/dynatrace.distributedtracing/` },
       },
@@ -394,7 +394,7 @@ const DEMO_PATHS: DemoPath[] = [
       {
         title: 'Ensure services are running',
         action: 'You need at least one generated journey with active services before using LiveDebugger. Go to the Home page and check that services are listed with a green status. If not, generate a journey first (Quick Start path, steps 1-3).',
-        where: 'BizObs Engine App',
+        where: 'BizObs Demonstrator App',
         tip: 'Services must have active traffic for snapshots to trigger. The auto-load feature keeps services producing requests automatically.',
       },
       {
@@ -486,12 +486,12 @@ const PERSONAS: Persona[] = [
     ],
     demoFlow: [
       { step: 'Generate a Retail journey (Quick Start)', detail: 'Show how fast you can model a business process end-to-end.' },
-      { step: 'Open Engine Dashboards — Executive preset', detail: 'Navigate to Engine Dashboards. Select the Executive preset to show business KPIs: revenue trends, SLA compliance, IT impact on business, journey flow funnel, and top customers.' },
+      { step: 'Open Demonstrator Dashboards — Executive preset', detail: 'Navigate to Demonstrator Dashboards. Select the Executive preset to show business KPIs: revenue trends, SLA compliance, IT impact on business, journey flow funnel, and top customers.' },
       { step: 'Inject chaos and watch Dynatrace Intelligence', detail: 'Break something, then show Dynatrace Intelligence finding the root cause automatically.', dtLink: { label: 'Problems', url: `${TENANT_URL}/ui/apps/dynatrace.davis.problems/` } },
       { step: 'Auto-remediate with Fix-It', detail: 'Let AI fix the problem — emphasize speed and zero manual intervention.' },
       { step: 'Show the AppEngine app itself', detail: 'Point out this is a Dynatrace-native app — Strato components, EdgeConnect, serverless functions.' },
     ],
-    suggestedPaths: ['quick-start', 'engine-dashboards', 'chaos-and-fix'],
+    suggestedPaths: ['quick-start', 'demonstrator-dashboards', 'chaos-and-fix'],
   },
   {
     id: 'sre',
@@ -510,7 +510,7 @@ const PERSONAS: Persona[] = [
       'Chaos Control lets you inject specific faults — error rates, latency spikes, timeouts — on individual services.',
       'Every chaos injection sends a CUSTOM_DEPLOYMENT event tagged [ROOT CAUSE] so Dynatrace Intelligence correlates it instantly.',
       'Fix-It reads feature flags, diagnoses the issue, and applies the fix automatically — simulating a real auto-remediation workflow.',
-      'The in-app Engine Dashboards include Developer and Operations presets with golden signals: traffic, latency, errors — filterable by company and service.',
+      'The in-app Demonstrator Dashboards include Developer and Operations presets with golden signals: traffic, latency, errors — filterable by company and service.',
     ],
     demoFlow: [
       { step: 'Show running services', detail: 'Open Services app, show healthy baselines and service flow.', dtLink: { label: 'Services', url: `${TENANT_URL}/ui/apps/dynatrace.services` } },
@@ -518,7 +518,7 @@ const PERSONAS: Persona[] = [
       { step: 'Watch Dynatrace Intelligence raise a problem', detail: 'Open Problems. Show the automatic root cause analysis and the correlated deployment event.', dtLink: { label: 'Problems', url: `${TENANT_URL}/ui/apps/dynatrace.davis.problems/` } },
       { step: 'Auto-remediate with Fix-It', detail: 'Run Fix-It auto-diagnose. Show it reading flags, finding the issue, and disabling the fault.' },
       { step: 'Verify in Dynatrace', detail: 'Show error rates dropping, problem closing. Highlight zero human intervention.', dtLink: { label: 'Services', url: `${TENANT_URL}/ui/apps/dynatrace.services` } },
-      { step: 'Show golden signals on Engine Dashboards', detail: 'Open Engine Dashboards → Developer preset. Show traffic, latency (p50/p90/p99), errors, and service health tiles with RED metrics table.' },
+      { step: 'Show golden signals on Demonstrator Dashboards', detail: 'Open Demonstrator Dashboards → Developer preset. Show traffic, latency (p50/p90/p99), errors, and service health tiles with RED metrics table.' },
     ],
     suggestedPaths: ['chaos-and-fix', 'autonomous-ops', 'quick-start'],
   },
@@ -560,24 +560,24 @@ const PERSONAS: Persona[] = [
     audience: 'Business analysts, product owners, and anyone focused on business metrics',
     focusAreas: [
       'Business journey modeling (industry templates)',
-      'In-app Engine Dashboards with 4 persona presets',
+      'In-app Demonstrator Dashboards with 4 persona presets',
       'Conversion funnel and journey flow visibility',
       'Business impact of technical issues',
     ],
     talkingPoints: [
       'Choose from 10+ industry templates — Retail, Healthcare, Financial Services, Travel, etc. Each models a realistic business journey.',
-      'The in-app Engine Dashboards page has 4 persona presets: Developer (~30 tiles), Operations (~27 tiles), Executive (~38 tiles), and Dynatrace Intelligence (~19 tiles) — all filterable by company, journey, service, and event type.',
+      'The in-app Demonstrator Dashboards page has 4 persona presets: Developer (~30 tiles), Operations (~27 tiles), Executive (~38 tiles), and Dynatrace Intelligence (~19 tiles) — all filterable by company, journey, service, and event type.',
       'Executive preset shows revenue trends, SLA compliance, journey funnel, IT impact on business, and top customers by revenue.',
       'When chaos hits a service, you can show how a technical issue (e.g. payment errors) directly impacts business KPIs on the Executive preset.',
     ],
     demoFlow: [
       { step: 'Show industry templates', detail: 'Open Step 1 and scroll through the available industries. Point out the journey steps for each.' },
       { step: 'Generate a Retail journey', detail: 'Pick "Retail" with a custom company name. Show the JSON preview to demonstrate the data model.' },
-      { step: 'Open Engine Dashboards — Executive preset', detail: 'Navigate to Engine Dashboards. Select Executive to show revenue, SLA, journey funnel, and IT impact tiles. Filter by the company you just generated.' },
+      { step: 'Open Demonstrator Dashboards — Executive preset', detail: 'Navigate to Demonstrator Dashboards. Select Executive to show revenue, SLA, journey funnel, and IT impact tiles. Filter by the company you just generated.' },
       { step: 'Switch to Developer preset', detail: 'Show the Developer view: service health RED table, latency percentiles, error trends, traces & exceptions, and log analysis.' },
       { step: 'Break something and show impact', detail: 'Inject chaos on a payment service. Switch to the Executive preset and show revenue impact, error trends, and IT problems climbing.' },
     ],
-    suggestedPaths: ['quick-start', 'engine-dashboards', 'chaos-and-fix'],
+    suggestedPaths: ['quick-start', 'demonstrator-dashboards', 'chaos-and-fix'],
   },
   {
     id: 'devops',
@@ -622,7 +622,7 @@ const PERSONAS: Persona[] = [
     ],
     talkingPoints: [
       'Start with the business angle: "In 30 seconds, we model a full customer journey with real services."',
-      'Show breadth: services auto-discovered, traces flowing, 4 persona-based Engine Dashboards (Developer, Ops, Executive, Intelligence) — all from one click.',
+      'Show breadth: services auto-discovered, traces flowing, 4 persona-based Demonstrator Dashboards (Developer, Ops, Executive, Intelligence) — all from one click.',
       'The chaos → detect → fix → learn loop is the "wow moment". Dynatrace Intelligence finds root cause. Fix-It heals. Librarian remembers for next time.',
       'GenAI Observability is the differentiator: every LLM call — chat, embedding, agent loop — is fully observable with OTel semantic conventions.',
       'Close with the platform story: this entire app is a Dynatrace extension. Customers can build apps like this themselves.',
@@ -630,7 +630,7 @@ const PERSONAS: Persona[] = [
     demoFlow: [
       { step: '1. Hook: Generate a journey (2 min)', detail: 'Pick Retail + a customer\'s company name if possible. Click Generate. Wait for services to appear.' },
       { step: '2. Show services in Dynatrace (1 min)', detail: 'Open Services. Show the generated services, their dependencies, and the service flow.', dtLink: { label: 'Services', url: `${TENANT_URL}/ui/apps/dynatrace.services` } },
-      { step: '3. Open Engine Dashboards (1 min)', detail: 'Navigate to Engine Dashboards. Show Executive preset (revenue, SLA, journey funnel). Switch to Developer preset (RED metrics, latency, traces). Filter by the company name.' },
+      { step: '3. Open Demonstrator Dashboards (1 min)', detail: 'Navigate to Demonstrator Dashboards. Show Executive preset (revenue, SLA, journey funnel). Switch to Developer preset (RED metrics, latency, traces). Filter by the company name.' },
       { step: '4. Break it — inject chaos (30 sec)', detail: 'Go to Chaos Control. Enable 50% errors on the payment service. Say: "Let\'s see what happens."' },
       { step: '5. Dynatrace Intelligence detects the problem (2 min)', detail: 'Open Problems. Dynatrace Intelligence finds the root cause → correlated deployment event → full impact analysis.', dtLink: { label: 'Problems', url: `${TENANT_URL}/ui/apps/dynatrace.davis.problems/` } },
       { step: '6. Auto-remediate with Fix-It (1 min)', detail: 'Run Fix-It. Watch it diagnose and fix. Switch to Problems — problem closing automatically.' },
@@ -639,7 +639,7 @@ const PERSONAS: Persona[] = [
       { step: '9. LiveDebugger deep-dive (optional, 2 min)', detail: 'Open LiveDebugger on a service process. Set breakpoints on lines 697 (error injection), 708 (full error object), and 996 (service chain call) in dynamic-step-service.js. Capture snapshots showing injected errors, customer data, and trace context.', dtLink: { label: 'LiveDebugger', url: `${TENANT_URL}/ui/apps/dynatrace.devobs.debugger/debugger` } },
       { step: '10. Platform story close (30 sec)', detail: 'Remind them: this is an AppEngine app. Built with React + Strato. Deployed to Dynatrace. Customers can build their own.' },
     ],
-    suggestedPaths: ['quick-start', 'chaos-and-fix', 'genai-observability', 'engine-dashboards', 'live-debugger'],
+    suggestedPaths: ['quick-start', 'chaos-and-fix', 'genai-observability', 'demonstrator-dashboards', 'live-debugger'],
   },
   {
     id: 'ai-ml',
@@ -696,11 +696,11 @@ const PERSONAS: Persona[] = [
     demoFlow: [
       { step: 'Walk through industry templates', detail: 'Show the variety: Retail, Healthcare, Travel, etc. Each has different journey steps.' },
       { step: 'Generate a journey with your product name', detail: 'Use the customer\'s product or a relatable brand name for impact.' },
-      { step: 'Show Engine Dashboards — Executive preset', detail: 'Focus on the journey funnel: which steps have the most traffic, revenue by step, and where drop-off is highest.' },
+      { step: 'Show Demonstrator Dashboards — Executive preset', detail: 'Focus on the journey funnel: which steps have the most traffic, revenue by step, and where drop-off is highest.' },
       { step: 'Break a step and show business impact', detail: 'Inject errors on "Add to Cart". Show how downstream steps (Checkout, Payment) are affected.' },
       { step: 'Query journey data with DQL', detail: 'In a Notebook, show a custom query filtering by journey step and status.', dtLink: { label: 'Notebooks', url: `${TENANT_URL}/ui/apps/dynatrace.notebooks` } },
     ],
-    suggestedPaths: ['quick-start', 'engine-dashboards', 'chaos-and-fix'],
+    suggestedPaths: ['quick-start', 'demonstrator-dashboards', 'chaos-and-fix'],
   },
 ];
 
@@ -789,9 +789,9 @@ export const DemoGuide = () => {
             <InfoButton
               align="left"
               title="📖 Demo Guide"
-              description="Interactive walkthrough for demoing the BizObs Engine to different audiences."
+              description="Interactive walkthrough for demoing the BizObs Demonstrator to different audiences."
               sections={[
-                { label: '🗺️ Guided Paths', detail: '8 step-by-step walkthroughs: Quick Start, Engine Dashboards, Chaos & Fix-It, Autonomous Ops, Traces, GenAI, LiveDebugger, Platform' },
+                { label: '🗺️ Guided Paths', detail: '8 step-by-step walkthroughs: Quick Start, Demonstrator Dashboards, Chaos & Fix-It, Autonomous Ops, Traces, GenAI, LiveDebugger, Platform' },
                 { label: '👥 Persona Demos', detail: '8 persona-tailored demo flows with talking points, focus areas, and suggested paths' },
                 { label: '🔗 Dynatrace Links', detail: 'Quick links to Services, Problems, Traces, Dashboards, GenAI Observability, Notebooks, and LiveDebugger' },
                 { label: 'Expand steps', detail: 'Click any step to see detailed actions, tips, and direct links to Dynatrace apps' },
@@ -903,7 +903,7 @@ export const DemoGuide = () => {
                 { label: 'Problems', url: `${TENANT_URL}/ui/apps/dynatrace.davis.problems/` },
                 { label: 'Traces', url: `${TENANT_URL}/ui/apps/dynatrace.distributedtracing/` },
                 { label: 'Dashboards', url: `${TENANT_URL}/ui/apps/dynatrace.dashboards` },
-                { label: 'Engine Dashboards', url: `${TENANT_URL}/ui/apps/my.bizobs.generator.master/ui/engine-dashboards` },
+                { label: 'Demonstrator Dashboards', url: `${TENANT_URL}/ui/apps/my.bizobs.generator.master/ui/demonstrator-dashboards` },
                 { label: 'GenAI Observability', url: `${TENANT_URL}/ui/apps/dynatrace.genai.observability/overview` },
                 { label: 'Notebooks', url: `${TENANT_URL}/ui/apps/dynatrace.notebooks` },
                 { label: 'LiveDebugger', url: `${TENANT_URL}/ui/apps/dynatrace.devobs.debugger/debugger` },
@@ -949,12 +949,12 @@ export const DemoGuide = () => {
                   fontSize: 12, color: Colors.Text.Neutral.Subdued, lineHeight: 1.6,
                 }}>
                   <strong>What next?</strong> After completing {currentPath.title}, try the other paths.
-                  {selectedPath === 'quick-start' && ' "Engine Dashboards Deep Dive" explores all 4 preset dashboards, or try "Chaos & Fix-It" once your services are running.'}
-                  {selectedPath === 'engine-dashboards' && ' "Chaos & Fix-It" to break things and watch the dashboards react, or "GenAI Observability" to see AI-powered features.'}
+                  {selectedPath === 'quick-start' && ' "Demonstrator Dashboards Deep Dive" explores all 4 preset dashboards, or try "Chaos & Fix-It" once your services are running.'}
+                  {selectedPath === 'demonstrator-dashboards' && ' "Chaos & Fix-It" to break things and watch the dashboards react, or "GenAI Observability" to see AI-powered features.'}
                   {selectedPath === 'chaos-and-fix' && ' "Autonomous Operations" shows the full closed loop with AI memory, or "Traces & OpenTelemetry" shows what\'s happening under the hood.'}
                   {selectedPath === 'autonomous-ops' && ' "GenAI Observability" for a deep dive into all the AI spans generated during the autonomous loop.'}
                   {selectedPath === 'traces-and-otel' && ' "GenAI Observability" shows how Dynatrace monitors LLM calls, or try "LiveDebugger" for code-level debugging.'}
-                  {selectedPath === 'genai-observability' && ' "Autonomous Operations" shows the full AI-powered closed loop, or try "Engine Dashboards Deep Dive" to see all 4 dashboard presets.'}
+                  {selectedPath === 'genai-observability' && ' "Autonomous Operations" shows the full AI-powered closed loop, or try "Demonstrator Dashboards Deep Dive" to see all 4 dashboard presets.'}
                   {selectedPath === 'live-debugger' && ' "Platform & Architecture" covers how the whole system connects — AppEngine, EdgeConnect, and OneAgent.'}
                   {selectedPath === 'platform' && ' Try "LiveDebugger" for code-level debugging, or "Autonomous Operations" to see the full AI operations loop.'}
                 </div>

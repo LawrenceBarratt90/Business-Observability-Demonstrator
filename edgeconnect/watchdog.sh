@@ -1,10 +1,10 @@
 #!/bin/bash
 # EdgeConnect watchdog — restarts the container if it's not running or stale
 # Runs every 5 minutes via cron:
-#   */5 * * * * /home/ec2-user/Dynatrace-Business-Observability-Forge/edgeconnect/watchdog.sh >> /tmp/ec-watchdog.log 2>&1
+#   */5 * * * * /home/ec2-user/Business-Observability-Demonstrator/edgeconnect/watchdog.sh >> /tmp/ec-watchdog.log 2>&1
 
 CONTAINER="edgeconnect-bizobs"
-CONFIG="/home/ec2-user/Dynatrace-Business-Observability-Forge/edgeconnect/edgeConnect.yaml"
+CONFIG="/home/ec2-user/Business-Observability-Demonstrator/edgeconnect/edgeConnect.yaml"
 LOG_FILE="/tmp/ec-watchdog.log"
 
 # Trim log file if it gets too big (>1MB)

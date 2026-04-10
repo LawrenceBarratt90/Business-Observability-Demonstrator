@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================
-#  Business Outcome Engine — Deploy Script
+#  Business Observability Demonstrator — Deploy Script
 # ============================================================
 #
 #  Usage (after git clone/pull):
@@ -107,7 +107,7 @@ fi
 
 echo -e "${BOLD}"
 echo "╔══════════════════════════════════════════════════════════╗"
-echo "║     Business Outcome Engine — Deploy                ║"
+echo "║     Business Observability Demonstrator — Deploy                ║"
 echo "╠══════════════════════════════════════════════════════════╣"
 echo "║  Server + OTel + Ollama AI + AppEngine UI + EdgeConnect  ║"
 echo "╚══════════════════════════════════════════════════════════╝"
@@ -353,7 +353,7 @@ sleep 1
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Step 6: Start server with OpenTelemetry
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-step 6 "Starting BizObs Engine with OpenTelemetry"
+step 6 "Starting BizObs Demonstrator with OpenTelemetry"
 
 truncate -s 0 logs/server.log 2>/dev/null || true
 node --require ./otel.cjs server.js >> logs/server.log 2>&1 &
@@ -431,7 +431,7 @@ else
     echo "  Deploying to ${DT_APPS_URL}..."
     if npx dt-app deploy --non-interactive 2>&1 | tail -10; then
       ok "AppEngine UI deployed to your Dynatrace tenant"
-      echo -e "  ${CYAN}Open Dynatrace → Apps → Business Outcome Engine${NC}"
+      echo -e "  ${CYAN}Open Dynatrace → Apps → Business Observability Demonstrator${NC}"
     else
       warn "AppEngine deploy had issues — you can retry manually with:"
       echo -e "  ${CYAN}DT_APP_OAUTH_CLIENT_ID=$APP_OAUTH_CLIENT_ID DT_APP_OAUTH_CLIENT_SECRET=... npx dt-app deploy${NC}"
@@ -470,7 +470,7 @@ else
     echo -e "  ${CYAN}(or enter 'skip' to set this up later)${NC}"
     echo ""
     echo -e "  ${BOLD}Enter the EdgeConnect name (as shown in Dynatrace)${NC}"
-    echo -e "  ${CYAN}(e.g. bizobs-engine — must match exactly what you created in Dynatrace)${NC}"
+    echo -e "  ${CYAN}(e.g. bizobs-demonstrator — must match exactly what you created in Dynatrace)${NC}"
     read -rp "  → " EC_NAME
     echo ""
     echo -e "  ${BOLD}Enter EdgeConnect OAuth Client ID${NC}"
@@ -502,7 +502,7 @@ else
     fi
 
     # Use provided name or default
-    EC_NAME="${EC_NAME:-bizobs-engine}"
+    EC_NAME="${EC_NAME:-bizobs-demonstrator}"
 
     # Auto-detect server IPs for EdgeConnect host patterns
     # The platform needs to know which hosts to route through this EdgeConnect
@@ -686,7 +686,7 @@ echo -e "  ${BOLD}Restart:${NC}        bash stop.sh && bash deploy.sh"
 echo ""
 if [[ -n "$DT_URL" ]]; then
   echo -e "  ${BOLD}Dynatrace:${NC}      $DT_URL"
-  echo -e "  ${BOLD}AppEngine UI:${NC}   Dynatrace → Apps → Business Outcome Engine"
+  echo -e "  ${BOLD}AppEngine UI:${NC}   Dynatrace → Apps → Business Observability Demonstrator"
   echo -e "  ${BOLD}View traces:${NC}    Distributed Traces → Ingested traces tab"
   echo -e "  ${BOLD}AI Observability:${NC} Look for gen_ai.system = ollama"
   echo ""

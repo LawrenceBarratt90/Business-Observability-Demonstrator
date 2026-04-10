@@ -15,7 +15,7 @@ import { getEnvironmentUrl } from '@dynatrace-sdk/app-environment';
 
 import { generateCsuitePrompt, generateJourneyPrompt, PROMPT_DESCRIPTIONS } from '../constants/promptTemplates';
 import { INITIAL_TEMPLATES, InitialTemplate } from '../constants/initialTemplates';
-import { ENGINE_LOGO } from '../constants/engineLogo';
+import { DEMONSTRATOR_LOGO } from '../constants/demonstratorLogo';
 import { VCARB_CAR } from '../constants/vcarbCar';
 import { InfoButton } from '../components/InfoButton';
 import appConfig from '../../../app.config.json';
@@ -2094,7 +2094,7 @@ export const HomePage = () => {
         <div style={{ flex: 1, padding: 20, background: Colors.Background.Surface.Default, borderRadius: 8 }}>
           <Heading level={3} style={{ marginBottom: 12 }}>🎯 Application Overview</Heading>
           <Paragraph style={{ marginBottom: 12, fontSize: 14, lineHeight: 1.5 }}>
-            <Strong style={{ color: Colors.Theme.Primary['70'] }}>Business Outcome Engine</Strong> creates realistic customer journey scenarios 
+            <Strong style={{ color: Colors.Theme.Primary['70'] }}>Business Observability Demonstrator</Strong> creates realistic customer journey scenarios 
             for performance testing and business intelligence demonstrations.
           </Paragraph>
           
@@ -2582,9 +2582,9 @@ export const HomePage = () => {
         <TitleBar>
           <TitleBar.Title>
             <Flex alignItems="center" gap={8}>
-              <img src={ENGINE_LOGO} alt="BizObs Engine" style={{ width: 32, height: 32, borderRadius: 6 }} />
+              <img src={DEMONSTRATOR_LOGO} alt="BizObs Demonstrator" style={{ width: 32, height: 32, borderRadius: 6 }} />
               <span style={{ background: 'linear-gradient(135deg, #6c2c9c, #00d4ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: 700 }}>
-                Business Outcome Engine
+                Business Observability Demonstrator
               </span>
             </Flex>
           </TitleBar.Title>
@@ -2681,7 +2681,7 @@ export const HomePage = () => {
                   {showGetStartedTooltip && (
                     <div style={{ position: 'absolute', top: 24, right: 0, width: 260, padding: 12, borderRadius: 10, background: Colors.Background.Surface.Default, border: `1.5px solid ${Colors.Border.Neutral.Default}`, boxShadow: '0 8px 24px rgba(0,0,0,0.25)', zIndex: 10000, fontSize: 12, lineHeight: 1.6 }}>
                       <Strong style={{ fontSize: 13, marginBottom: 6, display: 'block' }}>🚀 Get Started Checklist</Strong>
-                      <div>Step-by-step guide to configure your BizObs Engine environment.</div>
+                      <div>Step-by-step guide to configure your BizObs Demonstrator environment.</div>
                       <div style={{ marginTop: 6 }}><Strong>Server</Strong> — Connect to your BizObs backend</div>
                       <div><Strong>EdgeConnect</Strong> — Set up Dynatrace connectivity</div>
                       <div><Strong>Settings</Strong> — Deploy capture rules &amp; feature flags</div>
@@ -2829,7 +2829,7 @@ export const HomePage = () => {
               </Link>
               <InfoButton
                 title="📖 Demo Guide"
-                description="Interactive walkthrough for demoing the BizObs Engine to different audiences."
+                description="Interactive walkthrough for demoing the BizObs Demonstrator to different audiences."
                 sections={[
                   { label: '🗺️ Guided Paths', detail: '8 step-by-step demo walkthroughs covering every feature' },
                   { label: '👥 Persona Demos', detail: '8 persona-tailored flows with talking points and focus areas' },
@@ -2869,10 +2869,10 @@ export const HomePage = () => {
               />
               </div>
 
-              {/* Engine Dashboards */}
+              {/* Demonstrator Dashboards */}
               <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
               <Link
-                to="/engine-dashboards"
+                to="/demonstrator-dashboards"
                 style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
                   width: 140, padding: '8px 0', borderRadius: 8,
@@ -2886,7 +2886,7 @@ export const HomePage = () => {
                 <span style={{ fontSize: 14 }}>📊</span> Dashboards
               </Link>
               <InfoButton
-                title="📊 Engine Dashboards"
+                title="📊 Demonstrator Dashboards"
                 description="Eight persona-based preset dashboards with live DQL-powered tiles."
                 sections={[
                   { label: '🔧 Developer', detail: 'RED metrics, latency percentiles, errors, traces, logs' },
@@ -2922,7 +2922,7 @@ export const HomePage = () => {
                 </button>
                 <InfoButton
                   title="⚙️ API Settings"
-                  description="Configure the connection to your BizObs Engine server."
+                  description="Configure the connection to your BizObs Demonstrator server."
                   sections={[
                     { label: 'Host', detail: 'IP address or hostname of your server' },
                     { label: 'Port', detail: 'Server port (default 8080)' },
@@ -3091,7 +3091,7 @@ export const HomePage = () => {
                   <span style={{ fontSize: 24 }}>⚙️</span>
                   <div>
                     <Strong style={{ color: 'white', fontSize: 16 }}>API Settings</Strong>
-                    <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: 12 }}>Configure BizObs Engine connection</div>
+                    <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: 12 }}>Configure BizObs Demonstrator connection</div>
                   </div>
                 </Flex>
                 <Flex alignItems="center" gap={8}>
@@ -4615,7 +4615,7 @@ export const HomePage = () => {
                     </div>
                     <div style={{ flex: 1 }}>
                       <Strong style={{ fontSize: 13, textDecoration: isStepComplete('server-ip') ? 'line-through' : 'none', opacity: isStepComplete('server-ip') ? 0.6 : 1 }}>Configure Server IP & Port</Strong>
-                      <div style={{ fontSize: 11, opacity: 0.6, marginTop: 2 }}>Set your BizObs Engine server host and port in Settings → Config tab</div>
+                      <div style={{ fontSize: 11, opacity: 0.6, marginTop: 2 }}>Set your BizObs Demonstrator server host and port in Settings → Config tab</div>
                     </div>
                     <button onClick={(e) => { e.stopPropagation(); openSettingsModal(); setShowGetStartedModal(false); }} style={{ padding: '4px 10px', borderRadius: 6, border: `1px solid ${Colors.Theme.Primary['70']}`, background: 'rgba(108,44,156,0.08)', cursor: 'pointer', fontSize: 11, fontWeight: 600, color: Colors.Theme.Primary['70'] }}>⚙️ Settings</button>
                   </Flex>

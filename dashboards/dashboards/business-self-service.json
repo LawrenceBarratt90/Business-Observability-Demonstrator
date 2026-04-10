@@ -44,7 +44,7 @@
   ],
   "tiles": {
     "0": {
-      "content": "## 💼 Business Self-Service Dashboard — $CompanyName\nReal-time business observability powered by **Dynatrace BizObs Engine**. Track revenue, orders, customer journeys and the business impact of technical issues.\n\n**TO START:** Select your Company, Journey Type and Services from the dropdowns above. All tiles auto-populate from your business events.",
+      "content": "## 💼 Business Self-Service Dashboard — $CompanyName\nReal-time business observability powered by **Dynatrace BizObs Demonstrator**. Track revenue, orders, customer journeys and the business impact of technical issues.\n\n**TO START:** Select your Company, Journey Type and Services from the dropdowns above. All tiles auto-populate from your business events.",
       "type": "markdown"
     },
     "1": {

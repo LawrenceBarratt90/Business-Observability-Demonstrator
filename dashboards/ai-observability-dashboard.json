@@ -30,7 +30,7 @@
     },
     "2": {
       "type": "markdown",
-      "content": "## \uD83E\uDD16 AI Observability — BizObs Engine\n*Powered by Ollama + OpenTelemetry GenAI Semantic Conventions*"
+      "content": "## \uD83E\uDD16 AI Observability — BizObs Demonstrator\n*Powered by Ollama + OpenTelemetry GenAI Semantic Conventions*"
     },
     "3": {
       "type": "markdown",

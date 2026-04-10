@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================
-#  Business Outcome Engine — EC2 Bootstrap Script
+#  Business Observability Demonstrator — EC2 Bootstrap Script
 # ============================================================
 #
 #  Run this on a FRESH Amazon Linux 2023 (or AL2/Ubuntu) EC2 instance.
@@ -27,7 +27,7 @@
 #      --otel-token dt0c01.YYYY \
 #      --app-oauth-id dt0s02.XXXX \
 #      --app-oauth-secret dt0s02.XXXX.YYYY \
-#      --ec-name bizobs-engine \
+#      --ec-name bizobs-demonstrator \
 #      --ec-client-id dt0s10.XXXX \
 #      --ec-client-secret dt0s10.XXXX.YYYY \
 #      --ec-resource urn:dtenvironment:abc123
@@ -74,12 +74,12 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-REPO_URL="https://github.com/LawrenceBarratt90/Dynatrace-Business-Outcome-Engine.git"
+REPO_URL="https://github.com/LawrenceBarratt90/Business-Observability-Demonstrator.git"
 INSTALL_DIR="/home/ec2-user/Dynatrace-Business-Outcome-Engine"
 
 echo -e "${BOLD}"
 echo "╔══════════════════════════════════════════════════════════════╗"
-echo "║   Business Outcome Engine — EC2 Full Bootstrap         ║"
+echo "║   Business Observability Demonstrator — EC2 Full Bootstrap         ║"
 echo "╠══════════════════════════════════════════════════════════════╣"
 echo "║   Phase 1: System packages + Node.js + Docker + Git         ║"
 echo "║   Phase 2: Clone repo                                       ║"

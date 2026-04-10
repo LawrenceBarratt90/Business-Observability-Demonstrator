@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================
-#  Business Outcome Engine — Log Cleanup & Rotation
+#  Business Observability Demonstrator — Log Cleanup & Rotation
 # ============================================================
 #  Prevents server.log and other logs from filling the disk.
 #

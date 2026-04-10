@@ -1,4 +1,4 @@
-# Technical Guide — Business Outcome Engine (v2.23.1)
+# Technical Guide — Business Observability Demonstrator (v2.23.1)
 
 > A hands-on guide for engineers, SEs, and developers who want to get the platform running and understand what's under the hood.
 
@@ -8,12 +8,12 @@
 
 ## What Is This?
 
-The Business Outcome Engine is a two-part system:
+The Business Observability Demonstrator is a two-part system:
 
-1. **The Engine** — A Node.js server that dynamically spawns microservices, simulates customer journeys, and runs AI agents for chaos injection and auto-remediation.
-2. **The Engine UI** — A Dynatrace AppEngine app (React + Strato) that gives you a single-pane-of-glass inside Dynatrace to control everything.
+1. **The Demonstrator** — A Node.js server that dynamically spawns microservices, simulates customer journeys, and runs AI agents for chaos injection and auto-remediation.
+2. **The Demonstrator UI** — A Dynatrace AppEngine app (React + Strato) that gives you a single-pane-of-glass inside Dynatrace to control everything.
 
-The Engine runs on your host (EC2, VM, Codespace). The Engine UI runs inside Dynatrace and talks to the Engine through an **EdgeConnect** tunnel.
+The Demonstrator runs on your host (EC2, VM, Codespace). The Demonstrator UI runs inside Dynatrace and talks to the Demonstrator through an **EdgeConnect** tunnel.
 
 ---
 
@@ -25,7 +25,7 @@ The Engine runs on your host (EC2, VM, Codespace). The Engine UI runs inside Dyn
 │                                                                  │
 │  ┌──────────────────────────┐   ┌───────────────────────────┐    │
 │  │  Business Observability  │   │  Services / BizEvents /   │    │
-│  │  Engine UI (AppEngine)    │   │  Dashboards / Problems    │    │
+│  │  Demonstrator UI (AppEngine)    │   │  Dashboards / Problems    │    │
 │  └──────────┬───────────────┘   └───────────────────────────┘    │
 │             │ EdgeConnect Tunnel                  ▲              │
 │             │ (HTTPS → port 8080)                 │ OneAgent +   │
@@ -77,7 +77,7 @@ Before you start, make sure you have **all of these** ready:
 | 1 | **Dynatrace Tenant** | Sprint or Managed | Receives all telemetry | You should have a `*.sprint.dynatracelabs.com` or `*.live.dynatrace.com` URL |
 | 2 | **Dynatrace API Token** | — | Engine sends events to DT | Create in DT: Settings → Access Tokens → Generate. Scopes: `events.ingest`, `metrics.ingest`, `openTelemetryTrace.ingest`, `entities.read` |
 | 3 | **OAuth Client(s)** | — | EdgeConnect + app deploy | Create in DT: Settings → General → External Requests → Add EdgeConnect. It generates the OAuth creds. Optionally add deploy scopes or use a separate client. |
-| 4 | **EC2 / VM / Host** | Linux recommended | Runs the Engine server | SSH access, ports 8080–8200 open in Security Group (inbound not strictly required — EdgeConnect tunnels inbound) |
+| 4 | **EC2 / VM / Host** | Linux recommended | Runs the Demonstrator server | SSH access, ports 8080–8200 open in Security Group (inbound not strictly required — EdgeConnect tunnels inbound) |
 | 5 | **Node.js** | v22+ (v24 recommended) | Server runtime | `node --version` → should show v22.x+ |
 | 6 | **Docker** | Latest | Runs EdgeConnect | `docker --version` |
 | 7 | **Dynatrace OneAgent** | Latest | Auto-instruments every child service | `sudo systemctl status oneagent` or check Hosts in DT UI |
@@ -95,7 +95,7 @@ Follow these steps **in order**. Each step depends on the one before it.
 Step 1: Clone & Install            ← Get the code (single unified repo)
 Step 2: Create DT Credentials      ← A: API Token  +  B: OAuth Client (2 things to create in DT)
 Step 3–5: ./setup.sh               ← Handles EdgeConnect, app deploy, build, and server start
-Step 6: Configure from Engine UI    ← Wire everything together (private IP + Get Started checklist)
+Step 6: Configure from Demonstrator UI    ← Wire everything together (private IP + Get Started checklist)
 ```
 
 > **Shortest path:** Do Steps 1–2, then just run `./setup.sh` — it walks you through 6 guided prompts and does Steps 3–5 automatically.
@@ -104,10 +104,10 @@ Step 6: Configure from Engine UI    ← Wire everything together (private IP + G
 
 ### Step 1: Clone & Setup
 
-This is a **single unified repo** — it contains both the Engine (server) and the Engine UI (AppEngine app).
+This is a **single unified repo** — it contains both the Demonstrator (server) and the Demonstrator UI (AppEngine app).
 
 ```bash
-sudo git clone https://github.com/LawrenceBarratt90/Dynatrace-Business-Outcome-Engine.git
+sudo git clone https://github.com/LawrenceBarratt90/Business-Observability-Demonstrator.git
 cd Dynatrace-Business-Outcome-Engine
 chmod +x setup.sh
 sudo ./setup.sh
@@ -125,7 +125,7 @@ You need **2–3 credentials** — an API Token, an EdgeConnect OAuth Client, an
 
 | # | Credential | Type | Where To Create | What Uses It |
 |---|-----------|------|----------------|---------------|
-| A | **API Token** | `dt0c01.*` | Dynatrace tenant → Settings → Access Tokens | The **Engine server** uses this to send events/metrics to Dynatrace |
+| A | **API Token** | `dt0c01.*` | Dynatrace tenant → Settings → Access Tokens | The **Demonstrator server** uses this to send events/metrics to Dynatrace |
 | B | **EdgeConnect OAuth** | `dt0s10.*` or `dt0s02.*` | Dynatrace tenant → Settings → General → External Requests → EdgeConnect | **EdgeConnect** (tunnel). Can also be used for deploy if you add the right scopes. |
 | C | **Deploy OAuth**  | `dt0s10.*` or `dt0s02.*` | Separate client from Account Management → IAM → OAuth clients | **`dt-app deploy`** (app deployment to Dynatrace AppEngine) |
 
@@ -133,12 +133,12 @@ You need **2–3 credentials** — an API Token, an EdgeConnect OAuth Client, an
 
 ---
 
-#### Credential A: API Token (for the Engine server)
+#### Credential A: API Token (for the Demonstrator server)
 
 **Create it in Dynatrace:**
 1. Go to your Dynatrace tenant
 2. Settings → Access Tokens → **Generate new token**
-3. Name: `BizObs Engine`
+3. Name: `BizObs Demonstrator`
 4. Add these scopes:
    - `events.ingest`
    - `metrics.ingest`
@@ -159,7 +159,7 @@ This client is used for the EdgeConnect tunnel. Depending on your tenant, it may
 1. Go to your Dynatrace tenant
 2. **Settings → General → External Requests**
 3. Click **Add EdgeConnect** (or select an existing one)
-4. Name it (e.g. `bizobs-engine`) — **remember this name, it must match what the script generates**
+4. Name it (e.g. `bizobs-demonstrator`) — **remember this name, it must match what the script generates**
 5. DT will generate the OAuth credentials for you and show:
    - **OAuth client ID**: `dt0s10.XXXXX` or `dt0s02.XXXXX`
    - **OAuth client secret**: shown only once!
@@ -175,7 +175,7 @@ This client is used for the EdgeConnect tunnel. Depending on your tenant, it may
 **Optionally, make this same client work for deploy too:**
 1. Go to **Account Management** → **Identity & Access Management** → **OAuth clients**
 2. Click **Create Client**
-3. Input your **email address** and the description **Business Outcome Engine App Install**
+3. Input your **email address** and the description **Business Observability Demonstrator App Install**
 4. **Add these scopes**:
    - `app-engine:apps:install` (required to deploy the app)
    - `app-engine:apps:run` (required to run the app)
@@ -205,7 +205,7 @@ cp ~/Downloads/edgeConnect.yaml edgeconnect/edgeConnect.yaml
 # 2. Start EdgeConnect tunnel
 bash edgeconnect/run-edgeconnect.sh
 
-# 3. Deploy Engine UI (setup.sh passes creds automatically;
+# 3. Deploy Demonstrator UI (setup.sh passes creds automatically;
 #    for manual deploy, re-run: ./setup.sh)
 npx dt-app deploy
 
@@ -234,7 +234,7 @@ You should get:
 {"status":"ok","timestamp":"...","mainProcess":{"pid":...,"uptime":...,"port":8080},"childServices":[]}
 ```
 
-The `childServices` array is empty — that's correct. **No services are spawned by default.** The server sits idle until you launch a journey from the Engine UI.
+The `childServices` array is empty — that's correct. **No services are spawned by default.** The server sits idle until you launch a journey from the Demonstrator UI.
 
 > **Want it to run in the background?** Use:
 > ```bash
@@ -245,9 +245,9 @@ The `childServices` array is empty — that's correct. **No services are spawned
 
 ---
 
-### Step 6: Configure from the Engine UI
+### Step 6: Configure from the Demonstrator UI
 
-Open the Engine app in Dynatrace (**Apps → Business Outcome Engine**).
+Open the Demonstrator app in Dynatrace (**Apps → Business Observability Demonstrator**).
 
 **6a. Go to Settings (gear icon) → Config tab:**
 
@@ -262,7 +262,7 @@ Click **Save**, then click **Test**.
 ![For Ui - Settings](Screenshots/demonstrator_ui-settings.png)
 
 > **If the test fails:**
-> - Make sure the Engine server is running (Step 5)
+> - Make sure the Demonstrator server is running (Step 5)
 > - Make sure EdgeConnect is running and connected (Step 3c)
 > - Make sure you're using the **private IP**, not the public Elastic IP
 > - Wait 15 seconds and try again (EdgeConnect routing can take a moment to propagate)
@@ -402,7 +402,7 @@ All agents use **LLM function calling** (via Ollama) to decide what actions to t
 
 #### Librarian Dashboard
 
-The Librarian agent also powers the **Librarian Dashboard** — a modal overlay on the Engine Dashboards page (📚 button). When opened, it:
+The Librarian agent also powers the **Librarian Dashboard** — a modal overlay on the Demonstrator Dashboards page (📚 button). When opened, it:
 
 1. Fetches all history events and vector store stats from the backend
 2. Sends the condensed timeline to Ollama for SRE-style analysis (with a 65-second `Promise.race` timeout)
@@ -462,7 +462,7 @@ These events appear as deployment markers on the affected service in Dynatrace, 
 
 ---
 
-## Engine UI Pages (AppEngine)
+## Demonstrator UI Pages (AppEngine)
 
 The Dynatrace AppEngine app has 8 routes:
 
@@ -472,14 +472,14 @@ The Dynatrace AppEngine app has 8 routes:
 | **Services** | `/services` | Live service dashboard with start/stop controls per company (accessible via direct URL) |
 | **Chaos Control** | `/chaos` | Select a service, pick a chaos type, inject — with live active faults list |
 | **Fix-It Agent** | `/fixit` | Trigger automated diagnosis and remediation |
-| **Engine Dashboards** | `/engine-dashboards` | DQL-powered dashboard presets (Security, DI, Infra, etc.) + Librarian modal overlay for AI-driven incident analysis |
+| **Demonstrator Dashboards** | `/demonstrator-dashboards` | DQL-powered dashboard presets (Security, DI, Infra, etc.) + Librarian modal overlay for AI-driven incident analysis |
 | **Settings** | `/settings` | Configure server IP, API tokens, EdgeConnect credentials |
 | **Demo Guide** | `/demo-guide` | Interactive walkthrough paths for demos (Quick Start, Chaos & Fix-It, Traces, Platform, LiveDebugger) |
 | **Solutions** | `/solutions` | 55+ industry verticals with Dynatrace capability mapping, clickable demo journeys |
 
 > **Note:** The primary navigation is the Home page with 3 tabs: Welcome, Customer Details, Generate Prompts. Chaos control is also accessible via the Nemesis modal on the Home page. Active Journeys shows running services and their status.
 
-> 📸 **Screenshot: Chaos Control Page** — *The Engine UI Chaos Control page showing: the service selector dropdown with a healthcare service selected, the chaos type picker (enable_errors, slow_responses, etc.), the intensity slider, and below it the "Active Faults" list showing one or two injected faults with their target service, type, and a "Revert" button.*
+> 📸 **Screenshot: Chaos Control Page** — *The Demonstrator UI Chaos Control page showing: the service selector dropdown with a healthcare service selected, the chaos type picker (enable_errors, slow_responses, etc.), the intensity slider, and below it the "Active Faults" list showing one or two injected faults with their target service, type, and a "Revert" button.*
 
 ### Home Page Flow
 
@@ -520,10 +520,10 @@ Welcome Tab → Step 1: Company Details → Step 2: Generate Prompts → Step 3:
 | Symptom | Cause | Fix |
 |---------|-------|-----|
 | **"Cannot reach X.X.X.X:8080"** on Config tab | You're using the **public** Elastic IP | Change to your **private IP** (`hostname -I \| awk '{print $1}'`). AWS doesn't support NAT hairpin — see Step 6a |
-| **EdgeConnect shows offline** | OAuth creds wrong, name mismatch, or EdgeConnect not running | Check `docker logs edgeconnect-bizobs`. The `name:` in `edgeConnect.yaml` must match the EdgeConnect name in DT UI (e.g. `bizobs-engine`). Re-run `./setup.sh`. Double-check `client_id`, `client_secret`, `resource` in YAML (Step 2B → Step 3a) |
+| **EdgeConnect shows offline** | OAuth creds wrong, name mismatch, or EdgeConnect not running | Check `docker logs edgeconnect-bizobs`. The `name:` in `edgeConnect.yaml` must match the EdgeConnect name in DT UI (e.g. `bizobs-demonstrator`). Re-run `./setup.sh`. Double-check `client_id`, `client_secret`, `resource` in YAML (Step 2B → Step 3a) |
 | **Test connection fails but EdgeConnect is green** | Server not running, or host pattern not registered | 1) Verify server: `curl http://localhost:8080/api/health` 2) Wait 15s and retry (propagation delay) 3) Ensure private IP is the host pattern |
-| **No services in Dynatrace** | OneAgent not installed or feature flags not enabled | Run Get Started checklist in Engine UI — deploy OneAgent Feature Flags step |
-| **Engine UI shows "Connection failed"** | Server IP not configured or EdgeConnect not tunneling | Settings → Config tab → set private IP + Test. Settings → EdgeConnect tab → verify green |
+| **No services in Dynatrace** | OneAgent not installed or feature flags not enabled | Run Get Started checklist in Demonstrator UI — deploy OneAgent Feature Flags step |
+| **Demonstrator UI shows "Connection failed"** | Server IP not configured or EdgeConnect not tunneling | Settings → Config tab → set private IP + Test. Settings → EdgeConnect tab → verify green |
 | **Chaos injection sends 200+ events** | `entitySelector` too broad (old bug) | Fixed in v2.9.10+ — now scoped to target service name |
 | **AI agents don't respond** | Ollama not running or model not pulled | `ollama pull llama3.2` and `curl http://localhost:11434/api/tags` to verify |
 | **`npx dt-app deploy` fails** | Missing credentials, wrong scope, or wrong directory | Re-run `./setup.sh` (it sets credentials automatically). Ensure the OAuth client has `app-engine:apps:install` + `app-engine:apps:run` scopes (Step 2B). Run from project root, not `edgeconnect/` |
@@ -534,7 +534,7 @@ Welcome Tab → Step 1: Company Details → Step 2: Generate Prompts → Step 3:
 
 ## Full Removal & Reinstall
 
-To completely remove the Engine from a host and start fresh, use the included `uninstall.sh` script.
+To completely remove the Demonstrator from a host and start fresh, use the included `uninstall.sh` script.
 
 ### Uninstall (keep Ollama)
 
@@ -566,7 +566,7 @@ After uninstalling, clone and run setup:
 
 ```bash
 cd /home/ec2-user
-git clone https://github.com/LawrenceBarratt90/Dynatrace-Business-Outcome-Engine.git
+git clone https://github.com/LawrenceBarratt90/Business-Observability-Demonstrator.git
 cd Dynatrace-Business-Outcome-Engine
 ./setup.sh
 ```
@@ -579,7 +579,7 @@ The `setup.sh` script will prompt for your Dynatrace credentials and handle ever
 
 ## Log Housekeeping
 
-The Engine includes automatic log rotation to prevent disk fills.
+The Demonstrator includes automatic log rotation to prevent disk fills.
 
 ### Manual cleanup
 

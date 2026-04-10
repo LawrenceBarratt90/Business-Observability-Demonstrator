@@ -1,10 +1,10 @@
 {
   "$schema": "./.dt-app/app.config.schema.json",
-  "environmentUrl": "https://YOUR_TENANT_ID.apps.dynatrace.com/",
+  "environmentUrl": "https://bko67471.sprint.apps.dynatracelabs.com/",
   "app": {
     "id": "my.bizobs.generator.master",
-    "name": "Business Outcome Engine",
-    "version": "2.32.0",
+    "name": "Business Observability Demonstrator",
+    "version": "2.33.0",
     "description": "AI-powered Business Observability — generate and observe journeys",
     "scopes": [
       {
@@ -21,7 +21,7 @@
       },
       {
         "name": "storage:bizevents:read",
-        "comment": "Read business events for Engine Dashboards live DQL tiles"
+        "comment": "Read business events for Demonstrator Dashboards live DQL tiles"
       },
       {
         "name": "storage:metrics:read",

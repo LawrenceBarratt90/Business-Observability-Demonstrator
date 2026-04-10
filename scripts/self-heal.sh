@@ -4,7 +4,7 @@
 
 set -e
 
-APP_DIR="/home/ec2-user/Dynatrace-Business-Observability-Forge"
+APP_DIR="/home/ec2-user/Business-Observability-Demonstrator"
 NODE="/home/ec2-user/.nvm/versions/node/v24.14.0/bin/node"
 NPX="/home/ec2-user/.nvm/versions/node/v24.14.0/bin/npx"
 LOG="$APP_DIR/server.log"

@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================
-#  Business Outcome Engine — Full Deployment Script
+#  Business Observability Demonstrator — Full Deployment Script
 # ============================================================
 #
 #  Usage:
@@ -44,7 +44,7 @@ DT_API_TOKEN=""
 DT_OTEL_TOKEN=""
 OLLAMA_MODEL="llama3.2"
 APP_DIR=""
-REPO_URL="https://github.com/LawrenceBarratt90/Dynatrace-Business-Outcome-Engine.git"
+REPO_URL="https://github.com/LawrenceBarratt90/Business-Observability-Demonstrator.git"
 APP_OAUTH_CLIENT_ID=""
 APP_OAUTH_CLIENT_SECRET=""
 EC_NAME=""
@@ -102,7 +102,7 @@ done
 
 echo -e "${BOLD}"
 echo "╔══════════════════════════════════════════════════════════╗"
-echo "║     Business Outcome Engine — Full Deployment      ║"
+echo "║     Business Observability Demonstrator — Full Deployment      ║"
 echo "╠══════════════════════════════════════════════════════════╣"
 echo "║  Server + OTel + AppEngine UI + EdgeConnect             ║"
 echo "╚══════════════════════════════════════════════════════════╝"
@@ -196,7 +196,7 @@ elif [[ -f "server.js" && -f "package.json" ]]; then
 elif [[ -f "../server.js" && -f "../package.json" ]]; then
   APP_DIR="$(cd .. && pwd)"
 else
-  APP_DIR="$(pwd)/Business Outcome Engine"
+  APP_DIR="$(pwd)/Business Observability Demonstrator"
 fi
 
 if [[ ! -f "$APP_DIR/server.js" ]]; then
@@ -330,7 +330,7 @@ sleep 1
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Step 7: Start server with OpenTelemetry
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-step 7 "Starting BizObs Engine with OpenTelemetry"
+step 7 "Starting BizObs Demonstrator with OpenTelemetry"
 
 truncate -s 0 logs/server.log 2>/dev/null || true
 node --require ./otel.cjs server.js >> logs/server.log 2>&1 &
@@ -421,7 +421,7 @@ else
     echo "  Deploying to ${DT_APPS_URL}..."
     if npx dt-app deploy --non-interactive 2>&1 | tail -10; then
       ok "AppEngine UI deployed to your Dynatrace tenant"
-      echo -e "  ${CYAN}Open Dynatrace → Apps → Business Outcome Engine${NC}"
+      echo -e "  ${CYAN}Open Dynatrace → Apps → Business Observability Demonstrator${NC}"
     else
       warn "AppEngine deploy had issues — you can retry manually with:"
       echo -e "  ${CYAN}DT_APP_OAUTH_CLIENT_ID=$APP_OAUTH_CLIENT_ID DT_APP_OAUTH_CLIENT_SECRET=... npx dt-app deploy${NC}"
@@ -460,7 +460,7 @@ else
     echo -e "  ${CYAN}(or enter 'skip' to set this up later)${NC}"
     echo ""
     echo -e "  ${BOLD}Enter the EdgeConnect name (as shown in Dynatrace)${NC}"
-    echo -e "  ${CYAN}(e.g. bizobs-engine — must match exactly what you created in Dynatrace)${NC}"
+    echo -e "  ${CYAN}(e.g. bizobs-demonstrator — must match exactly what you created in Dynatrace)${NC}"
     read -rp "  → " EC_NAME
     echo ""
     echo -e "  ${BOLD}Enter EdgeConnect OAuth Client ID${NC}"
@@ -483,7 +483,7 @@ else
 
     # Default EdgeConnect name if not provided
     if [[ -z "$EC_NAME" ]]; then
-      EC_NAME="bizobs-engine"
+      EC_NAME="bizobs-demonstrator"
     fi
 
     # Derive apps host for EdgeConnect
@@ -567,7 +567,7 @@ echo -e "  ${BOLD}Restart:${NC}        kill \$(cat server.pid); sleep 2; node --
 echo ""
 if [[ -n "$DT_URL" ]]; then
   echo -e "  ${BOLD}Dynatrace:${NC}      $DT_URL"
-  echo -e "  ${BOLD}AppEngine UI:${NC}   Dynatrace → Apps → Business Outcome Engine"
+  echo -e "  ${BOLD}AppEngine UI:${NC}   Dynatrace → Apps → Business Observability Demonstrator"
   echo -e "  ${BOLD}View traces:${NC}    Distributed Traces → Ingested traces tab"
   echo -e "  ${BOLD}AI Observability:${NC} Look for gen_ai.system = ollama"
   echo ""

@@ -2189,7 +2189,7 @@ function useLibrarian() {
    MAIN PAGE COMPONENT
    ═══════════════════════════════════════════════════════════════ */
 
-export const EngineDashboardsPage = () => {
+export const DemonstratorDashboardsPage = () => {
   const [preset, setPreset] = useState<DashboardPreset>('developer');
   const [companyName, setCompanyName] = useState('');
   const [journeyType, setJourneyType] = useState('');
@@ -2262,10 +2262,10 @@ export const EngineDashboardsPage = () => {
           ← Back to Home
         </Link>
         <span style={{ color: '#e0e0ff', fontWeight: 700, fontSize: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-          📊 {companyName ? `${companyName} Dashboards` : 'Engine Dashboards'}
+          📊 {companyName ? `${companyName} Dashboards` : 'Demonstrator Dashboards'}
           <InfoButton
             align="left"
-            title="📊 Engine Dashboards"
+            title="📊 Demonstrator Dashboards"
             description="Nine persona-based preset dashboards with live DQL-powered tiles, all filterable by company, journey, service, and timeframe."
             sections={[
               { label: '🔧 Developer', detail: '~28 tiles: RED metrics, latency p50/p90/p99, errors, traces, logs, endpoints' },
@@ -2727,7 +2727,7 @@ export const EngineDashboardsPage = () => {
         background: 'rgba(30,30,50,0.4)', border: '1px solid rgba(100,120,200,0.15)',
         color: '#8899aa', fontSize: 11, textAlign: 'center',
       }}>
-        Engine Dashboards — 7 vertical dashboards · People · Time · Money · Powered by Strato & DQL
+        Demonstrator Dashboards — 7 vertical dashboards · People · Time · Money · Powered by Strato & DQL
       </div>
     </div>
   );

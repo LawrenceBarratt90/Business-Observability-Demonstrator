@@ -363,7 +363,7 @@ export async function startChildService(internalServiceName, scriptPath, portPar
         DT_TAGS: `company=${companyName.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()} service=${dynatraceServiceName.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()} app=bizobs-journey environment=ace-box industry=${industryType.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()} journey-type=${(journeyType || 'unknown').replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()} journey-detail=${(env.JOURNEY_DETAIL || stepName || 'unknown_journey').replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()}`,
         
         // 📦 DT_RELEASE_*: Release tracking metadata
-        DT_RELEASE_PRODUCT: 'BizObs-Engine',
+        DT_RELEASE_PRODUCT: 'BizObs-Demonstrator',
         DT_RELEASE_STAGE: 'production',
         DT_RELEASE_VERSION: '1.0.0',
         
@@ -594,7 +594,7 @@ export async function ensureServiceRunning(stepName, companyContext = {}) {
 `process.env.DT_TAGS = 'company=' + process.env.COMPANY_NAME.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase() + ' service=' + process.env.SERVICE_NAME.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() + ' app=bizobs-journey environment=ace-box industry=' + process.env.INDUSTRY_TYPE.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase() + ' journey-type=' + (process.env.JOURNEY_TYPE || 'unknown').replace(/[^a-zA-Z0-9]/g, '_').toLowerCase() + ' journey-detail=' + (process.env.STEP_NAME || 'unknown_journey').replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();\n` +
 `\n` +
 `// 📦 DT_RELEASE_*: Release tracking\n` +
-`process.env.DT_RELEASE_PRODUCT = 'BizObs-Engine';\n` +
+`process.env.DT_RELEASE_PRODUCT = 'BizObs-Demonstrator';\n` +
 `process.env.DT_RELEASE_STAGE = 'production';\n` +
 `process.env.DT_RELEASE_VERSION = '1.0.0';\n` +
 `\n` +

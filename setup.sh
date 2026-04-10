@@ -1,9 +1,9 @@
 #!/bin/bash
 # ============================================================
-#  Business Outcome Engine — One-Command Setup
+#  Business Observability Demonstrator — One-Command Setup
 # ============================================================
 #  Usage:
-#    git clone https://github.com/LawrenceBarratt90/Dynatrace-Business-Outcome-Engine.git
+#    git clone https://github.com/LawrenceBarratt90/Business-Observability-Demonstrator.git
 #    cd Dynatrace-Business-Outcome-Engine && ./setup.sh
 #
 #  The script will prompt you for values if setup.conf doesn't exist.
@@ -25,7 +25,7 @@ echo -e "${BLUE}"
 cat << 'BANNER'
 ╔══════════════════════════════════════════════════════════════╗
 ║                                                              ║
-║     Business Outcome Engine                             ║
+║     Business Observability Demonstrator                             ║
 ║     One-Command Setup                                        ║
 ║                                                              ║
 ╚══════════════════════════════════════════════════════════════╝
@@ -148,7 +148,7 @@ if [ "$NEED_PROMPT" = true ]; then
 
   # 6. AppEngine Deploy OAuth (can be same or different)
   echo -e "  ${CYAN}─── 6/6: AppEngine Deploy OAuth ───${NC}"
-  echo -e "  ${YELLOW}This deploys the Engine UI to your Dynatrace Apps.${NC}"
+  echo -e "  ${YELLOW}This deploys the Demonstrator UI to your Dynatrace Apps.${NC}"
   echo -e "  ${YELLOW}Can be the SAME client as EdgeConnect (if you added deploy scopes to it)${NC}"
   echo -e "  ${YELLOW}OR a different OAuth client. Accepts dt0s10 (env-level) or dt0s02 (account-level).${NC}"
   echo -e "  ${YELLOW}Required scopes:${NC}"
@@ -396,7 +396,7 @@ ok "Created .dt-credentials.json"
 step "Step 4/6: Starting EdgeConnect"
 
 cat > "$SCRIPT_DIR/edgeconnect/edgeConnect.yaml" << EOF
-name: bizobs-engine
+name: bizobs-demonstrator
 api_endpoint_host: $(echo "$APPS_URL" | sed 's|https://||')
 oauth:
   client_id: ${EC_OAUTH_CLIENT_ID}
@@ -429,7 +429,7 @@ else
 fi
 
 # ── Step 5: Deploy app ─────────────────────────────────────
-step "Step 5/6: Deploying Engine UI to Dynatrace"
+step "Step 5/6: Deploying Demonstrator UI to Dynatrace"
 
 cd "$SCRIPT_DIR"
 export DT_APP_OAUTH_CLIENT_ID="$DEPLOY_OAUTH_CLIENT_ID"
@@ -457,7 +457,7 @@ if echo "$DEPLOY_OUTPUT" | grep -qi 'forbidden\|unauthorized\|403\|401'; then
 elif [ $DEPLOY_EXIT -ne 0 ] || echo "$DEPLOY_OUTPUT" | grep -qi 'error\|failed'; then
   warn "Deploy may have failed — check output above. Retry: npx dt-app deploy"
 else
-  ok "Engine UI deployed"
+  ok "Demonstrator UI deployed"
 fi
 
 # ── Step 6: Build & start server ───────────────────────────
@@ -504,7 +504,7 @@ echo -e "${GREEN}╔════════════════════
 echo -e "║                    Setup Complete!                        ║"
 echo -e "╚══════════════════════════════════════════════════════════╝${NC}"
 echo ""
-echo -e "  ${BOLD}Open Dynatrace → Apps → Business Outcome Engine${NC}"
+echo -e "  ${BOLD}Open Dynatrace → Apps → Business Observability Demonstrator${NC}"
 echo ""
 echo -e "  Then in Settings → Config tab:"
 echo -e "    Host/IP:  ${BOLD}$PRIVATE_IP${NC}"
