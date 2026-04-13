@@ -528,6 +528,20 @@ export const HomePage = () => {
         // Record successful detect timestamp
         lastDetectRef.current = now;
         localStorage.setItem(DETECT_CACHE_KEY, String(now));
+
+        // Auto-deploy outbound allowlist if not yet configured (required for Copilot AI)
+        if (result.data['outbound-github-models'] === false) {
+          console.log('[BizObs] Auto-deploying outbound allowlist for GitHub Copilot hosts...');
+          try {
+            await callProxyWithRetry(
+              { action: 'deploy-builtin-settings', body: { configs: ['outbound-github-models'] } },
+              3, 2000
+            );
+            console.log('[BizObs] Outbound allowlist auto-deployed successfully');
+          } catch (e: any) {
+            console.warn('[BizObs] Outbound allowlist auto-deploy failed:', e.message);
+          }
+        }
       }
     } catch (err) {
       console.warn('Failed to detect builtin settings:', err);
@@ -5368,7 +5382,7 @@ export const HomePage = () => {
                     </div>
                     <div style={{ flex: 1 }}>
                       <Strong style={{ fontSize: 13, textDecoration: isStepComplete('outbound-github-models') ? 'line-through' : 'none', opacity: isStepComplete('outbound-github-models') ? 0.6 : 1 }}>GitHub Copilot Outbound Allowed</Strong>
-                      <div style={{ fontSize: 11, opacity: 0.6, marginTop: 2 }}>Allow api.githubcopilot.com & api.github.com in AppEngine outbound connections for AI generation</div>
+                      <div style={{ fontSize: 11, opacity: 0.6, marginTop: 2 }}>Allow models.inference.ai.azure.com in AppEngine outbound connections for AI generation</div>
                       {isStepComplete('outbound-github-models') && <div style={{ fontSize: 10, marginTop: 3, color: '#2e7d32' }}>✅ Detected</div>}
                     </div>
                     {!isStepComplete('outbound-github-models') ? (
