@@ -6804,7 +6804,7 @@
       {
         "name": "shippingCost",
         "type": "numeric",
-        "sampleValue": 13.06
+        "sampleValue": 7.45
       },
       {
         "name": "channel",
@@ -6814,32 +6814,32 @@
       {
         "name": "deviceType",
         "type": "string",
-        "sampleValue": "tablet"
+        "sampleValue": "mobile"
       },
       {
         "name": "region",
         "type": "string",
-        "sampleValue": "Metro"
+        "sampleValue": "Regional"
       },
       {
         "name": "customerSegmentValue",
         "type": "string",
-        "sampleValue": "consumer"
+        "sampleValue": "enterprise"
       },
       {
         "name": "loyaltyTier",
         "type": "string",
-        "sampleValue": "platinum"
+        "sampleValue": "silver"
       },
       {
         "name": "segment",
         "type": "string",
-        "sampleValue": "bundle"
+        "sampleValue": "mobile_prepaid"
       },
       {
         "name": "Productname",
         "type": "string",
-        "sampleValue": "Fibre_Broadband"
+        "sampleValue": "Starter_Plan"
       },
       {
         "name": "ProductId",
@@ -6849,12 +6849,12 @@
       {
         "name": "ProductType",
         "type": "string",
-        "sampleValue": "postpaid_plan"
+        "sampleValue": "broadband"
       },
       {
         "name": "Price",
         "type": "numeric",
-        "sampleValue": 25
+        "sampleValue": 120
       },
       {
         "name": "dataUsageGB",
@@ -6864,7 +6864,7 @@
       {
         "name": "networkType",
         "type": "string",
-        "sampleValue": "fibre"
+        "sampleValue": "5G_private"
       },
       {
         "name": "contractLengthMonths",
@@ -6874,7 +6874,7 @@
       {
         "name": "marketTrend",
         "type": "string",
-        "sampleValue": "satellite_connectivity"
+        "sampleValue": "private_5g"
       },
       {
         "name": "browser",
@@ -7023,8 +7023,8 @@
       "ActivationSetup",
       "OnboardingEngagement"
     ],
-    "lastUpdated": "2026-04-01T12:43:58.864Z",
-    "runCount": 7647
+    "lastUpdated": "2026-04-13T12:48:39.518Z",
+    "runCount": 8749
   },
   "leonardo|procurement engagement": {
     "companyName": "Leonardo",
@@ -16497,5 +16497,364 @@
     ],
     "lastUpdated": "2026-04-11T00:28:18.075Z",
     "runCount": 44661
+  },
+  "accounting|audit analytics": {
+    "companyName": "Accounting",
+    "journeyType": "Audit Analytics",
+    "fields": [
+      {
+        "name": "orderTotal",
+        "type": "numeric",
+        "sampleValue": 129.84
+      },
+      {
+        "name": "transactionValue",
+        "type": "numeric",
+        "sampleValue": 192.24
+      },
+      {
+        "name": "averageOrderValue",
+        "type": "numeric",
+        "sampleValue": 85
+      },
+      {
+        "name": "contractValue",
+        "type": "numeric",
+        "sampleValue": 85000
+      },
+      {
+        "name": "annualRevenue",
+        "type": "numeric",
+        "sampleValue": 1700000
+      },
+      {
+        "name": "revenuePerCustomer",
+        "type": "numeric",
+        "sampleValue": 200
+      },
+      {
+        "name": "profitMargin",
+        "type": "numeric",
+        "sampleValue": 32
+      },
+      {
+        "name": "customerLifetimeValue",
+        "type": "numeric",
+        "sampleValue": 680000
+      },
+      {
+        "name": "lifetimeValue",
+        "type": "numeric",
+        "sampleValue": 680000
+      },
+      {
+        "name": "acquisitionCost",
+        "type": "numeric",
+        "sampleValue": 12000
+      },
+      {
+        "name": "costPerAcquisition",
+        "type": "numeric",
+        "sampleValue": 12000
+      },
+      {
+        "name": "conversionProbability",
+        "type": "numeric",
+        "sampleValue": 0.65
+      },
+      {
+        "name": "conversionRate",
+        "type": "numeric",
+        "sampleValue": 65
+      },
+      {
+        "name": "engagementScore",
+        "type": "numeric",
+        "sampleValue": 78
+      },
+      {
+        "name": "timeToConversion",
+        "type": "numeric",
+        "sampleValue": 45
+      },
+      {
+        "name": "sessionDuration",
+        "type": "numeric",
+        "sampleValue": 120
+      },
+      {
+        "name": "pageViews",
+        "type": "numeric",
+        "sampleValue": 15
+      },
+      {
+        "name": "purchaseFrequency",
+        "type": "numeric",
+        "sampleValue": 1
+      },
+      {
+        "name": "netPromoterScore",
+        "type": "numeric",
+        "sampleValue": 48
+      },
+      {
+        "name": "satisfactionRating",
+        "type": "numeric",
+        "sampleValue": 4.2
+      },
+      {
+        "name": "retentionProbability",
+        "type": "numeric",
+        "sampleValue": 0.92
+      },
+      {
+        "name": "processingTime",
+        "type": "numeric",
+        "sampleValue": 120
+      },
+      {
+        "name": "operationalCost",
+        "type": "numeric",
+        "sampleValue": 55000
+      },
+      {
+        "name": "efficiencyRating",
+        "type": "numeric",
+        "sampleValue": 82
+      },
+      {
+        "name": "discountApplied",
+        "type": "numeric",
+        "sampleValue": 13.09
+      },
+      {
+        "name": "taxAmount",
+        "type": "numeric",
+        "sampleValue": 10.39
+      },
+      {
+        "name": "shippingCost",
+        "type": "numeric",
+        "sampleValue": 19.58
+      },
+      {
+        "name": "channel",
+        "type": "string",
+        "sampleValue": "conference"
+      },
+      {
+        "name": "deviceType",
+        "type": "string",
+        "sampleValue": "laptop"
+      },
+      {
+        "name": "region",
+        "type": "string",
+        "sampleValue": "Birmingham"
+      },
+      {
+        "name": "customerSegmentValue",
+        "type": "string",
+        "sampleValue": "charity"
+      },
+      {
+        "name": "loyaltyTier",
+        "type": "string",
+        "sampleValue": "multi_year"
+      },
+      {
+        "name": "segment",
+        "type": "string",
+        "sampleValue": "regulatory_audit"
+      },
+      {
+        "name": "Productname",
+        "type": "string",
+        "sampleValue": "IT_Audit"
+      },
+      {
+        "name": "ProductId",
+        "type": "string",
+        "sampleValue": "AUD-STAT-001"
+      },
+      {
+        "name": "ProductType",
+        "type": "string",
+        "sampleValue": "statutory"
+      },
+      {
+        "name": "Price",
+        "type": "numeric",
+        "sampleValue": 45000
+      },
+      {
+        "name": "auditRiskLevel",
+        "type": "string",
+        "sampleValue": "medium"
+      },
+      {
+        "name": "materialityThreshold",
+        "type": "numeric",
+        "sampleValue": 150000
+      },
+      {
+        "name": "findingsCount",
+        "type": "numeric",
+        "sampleValue": 15
+      },
+      {
+        "name": "marketTrend",
+        "type": "string",
+        "sampleValue": "real_time_reporting"
+      },
+      {
+        "name": "browser",
+        "type": "string",
+        "sampleValue": "Chrome"
+      },
+      {
+        "name": "location",
+        "type": "string",
+        "sampleValue": "London, UK"
+      },
+      {
+        "name": "entryChannel",
+        "type": "string",
+        "sampleValue": "organic"
+      },
+      {
+        "name": "customerIntent",
+        "type": "string",
+        "sampleValue": "purchase"
+      },
+      {
+        "name": "loyaltyStatus",
+        "type": "string",
+        "sampleValue": "new"
+      },
+      {
+        "name": "abandonmentRisk",
+        "type": "string",
+        "sampleValue": "high"
+      },
+      {
+        "name": "pricingTier",
+        "type": "string",
+        "sampleValue": "Bronze"
+      },
+      {
+        "name": "subscriptionLevel",
+        "type": "string",
+        "sampleValue": "Basic"
+      },
+      {
+        "name": "membershipStatus",
+        "type": "string",
+        "sampleValue": "Regular"
+      },
+      {
+        "name": "churnRisk",
+        "type": "string",
+        "sampleValue": "high"
+      },
+      {
+        "name": "upsellPotential",
+        "type": "numeric",
+        "sampleValue": 204000
+      },
+      {
+        "name": "crossSellOpportunity",
+        "type": "string",
+        "sampleValue": "high"
+      },
+      {
+        "name": "marketSegment",
+        "type": "string",
+        "sampleValue": "Enterprise"
+      },
+      {
+        "name": "competitiveAdvantage",
+        "type": "string",
+        "sampleValue": "Price"
+      },
+      {
+        "name": "marketShare",
+        "type": "numeric",
+        "sampleValue": 0.05
+      },
+      {
+        "name": "brandLoyalty",
+        "type": "string",
+        "sampleValue": "Low"
+      },
+      {
+        "name": "competitorComparison",
+        "type": "string",
+        "sampleValue": "Better"
+      },
+      {
+        "name": "resourceUtilization",
+        "type": "numeric",
+        "sampleValue": 0.6
+      },
+      {
+        "name": "riskLevel",
+        "type": "string",
+        "sampleValue": "Low"
+      },
+      {
+        "name": "complianceScore",
+        "type": "numeric",
+        "sampleValue": 85
+      },
+      {
+        "name": "fraudRisk",
+        "type": "string",
+        "sampleValue": "high"
+      },
+      {
+        "name": "securityRating",
+        "type": "string",
+        "sampleValue": "A"
+      },
+      {
+        "name": "growthPotential",
+        "type": "numeric",
+        "sampleValue": 170000
+      },
+      {
+        "name": "futureValue",
+        "type": "numeric",
+        "sampleValue": 1020000
+      },
+      {
+        "name": "expansionOpportunity",
+        "type": "string",
+        "sampleValue": "Limited"
+      },
+      {
+        "name": "seasonalImpact",
+        "type": "numeric",
+        "sampleValue": 0.1
+      }
+    ],
+    "services": [
+      "AuditPlanningService",
+      "DataExtractionService",
+      "TransactionTestingService",
+      "SubstantiveProceduresService",
+      "WorkpaperGenerationService",
+      "AuditReportingService"
+    ],
+    "steps": [
+      "AuditPlanning",
+      "DataExtraction",
+      "TransactionTesting",
+      "SubstantiveProcedures",
+      "WorkpaperGeneration",
+      "AuditReporting"
+    ],
+    "lastUpdated": "2026-04-13T12:48:40.381Z",
+    "runCount": 1906
   }
 }

@@ -5,12 +5,12 @@
 
 import { edgeConnectClient } from '@dynatrace-sdk/client-app-engine-edge-connect';
 import { workflowsClient } from '@dynatrace-sdk/client-automation';
-import { settingsObjectsClient } from '@dynatrace-sdk/client-classic-environment-v2';
+import { settingsObjectsClient, credentialVaultClient } from '@dynatrace-sdk/client-classic-environment-v2';
 import { documentsClient, environmentSharesClient } from '@dynatrace-sdk/client-document';
 import { queryExecutionClient } from '@dynatrace-sdk/client-query';
 
 interface ProxyPayload {
-  action: 'simulate-journey' | 'simulate-vcarb-race' | 'vcarb-race-status' | 'stop-vcarb-race' | 'get-saved-config' | 'test-connection' | 'get-services' | 'stop-all-services' | 'stop-company-services' | 'get-dormant-services' | 'clear-dormant-services' | 'clear-company-dormant' | 'chaos-get-active' | 'chaos-get-recipes' | 'chaos-inject' | 'chaos-revert' | 'chaos-revert-all' | 'chaos-get-targeted' | 'chaos-remove-target' | 'chaos-smart' | 'ec-create' | 'ec-update-patterns' | 'detect-builtin-settings' | 'deploy-builtin-settings' | 'deploy-workflow' | 'debug-builtin-schema' | 'generate-dashboard' | 'generate-dashboard-async' | 'get-dashboard-status' | 'deploy-dashboard' | 'deploy-ai-dashboard' | 'mcp-generate-deploy-dashboard' | 'list-saved-dashboards' | 'load-saved-dashboard' | 'delete-saved-dashboard' | 'deploy-business-flow' | 'list-business-flows' | 'delete-business-flows' | 'generate-pdf' | 'generate-doc' | 'load-app-settings' | 'save-app-settings' | 'check-journey-assets' | 'create-notebook' | 'execute-dql' | 'demonstrator-ai-tiles' | 'demonstrator-tiles-status' | 'field-repo-get' | 'librarian-history' | 'librarian-stats' | 'librarian-analyze' | 'system-health' | 'system-cleanup';
+  action: 'simulate-journey' | 'simulate-vcarb-race' | 'vcarb-race-status' | 'stop-vcarb-race' | 'get-saved-config' | 'test-connection' | 'get-services' | 'stop-all-services' | 'stop-company-services' | 'get-dormant-services' | 'clear-dormant-services' | 'clear-company-dormant' | 'chaos-get-active' | 'chaos-get-recipes' | 'chaos-inject' | 'chaos-revert' | 'chaos-revert-all' | 'chaos-get-targeted' | 'chaos-remove-target' | 'chaos-smart' | 'ec-create' | 'ec-update-patterns' | 'detect-builtin-settings' | 'deploy-builtin-settings' | 'deploy-workflow' | 'debug-builtin-schema' | 'generate-dashboard' | 'generate-dashboard-async' | 'get-dashboard-status' | 'deploy-dashboard' | 'deploy-ai-dashboard' | 'mcp-generate-deploy-dashboard' | 'list-saved-dashboards' | 'load-saved-dashboard' | 'delete-saved-dashboard' | 'deploy-business-flow' | 'list-business-flows' | 'delete-business-flows' | 'generate-pdf' | 'generate-doc' | 'load-app-settings' | 'save-app-settings' | 'check-journey-assets' | 'create-notebook' | 'execute-dql' | 'demonstrator-ai-tiles' | 'demonstrator-tiles-status' | 'field-repo-get' | 'librarian-history' | 'librarian-stats' | 'librarian-analyze' | 'system-health' | 'system-cleanup' | 'github-copilot-generate' | 'github-copilot-check-credential' | 'github-copilot-save-credential';
   apiHost: string;
   apiPort: string;
   apiProtocol: string;
@@ -2016,6 +2016,134 @@ export default async function (payload: ProxyPayload) {
       } catch (err: any) {
         console.error('[proxy-api] system-cleanup error:', err.message);
         return { success: false, error: err.message || 'System cleanup failed' };
+      }
+    }
+
+    // ── GitHub Copilot / AI Generation ──────────────────────────────────────
+
+    const GITHUB_CREDENTIAL_NAME = 'bizobs-github-pat';
+
+    if (action === 'github-copilot-check-credential') {
+      try {
+        const creds = await credentialVaultClient.listCredentials({ type: 'TOKEN' });
+        const existing = (creds.credentials || []).find(
+          (c: any) => c.name === GITHUB_CREDENTIAL_NAME
+        );
+        if (existing) {
+          return { success: true, data: { configured: true, credentialId: existing.id, name: existing.name } };
+        }
+        return { success: true, data: { configured: false } };
+      } catch (err: any) {
+        console.error('[proxy-api] github-copilot-check-credential error:', err.message);
+        return { success: false, error: err.message || 'Failed to check credential vault' };
+      }
+    }
+
+    if (action === 'github-copilot-save-credential') {
+      try {
+        const { token } = body as { token: string };
+        if (!token || !token.startsWith('ghp_') && !token.startsWith('github_pat_')) {
+          return { success: false, error: 'Invalid token format. GitHub PATs start with ghp_ or github_pat_' };
+        }
+        // Check if credential already exists — update it if so
+        const creds = await credentialVaultClient.listCredentials({ type: 'TOKEN' });
+        const existing = (creds.credentials || []).find(
+          (c: any) => c.name === GITHUB_CREDENTIAL_NAME
+        );
+        if (existing) {
+          await credentialVaultClient.updateCredentials({
+            id: existing.id,
+            body: {
+              name: GITHUB_CREDENTIAL_NAME,
+              scopes: ['APP_ENGINE'],
+              type: 'TOKEN',
+              token: token,
+              description: 'GitHub Personal Access Token for AI-powered prompt generation in Business Observability Demonstrator',
+            } as any,
+          });
+          return { success: true, data: { credentialId: existing.id, updated: true } };
+        }
+        // Create new
+        const result = await credentialVaultClient.createCredentials({
+          body: {
+            name: GITHUB_CREDENTIAL_NAME,
+            scopes: ['APP_ENGINE'],
+            type: 'TOKEN',
+            token: token,
+            description: 'GitHub Personal Access Token for AI-powered prompt generation in Business Observability Demonstrator',
+          } as any,
+        });
+        return { success: true, data: { credentialId: result.id, created: true } };
+      } catch (err: any) {
+        console.error('[proxy-api] github-copilot-save-credential error:', err.message);
+        return { success: false, error: err.message || 'Failed to save credential' };
+      }
+    }
+
+    if (action === 'github-copilot-generate') {
+      try {
+        const { prompt, model } = body as { prompt: string; model?: string };
+        if (!prompt) {
+          return { success: false, error: 'Prompt is required' };
+        }
+        // 1. Retrieve the GitHub PAT from credential vault
+        const creds = await credentialVaultClient.listCredentials({ type: 'TOKEN' });
+        const existing = (creds.credentials || []).find(
+          (c: any) => c.name === GITHUB_CREDENTIAL_NAME
+        );
+        if (!existing) {
+          return { success: false, error: 'GitHub PAT not configured. Go to Settings → GitHub Copilot to set it up.', code: 'NO_CREDENTIAL' };
+        }
+        const details = await credentialVaultClient.getCredentialsDetails({ id: existing.id });
+        const ghToken = (details as any).token;
+        if (!ghToken) {
+          return { success: false, error: 'Could not retrieve token from credential vault.', code: 'TOKEN_EMPTY' };
+        }
+
+        // 2. Call GitHub Models API (OpenAI-compatible)
+        const selectedModel = model || 'gpt-4o';
+        const resp = await fetch('https://models.inference.ai.azure.com/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${ghToken}`,
+          },
+          body: JSON.stringify({
+            model: selectedModel,
+            messages: [
+              { role: 'system', content: 'You are a business analyst AI assistant. Respond with well-structured, actionable JSON when the prompt requests it. Otherwise respond with clear, professional text.' },
+              { role: 'user', content: prompt },
+            ],
+            temperature: 0.7,
+            max_tokens: 4096,
+          }),
+          signal: AbortSignal.timeout(120000),
+        });
+
+        if (!resp.ok) {
+          const errText = await resp.text();
+          if (resp.status === 401) {
+            return { success: false, error: 'GitHub token is invalid or expired. Update it in Settings → GitHub Copilot.', code: 'AUTH_FAILED' };
+          }
+          if (resp.status === 429) {
+            return { success: false, error: 'GitHub Models rate limit reached. Try again in a few minutes.', code: 'RATE_LIMITED' };
+          }
+          return { success: false, error: `GitHub Models API error (${resp.status}): ${errText.slice(0, 200)}` };
+        }
+
+        const result = await resp.json();
+        const content = result.choices?.[0]?.message?.content || '';
+        return {
+          success: true,
+          data: {
+            content,
+            model: selectedModel,
+            usage: result.usage || {},
+          },
+        };
+      } catch (err: any) {
+        console.error('[proxy-api] github-copilot-generate error:', err.message);
+        return { success: false, error: err.message || 'AI generation failed' };
       }
     }
 

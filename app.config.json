@@ -4,7 +4,7 @@
   "app": {
     "id": "my.bizobs.generator.master",
     "name": "Business Observability Demonstrator",
-    "version": "2.34.2",
+    "version": "2.35.0",
     "description": "AI-powered Business Observability — generate and observe journeys",
     "scopes": [
       {
@@ -102,6 +102,14 @@
       {
         "name": "document:environment-shares:read",
         "comment": "Read environment share status of documents"
+      },
+      {
+        "name": "environment-api:credentials:read",
+        "comment": "Read credentials from the Credential Vault (GitHub PAT for AI generation)"
+      },
+      {
+        "name": "environment-api:credentials:write",
+        "comment": "Store credentials in the Credential Vault (GitHub PAT for AI generation)"
       }
     ],
     "settings": {

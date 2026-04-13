@@ -162,7 +162,7 @@ export const HomePage = () => {
   const [clearingDormantCompany, setClearingDormantCompany] = useState<string | null>(null);
 
   // Settings modal tab state
-  const [settingsTab, setSettingsTab] = useState<'config' | 'edgeconnect' | 'system'>('config');
+  const [settingsTab, setSettingsTab] = useState<'config' | 'edgeconnect' | 'system' | 'copilot'>('config');
 
   // System maintenance state
   const [systemHealth, setSystemHealth] = useState<any>(null);
@@ -259,6 +259,18 @@ export const HomePage = () => {
 
   // Step 2 guided sub-step state
   const [step2Phase, setStep2Phase] = useState<'prompts' | 'response' | 'generate'>(  'prompts');
+
+  // GitHub Copilot AI generation state
+  const [ghCopilotConfigured, setGhCopilotConfigured] = useState(false);
+  const [ghCopilotChecking, setGhCopilotChecking] = useState(false);
+  const [ghCopilotToken, setGhCopilotToken] = useState('');
+  const [ghCopilotSaving, setGhCopilotSaving] = useState(false);
+  const [ghCopilotStatus, setGhCopilotStatus] = useState('');
+  const [ghCopilotModel, setGhCopilotModel] = useState('gpt-4o');
+  const [ghGenerating1, setGhGenerating1] = useState(false);
+  const [ghGenerating2, setGhGenerating2] = useState(false);
+  const [ghResult1, setGhResult1] = useState('');
+  const [ghResult2, setGhResult2] = useState('');
 
   // Toast notification state
   const [toastMessage, setToastMessage] = useState('');
@@ -436,6 +448,21 @@ export const HomePage = () => {
     }).catch(err => {
       console.warn('[BizObs] Settings load failed:', err);
     });
+  }, []);
+
+  // ── Check if GitHub Copilot credential is configured ──
+  useEffect(() => {
+    (async () => {
+      setGhCopilotChecking(true);
+      try {
+        const resp = await functions.call('proxy-api', { data: { action: 'github-copilot-check-credential', apiHost: '', apiPort: '', apiProtocol: '' } });
+        const res = await resp.json();
+        if (res.success && res.data?.configured) {
+          setGhCopilotConfigured(true);
+        }
+      } catch { /* ignore */ }
+      setGhCopilotChecking(false);
+    })();
   }, []);
 
   // ── Detect builtin Dynatrace settings via serverless function ──
@@ -2535,7 +2562,24 @@ export const HomePage = () => {
           <div>
             <Paragraph style={{ fontSize: 13, marginBottom: 16, lineHeight: 1.6 }}>
               Copy each prompt below into an <Strong>external AI assistant</Strong> (e.g. ChatGPT, Gemini, or Microsoft Copilot — <em>not</em> Dynatrace Copilot). Run Prompt 1 first, then Prompt 2 in the <Strong>same conversation</Strong>.
+              {ghCopilotConfigured && <> Or use <Strong>✨ Generate with AI</Strong> to run them directly using your GitHub Copilot subscription.</>}
             </Paragraph>
+
+            {/* GitHub Copilot not configured banner */}
+            {!ghCopilotConfigured && !ghCopilotChecking && (
+              <div style={{
+                padding: 10, marginBottom: 12, borderRadius: 8,
+                background: 'rgba(0,161,201,0.06)', border: '1px solid rgba(0,161,201,0.2)',
+                cursor: 'pointer',
+              }} onClick={() => { setShowSettingsModal(true); setSettingsTab('copilot'); }}>
+                <Flex alignItems="center" gap={8}>
+                  <span style={{ fontSize: 16 }}>💡</span>
+                  <Paragraph style={{ fontSize: 12, marginBottom: 0, lineHeight: 1.4 }}>
+                    <Strong>Tip:</Strong> Configure a GitHub Personal Access Token in <Strong>Settings → GitHub Copilot</Strong> to generate AI responses directly in the app — no copy/paste needed.
+                  </Paragraph>
+                </Flex>
+              </div>
+            )}
 
             {/* Prompt 1 */}
             <div style={{
@@ -2548,7 +2592,42 @@ export const HomePage = () => {
                   <div style={{ fontSize: 18 }}>💼</div>
                   <Strong style={{ fontSize: 14 }}>Prompt 1 — C-suite Analysis</Strong>
                 </Flex>
-                <Button onClick={() => copyToClipboard(prompt1, 'Prompt 1')} variant="emphasized">📋 Copy</Button>
+                <Flex gap={8}>
+                  <Button onClick={() => copyToClipboard(prompt1, 'Prompt 1')} variant="emphasized">📋 Copy</Button>
+                  <Button
+                    disabled={!ghCopilotConfigured || ghGenerating1}
+                    variant="accent"
+                    onClick={async () => {
+                      setGhGenerating1(true);
+                      setGhResult1('');
+                      try {
+                        const res = await callProxyWithRetry({
+                          action: 'github-copilot-generate',
+                          apiHost: '', apiPort: '', apiProtocol: '',
+                          body: { prompt: prompt1, model: ghCopilotModel },
+                        });
+                        if (res.success) {
+                          setGhResult1(res.data.content);
+                          showToast(`✅ C-suite analysis generated (${res.data.model})`, 'success');
+                        } else {
+                          setGhResult1('');
+                          if (res.code === 'NO_CREDENTIAL') {
+                            setShowSettingsModal(true);
+                            setSettingsTab('copilot');
+                          }
+                          showToast(`❌ ${res.error}`, 'error', 6000);
+                        }
+                      } catch (err: any) {
+                        showToast(`❌ ${err.message}`, 'error');
+                      }
+                      setGhGenerating1(false);
+                    }}
+                    title={!ghCopilotConfigured ? 'Configure GitHub PAT in Settings → GitHub Copilot first' : 'Generate with AI using your GitHub Copilot'}
+                    style={{ opacity: !ghCopilotConfigured ? 0.5 : 1 }}
+                  >
+                    {ghGenerating1 ? '⏳ Generating...' : '✨ Generate with AI'}
+                  </Button>
+                </Flex>
               </Flex>
               <Paragraph style={{ fontSize: 12, marginBottom: 8, opacity: 0.8, padding: '6px 10px', background: 'rgba(0,161,201,0.12)', borderRadius: 6 }}>
                 {PROMPT_DESCRIPTIONS.csuite.description}
@@ -2563,6 +2642,28 @@ export const HomePage = () => {
                   resize: 'vertical', lineHeight: 1.5,
                 }}
               />
+              {/* AI Generated Result */}
+              {ghResult1 && (
+                <div style={{ marginTop: 12 }}>
+                  <Flex justifyContent="space-between" alignItems="center" style={{ marginBottom: 6 }}>
+                    <Flex alignItems="center" gap={6}>
+                      <span style={{ fontSize: 14 }}>🤖</span>
+                      <Strong style={{ fontSize: 12, color: 'rgba(115,190,40,0.9)' }}>AI-Generated Response</Strong>
+                    </Flex>
+                    <Button onClick={() => copyToClipboard(ghResult1, 'AI Response 1')} variant="default" style={{ fontSize: 11 }}>📋 Copy Result</Button>
+                  </Flex>
+                  <textarea
+                    readOnly value={ghResult1}
+                    style={{
+                      width: '100%', height: 200, padding: 12,
+                      background: 'rgba(115,190,40,0.04)',
+                      border: '1px solid rgba(115,190,40,0.3)', borderRadius: 8,
+                      color: Colors.Text.Neutral.Default, fontFamily: 'monospace', fontSize: 12,
+                      resize: 'vertical', lineHeight: 1.5,
+                    }}
+                  />
+                </div>
+              )}
             </div>
 
             {/* Prompt 2 */}
@@ -2576,7 +2677,44 @@ export const HomePage = () => {
                   <div style={{ fontSize: 18 }}>🗺️</div>
                   <Strong style={{ fontSize: 14 }}>Prompt 2 — Customer Journey</Strong>
                 </Flex>
-                <Button onClick={() => copyToClipboard(prompt2, 'Prompt 2')} variant="emphasized">📋 Copy</Button>
+                <Flex gap={8}>
+                  <Button onClick={() => copyToClipboard(prompt2, 'Prompt 2')} variant="emphasized">📋 Copy</Button>
+                  <Button
+                    disabled={!ghCopilotConfigured || ghGenerating2}
+                    variant="accent"
+                    onClick={async () => {
+                      setGhGenerating2(true);
+                      setGhResult2('');
+                      try {
+                        // Include the C-suite result as context so Prompt 2 builds on Prompt 1
+                        const contextPrefix = ghResult1 ? `Here is the C-suite analysis from the previous step:\n\n${ghResult1}\n\nNow, based on that context:\n\n` : '';
+                        const res = await callProxyWithRetry({
+                          action: 'github-copilot-generate',
+                          apiHost: '', apiPort: '', apiProtocol: '',
+                          body: { prompt: contextPrefix + prompt2, model: ghCopilotModel },
+                        });
+                        if (res.success) {
+                          setGhResult2(res.data.content);
+                          showToast(`✅ Journey config generated (${res.data.model})`, 'success');
+                        } else {
+                          setGhResult2('');
+                          if (res.code === 'NO_CREDENTIAL') {
+                            setShowSettingsModal(true);
+                            setSettingsTab('copilot');
+                          }
+                          showToast(`❌ ${res.error}`, 'error', 6000);
+                        }
+                      } catch (err: any) {
+                        showToast(`❌ ${err.message}`, 'error');
+                      }
+                      setGhGenerating2(false);
+                    }}
+                    title={!ghCopilotConfigured ? 'Configure GitHub PAT in Settings → GitHub Copilot first' : 'Generate with AI using your GitHub Copilot'}
+                    style={{ opacity: !ghCopilotConfigured ? 0.5 : 1 }}
+                  >
+                    {ghGenerating2 ? '⏳ Generating...' : '✨ Generate with AI'}
+                  </Button>
+                </Flex>
               </Flex>
               <Paragraph style={{ fontSize: 12, marginBottom: 8, opacity: 0.8, padding: '6px 10px', background: 'rgba(108,44,156,0.12)', borderRadius: 6 }}>
                 {PROMPT_DESCRIPTIONS.journey.description}
@@ -2591,6 +2729,41 @@ export const HomePage = () => {
                   resize: 'vertical', lineHeight: 1.5,
                 }}
               />
+              {/* AI Generated Result */}
+              {ghResult2 && (
+                <div style={{ marginTop: 12 }}>
+                  <Flex justifyContent="space-between" alignItems="center" style={{ marginBottom: 6 }}>
+                    <Flex alignItems="center" gap={6}>
+                      <span style={{ fontSize: 14 }}>🤖</span>
+                      <Strong style={{ fontSize: 12, color: 'rgba(115,190,40,0.9)' }}>AI-Generated Response</Strong>
+                    </Flex>
+                    <Flex gap={8}>
+                      <Button onClick={() => copyToClipboard(ghResult2, 'AI Response 2')} variant="default" style={{ fontSize: 11 }}>📋 Copy Result</Button>
+                      <Button
+                        variant="emphasized"
+                        style={{ fontSize: 11 }}
+                        onClick={() => {
+                          setCopilotResponse(ghResult2);
+                          setStep2Phase('response');
+                          showToast('✅ AI response loaded into paste area — click Validate', 'success');
+                        }}
+                      >
+                        📥 Use as Journey Response
+                      </Button>
+                    </Flex>
+                  </Flex>
+                  <textarea
+                    readOnly value={ghResult2}
+                    style={{
+                      width: '100%', height: 200, padding: 12,
+                      background: 'rgba(115,190,40,0.04)',
+                      border: '1px solid rgba(115,190,40,0.3)', borderRadius: 8,
+                      color: Colors.Text.Neutral.Default, fontFamily: 'monospace', fontSize: 12,
+                      resize: 'vertical', lineHeight: 1.5,
+                    }}
+                  />
+                </div>
+              )}
             </div>
 
             <Flex justifyContent="space-between" style={{ marginTop: 8 }}>
@@ -3058,6 +3231,7 @@ export const HomePage = () => {
               <Flex gap={0}>
                 {([
                   { id: 'config', icon: '🔌', label: 'API Config' },
+                  { id: 'copilot', icon: '🤖', label: 'GitHub Copilot' },
                   { id: 'system', icon: '💾', label: 'System' },
                 ] as const).map(tab => (
                   <button
@@ -3169,6 +3343,131 @@ export const HomePage = () => {
                     </Flex>
                   </>
                 )}
+              </div>
+            </div>
+            )}
+
+            {/* GitHub Copilot Tab */}
+            {settingsTab === 'copilot' && (
+            <div style={{ padding: 24 }}>
+              <Strong style={{ fontSize: 15, display: 'block', marginBottom: 4 }}>🤖 GitHub Copilot AI Generation</Strong>
+              <Paragraph style={{ fontSize: 12, marginBottom: 16, opacity: 0.7, lineHeight: 1.5 }}>
+                Use your GitHub Copilot subscription to generate executive summaries and journey configs directly in the app — no copy/paste needed.
+                Your GitHub Personal Access Token is stored securely in the Dynatrace Credential Vault.
+              </Paragraph>
+
+              {/* Status indicator */}
+              <div style={{
+                padding: 12, marginBottom: 16, borderRadius: 8,
+                background: ghCopilotConfigured ? 'rgba(115,190,40,0.1)' : 'rgba(220,50,47,0.08)',
+                border: `1px solid ${ghCopilotConfigured ? 'rgba(115,190,40,0.4)' : 'rgba(220,50,47,0.3)'}`,
+              }}>
+                <Flex alignItems="center" gap={8}>
+                  <span style={{ fontSize: 18 }}>{ghCopilotChecking ? '⏳' : ghCopilotConfigured ? '✅' : '⚠️'}</span>
+                  <div>
+                    <Strong style={{ fontSize: 13 }}>
+                      {ghCopilotChecking ? 'Checking credential vault...' : ghCopilotConfigured ? 'GitHub PAT configured — ready to generate' : 'Not configured — Generate with AI buttons will be disabled'}
+                    </Strong>
+                    {!ghCopilotConfigured && !ghCopilotChecking && (
+                      <Paragraph style={{ fontSize: 11, marginBottom: 0, marginTop: 2, opacity: 0.8 }}>
+                        Enter your GitHub Personal Access Token below to enable AI-powered generation.
+                      </Paragraph>
+                    )}
+                  </div>
+                </Flex>
+              </div>
+
+              {/* How to get a token */}
+              <div style={{
+                padding: 12, marginBottom: 16, borderRadius: 8,
+                background: 'rgba(0,161,201,0.06)', border: '1px solid rgba(0,161,201,0.2)',
+              }}>
+                <Strong style={{ fontSize: 13, display: 'block', marginBottom: 6 }}>📋 How to create a GitHub Personal Access Token</Strong>
+                <ol style={{ margin: 0, paddingLeft: 20, fontSize: 12, lineHeight: 1.8, opacity: 0.9 }}>
+                  <li>Go to <Strong>github.com → Settings → Developer Settings → Personal Access Tokens → Fine-grained tokens</Strong></li>
+                  <li>Click <Strong>Generate new token</Strong></li>
+                  <li>Give it a name like <Strong>BizObs Demonstrator</Strong></li>
+                  <li>No special permissions needed — just the default (read-only access to your public profile)</li>
+                  <li>Copy the token (starts with <code style={{ background: 'rgba(0,0,0,0.2)', padding: '1px 4px', borderRadius: 3 }}>ghp_</code> or <code style={{ background: 'rgba(0,0,0,0.2)', padding: '1px 4px', borderRadius: 3 }}>github_pat_</code>)</li>
+                </ol>
+              </div>
+
+              {/* Token input */}
+              <div style={{ marginBottom: 16 }}>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6 }}>GitHub Personal Access Token</label>
+                <Flex gap={8}>
+                  <input
+                    type="password"
+                    placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                    value={ghCopilotToken}
+                    onChange={(e: any) => setGhCopilotToken(e.target.value)}
+                    style={{
+                      flex: 1, padding: '8px 12px', borderRadius: 6,
+                      background: Colors.Background.Base.Default,
+                      border: `1px solid ${Colors.Border.Neutral.Default}`,
+                      color: Colors.Text.Neutral.Default, fontSize: 13,
+                      fontFamily: 'monospace',
+                    }}
+                  />
+                  <Button
+                    variant="emphasized"
+                    disabled={!ghCopilotToken.trim() || ghCopilotSaving}
+                    onClick={async () => {
+                      setGhCopilotSaving(true);
+                      setGhCopilotStatus('⏳ Saving to Credential Vault...');
+                      try {
+                        const res = await callProxyWithRetry({
+                          action: 'github-copilot-save-credential',
+                          apiHost: '', apiPort: '', apiProtocol: '',
+                          body: { token: ghCopilotToken.trim() },
+                        });
+                        if (res.success) {
+                          setGhCopilotStatus(`✅ Token ${res.data?.updated ? 'updated' : 'saved'} in Credential Vault`);
+                          setGhCopilotConfigured(true);
+                          setGhCopilotToken('');
+                        } else {
+                          setGhCopilotStatus(`❌ ${res.error}`);
+                        }
+                      } catch (err: any) {
+                        setGhCopilotStatus(`❌ ${err.message}`);
+                      }
+                      setGhCopilotSaving(false);
+                    }}
+                  >
+                    {ghCopilotSaving ? '⏳ Saving...' : '🔐 Save to Vault'}
+                  </Button>
+                </Flex>
+              </div>
+
+              {/* Status message */}
+              {ghCopilotStatus && (
+                <div style={{
+                  padding: 10, marginBottom: 16, borderRadius: 8, fontSize: 13, fontFamily: 'monospace',
+                  background: ghCopilotStatus.includes('✅') ? 'rgba(115,190,40,0.12)' : ghCopilotStatus.includes('❌') ? 'rgba(220,50,47,0.12)' : 'rgba(0,161,201,0.12)',
+                  border: `1px solid ${ghCopilotStatus.includes('✅') ? 'rgba(115,190,40,0.4)' : ghCopilotStatus.includes('❌') ? 'rgba(220,50,47,0.4)' : 'rgba(0,161,201,0.4)'}`,
+                }}>
+                  {ghCopilotStatus}
+                </div>
+              )}
+
+              {/* Model selector */}
+              <div style={{ marginBottom: 16 }}>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6 }}>AI Model</label>
+                <Flex gap={8}>
+                  {(['gpt-4o', 'gpt-4o-mini', 'o3-mini'] as const).map(m => (
+                    <Button
+                      key={m}
+                      variant={ghCopilotModel === m ? 'emphasized' : 'default'}
+                      onClick={() => setGhCopilotModel(m)}
+                      style={{ flex: 1 }}
+                    >
+                      {m}
+                    </Button>
+                  ))}
+                </Flex>
+                <Paragraph style={{ fontSize: 11, marginTop: 4, marginBottom: 0, opacity: 0.6 }}>
+                  Available models depend on your GitHub Copilot plan. gpt-4o works for most users.
+                </Paragraph>
               </div>
             </div>
             )}
