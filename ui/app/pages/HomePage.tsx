@@ -267,8 +267,10 @@ export const HomePage = () => {
   const [ghCopilotSaving, setGhCopilotSaving] = useState(false);
   const [ghCopilotStatus, setGhCopilotStatus] = useState('');
   const [ghCopilotModel, setGhCopilotModel] = useState('gpt-4o');
+  const [ghAvailableModels, setGhAvailableModels] = useState<Array<{ id: string; name: string; owned_by: string }>>([]);
   const [ghGenerating1, setGhGenerating1] = useState(false);
   const [ghGenerating2, setGhGenerating2] = useState(false);
+  const [ghGeneratingAll, setGhGeneratingAll] = useState(false);
   const [ghResult1, setGhResult1] = useState('');
   const [ghResult2, setGhResult2] = useState('');
 
@@ -338,6 +340,7 @@ export const HomePage = () => {
     { key: 'openpipeline-routing', label: 'OpenPipeline Routing Configured', section: 'config' },
     { key: 'biz-events', label: 'Business Event Capture Rule', section: 'config' },
     { key: 'feature-flags', label: 'OneAgent Feature Flag Enabled', section: 'config' },
+    { key: 'outbound-github-models', label: 'GitHub Models Outbound Allowed', section: 'config' },
     { key: 'automation-workflow', label: 'Fix-It Agent Workflow Deployed', section: 'config' },
   ];
 
@@ -354,6 +357,7 @@ export const HomePage = () => {
     'openpipeline-routing': builtinSettingsDetected['openpipeline-routing'] || false,
     'biz-events': builtinSettingsDetected['biz-events'] || false,
     'feature-flags': builtinSettingsDetected['feature-flags'] || false,
+    'outbound-github-models': builtinSettingsDetected['outbound-github-models'] || false,
     'automation-workflow': builtinSettingsDetected['automation-workflow'] || false,
   };
   const isStepComplete = (key: string) => autoDetected[key] || checklist[key];
@@ -450,7 +454,7 @@ export const HomePage = () => {
     });
   }, []);
 
-  // ── Check if GitHub Copilot credential is configured ──
+  // ── Check if GitHub Copilot credential is configured + fetch available models ──
   useEffect(() => {
     (async () => {
       setGhCopilotChecking(true);
@@ -459,6 +463,20 @@ export const HomePage = () => {
         const res = await resp.json();
         if (res.success && res.data?.configured) {
           setGhCopilotConfigured(true);
+          // Fetch available models
+          try {
+            const modelsResp = await functions.call('proxy-api', { data: { action: 'github-copilot-list-models', apiHost: '', apiPort: '', apiProtocol: '' } });
+            const modelsRes = await modelsResp.json();
+            if (modelsRes.success && modelsRes.data?.models?.length > 0) {
+              setGhAvailableModels(modelsRes.data.models);
+              // If current model not in list, default to first available
+              const ids = modelsRes.data.models.map((m: any) => m.id);
+              if (!ids.includes(ghCopilotModel)) {
+                const preferred = ids.find((id: string) => id === 'gpt-4o') || ids[0];
+                setGhCopilotModel(preferred);
+              }
+            }
+          } catch { /* models fetch failed — use hardcoded defaults */ }
         }
       } catch { /* ignore */ }
       setGhCopilotChecking(false);
@@ -2406,19 +2424,110 @@ export const HomePage = () => {
               />
             </div>
 
-            <Flex justifyContent="flex-end" gap={12} style={{ marginTop: 8 }}>
+            <Flex justifyContent="space-between" alignItems="center" gap={12} style={{ marginTop: 16 }}>
               <Button onClick={() => setActiveTab('welcome')} style={{ padding: '8px 16px' }}>
                 ← Back
               </Button>
-              <Button 
-                color="primary"
-                variant="emphasized"
-                onClick={() => setActiveTab('step2')}
-                disabled={!companyName || !domain}
-                style={{ padding: '8px 20px' }}
-              >
-                Next: Generate Prompts →
-              </Button>
+              <Flex alignItems="center" gap={12}>
+                {/* Model dropdown — only shown when PAT is configured */}
+                {ghCopilotConfigured && (
+                  <select
+                    value={ghCopilotModel}
+                    onChange={(e: any) => setGhCopilotModel(e.target.value)}
+                    style={{
+                      padding: '7px 10px', borderRadius: 6,
+                      background: Colors.Background.Base.Default,
+                      border: `1px solid ${Colors.Border.Neutral.Default}`,
+                      color: Colors.Text.Neutral.Default, fontSize: 12,
+                      cursor: 'pointer', minWidth: 140,
+                    }}
+                  >
+                    {ghAvailableModels.length > 0
+                      ? ghAvailableModels.map(m => (
+                          <option key={m.id} value={m.id}>{m.id}</option>
+                        ))
+                      : ['gpt-4o', 'gpt-4o-mini', 'o3-mini'].map(id => (
+                          <option key={id} value={id}>{id}</option>
+                        ))
+                    }
+                  </select>
+                )}
+                {/* Generate with AI button */}
+                <Button
+                  variant="accent"
+                  disabled={!companyName || !domain || !ghCopilotConfigured || ghGeneratingAll}
+                  onClick={async () => {
+                    setGhGeneratingAll(true);
+                    // Generate prompts inline to avoid race condition with useEffect
+                    const csuite = generateCsuitePrompt({ companyName, domain, requirements });
+                    const journey = generateJourneyPrompt({ companyName, domain, requirements });
+                    setPrompt1(csuite);
+                    setPrompt2(journey);
+                    setActiveTab('step2');
+                    setStep2Phase('prompts');
+                    try {
+                      // Generate Prompt 1
+                      setGhGenerating1(true);
+                      setGhResult1('');
+                      const res1 = await callProxyWithRetry({
+                        action: 'github-copilot-generate',
+                        apiHost: '', apiPort: '', apiProtocol: '',
+                        body: { prompt: csuite, model: ghCopilotModel },
+                      });
+                      setGhGenerating1(false);
+                      if (!res1.success) {
+                        showToast(`❌ Prompt 1: ${res1.error}`, 'error', 6000);
+                        if (res1.code === 'NO_CREDENTIAL') { setShowSettingsModal(true); setSettingsTab('copilot'); }
+                        setGhGeneratingAll(false);
+                        return;
+                      }
+                      setGhResult1(res1.data.content);
+                      showToast(`✅ C-suite analysis generated (${res1.data.model})`, 'success');
+
+                      // Generate Prompt 2 with Prompt 1 result as context
+                      setGhGenerating2(true);
+                      setGhResult2('');
+                      const contextPrefix = `Here is the C-suite analysis from the previous step:\n\n${res1.data.content}\n\nNow, based on that context:\n\n`;
+                      const res2 = await callProxyWithRetry({
+                        action: 'github-copilot-generate',
+                        apiHost: '', apiPort: '', apiProtocol: '',
+                        body: { prompt: contextPrefix + journey, model: ghCopilotModel },
+                      });
+                      setGhGenerating2(false);
+                      if (!res2.success) {
+                        showToast(`❌ Prompt 2: ${res2.error}`, 'error', 6000);
+                        setGhGeneratingAll(false);
+                        return;
+                      }
+                      setGhResult2(res2.data.content);
+                      showToast(`✅ Journey config generated — auto-loading response`, 'success');
+
+                      // Auto-load the journey response and advance to paste/validate step
+                      setCopilotResponse(res2.data.content);
+                      setStep2Phase('response');
+                    } catch (err: any) {
+                      setGhGenerating1(false);
+                      setGhGenerating2(false);
+                      showToast(`❌ ${err.message}`, 'error');
+                    }
+                    setGhGeneratingAll(false);
+                  }}
+                  title={!ghCopilotConfigured ? 'Configure GitHub PAT in Settings → GitHub Copilot first' : `Generate both prompts with AI using ${ghCopilotModel}`}
+                  style={{ padding: '8px 20px', opacity: !ghCopilotConfigured ? 0.4 : 1 }}
+                >
+                  {ghGeneratingAll ? '⏳ Generating...' : '✨ Generate with AI'}
+                </Button>
+                {/* Manual path */}
+                <Button 
+                  color="primary"
+                  variant="emphasized"
+                  onClick={() => setActiveTab('step2')}
+                  disabled={!companyName || !domain}
+                  style={{ padding: '8px 20px' }}
+                >
+                  Next: Generate Prompts →
+                </Button>
+              </Flex>
             </Flex>
           </Flex>
         </div>
@@ -3425,6 +3534,15 @@ export const HomePage = () => {
                           setGhCopilotStatus(`✅ Token ${res.data?.updated ? 'updated' : 'saved'} in Credential Vault`);
                           setGhCopilotConfigured(true);
                           setGhCopilotToken('');
+                          // Refresh available models list
+                          try {
+                            const modelsResp = await functions.call('proxy-api', { data: { action: 'github-copilot-list-models', apiHost: '', apiPort: '', apiProtocol: '' } });
+                            const modelsRes = await modelsResp.json();
+                            if (modelsRes.success && modelsRes.data?.models?.length > 0) {
+                              setGhAvailableModels(modelsRes.data.models);
+                              setGhCopilotStatus(`✅ Token ${res.data?.updated ? 'updated' : 'saved'} — ${modelsRes.data.models.length} models available`);
+                            }
+                          } catch { /* models fetch failed */ }
                         } else {
                           setGhCopilotStatus(`❌ ${res.error}`);
                         }
@@ -3453,20 +3571,30 @@ export const HomePage = () => {
               {/* Model selector */}
               <div style={{ marginBottom: 16 }}>
                 <label style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6 }}>AI Model</label>
-                <Flex gap={8}>
-                  {(['gpt-4o', 'gpt-4o-mini', 'o3-mini'] as const).map(m => (
-                    <Button
-                      key={m}
-                      variant={ghCopilotModel === m ? 'emphasized' : 'default'}
-                      onClick={() => setGhCopilotModel(m)}
-                      style={{ flex: 1 }}
-                    >
-                      {m}
-                    </Button>
-                  ))}
-                </Flex>
+                <select
+                  value={ghCopilotModel}
+                  onChange={(e: any) => setGhCopilotModel(e.target.value)}
+                  style={{
+                    width: '100%', padding: '8px 12px', borderRadius: 6,
+                    background: Colors.Background.Base.Default,
+                    border: `1px solid ${Colors.Border.Neutral.Default}`,
+                    color: Colors.Text.Neutral.Default, fontSize: 13,
+                    cursor: 'pointer',
+                  }}
+                >
+                  {ghAvailableModels.length > 0
+                    ? ghAvailableModels.map(m => (
+                        <option key={m.id} value={m.id}>{m.id}{m.owned_by ? ` (${m.owned_by})` : ''}</option>
+                      ))
+                    : ['gpt-4o', 'gpt-4o-mini', 'o3-mini'].map(id => (
+                        <option key={id} value={id}>{id}</option>
+                      ))
+                  }
+                </select>
                 <Paragraph style={{ fontSize: 11, marginTop: 4, marginBottom: 0, opacity: 0.6 }}>
-                  Available models depend on your GitHub Copilot plan. gpt-4o works for most users.
+                  {ghAvailableModels.length > 0
+                    ? `${ghAvailableModels.length} models available from GitHub Models API`
+                    : 'Save a valid PAT to populate models from GitHub Models API'}
                 </Paragraph>
               </div>
             </div>
@@ -5130,7 +5258,7 @@ export const HomePage = () => {
                   </Flex>
                   <Flex gap={6}>
                     <button onClick={() => detectBuiltinSettings(true)} disabled={isDetecting} style={{ padding: '3px 8px', borderRadius: 5, border: `1px solid ${Colors.Border.Neutral.Default}`, background: 'transparent', cursor: 'pointer', fontSize: 10, fontWeight: 600, opacity: isDetecting ? 0.4 : 0.7 }}>{isDetecting ? '⏳' : '🔄'} Refresh</button>
-                    {(!isStepComplete('biz-events') || !isStepComplete('openpipeline') || !isStepComplete('openpipeline-routing') || !isStepComplete('feature-flags')) && (
+                    {(!isStepComplete('biz-events') || !isStepComplete('openpipeline') || !isStepComplete('openpipeline-routing') || !isStepComplete('feature-flags') || !isStepComplete('outbound-github-models')) && (
                       <button
                         onClick={() => {
                           const toDeploy: string[] = [];
@@ -5138,6 +5266,7 @@ export const HomePage = () => {
                           if (!isStepComplete('feature-flags')) toDeploy.push('feature-flags');
                           if (!isStepComplete('openpipeline')) toDeploy.push('openpipeline');
                           if (!isStepComplete('openpipeline-routing')) toDeploy.push('openpipeline-routing');
+                          if (!isStepComplete('outbound-github-models')) toDeploy.push('outbound-github-models');
                           deployBuiltinConfigs(toDeploy);
                         }}
                         disabled={isDeployingConfigs}
@@ -5227,6 +5356,25 @@ export const HomePage = () => {
                       <button onClick={(e) => { e.stopPropagation(); deployBuiltinConfigs(['openpipeline-routing']); }} disabled={isDeployingConfigs} style={{ padding: '4px 10px', borderRadius: 6, border: '1px solid rgba(0,161,201,0.4)', background: 'rgba(0,161,201,0.08)', cursor: 'pointer', fontSize: 11, fontWeight: 600, color: '#00a1c9' }}>🚀 Deploy</button>
                     ) : (
                       <a href={`${TENANT_URL}/ui/apps/dynatrace.settings/settings/openpipeline-bizevents/routing?page=1&pageSize=50`} target="_blank" rel="noopener noreferrer" style={{ padding: '4px 10px', borderRadius: 6, border: '1px solid rgba(65,105,225,0.3)', background: 'rgba(65,105,225,0.06)', fontSize: 11, fontWeight: 600, color: '#4169e1', textDecoration: 'none' }}>Open →</a>
+                    )}
+                  </Flex>
+                </div>
+
+                {/* Step: GitHub Models Outbound Allowlist */}
+                <div onClick={() => toggleCheck('outbound-github-models')} style={{ padding: '12px 14px', borderRadius: 10, border: `1px solid ${isStepComplete('outbound-github-models') ? 'rgba(0,180,0,0.3)' : Colors.Border.Neutral.Default}`, background: isStepComplete('outbound-github-models') ? 'rgba(0,180,0,0.04)' : 'transparent', cursor: 'pointer', marginBottom: 8, transition: 'all 0.2s' }}>
+                  <Flex alignItems="center" gap={12}>
+                    <div style={{ width: 24, height: 24, borderRadius: 6, border: `2px solid ${isStepComplete('outbound-github-models') ? '#2e7d32' : Colors.Border.Neutral.Default}`, background: isStepComplete('outbound-github-models') ? '#2e7d32' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'all 0.2s' }}>
+                      {isStepComplete('outbound-github-models') && <span style={{ color: 'white', fontSize: 14, fontWeight: 700 }}>✓</span>}
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <Strong style={{ fontSize: 13, textDecoration: isStepComplete('outbound-github-models') ? 'line-through' : 'none', opacity: isStepComplete('outbound-github-models') ? 0.6 : 1 }}>GitHub Models Outbound Allowed</Strong>
+                      <div style={{ fontSize: 11, opacity: 0.6, marginTop: 2 }}>Allow models.inference.ai.azure.com in AppEngine outbound connections for AI generation</div>
+                      {isStepComplete('outbound-github-models') && <div style={{ fontSize: 10, marginTop: 3, color: '#2e7d32' }}>✅ Detected</div>}
+                    </div>
+                    {!isStepComplete('outbound-github-models') ? (
+                      <button onClick={(e) => { e.stopPropagation(); deployBuiltinConfigs(['outbound-github-models']); }} disabled={isDeployingConfigs} style={{ padding: '4px 10px', borderRadius: 6, border: '1px solid rgba(0,161,201,0.4)', background: 'rgba(0,161,201,0.08)', cursor: 'pointer', fontSize: 11, fontWeight: 600, color: '#00a1c9' }}>🚀 Deploy</button>
+                    ) : (
+                      <a href={`${TENANT_URL}/ui/apps/dynatrace.settings/settings/dt-javascript-runtime.allowed-outbound-connections`} target="_blank" rel="noopener noreferrer" style={{ padding: '4px 10px', borderRadius: 6, border: '1px solid rgba(65,105,225,0.3)', background: 'rgba(65,105,225,0.06)', fontSize: 11, fontWeight: 600, color: '#4169e1', textDecoration: 'none' }}>Open →</a>
                     )}
                   </Flex>
                 </div>

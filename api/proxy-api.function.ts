@@ -10,7 +10,7 @@ import { documentsClient, environmentSharesClient } from '@dynatrace-sdk/client-
 import { queryExecutionClient } from '@dynatrace-sdk/client-query';
 
 interface ProxyPayload {
-  action: 'simulate-journey' | 'simulate-vcarb-race' | 'vcarb-race-status' | 'stop-vcarb-race' | 'get-saved-config' | 'test-connection' | 'get-services' | 'stop-all-services' | 'stop-company-services' | 'get-dormant-services' | 'clear-dormant-services' | 'clear-company-dormant' | 'chaos-get-active' | 'chaos-get-recipes' | 'chaos-inject' | 'chaos-revert' | 'chaos-revert-all' | 'chaos-get-targeted' | 'chaos-remove-target' | 'chaos-smart' | 'ec-create' | 'ec-update-patterns' | 'detect-builtin-settings' | 'deploy-builtin-settings' | 'deploy-workflow' | 'debug-builtin-schema' | 'generate-dashboard' | 'generate-dashboard-async' | 'get-dashboard-status' | 'deploy-dashboard' | 'deploy-ai-dashboard' | 'mcp-generate-deploy-dashboard' | 'list-saved-dashboards' | 'load-saved-dashboard' | 'delete-saved-dashboard' | 'deploy-business-flow' | 'list-business-flows' | 'delete-business-flows' | 'generate-pdf' | 'generate-doc' | 'load-app-settings' | 'save-app-settings' | 'check-journey-assets' | 'create-notebook' | 'execute-dql' | 'demonstrator-ai-tiles' | 'demonstrator-tiles-status' | 'field-repo-get' | 'librarian-history' | 'librarian-stats' | 'librarian-analyze' | 'system-health' | 'system-cleanup' | 'github-copilot-generate' | 'github-copilot-check-credential' | 'github-copilot-save-credential';
+  action: 'simulate-journey' | 'simulate-vcarb-race' | 'vcarb-race-status' | 'stop-vcarb-race' | 'get-saved-config' | 'test-connection' | 'get-services' | 'stop-all-services' | 'stop-company-services' | 'get-dormant-services' | 'clear-dormant-services' | 'clear-company-dormant' | 'chaos-get-active' | 'chaos-get-recipes' | 'chaos-inject' | 'chaos-revert' | 'chaos-revert-all' | 'chaos-get-targeted' | 'chaos-remove-target' | 'chaos-smart' | 'ec-create' | 'ec-update-patterns' | 'detect-builtin-settings' | 'deploy-builtin-settings' | 'deploy-workflow' | 'debug-builtin-schema' | 'generate-dashboard' | 'generate-dashboard-async' | 'get-dashboard-status' | 'deploy-dashboard' | 'deploy-ai-dashboard' | 'mcp-generate-deploy-dashboard' | 'list-saved-dashboards' | 'load-saved-dashboard' | 'delete-saved-dashboard' | 'deploy-business-flow' | 'list-business-flows' | 'delete-business-flows' | 'generate-pdf' | 'generate-doc' | 'load-app-settings' | 'save-app-settings' | 'check-journey-assets' | 'create-notebook' | 'execute-dql' | 'demonstrator-ai-tiles' | 'demonstrator-tiles-status' | 'field-repo-get' | 'librarian-history' | 'librarian-stats' | 'librarian-analyze' | 'system-health' | 'system-cleanup' | 'github-copilot-generate' | 'github-copilot-check-credential' | 'github-copilot-save-credential' | 'github-copilot-list-models';
   apiHost: string;
   apiPort: string;
   apiProtocol: string;
@@ -538,6 +538,36 @@ export default async function (payload: ProxyPayload) {
         detected['automation-workflow'] = false;
       }
 
+      // 9. Outbound connections allowlist — check if models.inference.ai.azure.com is allowed
+      try {
+        const result = await settingsObjectsClient.getSettingsObjects({
+          schemaIds: 'builtin:dt-javascript-runtime.allowed-outbound-connections',
+          fields: 'objectId,value',
+          pageSize: 500,
+        });
+        const items = result.items || [];
+        detected['outbound-github-models'] = items.some(
+          (i: any) => i.value?.host === 'models.inference.ai.azure.com'
+        );
+        // Also check if enforcement is disabled (all hosts allowed)
+        if (!detected['outbound-github-models']) {
+          try {
+            const enfResult = await settingsObjectsClient.getSettingsObjects({
+              schemaIds: 'builtin:dt-javascript-runtime.allowed-outbound-connections.enforced',
+              fields: 'objectId,value',
+              pageSize: 1,
+            });
+            const enf = enfResult.items?.[0]?.value as any;
+            if (enf?.enforced === false) {
+              detected['outbound-github-models'] = true;
+            }
+          } catch { /* enforcement schema may not exist — that's fine */ }
+        }
+      } catch (e: any) {
+        console.log(`[detect] Outbound allowlist detection error: ${e.message}`);
+        detected['outbound-github-models'] = false;
+      }
+
       return { success: true, data: detected };
     }
 
@@ -1008,6 +1038,32 @@ export default async function (payload: ProxyPayload) {
               });
               results['feature-flags'] = { success: true };
             }
+          } else if (configKey === 'outbound-github-models') {
+            // Add models.inference.ai.azure.com to the outbound connections allowlist
+            const existing = await settingsObjectsClient.getSettingsObjects({
+              schemaIds: 'builtin:dt-javascript-runtime.allowed-outbound-connections',
+              fields: 'objectId,value',
+              pageSize: 500,
+            });
+            const alreadyAllowed = (existing.items || []).some(
+              (i: any) => i.value?.host === 'models.inference.ai.azure.com'
+            );
+            if (alreadyAllowed) {
+              results['outbound-github-models'] = { success: true, error: 'Already in allowlist — no changes needed' };
+            } else {
+              await settingsObjectsClient.postSettingsObjects({
+                body: [{
+                  schemaId: 'builtin:dt-javascript-runtime.allowed-outbound-connections',
+                  scope: 'environment',
+                  value: {
+                    host: 'models.inference.ai.azure.com',
+                    port: -1,
+                  },
+                }],
+              });
+              results['outbound-github-models'] = { success: true };
+            }
+
           } else if (configKey === 'automation-workflow') {
             // Workflow requires automation:workflows:write scope which is restricted
             // to Dynatrace-provided apps. Return the template for manual import.
@@ -2077,6 +2133,53 @@ export default async function (payload: ProxyPayload) {
       } catch (err: any) {
         console.error('[proxy-api] github-copilot-save-credential error:', err.message);
         return { success: false, error: err.message || 'Failed to save credential' };
+      }
+    }
+
+    if (action === 'github-copilot-list-models') {
+      try {
+        // Retrieve the GitHub PAT from credential vault
+        const creds = await credentialVaultClient.listCredentials({ type: 'TOKEN' });
+        const existing = (creds.credentials || []).find(
+          (c: any) => c.name === GITHUB_CREDENTIAL_NAME
+        );
+        if (!existing) {
+          return { success: true, data: { models: [], configured: false } };
+        }
+        const details = await credentialVaultClient.getCredentialsDetails({ id: existing.id });
+        const ghToken = (details as any).token;
+        if (!ghToken) {
+          return { success: true, data: { models: [], configured: false } };
+        }
+
+        // Call GitHub Models API to list available models
+        const resp = await fetch('https://models.inference.ai.azure.com/models', {
+          method: 'GET',
+          headers: { 'Authorization': `Bearer ${ghToken}` },
+          signal: AbortSignal.timeout(15000),
+        });
+        if (!resp.ok) {
+          if (resp.status === 401) {
+            return { success: false, error: 'GitHub token is invalid or expired.', code: 'AUTH_FAILED' };
+          }
+          return { success: true, data: { models: [], configured: true, error: `API returned ${resp.status}` } };
+        }
+
+        const result = await resp.json();
+        // Filter to chat/completion models and extract useful info
+        const models = (result.data || result || [])
+          .filter((m: any) => m.id && (m.task === 'chat-completion' || !m.task))
+          .map((m: any) => ({
+            id: m.id,
+            name: m.name || m.id,
+            owned_by: m.owned_by || m.publisher || '',
+          }))
+          .sort((a: any, b: any) => a.id.localeCompare(b.id));
+
+        return { success: true, data: { models, configured: true } };
+      } catch (err: any) {
+        console.error('[proxy-api] github-copilot-list-models error:', err.message);
+        return { success: true, data: { models: [], configured: true, error: err.message } };
       }
     }
 
