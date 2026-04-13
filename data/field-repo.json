@@ -3503,67 +3503,67 @@
       {
         "name": "discountApplied",
         "type": "numeric",
-        "sampleValue": 12.97
+        "sampleValue": 11.43
       },
       {
         "name": "channel",
         "type": "string",
-        "sampleValue": "airline_website"
+        "sampleValue": "ota_booking"
       },
       {
         "name": "deviceType",
         "type": "string",
-        "sampleValue": "mobile"
+        "sampleValue": "desktop"
       },
       {
         "name": "region",
         "type": "string",
-        "sampleValue": "Middle East"
+        "sampleValue": "Africa"
       },
       {
         "name": "customerSegmentValue",
         "type": "string",
-        "sampleValue": "business_traveller"
+        "sampleValue": "leisure_traveller"
       },
       {
         "name": "loyaltyTier",
         "type": "string",
-        "sampleValue": "Silver"
+        "sampleValue": "Platinum"
       },
       {
         "name": "segment",
         "type": "string",
-        "sampleValue": "business_class"
+        "sampleValue": "premium_economy"
       },
       {
         "name": "Productname",
         "type": "string",
-        "sampleValue": "First Class LHR-HKG"
+        "sampleValue": "Premium Economy LHR-SIN"
       },
       {
         "name": "ProductId",
         "type": "string",
-        "sampleValue": "AIR-FB-001"
+        "sampleValue": "AIR-FB-003"
       },
       {
         "name": "ProductType",
         "type": "string",
-        "sampleValue": "basic_economy"
+        "sampleValue": "business"
       },
       {
         "name": "Price",
         "type": "numeric",
-        "sampleValue": 120
+        "sampleValue": 450
       },
       {
         "name": "flightDuration",
         "type": "numeric",
-        "sampleValue": 480
+        "sampleValue": 720
       },
       {
         "name": "baggageAllowance",
         "type": "string",
-        "sampleValue": "hand_only"
+        "sampleValue": "2x32kg"
       },
       {
         "name": "seatSelection",
@@ -3573,7 +3573,7 @@
       {
         "name": "ancillaryRevenue",
         "type": "numeric",
-        "sampleValue": 0
+        "sampleValue": 45
       },
       {
         "name": "carbonOffset",
@@ -3583,7 +3583,7 @@
       {
         "name": "marketTrend",
         "type": "string",
-        "sampleValue": "dynamic_pricing"
+        "sampleValue": "ndc_distribution"
       },
       {
         "name": "browser",
@@ -3623,7 +3623,7 @@
       {
         "name": "shippingCost",
         "type": "numeric",
-        "sampleValue": 7.84
+        "sampleValue": 8.21
       },
       {
         "name": "pricingTier",
@@ -3747,8 +3747,8 @@
       "PreDepartureManagement",
       "ItinerarySharingAndExpenseReport"
     ],
-    "lastUpdated": "2026-04-10T23:28:20.034Z",
-    "runCount": 23096
+    "lastUpdated": "2026-04-12T00:02:11.434Z",
+    "runCount": 25271
   },
   "energy & utilities|meter reading & billing": {
     "companyName": "Energy & Utilities",
@@ -16161,7 +16161,7 @@
       {
         "name": "annualRevenue",
         "type": "numeric",
-        "sampleValue": 1953.57
+        "sampleValue": 3115.85
       },
       {
         "name": "revenuePerCustomer",
@@ -16176,7 +16176,7 @@
       {
         "name": "customerLifetimeValue",
         "type": "numeric",
-        "sampleValue": 781.43
+        "sampleValue": 1246.34
       },
       {
         "name": "lifetimeValue",
@@ -16186,12 +16186,12 @@
       {
         "name": "acquisitionCost",
         "type": "numeric",
-        "sampleValue": 40.24
+        "sampleValue": 56.29
       },
       {
         "name": "costPerAcquisition",
         "type": "numeric",
-        "sampleValue": 48.29
+        "sampleValue": 67.55
       },
       {
         "name": "conversionProbability",
@@ -16211,7 +16211,7 @@
       {
         "name": "timeToConversion",
         "type": "numeric",
-        "sampleValue": 14.57
+        "sampleValue": 13.29
       },
       {
         "name": "sessionDuration",
@@ -16271,37 +16271,37 @@
       {
         "name": "channel",
         "type": "string",
-        "sampleValue": "parts_system"
+        "sampleValue": "hangar_terminal"
       },
       {
         "name": "deviceType",
         "type": "string",
-        "sampleValue": "tablet"
+        "sampleValue": "barcode_scanner"
       },
       {
         "name": "region",
         "type": "string",
-        "sampleValue": "RAF Brize Norton"
+        "sampleValue": "Darwin AU"
       },
       {
         "name": "customerSegmentValue",
         "type": "string",
-        "sampleValue": "fast_jet"
+        "sampleValue": "rotary_wing"
       },
       {
         "name": "loyaltyTier",
         "type": "string",
-        "sampleValue": "Routine"
+        "sampleValue": "Scheduled"
       },
       {
         "name": "segment",
         "type": "string",
-        "sampleValue": "naval_vessel"
+        "sampleValue": "aircraft"
       },
       {
         "name": "Productname",
         "type": "string",
-        "sampleValue": "Frigate Gas Turbine"
+        "sampleValue": "MQ-9 Sensor Pod"
       },
       {
         "name": "ProductId",
@@ -16311,27 +16311,27 @@
       {
         "name": "ProductType",
         "type": "string",
-        "sampleValue": "powerpack"
+        "sampleValue": "transmission"
       },
       {
         "name": "Price",
         "type": "numeric",
-        "sampleValue": 2500000
+        "sampleValue": 4200000
       },
       {
         "name": "componentRUL",
         "type": "numeric",
-        "sampleValue": 1800
+        "sampleValue": 450
       },
       {
         "name": "maintenanceType",
         "type": "string",
-        "sampleValue": "calendar"
+        "sampleValue": "field"
       },
       {
         "name": "marketTrend",
         "type": "string",
-        "sampleValue": "autonomous_inspection"
+        "sampleValue": "condition_based"
       },
       {
         "name": "browser",
@@ -16366,7 +16366,7 @@
       {
         "name": "discountApplied",
         "type": "numeric",
-        "sampleValue": 19.31
+        "sampleValue": 16.3
       },
       {
         "name": "taxAmount",
@@ -16376,7 +16376,7 @@
       {
         "name": "shippingCost",
         "type": "numeric",
-        "sampleValue": 16.6
+        "sampleValue": 10.79
       },
       {
         "name": "pricingTier",
@@ -16401,7 +16401,7 @@
       {
         "name": "upsellPotential",
         "type": "numeric",
-        "sampleValue": 234.43
+        "sampleValue": 373.9
       },
       {
         "name": "crossSellOpportunity",
@@ -16461,12 +16461,12 @@
       {
         "name": "growthPotential",
         "type": "numeric",
-        "sampleValue": 195.36
+        "sampleValue": 311.58
       },
       {
         "name": "futureValue",
         "type": "numeric",
-        "sampleValue": 1172.15
+        "sampleValue": 1869.51
       },
       {
         "name": "expansionOpportunity",
@@ -16495,7 +16495,7 @@
       "ReadinessVerification",
       "FleetReadinessReport"
     ],
-    "lastUpdated": "2026-04-10T23:28:20.945Z",
-    "runCount": 41321
+    "lastUpdated": "2026-04-11T00:28:18.075Z",
+    "runCount": 44661
   }
 }
