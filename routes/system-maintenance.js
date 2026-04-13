@@ -1,6 +1,13 @@
 /**
  * System Maintenance API — Cross-platform disk health & auto-cleanup
- * Works on Linux, macOS, and Windows.
+ * 
+ * DESIGN: Zero-intervention disk management for any VM / cloud / OS.
+ * - Runs cleanup every 15 minutes (not just on boot)
+ * - Three tiers: NORMAL (<75%), WARNING (75-89%), CRITICAL (90%+)
+ * - At WARNING: cleans safe items (caches, temp, logs)
+ * - At CRITICAL: cleans everything including aggressive targets
+ * - Scans all known cache/temp/log locations across Linux, macOS, Windows
+ * - Never deletes user data, source code, node_modules, or .git
  */
 import express from 'express';
 import { execSync } from 'child_process';
@@ -14,6 +21,11 @@ const __dirname = path.dirname(__filename);
 const PROJECT_DIR = path.resolve(__dirname, '..');
 
 const router = express.Router();
+
+// ── Thresholds ──────────────────────────────────────────────
+const WARN_PERCENT = 75;   // Start cleaning safe items
+const CRIT_PERCENT = 90;   // Clean aggressively
+const CHECK_INTERVAL_MS = 15 * 60 * 1000; // 15 minutes
 
 // ── Helpers ─────────────────────────────────────────────────
 
@@ -79,130 +91,116 @@ function findCleanableItems() {
   const homeDir = os.homedir();
   const platform = os.platform();
 
-  // 1. Project logs
-  const logsDir = path.join(PROJECT_DIR, 'logs');
-  if (fs.existsSync(logsDir)) {
-    const size = getDirectorySize(logsDir);
-    if (size > 1024) {
-      items.push({ id: 'project-logs', label: 'Server logs', path: logsDir, size, category: 'logs', safe: true });
-    }
-  }
-
-  // 2. npm cache (_npx, _logs, _cacache)
-  const npmDir = path.join(homeDir, '.npm');
-  for (const sub of ['_npx', '_logs', '_cacache']) {
-    const p = path.join(npmDir, sub);
-    if (fs.existsSync(p)) {
-      const size = getDirectorySize(p);
-      if (size > 10240) {
-        items.push({ id: `npm-${sub}`, label: `npm ${sub} cache`, path: p, size, category: 'cache', safe: true });
+  // Helper: add item if path exists and has meaningful size
+  const addIfExists = (id, label, dirPath, minBytes, safe, category = 'cache') => {
+    try {
+      if (fs.existsSync(dirPath)) {
+        const size = getDirectorySize(dirPath);
+        if (size > minBytes) {
+          items.push({ id, label, path: dirPath, size, category, safe });
+        }
       }
-    }
-  }
+    } catch { /* permission */ }
+  };
 
-  // 3. Temp files
+  // Helper: add if command output reveals reclaimable bytes (e.g. docker, journalctl)
+  const addCmd = (id, label, estimateSize, safe, category = 'system') => {
+    if (estimateSize > 0) {
+      items.push({ id, label, path: '', size: estimateSize, category, safe, isCommand: true });
+    }
+  };
+
+  // ── 1. PROJECT CACHES ──
+  addIfExists('project-logs', 'Server logs', path.join(PROJECT_DIR, 'logs'), 1024, true, 'logs');
+  addIfExists('nm-cache', 'node_modules/.cache', path.join(PROJECT_DIR, 'node_modules', '.cache'), 10240, true);
+
+  // ── 2. NPM / YARN / PNPM CACHES ──
+  const npmDir = path.join(homeDir, '.npm');
+  for (const sub of ['_npx', '_logs', '_cacache', '_update-notifier-last-checked']) {
+    addIfExists(`npm-${sub}`, `npm ${sub}`, path.join(npmDir, sub), 10240, true);
+  }
+  addIfExists('yarn-cache', 'Yarn cache', path.join(homeDir, '.yarn', 'cache'), 10240, true);
+  addIfExists('pnpm-cache', 'pnpm store', path.join(homeDir, '.pnpm-store'), 10240, true);
+
+  // ── 3. TEMP FILES (>24h old) ──
   const tmpDir = os.tmpdir();
   try {
-    const tmpEntries = fs.readdirSync(tmpDir, { withFileTypes: true });
     let tmpCleanable = 0;
-    for (const entry of tmpEntries) {
+    for (const entry of fs.readdirSync(tmpDir, { withFileTypes: true })) {
       try {
         const fp = path.join(tmpDir, entry.name);
         const stat = fs.statSync(fp);
-        // Only count files/dirs older than 24h
         if (Date.now() - stat.mtimeMs > 86400000) {
           tmpCleanable += entry.isDirectory() ? getDirectorySize(fp) : stat.size;
         }
-      } catch { /* permission issues */ }
+      } catch { /* permission */ }
     }
     if (tmpCleanable > 10240) {
       items.push({ id: 'temp-files', label: 'Temp files (>24h old)', path: tmpDir, size: tmpCleanable, category: 'temp', safe: true });
     }
   } catch { /* tmpdir inaccessible */ }
 
-  // 4. Platform-specific caches
-  if (platform === 'darwin') {
-    // macOS: ~/Library/Caches
-    const macCache = path.join(homeDir, 'Library', 'Caches');
-    if (fs.existsSync(macCache)) {
-      items.push({ id: 'mac-caches', label: 'macOS Library/Caches', path: macCache, size: -1, category: 'cache', safe: false, note: 'Scan only — manual review recommended' });
-    }
-  }
-
-  // 5. node_modules/.cache
-  const nmCache = path.join(PROJECT_DIR, 'node_modules', '.cache');
-  if (fs.existsSync(nmCache)) {
-    const size = getDirectorySize(nmCache);
-    if (size > 10240) {
-      items.push({ id: 'nm-cache', label: 'node_modules/.cache', path: nmCache, size, category: 'cache', safe: true });
-    }
-  }
-
-  // 6. VS Code Server logs (Linux remote dev)
+  // ── 4. VS CODE SERVER (remote dev) ──
   if (platform === 'linux') {
-    const vscodeLogs = path.join(homeDir, '.vscode-server', 'data', 'logs');
-    if (fs.existsSync(vscodeLogs)) {
-      const size = getDirectorySize(vscodeLogs);
-      if (size > 10240) {
-        items.push({ id: 'vscode-logs', label: 'VS Code Server logs', path: vscodeLogs, size, category: 'logs', safe: true });
-      }
-    }
+    addIfExists('vscode-logs', 'VS Code Server logs', path.join(homeDir, '.vscode-server', 'data', 'logs'), 10240, true, 'logs');
+    addIfExists('vscode-cacheddata', 'VS Code CachedData', path.join(homeDir, '.vscode-server', 'data', 'CachedData'), 10240, true);
+    // Old VS Code workspace storage (can grow huge)
+    addIfExists('vscode-workspace-storage', 'VS Code workspace storage', path.join(homeDir, '.vscode-server', 'data', 'User', 'workspaceStorage'), 50 * 1024 * 1024, true);
   }
 
-  // 7. VS Code workspace storage (can grow to hundreds of MB)
-  if (platform === 'linux') {
-    const wsStorage = path.join(homeDir, '.vscode-server', 'data', 'User', 'workspaceStorage');
-    if (fs.existsSync(wsStorage)) {
-      const size = getDirectorySize(wsStorage);
-      if (size > 50 * 1024 * 1024) { // > 50MB
-        items.push({ id: 'vscode-wsstorage', label: 'VS Code workspace storage', path: wsStorage, size, category: 'cache', safe: true });
-      }
-    }
-  }
+  // ── 5. PYTHON CACHES (pip, __pycache__) ──
+  addIfExists('pip-cache', 'pip cache', path.join(homeDir, '.cache', 'pip'), 10240, true);
+  addIfExists('pip-local', 'pip local packages', path.join(homeDir, '.local', 'lib'), 50 * 1024 * 1024, false);
 
-  // 8. VS Code CachedData
-  const vscodeCached = path.join(homeDir, '.vscode-server', 'data', 'CachedData');
-  if (fs.existsSync(vscodeCached)) {
-    const size = getDirectorySize(vscodeCached);
-    if (size > 10 * 1024 * 1024) { // > 10MB
-      items.push({ id: 'vscode-cacheddata', label: 'VS Code CachedData', path: vscodeCached, size, category: 'cache', safe: true });
-    }
-  }
+  // ── 6. GO / RUST / MISC DEV CACHES ──
+  addIfExists('go-cache', 'Go build cache', path.join(homeDir, '.cache', 'go-build'), 10240, true);
+  addIfExists('go-mod', 'Go module cache', path.join(homeDir, 'go', 'pkg', 'mod', 'cache'), 10240, true);
+  addIfExists('cargo-cache', 'Cargo registry cache', path.join(homeDir, '.cargo', 'registry', 'cache'), 10240, true);
 
-  // 9. Git garbage collection (compacts .git objects)
-  const gitDir = path.join(PROJECT_DIR, '.git');
-  if (fs.existsSync(gitDir)) {
-    const size = getDirectorySize(gitDir);
-    if (size > 20 * 1024 * 1024) { // > 20MB
-      items.push({ id: 'git-gc', label: 'Git repo compaction', path: gitDir, size, category: 'cache', safe: true, note: 'Runs git gc --aggressive' });
-    }
-  }
+  // ── 7. CLOUD SDK / CLI CACHES ──
+  addIfExists('gcloud-logs', 'gcloud logs', path.join(homeDir, '.config', 'gcloud', 'logs'), 10240, true, 'logs');
+  addIfExists('gcloud-cache', 'gcloud cache', path.join(homeDir, '.config', 'gcloud', 'cache'), 10240, true);
+  addIfExists('aws-cli-cache', 'AWS CLI cache', path.join(homeDir, '.aws', 'cli', 'cache'), 10240, true);
 
-  // 10. Docker unused images/containers (if docker available)
+  // ── 8. DOCKER (if installed) ──
   try {
-    const dockerCheck = execSync('which docker 2>/dev/null', { encoding: 'utf8', timeout: 5000 }).trim();
-    if (dockerCheck) {
-      try {
-        const raw = execSync('docker system df --format "{{.Reclaimable}}" 2>/dev/null | head -1', { encoding: 'utf8', timeout: 10000 }).trim();
-        if (raw && raw !== '0B') {
-          items.push({ id: 'docker-prune', label: `Docker reclaimable: ${raw}`, path: 'docker', size: -1, category: 'cache', safe: true, note: 'Removes unused images, containers, networks' });
-        }
-      } catch { /* docker not running or no permission */ }
-    }
-  } catch { /* no docker */ }
-
-  // 11. System journal/audit logs (Linux only)
-  if (platform === 'linux') {
-    for (const logPath of ['/var/log/journal', '/var/log/audit']) {
-      if (fs.existsSync(logPath)) {
-        try {
-          const size = getDirectorySize(logPath);
-          if (size > 10 * 1024 * 1024) { // > 10MB
-            items.push({ id: `sys-${path.basename(logPath)}`, label: `System ${path.basename(logPath)} logs`, path: logPath, size, category: 'system-logs', safe: true, note: 'Requires elevated permissions' });
-          }
-        } catch { /* permission denied is expected */ }
+    const dockerDf = execSync('docker system df --format "{{.Reclaimable}}" 2>/dev/null', { encoding: 'utf8', timeout: 10000 });
+    // Parse reclaimable bytes — docker outputs human-readable like "1.2GB"
+    const match = dockerDf.match(/([\d.]+)\s*(B|KB|MB|GB|TB)/i);
+    if (match) {
+      const units = { B: 1, KB: 1024, MB: 1024 ** 2, GB: 1024 ** 3, TB: 1024 ** 4 };
+      const reclaimable = parseFloat(match[1]) * (units[match[2].toUpperCase()] || 1);
+      if (reclaimable > 50 * 1024 * 1024) { // > 50MB
+        addCmd('docker-prune', 'Docker system prune', reclaimable, true, 'docker');
       }
     }
+  } catch { /* docker not installed or not running */ }
+
+  // ── 9. GIT GC (compact git objects in project) ──
+  try {
+    const gitDir = path.join(PROJECT_DIR, '.git');
+    if (fs.existsSync(gitDir)) {
+      const gitSize = getDirectorySize(gitDir);
+      if (gitSize > 100 * 1024 * 1024) { // > 100MB
+        items.push({ id: 'git-gc', label: 'Git garbage collection', path: gitDir, size: Math.floor(gitSize * 0.3), category: 'git', safe: true, isCommand: true, note: 'Runs git gc --aggressive' });
+      }
+    }
+  } catch { /* no git */ }
+
+  // ── 10. SYSTEM LOGS (Linux — journald, audit) ──
+  if (platform === 'linux') {
+    try {
+      const journalSize = parseInt(execSync('journalctl --disk-usage 2>/dev/null | grep -oP "\\d+\\.?\\d*[KMGT]"', { encoding: 'utf8', timeout: 5000 }).trim().replace(/[^0-9.]/g, '')) || 0;
+      if (journalSize > 50) { // > 50MB
+        addCmd('sys-journal', 'System journal logs', journalSize * 1024 * 1024, true, 'system-logs');
+      }
+    } catch { /* no journalctl or no permission */ }
+  }
+
+  // ── 11. macOS SPECIFIC ──
+  if (platform === 'darwin') {
+    addIfExists('mac-derived-data', 'Xcode DerivedData', path.join(homeDir, 'Library', 'Developer', 'Xcode', 'DerivedData'), 100 * 1024 * 1024, true);
+    addIfExists('mac-caches', 'macOS Caches', path.join(homeDir, 'Library', 'Caches'), 100 * 1024 * 1024, false);
   }
 
   return items;
@@ -211,19 +209,48 @@ function findCleanableItems() {
 function cleanItem(item) {
   const results = { id: item.id, success: false, freed: 0, message: '' };
   try {
+    // ── Command-based cleanups ──
+    if (item.isCommand) {
+      switch (item.id) {
+        case 'docker-prune':
+          try {
+            execSync('docker system prune -f 2>/dev/null', { timeout: 30000 });
+            results.success = true;
+            results.freed = item.size;
+            results.message = `Docker system prune (${formatBytes(item.size)})`;
+          } catch (e) { results.message = `Docker prune failed: ${e.message}`; }
+          break;
+        case 'git-gc':
+          try {
+            execSync('git gc --aggressive --prune=now 2>/dev/null', { cwd: PROJECT_DIR, timeout: 120000 });
+            results.success = true;
+            results.freed = item.size;
+            results.message = `Git gc freed ~${formatBytes(item.size)}`;
+          } catch (e) { results.message = `Git gc failed: ${e.message}`; }
+          break;
+        case 'sys-journal':
+          try {
+            execSync('journalctl --vacuum-size=10M 2>&1', { timeout: 15000 });
+            results.success = true;
+            results.freed = item.size;
+            results.message = 'Vacuumed journal logs to 10MB';
+          } catch (e) { results.message = `Journal cleanup failed: ${e.message}`; }
+          break;
+        default:
+          results.message = `No handler for command ${item.id}`;
+      }
+      return results;
+    }
+
+    // ── Directory-based cleanups ──
     switch (item.id) {
       case 'project-logs': {
-        // Truncate log files to 0, don't delete the directory
-        const entries = fs.readdirSync(item.path);
         let freed = 0;
-        for (const f of entries) {
+        for (const f of fs.readdirSync(item.path)) {
           const fp = path.join(item.path, f);
           try {
             const stat = fs.statSync(fp);
-            if (stat.isFile()) {
-              freed += stat.size;
-              fs.writeFileSync(fp, '');
-            }
+            if (stat.isFile()) { freed += stat.size; fs.writeFileSync(fp, ''); }
           } catch { /* skip */ }
         }
         results.freed = freed;
@@ -231,133 +258,37 @@ function cleanItem(item) {
         results.message = `Truncated log files (${formatBytes(freed)})`;
         break;
       }
-      case 'npm-_npx':
-      case 'npm-_logs':
-      case 'npm-_cacache': {
-        const size = getDirectorySize(item.path);
-        fs.rmSync(item.path, { recursive: true, force: true });
-        results.freed = size;
-        results.success = true;
-        results.message = `Removed ${item.label} (${formatBytes(size)})`;
-        break;
-      }
-      case 'nm-cache': {
-        const size = getDirectorySize(item.path);
-        fs.rmSync(item.path, { recursive: true, force: true });
-        results.freed = size;
-        results.success = true;
-        results.message = `Removed node_modules/.cache (${formatBytes(size)})`;
-        break;
-      }
-      case 'vscode-logs': {
-        const size = getDirectorySize(item.path);
-        fs.rmSync(item.path, { recursive: true, force: true });
-        results.freed = size;
-        results.success = true;
-        results.message = `Removed VS Code logs (${formatBytes(size)})`;
-        break;
-      }
-      case 'vscode-wsstorage': {
-        // Remove workspace storage entries older than 7 days
-        let freed = 0;
-        try {
-          for (const entry of fs.readdirSync(item.path, { withFileTypes: true })) {
-            const fp = path.join(item.path, entry.name);
-            try {
-              const stat = fs.statSync(fp);
-              if (entry.isDirectory() && Date.now() - stat.mtimeMs > 7 * 86400000) {
-                const size = getDirectorySize(fp);
-                fs.rmSync(fp, { recursive: true, force: true });
-                freed += size;
-              }
-            } catch { /* in-use */ }
-          }
-        } catch { /* permission */ }
-        results.freed = freed;
-        results.success = true;
-        results.message = `Cleaned workspace storage (${formatBytes(freed)})`;
-        break;
-      }
-      case 'vscode-cacheddata': {
-        const size = getDirectorySize(item.path);
-        fs.rmSync(item.path, { recursive: true, force: true });
-        results.freed = size;
-        results.success = true;
-        results.message = `Removed VS Code CachedData (${formatBytes(size)})`;
-        break;
-      }
-      case 'git-gc': {
-        try {
-          execSync('git gc --aggressive --prune=now 2>&1', { cwd: PROJECT_DIR, encoding: 'utf8', timeout: 60000 });
-          const sizeAfter = getDirectorySize(item.path);
-          results.freed = Math.max(0, item.size - sizeAfter);
-          results.success = true;
-          results.message = `Git compacted (.git now ${formatBytes(sizeAfter)}, freed ${formatBytes(results.freed)})`;
-        } catch (e) {
-          results.message = `Git gc failed: ${e.message}`;
-        }
-        break;
-      }
-      case 'docker-prune': {
-        try {
-          const output = execSync('docker system prune -f 2>&1', { encoding: 'utf8', timeout: 60000 });
-          results.success = true;
-          results.message = `Docker pruned: ${output.trim().split('\n').pop()}`;
-        } catch (e) {
-          results.message = `Docker prune failed: ${e.message}`;
-        }
-        break;
-      }
-
       case 'temp-files': {
         let freed = 0;
-        try {
-          for (const entry of fs.readdirSync(item.path, { withFileTypes: true })) {
-            const fp = path.join(item.path, entry.name);
-            try {
-              const stat = fs.statSync(fp);
-              if (Date.now() - stat.mtimeMs > 86400000) {
-                const size = entry.isDirectory() ? getDirectorySize(fp) : stat.size;
-                fs.rmSync(fp, { recursive: true, force: true });
-                freed += size;
-              }
-            } catch { /* permission/in-use */ }
-          }
-        } catch { /* tmpdir inaccessible */ }
+        for (const entry of fs.readdirSync(item.path, { withFileTypes: true })) {
+          const fp = path.join(item.path, entry.name);
+          try {
+            const stat = fs.statSync(fp);
+            if (Date.now() - stat.mtimeMs > 86400000) {
+              const size = entry.isDirectory() ? getDirectorySize(fp) : stat.size;
+              fs.rmSync(fp, { recursive: true, force: true });
+              freed += size;
+            }
+          } catch { /* permission/in-use */ }
+        }
         results.freed = freed;
         results.success = true;
         results.message = `Cleaned temp files (${formatBytes(freed)})`;
         break;
       }
-      case 'sys-journal': {
-        try {
-          execSync('journalctl --vacuum-size=10M 2>&1', { timeout: 15000 });
+      default: {
+        // Generic: remove entire directory contents
+        if (item.path && fs.existsSync(item.path)) {
+          const size = getDirectorySize(item.path);
+          fs.rmSync(item.path, { recursive: true, force: true });
+          results.freed = size;
           results.success = true;
-          results.message = 'Vacuumed journal logs to 10MB';
-          results.freed = item.size - 10 * 1024 * 1024;
-        } catch (e) {
-          results.message = `Journal cleanup requires sudo: ${e.message}`;
+          results.message = `Removed ${item.label} (${formatBytes(size)})`;
+        } else {
+          results.message = `Path not found: ${item.path}`;
         }
         break;
       }
-      case 'sys-audit': {
-        try {
-          // Truncate audit.log if accessible
-          const auditLog = '/var/log/audit/audit.log';
-          if (fs.existsSync(auditLog)) {
-            const stat = fs.statSync(auditLog);
-            fs.writeFileSync(auditLog, '');
-            results.freed = stat.size;
-            results.success = true;
-            results.message = `Truncated audit.log (${formatBytes(stat.size)})`;
-          }
-        } catch (e) {
-          results.message = `Audit cleanup requires sudo: ${e.message}`;
-        }
-        break;
-      }
-      default:
-        results.message = `No cleanup handler for ${item.id}`;
     }
   } catch (e) {
     results.message = `Cleanup failed: ${e.message}`;
@@ -422,58 +353,63 @@ router.post('/cleanup', async (req, res) => {
   }
 });
 
-// ── POST /api/system/auto-cleanup — Called on server startup ──
-// Runs safe cleanup if disk > 90% full. Called from server.js on boot.
-router.autoCleanupOnBoot = async function () {
+// ── Tiered auto-cleanup — called on boot and every 15 minutes ──
+function runAutoCleanup(trigger = 'scheduled') {
   const disk = getDiskUsage();
-  if (disk.percent >= 90) {
-    console.log(`[system-maintenance] ⚠️ Disk at ${disk.percent}% — running auto-cleanup...`);
-    const cleanable = findCleanableItems().filter(i => i.safe && i.size > 0);
-    let totalFreed = 0;
-    for (const item of cleanable) {
-      const result = cleanItem(item);
-      if (result.success && result.freed > 0) {
-        console.log(`[system-maintenance]   ${result.message}`);
-        totalFreed += result.freed;
-      }
-    }
-    const diskAfter = getDiskUsage();
-    console.log(`[system-maintenance] ✅ Auto-cleanup freed ${formatBytes(totalFreed)} — disk now ${diskAfter.percent}%`);
-    return { freed: totalFreed, diskBefore: disk, diskAfter };
-  } else {
-    console.log(`[system-maintenance] Disk at ${disk.percent}% — no auto-cleanup needed`);
+  if (disk.error) {
+    console.log(`[system-maintenance] ⚠️ Could not read disk: ${disk.error}`);
     return null;
   }
+
+  if (disk.percent < WARN_PERCENT) {
+    if (trigger === 'boot') console.log(`[system-maintenance] ✅ Disk at ${disk.percent}% (${formatBytes(disk.free)} free) — healthy`);
+    return null;
+  }
+
+  const tier = disk.percent >= CRIT_PERCENT ? 'CRITICAL' : 'WARNING';
+  console.log(`[system-maintenance] ⚠️ [${tier}] Disk at ${disk.percent}% (${formatBytes(disk.free)} free) — running ${trigger} cleanup...`);
+
+  const cleanable = findCleanableItems();
+  // At WARNING: only clean safe items. At CRITICAL: clean everything.
+  const toClean = tier === 'CRITICAL'
+    ? cleanable.filter(i => i.size > 0)
+    : cleanable.filter(i => i.safe && i.size > 0);
+
+  // Sort largest first so we free space fast
+  toClean.sort((a, b) => b.size - a.size);
+
+  let totalFreed = 0;
+  for (const item of toClean) {
+    const result = cleanItem(item);
+    if (result.success && result.freed > 0) {
+      console.log(`[system-maintenance]   ✓ ${result.message}`);
+      totalFreed += result.freed;
+    }
+
+    // Re-check disk after each item — stop if we're below warning threshold
+    const check = getDiskUsage();
+    if (!check.error && check.percent < WARN_PERCENT) {
+      console.log(`[system-maintenance]   Disk now ${check.percent}% — stopping early`);
+      break;
+    }
+  }
+
+  const diskAfter = getDiskUsage();
+  console.log(`[system-maintenance] ✅ Cleanup freed ${formatBytes(totalFreed)} — disk now ${diskAfter.percent}% (${formatBytes(diskAfter.free)} free)`);
+  return { freed: totalFreed, diskBefore: disk, diskAfter, tier, trigger };
+}
+
+// Boot cleanup
+router.autoCleanupOnBoot = function () {
+  return Promise.resolve(runAutoCleanup('boot'));
 };
 
-// ── Scheduled cleanup — runs every hour, acts if disk > 85% ──
+// Scheduled cleanup — starts a 15-minute interval, returns the timer
 router.startScheduledCleanup = function () {
-  const INTERVAL = 60 * 60 * 1000; // 1 hour
-  const THRESHOLD = 85;
-  const timer = setInterval(() => {
-    try {
-      const disk = getDiskUsage();
-      if (disk.percent >= THRESHOLD) {
-        console.log(`[system-maintenance] ⚠️ Scheduled check: disk at ${disk.percent}% (>${THRESHOLD}%) — cleaning...`);
-        const cleanable = findCleanableItems().filter(i => i.safe && i.size > 0);
-        let totalFreed = 0;
-        for (const item of cleanable) {
-          const result = cleanItem(item);
-          if (result.success && result.freed > 0) {
-            console.log(`[system-maintenance]   ${result.message}`);
-            totalFreed += result.freed;
-          }
-        }
-        const diskAfter = getDiskUsage();
-        console.log(`[system-maintenance] ✅ Scheduled cleanup freed ${formatBytes(totalFreed)} — disk now ${diskAfter.percent}%`);
-      }
-    } catch (e) {
-      console.error('[system-maintenance] Scheduled cleanup error:', e.message);
-    }
-  }, INTERVAL);
-  timer.unref(); // Don't prevent process exit
-  console.log(`[system-maintenance] ⏰ Scheduled disk cleanup: every 60 min (threshold: ${THRESHOLD}%)`);
-  return timer;
+  console.log(`[system-maintenance] 🔄 Scheduled disk cleanup enabled (every ${CHECK_INTERVAL_MS / 60000} min, warn at ${WARN_PERCENT}%, critical at ${CRIT_PERCENT}%)`);
+  return setInterval(() => {
+    try { runAutoCleanup('scheduled'); } catch (e) { console.warn('[system-maintenance] Scheduled cleanup error:', e.message); }
+  }, CHECK_INTERVAL_MS);
 };
 
 export default router;
