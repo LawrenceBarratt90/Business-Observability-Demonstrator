@@ -67,9 +67,10 @@ if (process.env.DT_ENVIRONMENT) {
 }
 DT_API_TOKEN = process.env.DT_OTEL_TOKEN || process.env.DT_PLATFORM_TOKEN || "";
 
-// 2. Fill gaps from .dt-credentials.json
+// 2. Fill gaps from .dt-credentials.json (resolve relative to this file's directory, not cwd)
+const credentialsPath = require("path").resolve(__dirname, ".dt-credentials.json");
 try {
-  const creds = JSON.parse(fs.readFileSync(".dt-credentials.json", "utf-8"));
+  const creds = JSON.parse(fs.readFileSync(credentialsPath, "utf-8"));
   if (!DT_API_URL && creds.environmentUrl) {
     DT_API_URL = creds.environmentUrl.replace(/\/+$/, "") + "/api/v2/otlp";
   }
