@@ -120,32 +120,7 @@ function findCleanableItems() {
     }
   } catch { /* tmpdir inaccessible */ }
 
-  // 4. Old rotated logs in project  
-  try {
-    const logFiles = [];
-    const scanForLogs = (dir, depth = 0) => {
-      if (depth > 2) return;
-      try {
-        for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-          const fp = path.join(dir, entry.name);
-          if (entry.isFile() && /\.(log\.\d+|log\.gz|log\.old|log-\d{8})$/i.test(entry.name)) {
-            logFiles.push(fp);
-          } else if (entry.isDirectory() && !['node_modules', '.git', 'dist'].includes(entry.name)) {
-            scanForLogs(fp, depth + 1);
-          }
-        }
-      } catch { /* permission */ }
-    };
-    scanForLogs(PROJECT_DIR);
-    if (logFiles.length > 0) {
-      const size = logFiles.reduce((sum, f) => { try { return sum + fs.statSync(f).size; } catch { return sum; } }, 0);
-      if (size > 1024) {
-        items.push({ id: 'rotated-logs', label: `${logFiles.length} rotated log file(s)`, path: PROJECT_DIR, size, category: 'logs', safe: true, files: logFiles });
-      }
-    }
-  } catch { /* scanning error */ }
-
-  // 5. Platform-specific caches
+  // 4. Platform-specific caches
   if (platform === 'darwin') {
     // macOS: ~/Library/Caches
     const macCache = path.join(homeDir, 'Library', 'Caches');
@@ -154,7 +129,7 @@ function findCleanableItems() {
     }
   }
 
-  // 6. node_modules/.cache
+  // 5. node_modules/.cache
   const nmCache = path.join(PROJECT_DIR, 'node_modules', '.cache');
   if (fs.existsSync(nmCache)) {
     const size = getDirectorySize(nmCache);
@@ -163,7 +138,7 @@ function findCleanableItems() {
     }
   }
 
-  // 7. Old dist builds
+  // 6. Old dist builds
   const distDir = path.join(PROJECT_DIR, 'dist');
   if (fs.existsSync(distDir)) {
     const size = getDirectorySize(distDir);
@@ -172,7 +147,7 @@ function findCleanableItems() {
     }
   }
 
-  // 8. VS Code Server logs (Linux remote dev)
+  // 7. VS Code Server logs (Linux remote dev)
   if (platform === 'linux') {
     const vscodeLogs = path.join(homeDir, '.vscode-server', 'data', 'logs');
     if (fs.existsSync(vscodeLogs)) {
@@ -183,7 +158,7 @@ function findCleanableItems() {
     }
   }
 
-  // 9. System journal/audit logs (Linux only, will need sudo for actual cleanup)  
+  // 8. System journal/audit logs (Linux only, will need sudo for actual cleanup)  
   if (platform === 'linux') {
     for (const logPath of ['/var/log/journal', '/var/log/audit']) {
       if (fs.existsSync(logPath)) {
@@ -249,19 +224,7 @@ function cleanItem(item) {
         results.message = `Removed VS Code logs (${formatBytes(size)})`;
         break;
       }
-      case 'rotated-logs': {
-        let freed = 0;
-        for (const f of (item.files || [])) {
-          try {
-            freed += fs.statSync(f).size;
-            fs.unlinkSync(f);
-          } catch { /* skip */ }
-        }
-        results.freed = freed;
-        results.success = true;
-        results.message = `Removed rotated logs (${formatBytes(freed)})`;
-        break;
-      }
+
       case 'temp-files': {
         let freed = 0;
         try {

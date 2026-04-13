@@ -4752,27 +4752,6 @@ app.use((err, req, res, next) => {
   // Store health monitor for cleanup
   server.healthMonitor = healthMonitor;
   
-  // --- Log rotation (prevents /tmp/bizobs-server.log from growing unbounded) ---
-  const LOG_PATH = path.join(__dirname, 'logs', 'server.log');
-  const LOG_MAX_BYTES = 25 * 1024 * 1024; // 25 MB
-  const logRotation = setInterval(async () => {
-    try {
-      const { stat, readFile, writeFile, unlink } = await import('fs/promises');
-      const info = await stat(LOG_PATH).catch(() => null);
-      if (info && info.size > LOG_MAX_BYTES) {
-        // Keep last ~5MB of the log
-        const buf = await readFile(LOG_PATH);
-        const keep = buf.slice(buf.length - 5 * 1024 * 1024);
-        const rotated = `${LOG_PATH}.1`;
-        await unlink(rotated).catch(() => {});
-        await writeFile(rotated, buf.slice(0, buf.length - keep.length));
-        await writeFile(LOG_PATH, Buffer.concat([Buffer.from(`--- Log rotated at ${new Date().toISOString()} (was ${(info.size / 1e6).toFixed(1)}MB) ---\n`), keep]));
-        console.log(`[log-rotation] Rotated ${LOG_PATH} (${(info.size / 1e6).toFixed(1)}MB -> 5MB, old data in ${rotated})`);
-      }
-    } catch (e) { /* ignore rotation errors */ }
-  }, 300000); // every 5 minutes
-  server.logRotation = logRotation;
-  
   // --- Auto-start AI Agents ---
   console.log('🤖 Starting autonomous AI agents...');
   try {
