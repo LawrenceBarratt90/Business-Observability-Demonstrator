@@ -2205,6 +2205,7 @@ export default async function (payload: ProxyPayload) {
 
         // 2. Call GitHub Models API (OpenAI-compatible)
         const selectedModel = model || 'gpt-4.1';
+        const startTime = Date.now();
         const resp = await fetch('https://models.inference.ai.azure.com/chat/completions', {
           method: 'POST',
           headers: {
@@ -2222,9 +2223,18 @@ export default async function (payload: ProxyPayload) {
           }),
           signal: AbortSignal.timeout(120000),
         });
+        const durationMs = Date.now() - startTime;
 
         if (!resp.ok) {
           const errText = await resp.text();
+          console.log('[GenAI Span]', JSON.stringify({
+            'gen_ai.system': 'github_models',
+            'gen_ai.operation.name': 'chat',
+            'gen_ai.request.model': selectedModel,
+            'gen_ai.response.status': 'error',
+            'gen_ai.response.error': `HTTP ${resp.status}`,
+            'gen_ai.response.duration_ms': durationMs,
+          }));
           if (resp.status === 401) {
             return { success: false, error: 'GitHub token is invalid or expired. Update it in Settings → GitHub Copilot.', code: 'AUTH_FAILED' };
           }
@@ -2236,12 +2246,40 @@ export default async function (payload: ProxyPayload) {
 
         const result = await resp.json();
         const content = result.choices?.[0]?.message?.content || '';
+        const usage = result.usage || {};
+        const promptTokens = usage.prompt_tokens || 0;
+        const completionTokens = usage.completion_tokens || 0;
+
+        // 3. Log GenAI span for Dynatrace AI Observability
+        console.log('[GenAI Span]', JSON.stringify({
+          'gen_ai.system': 'github_models',
+          'gen_ai.operation.name': 'chat',
+          'gen_ai.request.model': selectedModel,
+          'gen_ai.response.model': result.model || selectedModel,
+          'gen_ai.usage.prompt_tokens': promptTokens,
+          'gen_ai.usage.completion_tokens': completionTokens,
+          'gen_ai.usage.total_tokens': promptTokens + completionTokens,
+          'gen_ai.response.finish_reason': result.choices?.[0]?.finish_reason || 'unknown',
+          'gen_ai.response.duration_ms': durationMs,
+          'gen_ai.response.status': 'ok',
+          'server.address': 'models.inference.ai.azure.com',
+        }));
+
         return {
           success: true,
           data: {
             content,
             model: selectedModel,
-            usage: result.usage || {},
+            usage,
+            genai: {
+              system: 'github_models',
+              model: result.model || selectedModel,
+              promptTokens,
+              completionTokens,
+              totalTokens: promptTokens + completionTokens,
+              durationMs,
+              finishReason: result.choices?.[0]?.finish_reason || 'unknown',
+            },
           },
         };
       } catch (err: any) {

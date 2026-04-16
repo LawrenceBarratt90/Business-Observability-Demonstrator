@@ -1671,7 +1671,8 @@ export const HomePage = () => {
         throw new Error(`C-Suite generation failed: ${res1.error}`);
       }
       setGhResult1(res1.data.content);
-      updateStep(0, { status: 'done', detail: `Model: ${res1.data.model}` });
+      const g1 = res1.data.genai;
+      updateStep(0, { status: 'done', detail: g1 ? `${g1.model} · ${g1.totalTokens} tokens · ${(g1.durationMs / 1000).toFixed(1)}s` : `Model: ${res1.data.model}` });
 
       // Step 2: Generate Journey Config
       updateStep(1, { status: 'running' });
@@ -1688,7 +1689,8 @@ export const HomePage = () => {
         throw new Error(`Journey generation failed: ${res2.error}`);
       }
       setGhResult2(res2.data.content);
-      updateStep(1, { status: 'done', detail: `Model: ${res2.data.model}` });
+      const g2 = res2.data.genai;
+      updateStep(1, { status: 'done', detail: g2 ? `${g2.model} · ${g2.totalTokens} tokens · ${(g2.durationMs / 1000).toFixed(1)}s` : `Model: ${res2.data.model}` });
 
       // Step 3: Validate JSON
       updateStep(2, { status: 'running' });

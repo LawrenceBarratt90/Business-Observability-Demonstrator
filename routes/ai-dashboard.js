@@ -43,7 +43,7 @@ const SKILLS_PATH = path.join(__dirname, '../ai-agent-knowledge-base-main@c5ea86
 const PROMPTS_PATH = path.join(__dirname, '../prompts');
 
 const OLLAMA_ENDPOINT = process.env.OLLAMA_ENDPOINT || 'http://localhost:11434';
-const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'llama3.2';
+const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'llama3.2:1b';
 
 // Respect OLLAMA_MODE — when 'disabled', skip all LLM calls and use templates only
 const OLLAMA_DISABLED = (process.env.OLLAMA_MODE || global.ollamaMode || 'full').toLowerCase() === 'disabled';
