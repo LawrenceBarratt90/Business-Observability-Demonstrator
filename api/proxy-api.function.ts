@@ -2203,8 +2203,34 @@ export default async function (payload: ProxyPayload) {
           return { success: false, error: 'Could not retrieve token from credential vault.', code: 'TOKEN_EMPTY' };
         }
 
-        // 2. Call GitHub Models API (OpenAI-compatible)
         const selectedModel = model || 'gpt-4.1';
+
+        // 2. Route through EC2 server for OTel GenAI tracing (shows in DT AI Observability)
+        //    Falls back to direct GitHub Models API call if server unreachable
+        try {
+          const proxyResp = await fetch(`${baseUrl}/api/ai-generate/github`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-github-token': ghToken,
+            },
+            body: JSON.stringify({ prompt, model: selectedModel }),
+            signal: AbortSignal.timeout(120000),
+          });
+          if (proxyResp.ok) {
+            const proxyResult = await proxyResp.json();
+            if (proxyResult.success) {
+              console.log('[proxy-api] GitHub Models call routed via EC2 server (OTel traced)');
+              return proxyResult;
+            }
+          }
+          // If proxy returned an error status, fall through to direct call
+          console.warn('[proxy-api] EC2 proxy returned non-ok, falling back to direct call');
+        } catch (proxyErr: any) {
+          console.warn('[proxy-api] EC2 proxy unreachable, falling back to direct GitHub Models call:', proxyErr.message);
+        }
+
+        // 3. Fallback: Call GitHub Models API directly (no OTel span, but still works)
         const startTime = Date.now();
         const resp = await fetch('https://models.inference.ai.azure.com/chat/completions', {
           method: 'POST',
@@ -2227,14 +2253,6 @@ export default async function (payload: ProxyPayload) {
 
         if (!resp.ok) {
           const errText = await resp.text();
-          console.log('[GenAI Span]', JSON.stringify({
-            'gen_ai.system': 'github_models',
-            'gen_ai.operation.name': 'chat',
-            'gen_ai.request.model': selectedModel,
-            'gen_ai.response.status': 'error',
-            'gen_ai.response.error': `HTTP ${resp.status}`,
-            'gen_ai.response.duration_ms': durationMs,
-          }));
           if (resp.status === 401) {
             return { success: false, error: 'GitHub token is invalid or expired. Update it in Settings → GitHub Copilot.', code: 'AUTH_FAILED' };
           }
@@ -2247,23 +2265,6 @@ export default async function (payload: ProxyPayload) {
         const result = await resp.json();
         const content = result.choices?.[0]?.message?.content || '';
         const usage = result.usage || {};
-        const promptTokens = usage.prompt_tokens || 0;
-        const completionTokens = usage.completion_tokens || 0;
-
-        // 3. Log GenAI span for Dynatrace AI Observability
-        console.log('[GenAI Span]', JSON.stringify({
-          'gen_ai.system': 'github_models',
-          'gen_ai.operation.name': 'chat',
-          'gen_ai.request.model': selectedModel,
-          'gen_ai.response.model': result.model || selectedModel,
-          'gen_ai.usage.prompt_tokens': promptTokens,
-          'gen_ai.usage.completion_tokens': completionTokens,
-          'gen_ai.usage.total_tokens': promptTokens + completionTokens,
-          'gen_ai.response.finish_reason': result.choices?.[0]?.finish_reason || 'unknown',
-          'gen_ai.response.duration_ms': durationMs,
-          'gen_ai.response.status': 'ok',
-          'server.address': 'models.inference.ai.azure.com',
-        }));
 
         return {
           success: true,
@@ -2274,9 +2275,9 @@ export default async function (payload: ProxyPayload) {
             genai: {
               system: 'github_models',
               model: result.model || selectedModel,
-              promptTokens,
-              completionTokens,
-              totalTokens: promptTokens + completionTokens,
+              promptTokens: usage.prompt_tokens || 0,
+              completionTokens: usage.completion_tokens || 0,
+              totalTokens: (usage.prompt_tokens || 0) + (usage.completion_tokens || 0),
               durationMs,
               finishReason: result.choices?.[0]?.finish_reason || 'unknown',
             },

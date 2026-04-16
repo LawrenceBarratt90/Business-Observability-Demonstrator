@@ -17951,32 +17951,32 @@
       {
         "name": "Productname",
         "type": "string",
-        "sampleValue": "Standard Product"
+        "sampleValue": "Budget Product"
       },
       {
         "name": "ProductId",
         "type": "string",
-        "sampleValue": "SKU1000"
+        "sampleValue": "SKU1002"
       },
       {
         "name": "ProductType",
         "type": "string",
-        "sampleValue": "Clothing"
+        "sampleValue": "Home & Garden"
       },
       {
         "name": "Price",
         "type": "numeric",
-        "sampleValue": 29.99
+        "sampleValue": 39.99
       },
       {
         "name": "transactionValue",
         "type": "numeric",
-        "sampleValue": 221.26
+        "sampleValue": 191.77
       },
       {
         "name": "orderTotal",
         "type": "numeric",
-        "sampleValue": 245.83
+        "sampleValue": 371.31
       },
       {
         "name": "averageOrderValue",
@@ -17986,7 +17986,7 @@
       {
         "name": "customerLifetimeValue",
         "type": "numeric",
-        "sampleValue": 1290.58
+        "sampleValue": 1204.87
       },
       {
         "name": "revenuePerCustomer",
@@ -18001,17 +18001,17 @@
       {
         "name": "discountApplied",
         "type": "numeric",
-        "sampleValue": 19.86
+        "sampleValue": 14.36
       },
       {
         "name": "taxAmount",
         "type": "numeric",
-        "sampleValue": 19.67
+        "sampleValue": 29.7
       },
       {
         "name": "shippingCost",
         "type": "numeric",
-        "sampleValue": 19.76
+        "sampleValue": 17.79
       },
       {
         "name": "pricingTier",
@@ -18031,17 +18031,17 @@
       {
         "name": "contractValue",
         "type": "numeric",
-        "sampleValue": 4515.94
+        "sampleValue": 2250.94
       },
       {
         "name": "annualRevenue",
         "type": "numeric",
-        "sampleValue": 3226.45
+        "sampleValue": 3012.18
       },
       {
         "name": "acquisitionCost",
         "type": "numeric",
-        "sampleValue": 68.73
+        "sampleValue": 68.88
       },
       {
         "name": "retentionProbability",
@@ -18056,7 +18056,7 @@
       {
         "name": "upsellPotential",
         "type": "numeric",
-        "sampleValue": 387.17
+        "sampleValue": 361.46
       },
       {
         "name": "crossSellOpportunity",
@@ -18081,7 +18081,7 @@
       {
         "name": "engagementScore",
         "type": "numeric",
-        "sampleValue": 62.09
+        "sampleValue": 67.44
       },
       {
         "name": "satisfactionRating",
@@ -18101,7 +18101,7 @@
       {
         "name": "timeToConversion",
         "type": "numeric",
-        "sampleValue": 12.11
+        "sampleValue": 10.6
       },
       {
         "name": "competitiveAdvantage",
@@ -18126,7 +18126,7 @@
       {
         "name": "processingTime",
         "type": "numeric",
-        "sampleValue": 29.96
+        "sampleValue": 18.63
       },
       {
         "name": "operationalCost",
@@ -18146,7 +18146,7 @@
       {
         "name": "costPerAcquisition",
         "type": "numeric",
-        "sampleValue": 82.48
+        "sampleValue": 82.66
       },
       {
         "name": "riskLevel",
@@ -18171,12 +18171,12 @@
       {
         "name": "growthPotential",
         "type": "numeric",
-        "sampleValue": 322.65
+        "sampleValue": 301.22
       },
       {
         "name": "futureValue",
         "type": "numeric",
-        "sampleValue": 1935.87
+        "sampleValue": 1807.3
       },
       {
         "name": "expansionOpportunity",
@@ -18201,7 +18201,7 @@
       {
         "name": "financeType",
         "type": "string",
-        "sampleValue": "Personal Contract Purchase"
+        "sampleValue": "lease"
       },
       {
         "name": "leasingTermMonths",
@@ -18296,7 +18296,7 @@
       {
         "name": "errorRate",
         "type": "numeric",
-        "sampleValue": 0.003
+        "sampleValue": 0.007
       },
       {
         "name": "accessibilityCompliance",
@@ -18311,22 +18311,22 @@
       {
         "name": "productName",
         "type": "string",
-        "sampleValue": "BMW X5 xDrive45e"
+        "sampleValue": "BMW M4 Coupe"
       },
       {
         "name": "productSKU",
         "type": "string",
-        "sampleValue": "SKU-BMW-X5-45E"
+        "sampleValue": "SKU-BMW3S-2025"
       },
       {
         "name": "productPrice",
         "type": "numeric",
-        "sampleValue": 42800
+        "sampleValue": 65000
       },
       {
         "name": "productCategory",
         "type": "string",
-        "sampleValue": "Hatchback"
+        "sampleValue": "SUV"
       },
       {
         "name": "productColor",
@@ -18422,6 +18422,216 @@
         "name": "sessionDurationMinutes",
         "type": "numeric",
         "sampleValue": 30
+      },
+      {
+        "name": "dropOffRate",
+        "type": "numeric",
+        "sampleValue": 0.13
+      },
+      {
+        "name": "customerSatisfactionScore",
+        "type": "numeric",
+        "sampleValue": 4.7
+      },
+      {
+        "name": "averageTransactionValue",
+        "type": "numeric",
+        "sampleValue": 28700
+      },
+      {
+        "name": "depositAmount",
+        "type": "numeric",
+        "sampleValue": 2000
+      },
+      {
+        "name": "financeApprovalRate",
+        "type": "numeric",
+        "sampleValue": 0.71
+      },
+      {
+        "name": "serviceBookingCompletionRate",
+        "type": "numeric",
+        "sampleValue": 0.22
+      },
+      {
+        "name": "paymentGatewayLatency",
+        "type": "numeric",
+        "sampleValue": 850
+      },
+      {
+        "name": "pageLoadTime",
+        "type": "numeric",
+        "sampleValue": 1.5
+      },
+      {
+        "name": "bookingEngineLatency",
+        "type": "numeric",
+        "sampleValue": 720
+      },
+      {
+        "name": "accountRegistrationSuccessRate",
+        "type": "numeric",
+        "sampleValue": 0.94
+      },
+      {
+        "name": "userSessionDuration",
+        "type": "numeric",
+        "sampleValue": 27
+      },
+      {
+        "name": "browserType",
+        "type": "string",
+        "sampleValue": "Chrome"
+      },
+      {
+        "name": "configuratorCompletionRate",
+        "type": "numeric",
+        "sampleValue": 0.36
+      },
+      {
+        "name": "financeApplicationDropOff",
+        "type": "numeric",
+        "sampleValue": 0.22
+      },
+      {
+        "name": "serviceBookingDropOff",
+        "type": "numeric",
+        "sampleValue": 0.11
+      },
+      {
+        "name": "purchaseFinalizationRate",
+        "type": "numeric",
+        "sampleValue": 0.015
+      },
+      {
+        "name": "riskScore",
+        "type": "numeric",
+        "sampleValue": 0.06
+      },
+      {
+        "name": "complianceCheckResult",
+        "type": "string",
+        "sampleValue": "passed"
+      },
+      {
+        "name": "authenticationFailureRate",
+        "type": "numeric",
+        "sampleValue": 0.003
+      },
+      {
+        "name": "leadSource",
+        "type": "string",
+        "sampleValue": "website"
+      },
+      {
+        "name": "paymentMethods",
+        "type": "string",
+        "sampleValue": "credit_card"
+      },
+      {
+        "name": "deliveryOptions",
+        "type": "string",
+        "sampleValue": "in-dealership"
+      },
+      {
+        "name": "productVariant",
+        "type": "string",
+        "sampleValue": "Sport"
+      },
+      {
+        "name": "inventoryStatus",
+        "type": "string",
+        "sampleValue": "reserved"
+      },
+      {
+        "name": "crmIntegrationStatus",
+        "type": "string",
+        "sampleValue": "success"
+      },
+      {
+        "name": "analyticsPlatform",
+        "type": "string",
+        "sampleValue": "Adobe Analytics"
+      },
+      {
+        "name": "campaignType",
+        "type": "string",
+        "sampleValue": "Brand Awareness"
+      },
+      {
+        "name": "userFeedback",
+        "type": "string",
+        "sampleValue": "positive"
+      },
+      {
+        "name": "sessionEngagementScore",
+        "type": "numeric",
+        "sampleValue": 91
+      },
+      {
+        "name": "dropOffStep",
+        "type": "string",
+        "sampleValue": "FinanceApplication"
+      },
+      {
+        "name": "dealerInteractionCount",
+        "type": "numeric",
+        "sampleValue": 2
+      },
+      {
+        "name": "postTransactionSurveyCompleted",
+        "type": "string",
+        "sampleValue": "true"
+      },
+      {
+        "name": "personalizationLevel",
+        "type": "string",
+        "sampleValue": "high"
+      },
+      {
+        "name": "accountUpdateFrequency",
+        "type": "numeric",
+        "sampleValue": 0.19
+      },
+      {
+        "name": "serviceAppointmentBooked",
+        "type": "string",
+        "sampleValue": "false"
+      },
+      {
+        "name": "insuranceOfferAccepted",
+        "type": "string",
+        "sampleValue": "true"
+      },
+      {
+        "name": "vehicleAvailability",
+        "type": "string",
+        "sampleValue": "in-stock"
+      },
+      {
+        "name": "afterSalesRevenue",
+        "type": "numeric",
+        "sampleValue": 1750
+      },
+      {
+        "name": "customerRetentionRate",
+        "type": "numeric",
+        "sampleValue": 0.79
+      },
+      {
+        "name": "vehicleConfiguratorErrorRate",
+        "type": "numeric",
+        "sampleValue": 0.004
+      },
+      {
+        "name": "dealerFootfallGenerated",
+        "type": "numeric",
+        "sampleValue": 1
+      },
+      {
+        "name": "profileCompletionRate",
+        "type": "numeric",
+        "sampleValue": 0.88
       }
     ],
     "services": [
@@ -18430,7 +18640,11 @@
       "AccountAuthenticationService",
       "FinanceApplicationService",
       "PurchaseReservationService",
-      "AftersalesServiceBookingService"
+      "AftersalesServiceBookingService",
+      "QuoteRequestService",
+      "TestDriveBookingService",
+      "DepositPaymentService",
+      "AccountRegistrationService"
     ],
     "steps": [
       "VehicleSearch",
@@ -18438,9 +18652,13 @@
       "AccountAuthentication",
       "FinanceApplication",
       "PurchaseReservation",
-      "AftersalesServiceBooking"
+      "AftersalesServiceBooking",
+      "QuoteRequest",
+      "TestDriveBooking",
+      "DepositPayment",
+      "AccountRegistration"
     ],
-    "lastUpdated": "2026-04-16T10:07:41.154Z",
-    "runCount": 345
+    "lastUpdated": "2026-04-16T10:17:28.765Z",
+    "runCount": 728
   }
 }
