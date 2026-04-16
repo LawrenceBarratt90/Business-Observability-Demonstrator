@@ -662,6 +662,21 @@ async function logGenAISpan(spanAttributes, operationName) {
       kind: SpanKind.CLIENT,
       attributes: spanAttributes,
     });
+
+    // Add prompt/completion as span events for full content capture
+    const promptContent = spanAttributes['gen_ai.prompt.0.content'];
+    const completionContent = spanAttributes['gen_ai.completion.0.content'];
+    if (promptContent) {
+      span.addEvent('gen_ai.content.prompt', {
+        'gen_ai.prompt': JSON.stringify([{ role: 'user', content: promptContent }]),
+      });
+    }
+    if (completionContent) {
+      span.addEvent('gen_ai.content.completion', {
+        'gen_ai.completion': JSON.stringify([{ role: 'assistant', content: completionContent }]),
+      });
+    }
+
     span.setStatus({ code: SpanStatusCode.OK });
     span.end();
   } catch (error) {

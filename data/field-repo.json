@@ -17956,12 +17956,12 @@
       {
         "name": "ProductId",
         "type": "string",
-        "sampleValue": "SKU1002"
+        "sampleValue": "SKU1001"
       },
       {
         "name": "ProductType",
         "type": "string",
-        "sampleValue": "Home & Garden"
+        "sampleValue": "Electronics"
       },
       {
         "name": "Price",
@@ -17971,12 +17971,12 @@
       {
         "name": "transactionValue",
         "type": "numeric",
-        "sampleValue": 191.77
+        "sampleValue": 180.5
       },
       {
         "name": "orderTotal",
         "type": "numeric",
-        "sampleValue": 371.31
+        "sampleValue": 285.41
       },
       {
         "name": "averageOrderValue",
@@ -17986,7 +17986,7 @@
       {
         "name": "customerLifetimeValue",
         "type": "numeric",
-        "sampleValue": 1204.87
+        "sampleValue": 522.34
       },
       {
         "name": "revenuePerCustomer",
@@ -18001,17 +18001,17 @@
       {
         "name": "discountApplied",
         "type": "numeric",
-        "sampleValue": 14.36
+        "sampleValue": 12.27
       },
       {
         "name": "taxAmount",
         "type": "numeric",
-        "sampleValue": 29.7
+        "sampleValue": 22.83
       },
       {
         "name": "shippingCost",
         "type": "numeric",
-        "sampleValue": 17.79
+        "sampleValue": 7.3
       },
       {
         "name": "pricingTier",
@@ -18031,17 +18031,17 @@
       {
         "name": "contractValue",
         "type": "numeric",
-        "sampleValue": 2250.94
+        "sampleValue": 3055.84
       },
       {
         "name": "annualRevenue",
         "type": "numeric",
-        "sampleValue": 3012.18
+        "sampleValue": 1305.85
       },
       {
         "name": "acquisitionCost",
         "type": "numeric",
-        "sampleValue": 68.88
+        "sampleValue": 40.78
       },
       {
         "name": "retentionProbability",
@@ -18056,7 +18056,7 @@
       {
         "name": "upsellPotential",
         "type": "numeric",
-        "sampleValue": 361.46
+        "sampleValue": 156.7
       },
       {
         "name": "crossSellOpportunity",
@@ -18081,7 +18081,7 @@
       {
         "name": "engagementScore",
         "type": "numeric",
-        "sampleValue": 67.44
+        "sampleValue": 75.89
       },
       {
         "name": "satisfactionRating",
@@ -18101,7 +18101,7 @@
       {
         "name": "timeToConversion",
         "type": "numeric",
-        "sampleValue": 10.6
+        "sampleValue": 11.43
       },
       {
         "name": "competitiveAdvantage",
@@ -18126,7 +18126,7 @@
       {
         "name": "processingTime",
         "type": "numeric",
-        "sampleValue": 18.63
+        "sampleValue": 29.24
       },
       {
         "name": "operationalCost",
@@ -18146,7 +18146,7 @@
       {
         "name": "costPerAcquisition",
         "type": "numeric",
-        "sampleValue": 82.66
+        "sampleValue": 48.94
       },
       {
         "name": "riskLevel",
@@ -18171,12 +18171,12 @@
       {
         "name": "growthPotential",
         "type": "numeric",
-        "sampleValue": 301.22
+        "sampleValue": 130.59
       },
       {
         "name": "futureValue",
         "type": "numeric",
-        "sampleValue": 1807.3
+        "sampleValue": 783.51
       },
       {
         "name": "expansionOpportunity",
@@ -18221,7 +18221,7 @@
       {
         "name": "dealerLocation",
         "type": "string",
-        "sampleValue": "BMW Park Lane, London"
+        "sampleValue": "London"
       },
       {
         "name": "dealerApiLatencyMs",
@@ -18291,7 +18291,7 @@
       {
         "name": "mobileResponsivenessScore",
         "type": "numeric",
-        "sampleValue": 98
+        "sampleValue": 0.98
       },
       {
         "name": "errorRate",
@@ -18311,22 +18311,22 @@
       {
         "name": "productName",
         "type": "string",
-        "sampleValue": "BMW M4 Coupe"
+        "sampleValue": "BMW 530e M Sport"
       },
       {
         "name": "productSKU",
         "type": "string",
-        "sampleValue": "SKU-BMW3S-2025"
+        "sampleValue": "SKU-BMW-530E-2025"
       },
       {
         "name": "productPrice",
         "type": "numeric",
-        "sampleValue": 65000
+        "sampleValue": 650
       },
       {
         "name": "productCategory",
         "type": "string",
-        "sampleValue": "SUV"
+        "sampleValue": "Vehicle"
       },
       {
         "name": "productColor",
@@ -18421,7 +18421,7 @@
       {
         "name": "sessionDurationMinutes",
         "type": "numeric",
-        "sampleValue": 30
+        "sampleValue": 28
       },
       {
         "name": "dropOffRate",
@@ -18446,7 +18446,7 @@
       {
         "name": "financeApprovalRate",
         "type": "numeric",
-        "sampleValue": 0.71
+        "sampleValue": 0.73
       },
       {
         "name": "serviceBookingCompletionRate",
@@ -18601,7 +18601,7 @@
       {
         "name": "insuranceOfferAccepted",
         "type": "string",
-        "sampleValue": "true"
+        "sampleValue": "no"
       },
       {
         "name": "vehicleAvailability",
@@ -18631,7 +18631,162 @@
       {
         "name": "profileCompletionRate",
         "type": "numeric",
+        "sampleValue": 0.95
+      },
+      {
+        "name": "vehicleModel",
+        "type": "string",
+        "sampleValue": "BMW 530e M Sport"
+      },
+      {
+        "name": "vehicleSKU",
+        "type": "string",
+        "sampleValue": "SKU-BMW-530E-2025"
+      },
+      {
+        "name": "configurationConversionRate",
+        "type": "numeric",
+        "sampleValue": 0.04
+      },
+      {
+        "name": "financeApplicationCompletionRate",
+        "type": "numeric",
+        "sampleValue": 0.68
+      },
+      {
+        "name": "serviceBookingConversionRate",
+        "type": "numeric",
+        "sampleValue": 0.36
+      },
+      {
+        "name": "dealerAppointmentShowRate",
+        "type": "numeric",
+        "sampleValue": 0.81
+      },
+      {
+        "name": "reservationFee",
+        "type": "numeric",
+        "sampleValue": 500
+      },
+      {
+        "name": "paymentGatewayLatencyMs",
+        "type": "numeric",
+        "sampleValue": 820
+      },
+      {
+        "name": "dealerInventoryLookupLatencyMs",
+        "type": "numeric",
+        "sampleValue": 950
+      },
+      {
+        "name": "formCompletionRate",
+        "type": "numeric",
         "sampleValue": 0.88
+      },
+      {
+        "name": "errorRateCriticalFlows",
+        "type": "numeric",
+        "sampleValue": 0.012
+      },
+      {
+        "name": "accessoryUpsellRate",
+        "type": "numeric",
+        "sampleValue": 0.27
+      },
+      {
+        "name": "leadGenerationType",
+        "type": "string",
+        "sampleValue": "Test Drive Request"
+      },
+      {
+        "name": "accountStatus",
+        "type": "string",
+        "sampleValue": "active"
+      },
+      {
+        "name": "serviceBookingValue",
+        "type": "numeric",
+        "sampleValue": 650
+      },
+      {
+        "name": "aftersalesTransactionCount",
+        "type": "numeric",
+        "sampleValue": 2
+      },
+      {
+        "name": "appointmentType",
+        "type": "string",
+        "sampleValue": "Vehicle Handover"
+      },
+      {
+        "name": "dealerAppointmentStatus",
+        "type": "string",
+        "sampleValue": "confirmed"
+      },
+      {
+        "name": "customerFeedbackReceived",
+        "type": "string",
+        "sampleValue": "yes"
+      },
+      {
+        "name": "paymentMethodsAvailable",
+        "type": "string",
+        "sampleValue": "Paypal"
+      },
+      {
+        "name": "serviceTypesAvailable",
+        "type": "string",
+        "sampleValue": "Tyre Replacement"
+      },
+      {
+        "name": "bookingChannel",
+        "type": "string",
+        "sampleValue": "Online"
+      },
+      {
+        "name": "customerJourneyDropoffRate",
+        "type": "numeric",
+        "sampleValue": 0.18
+      },
+      {
+        "name": "crmLeadStatus",
+        "type": "string",
+        "sampleValue": "converted"
+      },
+      {
+        "name": "financeProductSelected",
+        "type": "string",
+        "sampleValue": "Personal Contract Purchase"
+      },
+      {
+        "name": "eligibilityCheckStatus",
+        "type": "string",
+        "sampleValue": "approved"
+      },
+      {
+        "name": "dealerNetworkCoverage",
+        "type": "numeric",
+        "sampleValue": 0.97
+      },
+      {
+        "name": "vehicleAvailabilityStatus",
+        "type": "string",
+        "sampleValue": "in stock"
+      },
+      {
+        "name": "accessorySelectionCount",
+        "type": "numeric",
+        "sampleValue": 3
+      },
+      {
+        "name": "serviceBookingStatus",
+        "type": "string",
+        "sampleValue": "confirmed"
+      },
+      {
+        "name": "accountCreationLatencyMs",
+        "type": "numeric",
+        "sampleValue": 670
       }
     ],
     "services": [
@@ -18644,7 +18799,10 @@
       "QuoteRequestService",
       "TestDriveBookingService",
       "DepositPaymentService",
-      "AccountRegistrationService"
+      "AccountRegistrationService",
+      "ReservationPurchaseInitiationService",
+      "DealerAppointmentBookingService",
+      "ServiceBookingService"
     ],
     "steps": [
       "VehicleSearch",
@@ -18656,9 +18814,12 @@
       "QuoteRequest",
       "TestDriveBooking",
       "DepositPayment",
-      "AccountRegistration"
+      "AccountRegistration",
+      "ReservationPurchaseInitiation",
+      "DealerAppointmentBooking",
+      "ServiceBooking"
     ],
-    "lastUpdated": "2026-04-16T10:17:28.765Z",
-    "runCount": 728
+    "lastUpdated": "2026-04-16T10:26:48.837Z",
+    "runCount": 863
   }
 }

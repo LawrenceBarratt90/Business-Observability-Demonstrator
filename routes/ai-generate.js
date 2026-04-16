@@ -68,11 +68,21 @@ router.post('/github', async (req, res) => {
       'gen_ai.request.model': model,
       'gen_ai.request.max_tokens': maxTokens,
       'gen_ai.request.temperature': temperature,
-      'gen_ai.prompt.0.role': 'user',
-      'gen_ai.prompt.0.content': prompt.substring(0, 4096),
+      'gen_ai.prompt.0.role': 'system',
+      'gen_ai.prompt.0.content': systemPrompt.substring(0, 4096),
+      'gen_ai.prompt.1.role': 'user',
+      'gen_ai.prompt.1.content': prompt.substring(0, 4096),
       'server.address': 'models.inference.ai.azure.com',
       'server.port': 443,
     },
+  });
+
+  // Log prompt as span event (Dynatrace captures full event content)
+  span.addEvent('gen_ai.content.prompt', {
+    'gen_ai.prompt': JSON.stringify([
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: prompt.substring(0, 8192) },
+    ]),
   });
 
   try {
@@ -142,6 +152,14 @@ router.post('/github', async (req, res) => {
       'gen_ai.response.finish_reason': finishReason,
       'gen_ai.response.duration_ms': durationFinal,
     });
+
+    // Log completion as span event (full content for DT AI Observability)
+    span.addEvent('gen_ai.content.completion', {
+      'gen_ai.completion': JSON.stringify([
+        { role: 'assistant', content: content.substring(0, 8192) },
+      ]),
+    });
+
     span.setStatus({ code: SpanStatusCode.OK });
     span.end();
 
