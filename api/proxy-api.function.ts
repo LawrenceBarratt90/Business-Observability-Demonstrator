@@ -2130,6 +2130,7 @@ export default async function (payload: ProxyPayload) {
               scopes: ['APP_ENGINE'],
               type: 'TOKEN',
               token: token,
+              ownerAccessOnly: false,
               description: 'GitHub Personal Access Token for AI-powered prompt generation in Business Observability Demonstrator',
             } as any,
           });
@@ -2142,6 +2143,7 @@ export default async function (payload: ProxyPayload) {
             scopes: ['APP_ENGINE'],
             type: 'TOKEN',
             token: token,
+            ownerAccessOnly: false,
             description: 'GitHub Personal Access Token for AI-powered prompt generation in Business Observability Demonstrator',
           } as any,
         });

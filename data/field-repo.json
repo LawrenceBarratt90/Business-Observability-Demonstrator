@@ -16924,22 +16924,22 @@
       {
         "name": "ProductType",
         "type": "string",
-        "sampleValue": "Clothing"
+        "sampleValue": "Electronics"
       },
       {
         "name": "Price",
         "type": "numeric",
-        "sampleValue": 39.99
+        "sampleValue": 29.99
       },
       {
         "name": "transactionValue",
         "type": "numeric",
-        "sampleValue": 109.99
+        "sampleValue": 237.62
       },
       {
         "name": "orderTotal",
         "type": "numeric",
-        "sampleValue": 360.48
+        "sampleValue": 358.76
       },
       {
         "name": "averageOrderValue",
@@ -16949,7 +16949,7 @@
       {
         "name": "customerLifetimeValue",
         "type": "numeric",
-        "sampleValue": 987.9
+        "sampleValue": 1103.05
       },
       {
         "name": "revenuePerCustomer",
@@ -16964,17 +16964,17 @@
       {
         "name": "discountApplied",
         "type": "numeric",
-        "sampleValue": 18.55
+        "sampleValue": 15.08
       },
       {
         "name": "taxAmount",
         "type": "numeric",
-        "sampleValue": 28.84
+        "sampleValue": 28.7
       },
       {
         "name": "shippingCost",
         "type": "numeric",
-        "sampleValue": 16.25
+        "sampleValue": 18.64
       },
       {
         "name": "pricingTier",
@@ -16994,17 +16994,17 @@
       {
         "name": "contractValue",
         "type": "numeric",
-        "sampleValue": 2399.98
+        "sampleValue": 1275.43
       },
       {
         "name": "annualRevenue",
         "type": "numeric",
-        "sampleValue": 2469.75
+        "sampleValue": 2757.63
       },
       {
         "name": "acquisitionCost",
         "type": "numeric",
-        "sampleValue": 68.24
+        "sampleValue": 25.18
       },
       {
         "name": "retentionProbability",
@@ -17019,7 +17019,7 @@
       {
         "name": "upsellPotential",
         "type": "numeric",
-        "sampleValue": 296.37
+        "sampleValue": 330.92
       },
       {
         "name": "crossSellOpportunity",
@@ -17044,7 +17044,7 @@
       {
         "name": "engagementScore",
         "type": "numeric",
-        "sampleValue": 72.89
+        "sampleValue": 63.76
       },
       {
         "name": "satisfactionRating",
@@ -17064,7 +17064,7 @@
       {
         "name": "timeToConversion",
         "type": "numeric",
-        "sampleValue": 5.78
+        "sampleValue": 5.81
       },
       {
         "name": "competitiveAdvantage",
@@ -17089,7 +17089,7 @@
       {
         "name": "processingTime",
         "type": "numeric",
-        "sampleValue": 26.1
+        "sampleValue": 24.16
       },
       {
         "name": "operationalCost",
@@ -17109,7 +17109,7 @@
       {
         "name": "costPerAcquisition",
         "type": "numeric",
-        "sampleValue": 81.89
+        "sampleValue": 30.22
       },
       {
         "name": "riskLevel",
@@ -17134,12 +17134,12 @@
       {
         "name": "growthPotential",
         "type": "numeric",
-        "sampleValue": 246.98
+        "sampleValue": 275.76
       },
       {
         "name": "futureValue",
         "type": "numeric",
-        "sampleValue": 1481.85
+        "sampleValue": 1654.57
       },
       {
         "name": "expansionOpportunity",
@@ -17764,8 +17764,8 @@
       "Checkout",
       "Payment"
     ],
-    "lastUpdated": "2026-04-16T20:36:04.169Z",
-    "runCount": 19599
+    "lastUpdated": "2026-04-16T20:40:21.356Z",
+    "runCount": 19830
   },
   "testchain corp|chain_test": {
     "companyName": "TestChain Corp",
@@ -18147,7 +18147,7 @@
       {
         "name": "ProductType",
         "type": "string",
-        "sampleValue": "Clothing"
+        "sampleValue": "Home & Garden"
       },
       {
         "name": "Price",
@@ -18157,12 +18157,12 @@
       {
         "name": "transactionValue",
         "type": "numeric",
-        "sampleValue": 167.7
+        "sampleValue": 57.98
       },
       {
         "name": "orderTotal",
         "type": "numeric",
-        "sampleValue": 103.26
+        "sampleValue": 227.85
       },
       {
         "name": "averageOrderValue",
@@ -18172,7 +18172,7 @@
       {
         "name": "customerLifetimeValue",
         "type": "numeric",
-        "sampleValue": 1259.18
+        "sampleValue": 1464.98
       },
       {
         "name": "revenuePerCustomer",
@@ -18187,17 +18187,17 @@
       {
         "name": "discountApplied",
         "type": "numeric",
-        "sampleValue": 8.11
+        "sampleValue": 15.02
       },
       {
         "name": "taxAmount",
         "type": "numeric",
-        "sampleValue": 8.26
+        "sampleValue": 18.23
       },
       {
         "name": "shippingCost",
         "type": "numeric",
-        "sampleValue": 10.2
+        "sampleValue": 14.62
       },
       {
         "name": "pricingTier",
@@ -18217,17 +18217,17 @@
       {
         "name": "contractValue",
         "type": "numeric",
-        "sampleValue": 5535.42
+        "sampleValue": 2112.58
       },
       {
         "name": "annualRevenue",
         "type": "numeric",
-        "sampleValue": 3147.95
+        "sampleValue": 3662.45
       },
       {
         "name": "acquisitionCost",
         "type": "numeric",
-        "sampleValue": 64.82
+        "sampleValue": 53.6
       },
       {
         "name": "retentionProbability",
@@ -18242,7 +18242,7 @@
       {
         "name": "upsellPotential",
         "type": "numeric",
-        "sampleValue": 377.75
+        "sampleValue": 439.49
       },
       {
         "name": "crossSellOpportunity",
@@ -18267,7 +18267,7 @@
       {
         "name": "engagementScore",
         "type": "numeric",
-        "sampleValue": 68.71
+        "sampleValue": 64.96
       },
       {
         "name": "satisfactionRating",
@@ -18287,7 +18287,7 @@
       {
         "name": "timeToConversion",
         "type": "numeric",
-        "sampleValue": 13.71
+        "sampleValue": 6.46
       },
       {
         "name": "competitiveAdvantage",
@@ -18312,7 +18312,7 @@
       {
         "name": "processingTime",
         "type": "numeric",
-        "sampleValue": 23.92
+        "sampleValue": 11.27
       },
       {
         "name": "operationalCost",
@@ -18332,7 +18332,7 @@
       {
         "name": "costPerAcquisition",
         "type": "numeric",
-        "sampleValue": 77.78
+        "sampleValue": 64.32
       },
       {
         "name": "riskLevel",
@@ -18357,12 +18357,12 @@
       {
         "name": "growthPotential",
         "type": "numeric",
-        "sampleValue": 314.8
+        "sampleValue": 366.25
       },
       {
         "name": "futureValue",
         "type": "numeric",
-        "sampleValue": 1888.77
+        "sampleValue": 2197.47
       },
       {
         "name": "expansionOpportunity",
@@ -19538,8 +19538,8 @@
       "PurchaseConfirmation",
       "PostPurchaseEngagement"
     ],
-    "lastUpdated": "2026-04-16T20:36:05.161Z",
-    "runCount": 18791
+    "lastUpdated": "2026-04-16T20:40:21.641Z",
+    "runCount": 18966
   },
   "asda|subscription flow": {
     "companyName": "Asda",
@@ -20149,5 +20149,629 @@
     ],
     "lastUpdated": "2026-04-16T20:06:13.639Z",
     "runCount": 1
+  },
+  "apple|order fulfillment": {
+    "companyName": "Apple",
+    "journeyType": "Order Fulfillment",
+    "fields": [
+      {
+        "name": "orderId",
+        "type": "string",
+        "sampleValue": "ORD-APPLE-1125"
+      },
+      {
+        "name": "orderStatus",
+        "type": "string",
+        "sampleValue": "Confirmed"
+      },
+      {
+        "name": "orderPlacedBy",
+        "type": "string",
+        "sampleValue": "Apple Operations"
+      },
+      {
+        "name": "supplierName",
+        "type": "string",
+        "sampleValue": "Foxconn Technology Group"
+      },
+      {
+        "name": "supplierComplianceStatus",
+        "type": "string",
+        "sampleValue": "Approved"
+      },
+      {
+        "name": "orderConfirmationRate",
+        "type": "numeric",
+        "sampleValue": 0.99
+      },
+      {
+        "name": "supplierResponseTime",
+        "type": "numeric",
+        "sampleValue": 18
+      },
+      {
+        "name": "shipmentId",
+        "type": "string",
+        "sampleValue": "SHIP-APPLE-4450"
+      },
+      {
+        "name": "shipmentStatus",
+        "type": "string",
+        "sampleValue": "In Transit"
+      },
+      {
+        "name": "shipmentTrackingAccuracy",
+        "type": "numeric",
+        "sampleValue": 0.98
+      },
+      {
+        "name": "logisticsPartner",
+        "type": "string",
+        "sampleValue": "DHL Supply Chain"
+      },
+      {
+        "name": "estimatedDeliveryDate",
+        "type": "string",
+        "sampleValue": "2025-11-24T12:00:00.000Z"
+      },
+      {
+        "name": "deliveryDelayMinutes",
+        "type": "numeric",
+        "sampleValue": 10
+      },
+      {
+        "name": "inventoryReceived",
+        "type": "numeric",
+        "sampleValue": 12500
+      },
+      {
+        "name": "inventoryExpected",
+        "type": "numeric",
+        "sampleValue": 12500
+      },
+      {
+        "name": "inventoryDiscrepancyCount",
+        "type": "numeric",
+        "sampleValue": 0
+      },
+      {
+        "name": "inventoryReconciliationSuccessRate",
+        "type": "numeric",
+        "sampleValue": 1
+      },
+      {
+        "name": "productionScheduleId",
+        "type": "string",
+        "sampleValue": "PROD-SCHED-9082"
+      },
+      {
+        "name": "scheduleAdherenceRate",
+        "type": "numeric",
+        "sampleValue": 0.97
+      },
+      {
+        "name": "productionStartDate",
+        "type": "string",
+        "sampleValue": "2025-11-25T08:00:00.000Z"
+      },
+      {
+        "name": "productionMilestone",
+        "type": "string",
+        "sampleValue": "Launch Readiness"
+      },
+      {
+        "name": "stakeholderNotificationStatus",
+        "type": "string",
+        "sampleValue": "Sent"
+      },
+      {
+        "name": "launchTimelineAdjustments",
+        "type": "numeric",
+        "sampleValue": 1
+      },
+      {
+        "name": "orderPlacementDuration",
+        "type": "numeric",
+        "sampleValue": 15
+      },
+      {
+        "name": "orderConfirmationDuration",
+        "type": "numeric",
+        "sampleValue": 20
+      },
+      {
+        "name": "shipmentSchedulingDuration",
+        "type": "numeric",
+        "sampleValue": 30
+      },
+      {
+        "name": "shipmentTrackingDuration",
+        "type": "numeric",
+        "sampleValue": 45
+      },
+      {
+        "name": "inventoryReconciliationDuration",
+        "type": "numeric",
+        "sampleValue": 25
+      },
+      {
+        "name": "productionScheduleUpdateDuration",
+        "type": "numeric",
+        "sampleValue": 35
+      },
+      {
+        "name": "orderFulfillmentSuccessRate",
+        "type": "numeric",
+        "sampleValue": 0.985
+      },
+      {
+        "name": "portalDowntimeMinutes",
+        "type": "numeric",
+        "sampleValue": 0
+      },
+      {
+        "name": "errorRate",
+        "type": "numeric",
+        "sampleValue": 0.001
+      },
+      {
+        "name": "complianceDocumentStatus",
+        "type": "string",
+        "sampleValue": "Valid"
+      },
+      {
+        "name": "riskAssessmentScore",
+        "type": "numeric",
+        "sampleValue": 87
+      },
+      {
+        "name": "netPromoterScore",
+        "type": "numeric",
+        "sampleValue": 40
+      },
+      {
+        "name": "conversionRate",
+        "type": "numeric",
+        "sampleValue": 0.05
+      },
+      {
+        "name": "averageOrderValue",
+        "type": "numeric",
+        "sampleValue": 85
+      },
+      {
+        "name": "transactionCurrency",
+        "type": "string",
+        "sampleValue": "GBP"
+      },
+      {
+        "name": "orderType",
+        "type": "string",
+        "sampleValue": "Bulk Component"
+      },
+      {
+        "name": "paymentMethod",
+        "type": "string",
+        "sampleValue": "Bank Transfer"
+      },
+      {
+        "name": "deliveryOption",
+        "type": "string",
+        "sampleValue": "Express"
+      },
+      {
+        "name": "productName",
+        "type": "string",
+        "sampleValue": "A17 Bionic Chip"
+      },
+      {
+        "name": "productSKU",
+        "type": "string",
+        "sampleValue": "SKU-LI-003"
+      },
+      {
+        "name": "productPrice",
+        "type": "numeric",
+        "sampleValue": 120
+      },
+      {
+        "name": "productCategory",
+        "type": "string",
+        "sampleValue": "Haptic Component"
+      },
+      {
+        "name": "orderedQuantity",
+        "type": "numeric",
+        "sampleValue": 2500
+      },
+      {
+        "name": "receivedQuantity",
+        "type": "numeric",
+        "sampleValue": 2000
+      },
+      {
+        "name": "productDeliveryStatus",
+        "type": "string",
+        "sampleValue": "Delivered"
+      },
+      {
+        "name": "sustainabilityBadge",
+        "type": "string",
+        "sampleValue": "Eco Certified"
+      },
+      {
+        "name": "orderAuditTrailStatus",
+        "type": "string",
+        "sampleValue": "Complete"
+      },
+      {
+        "name": "erpIntegrationStatus",
+        "type": "string",
+        "sampleValue": "Success"
+      },
+      {
+        "name": "apiResponseTime",
+        "type": "numeric",
+        "sampleValue": 120
+      },
+      {
+        "name": "dashboardUpdateFrequency",
+        "type": "numeric",
+        "sampleValue": 5
+      },
+      {
+        "name": "userSatisfactionScore",
+        "type": "numeric",
+        "sampleValue": 92
+      },
+      {
+        "name": "businessImpactScore",
+        "type": "numeric",
+        "sampleValue": 95
+      },
+      {
+        "name": "financialRiskExposure",
+        "type": "numeric",
+        "sampleValue": 0
+      },
+      {
+        "name": "regulatoryComplianceScore",
+        "type": "numeric",
+        "sampleValue": 98
+      },
+      {
+        "name": "launchReadinessStatus",
+        "type": "string",
+        "sampleValue": "On Track"
+      },
+      {
+        "name": "orderCancellationCount",
+        "type": "numeric",
+        "sampleValue": 0
+      },
+      {
+        "name": "customerEngagementRate",
+        "type": "numeric",
+        "sampleValue": 0.89
+      },
+      {
+        "name": "portalLatencyMilliseconds",
+        "type": "numeric",
+        "sampleValue": 105
+      },
+      {
+        "name": "shipmentIoTStatus",
+        "type": "string",
+        "sampleValue": "Active"
+      },
+      {
+        "name": "supplierPortalErrorCount",
+        "type": "numeric",
+        "sampleValue": 0
+      },
+      {
+        "name": "inventoryShortfallRisk",
+        "type": "numeric",
+        "sampleValue": 0
+      },
+      {
+        "name": "deviceType",
+        "type": "string",
+        "sampleValue": "mobile"
+      },
+      {
+        "name": "browser",
+        "type": "string",
+        "sampleValue": "Chrome"
+      },
+      {
+        "name": "location",
+        "type": "string",
+        "sampleValue": "London, UK"
+      },
+      {
+        "name": "entryChannel",
+        "type": "string",
+        "sampleValue": "organic"
+      },
+      {
+        "name": "customerIntent",
+        "type": "string",
+        "sampleValue": "purchase"
+      },
+      {
+        "name": "loyaltyStatus",
+        "type": "string",
+        "sampleValue": "new"
+      },
+      {
+        "name": "abandonmentRisk",
+        "type": "string",
+        "sampleValue": "high"
+      },
+      {
+        "name": "conversionProbability",
+        "type": "numeric",
+        "sampleValue": 0.6
+      },
+      {
+        "name": "sessionDuration",
+        "type": "numeric",
+        "sampleValue": 300
+      },
+      {
+        "name": "pageViews",
+        "type": "numeric",
+        "sampleValue": 3
+      },
+      {
+        "name": "Productname",
+        "type": "string",
+        "sampleValue": "Standard Product"
+      },
+      {
+        "name": "ProductId",
+        "type": "string",
+        "sampleValue": "SKU1002"
+      },
+      {
+        "name": "ProductType",
+        "type": "string",
+        "sampleValue": "Home & Garden"
+      },
+      {
+        "name": "Price",
+        "type": "string",
+        "sampleValue": 39.99
+      },
+      {
+        "name": "transactionValue",
+        "type": "numeric",
+        "sampleValue": 162.99
+      },
+      {
+        "name": "orderTotal",
+        "type": "numeric",
+        "sampleValue": 266.39
+      },
+      {
+        "name": "customerLifetimeValue",
+        "type": "numeric",
+        "sampleValue": 947.28
+      },
+      {
+        "name": "revenuePerCustomer",
+        "type": "numeric",
+        "sampleValue": 200
+      },
+      {
+        "name": "profitMargin",
+        "type": "numeric",
+        "sampleValue": 0.15
+      },
+      {
+        "name": "discountApplied",
+        "type": "numeric",
+        "sampleValue": 11.44
+      },
+      {
+        "name": "taxAmount",
+        "type": "numeric",
+        "sampleValue": 21.31
+      },
+      {
+        "name": "shippingCost",
+        "type": "numeric",
+        "sampleValue": 19.7
+      },
+      {
+        "name": "pricingTier",
+        "type": "string",
+        "sampleValue": "Bronze"
+      },
+      {
+        "name": "subscriptionLevel",
+        "type": "string",
+        "sampleValue": "Basic"
+      },
+      {
+        "name": "membershipStatus",
+        "type": "string",
+        "sampleValue": "Regular"
+      },
+      {
+        "name": "contractValue",
+        "type": "numeric",
+        "sampleValue": 4563.53
+      },
+      {
+        "name": "annualRevenue",
+        "type": "numeric",
+        "sampleValue": 2368.2
+      },
+      {
+        "name": "acquisitionCost",
+        "type": "numeric",
+        "sampleValue": 59.29
+      },
+      {
+        "name": "retentionProbability",
+        "type": "numeric",
+        "sampleValue": 0.7
+      },
+      {
+        "name": "churnRisk",
+        "type": "string",
+        "sampleValue": "high"
+      },
+      {
+        "name": "upsellPotential",
+        "type": "numeric",
+        "sampleValue": 284.18
+      },
+      {
+        "name": "crossSellOpportunity",
+        "type": "string",
+        "sampleValue": "high"
+      },
+      {
+        "name": "customerSegmentValue",
+        "type": "string",
+        "sampleValue": "High-Value"
+      },
+      {
+        "name": "marketSegment",
+        "type": "string",
+        "sampleValue": "Enterprise"
+      },
+      {
+        "name": "engagementScore",
+        "type": "numeric",
+        "sampleValue": 61.87
+      },
+      {
+        "name": "satisfactionRating",
+        "type": "numeric",
+        "sampleValue": 3.5
+      },
+      {
+        "name": "purchaseFrequency",
+        "type": "numeric",
+        "sampleValue": 2
+      },
+      {
+        "name": "timeToConversion",
+        "type": "numeric",
+        "sampleValue": 7.67
+      },
+      {
+        "name": "competitiveAdvantage",
+        "type": "string",
+        "sampleValue": "Price"
+      },
+      {
+        "name": "marketShare",
+        "type": "numeric",
+        "sampleValue": 0.05
+      },
+      {
+        "name": "brandLoyalty",
+        "type": "string",
+        "sampleValue": "Low"
+      },
+      {
+        "name": "competitorComparison",
+        "type": "string",
+        "sampleValue": "Better"
+      },
+      {
+        "name": "processingTime",
+        "type": "numeric",
+        "sampleValue": 25.14
+      },
+      {
+        "name": "operationalCost",
+        "type": "numeric",
+        "sampleValue": 80
+      },
+      {
+        "name": "efficiencyRating",
+        "type": "numeric",
+        "sampleValue": 70
+      },
+      {
+        "name": "resourceUtilization",
+        "type": "numeric",
+        "sampleValue": 0.6
+      },
+      {
+        "name": "costPerAcquisition",
+        "type": "numeric",
+        "sampleValue": 71.15
+      },
+      {
+        "name": "riskLevel",
+        "type": "string",
+        "sampleValue": "Low"
+      },
+      {
+        "name": "complianceScore",
+        "type": "numeric",
+        "sampleValue": 85
+      },
+      {
+        "name": "fraudRisk",
+        "type": "string",
+        "sampleValue": "high"
+      },
+      {
+        "name": "securityRating",
+        "type": "string",
+        "sampleValue": "A"
+      },
+      {
+        "name": "growthPotential",
+        "type": "numeric",
+        "sampleValue": 236.82
+      },
+      {
+        "name": "futureValue",
+        "type": "numeric",
+        "sampleValue": 1420.92
+      },
+      {
+        "name": "expansionOpportunity",
+        "type": "string",
+        "sampleValue": "Limited"
+      },
+      {
+        "name": "marketTrend",
+        "type": "string",
+        "sampleValue": "Declining"
+      },
+      {
+        "name": "seasonalImpact",
+        "type": "numeric",
+        "sampleValue": 0.1
+      }
+    ],
+    "services": [
+      "ComponentOrderPlacementService",
+      "SupplierOrderConfirmationService",
+      "ShipmentSchedulingService",
+      "ShipmentTrackingAndUpdateService",
+      "InventoryReconciliationService",
+      "ProductionScheduleUpdateService"
+    ],
+    "steps": [
+      "ComponentOrderPlacement",
+      "SupplierOrderConfirmation",
+      "ShipmentScheduling",
+      "ShipmentTrackingAndUpdate",
+      "InventoryReconciliation",
+      "ProductionScheduleUpdate"
+    ],
+    "lastUpdated": "2026-04-16T20:40:21.321Z",
+    "runCount": 86
   }
 }
