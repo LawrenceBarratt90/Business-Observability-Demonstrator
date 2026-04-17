@@ -1,6 +1,6 @@
 # Automated Dynatrace Configuration with Monaco
 
-This directory contains **Monaco (Monitoring as Code)** configurations to automatically deploy all required Dynatrace settings for the BizObs application.
+This directory contains **Monaco (Monitoring as Code)** configurations to automatically deploy all required Dynatrace settings for the Business Observability Demonstrator.
 
 ## 🚀 Quick Start
 
@@ -44,7 +44,7 @@ This directory contains **Monaco (Monitoring as Code)** configurations to automa
 3. **Verify Deployment**:
    - Check Dynatrace → Settings → Business Analytics → OneAgent
    - Check OpenPipeline → Business events → Pipelines
-   - Run a test journey through BizObs app
+   - Run a test journey through the Demonstrator
 
 ## 📁 Configuration Structure
 

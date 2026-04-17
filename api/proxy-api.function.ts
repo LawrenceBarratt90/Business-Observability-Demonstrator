@@ -1,5 +1,5 @@
 /**
- * Serverless proxy function for BizObs Generator API calls.
+ * Serverless proxy function for Business Observability Demonstrator API calls.
  * Runs server-side to bypass browser CSP restrictions.
  */
 
@@ -913,7 +913,7 @@ export default async function (payload: ProxyPayload) {
             // Skip if already handled by the openpipeline block above
             if (results['openpipeline-routing']) continue;
 
-            // Routing requested alone — find the Business Observability Generator pipeline objectId
+            // Routing requested alone — find the Demonstrator pipeline objectId
             const pipelineCheck = await settingsObjectsClient.getSettingsObjects({
               schemaIds: 'builtin:openpipeline.bizevents.pipelines',
               fields: 'objectId,value',

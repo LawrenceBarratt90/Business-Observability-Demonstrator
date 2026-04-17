@@ -145,7 +145,7 @@ function createMcpServer() {
   // ── Tool: get_dashboard_health ─────────────────────────────────────────────
   server.tool(
     'get_dashboard_health',
-    'Check the health of the AI dashboard generation engine (Ollama availability, installed models).',
+    'Check the health of the AI dashboard generation service (Ollama availability, installed models).',
     {},
     async () => {
       try {

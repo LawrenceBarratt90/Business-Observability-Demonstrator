@@ -320,7 +320,7 @@ Guidelines:
   const decision = await chatJSON<ChaosDecision>([
     {
       role: 'system',
-      content: `You are an autonomous chaos engineering agent for the BizObs app. Your goal is to randomly inject realistic failures to test system resilience and observability.
+      content: `You are an autonomous chaos engineering agent for the Business Observability Demonstrator. Your goal is to randomly inject realistic failures to test system resilience and observability.
 
 ${systemState}
 

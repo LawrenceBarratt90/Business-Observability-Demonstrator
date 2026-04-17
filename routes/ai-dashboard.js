@@ -4447,7 +4447,7 @@ router.get('/field-repo', (req, res) => {
 });
 
 // ============================================================================
-// ENGINE DASHBOARDS — AI TILE GENERATION
+// DEMONSTRATOR DASHBOARDS — AI TILE GENERATION
 // Ollama analyses discovered bizevent fields and generates DQL tile specs
 // that are specific to the actual deployed journey data.
 // ============================================================================
@@ -4684,7 +4684,7 @@ JSON array only. No markdown. No explanation.${repoContext}`;
 });
 
 // ============================================================================
-// ENGINE DASHBOARDS — ASYNC AI TILE GENERATION (job-based for EdgeConnect)
+// DEMONSTRATOR DASHBOARDS — ASYNC AI TILE GENERATION (job-based for EdgeConnect)
 // The proxy kicks off a job, then polls for results.
 // ============================================================================
 
