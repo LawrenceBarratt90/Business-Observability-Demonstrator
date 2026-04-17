@@ -1,8 +1,8 @@
-# Technical Guide — Business Observability Demonstrator (v2.23.1)
+# Technical Guide — Business Observability Demonstrator (v2.38.7)
 
 > A hands-on guide for engineers, SEs, and developers who want to get the platform running and understand what's under the hood.
 
-> **Want the fast path?** Just run `./setup.sh` — it walks you through 6 guided prompts and does everything automatically. This guide explains what the script does and how to do it manually.
+> **Want the fast path?** Just run `sudo ./setup.sh` — it walks you through 6 guided prompts and does everything automatically. This guide explains what the script does and how to do it manually.
 
 ---
 
@@ -10,14 +10,16 @@
 
 The Business Observability Demonstrator is a two-part system:
 
-1. **The Demonstrator** — A Node.js server that dynamically spawns microservices, simulates customer journeys, and runs AI agents for chaos injection and auto-remediation.
-2. **The Demonstrator UI** — A Dynatrace AppEngine app (React + Strato) that gives you a single-pane-of-glass inside Dynatrace to control everything.
+1. **The Demonstrator** — A Node.js server that dynamically spawns microservices, simulates customer journeys, runs AI agents for chaos injection and auto-remediation, and provides an AI-powered journey generation pipeline via GitHub Models.
+2. **The Demonstrator UI** — A Dynatrace AppEngine app (React + Strato) that gives you a single-pane-of-glass inside Dynatrace to control everything, with two distinct pathways: **AI-powered** (GitHub Models) and **Manual** (copy/paste prompts).
 
 The Demonstrator runs on your host (EC2, VM, Codespace). The Demonstrator UI runs inside Dynatrace and talks to the Demonstrator through an **EdgeConnect** tunnel.
 
 ---
 
-## Architecture Overview
+<details>
+<summary><h2>Architecture Overview</h2></summary>
+
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
@@ -39,6 +41,7 @@ The Demonstrator runs on your host (EC2, VM, Codespace). The Demonstrator UI run
 │  ┌──────────────────────────────────────────────────────────┐    │
 │  │  Main Server (port 8080) — Express.js + Socket.IO        │    │
 │  │  ├── 20+ API route modules (100+ endpoints)              │    │
+│  │  ├── AI Generation Pipeline (GitHub Models proxy)        │    │
 │  │  ├── AI Agents: Nemesis (chaos), Fix-It (remediation),   │    │
 │  │  │     Librarian (memory/audit), Dashboard (BI deploy)   │    │
 │  │  ├── Feature Flag Manager (per-service isolation)        │    │
@@ -61,14 +64,17 @@ The Demonstrator runs on your host (EC2, VM, Codespace). The Demonstrator UI run
 │                                                                  │
 │  ┌────────────────┐  ┌───────────┐  ┌────────────────────┐       │
 │  │  EdgeConnect   │  │  OneAgent │  │  Ollama (LLM)      │       │
-│  │  (tunnel)      │  │           │  │  llama3.2          │       │
+│  │  (tunnel)      │  │           │  │  llama3.2:1b       │       │
 │  └────────────────┘  └───────────┘  └────────────────────┘       │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
+</details>
+
 ---
 
-## Prerequisites
+<details>
+<summary><h2>Prerequisites</h2></summary>
 
 Before you start, make sure you have **all of these** ready:
 
@@ -81,24 +87,28 @@ Before you start, make sure you have **all of these** ready:
 | 5 | **Node.js** | v22+ (v24 recommended) | Server runtime | `node --version` → should show v22.x+ |
 | 6 | **Docker** | Latest | Runs EdgeConnect | `docker --version` |
 | 7 | **Dynatrace OneAgent** | Latest | Auto-instruments every child service | `sudo systemctl status oneagent` or check Hosts in DT UI |
-| 8 | **Ollama** | Latest | Powers AI agents (Nemesis, Fix-It, Librarian) | `ollama list` → should show `llama3.2` |
+| 8 | **Ollama** | Latest | Powers AI agents (Nemesis, Fix-It, Librarian) and dashboard generation | `ollama list` → should show `llama3.2:1b` |
+| 9 | **GitHub PAT** | — | Powers AI journey generation (GitHub Models) | Configure in Demonstrator UI → Settings → Copilot tab |
 
 > **Don't have a Dynatrace API Token yet?** Stop here and create one. Nothing will work without it.
 
+</details>
+
 ---
 
-## Getting Started
+<details>
+<summary><h2>Getting Started</h2></summary>
 
 Follow these steps **in order**. Each step depends on the one before it.
 
 ```
 Step 1: Clone & Install            ← Get the code (single unified repo)
 Step 2: Create DT Credentials      ← A: API Token  +  B: OAuth Client (2 things to create in DT)
-Step 3–5: ./setup.sh               ← Handles EdgeConnect, app deploy, build, and server start
+Step 3–5: sudo ./setup.sh               ← Handles EdgeConnect, app deploy, build, and server start
 Step 6: Configure from Demonstrator UI    ← Wire everything together (private IP + Get Started checklist)
 ```
 
-> **Shortest path:** Do Steps 1–2, then just run `./setup.sh` — it walks you through 6 guided prompts and does Steps 3–5 automatically.
+> **Shortest path:** Do Steps 1–2, then just run `sudo ./setup.sh` — it walks you through 6 guided prompts and does Steps 3–5 automatically.
 
 ---
 
@@ -109,7 +119,7 @@ This is a **single unified repo** — it contains both the Demonstrator (server)
 ```bash
 sudo git clone https://github.com/LawrenceBarratt90/Business-Observability-Demonstrator.git
 cd Business-Observability-Demonstrator
-chmod +x setup.sh
+sudo chmod +x setup.sh
 sudo ./setup.sh
 ```
 
@@ -190,12 +200,12 @@ This client is used for the EdgeConnect tunnel. Depending on your tenant, it may
 
 ### Steps 3–5: Deploy Everything
 
-> **Using `setup.sh`?** It handles all of this automatically. The steps below are only needed if you're doing a manual setup.
+> **Using `sudo ./setup.sh`?** It handles all of this automatically. The steps below are only needed if you're doing a manual setup.
 
 <details>
-<summary><strong>Manual Steps 3–5 (click to expand — not needed if you ran setup.sh)</strong></summary>
+<summary><strong>Manual Steps 3–5 (click to expand — not needed if you ran sudo ./setup.sh)</strong></summary>
 
-If you prefer to do things manually instead of `./setup.sh`:
+If you prefer to do things manually instead of `sudo ./setup.sh`:
 
 ```bash
 # 1. Copy the EdgeConnect YAML downloaded from DT External Requests page
@@ -203,23 +213,23 @@ If you prefer to do things manually instead of `./setup.sh`:
 cp ~/Downloads/edgeConnect.yaml edgeconnect/edgeConnect.yaml
 
 # 2. Start EdgeConnect tunnel
-bash edgeconnect/run-edgeconnect.sh
+sudo bash edgeconnect/run-edgeconnect.sh
 
 # 3. Deploy Demonstrator UI (setup.sh passes creds automatically;
 #    for manual deploy, re-run: ./setup.sh)
-npx dt-app deploy
+sudo npx dt-app deploy
 
 # 4. Build agents & start server
-npm run build:agents
-npm start
+sudo npm run build:agents
+sudo npm start
 ```
 
-> **Note:** `npx dt-app deploy` requires OAuth credentials in the environment. The easiest way is to run `./setup.sh` which sets them automatically. If you must deploy manually, export the deploy credentials:
+> **Note:** `npx dt-app deploy` requires OAuth credentials in the environment. The easiest way is to run `sudo ./setup.sh` which sets them automatically. If you must deploy manually, export the deploy credentials:
 > ```bash
 > source setup.conf
 > export DT_APP_OAUTH_CLIENT_ID="$DEPLOY_OAUTH_CLIENT_ID"
 > export DT_APP_OAUTH_CLIENT_SECRET="$DEPLOY_OAUTH_CLIENT_SECRET"
-> npx dt-app deploy
+> sudo npx dt-app deploy
 > ```
 
 </details>
@@ -238,7 +248,7 @@ The `childServices` array is empty — that's correct. **No services are spawned
 
 > **Want it to run in the background?** Use:
 > ```bash
-> nohup npm start > server.log 2>&1 &
+> sudo nohup npm start > server.log 2>&1 &
 > echo $! > server.pid
 > ```
 > Or set it up as a systemd service for auto-restart on reboot.
@@ -295,9 +305,12 @@ Work through from top to bottom. Each green checkmark means that step is configu
 
 **Once all steps are green, you're ready.** Go to the **Home** tab, pick a template from the Template Library, and click **Run** to launch your first journey simulation.
 
+</details>
+
 ---
 
-## How It Works
+<details>
+<summary><h2>How It Works</h2></summary>
 
 ### Journey Simulation Flow
 
@@ -398,7 +411,7 @@ The Nemesis agent (Nemesis) sets error rates on specific services. Each service 
 └──────────────┘
 ```
 
-All agents use **LLM function calling** (via Ollama) to decide what actions to take. The Librarian provides persistent memory so agents can learn from past incidents.
+All agents use **LLM function calling** (via Ollama llama3.2:1b) to decide what actions to take, with rule-based fallbacks when Ollama is unavailable. The Librarian provides persistent memory so agents can learn from past incidents.
 
 #### Librarian Dashboard
 
@@ -433,9 +446,12 @@ Every chaos injection and remediation action sends a `CUSTOM_DEPLOYMENT` event t
 
 These events appear as deployment markers on the affected service in Dynatrace, enabling root cause correlation with Dynatrace Intelligence.
 
+</details>
+
 ---
 
-## Key API Endpoints
+<details>
+<summary><h2>Key API Endpoints</h2></summary>
 
 | Endpoint | Method | Purpose |
 |----------|--------|---------|
@@ -452,6 +468,8 @@ These events appear as deployment markers on the affected service in Dynatrace, 
 | `/api/fixit/*` | POST | Fix-It AI agent endpoints |
 | `/api/librarian/*` | GET/POST | Librarian memory endpoints |
 | `/api/librarian/analyze` | POST | Ollama-powered history analysis (Librarian Dashboard) |
+| `/api/ai-generate/github` | POST | AI journey generation via GitHub Models |
+| `/api/ai-generate/models` | GET | Available AI models list |
 | `/api/ai-dashboard/*` | POST | AI-generated DQL dashboard deployment |
 | `/api/pdf/*` | POST | PDF export of dashboards |
 | `/api/mcp/*` | Various | MCP (Model Context Protocol) server endpoints |
@@ -460,15 +478,18 @@ These events appear as deployment markers on the affected service in Dynatrace, 
 | `/api/business-flow/*` | GET/POST | Business flow configuration |
 | `/api/dt-proxy/*` | GET | Proxy to Dynatrace APIs |
 
+</details>
+
 ---
 
-## Demonstrator UI Pages (AppEngine)
+<details>
+<summary><h2>Demonstrator UI Pages (AppEngine)</h2></summary>
 
 The Dynatrace AppEngine app has 8 routes:
 
 | Page | Route | Purpose |
 |------|-------|---------|
-| **Home** | `/` | Welcome, Get Started wizard, Template Library, Journey Builder, Active Journeys, Nemesis Chaos modal |
+| **Home** | `/` | Welcome page with two pathways (AI-powered / Manual), Customer Details, Journey Builder, Active Journeys, Nemesis Chaos modal |
 | **Services** | `/services` | Live service dashboard with start/stop controls per company (accessible via direct URL) |
 | **Chaos Control** | `/chaos` | Select a service, pick a chaos type, inject — with live active faults list |
 | **Fix-It Agent** | `/fixit` | Trigger automated diagnosis and remediation |
@@ -477,14 +498,32 @@ The Dynatrace AppEngine app has 8 routes:
 | **Demo Guide** | `/demo-guide` | Interactive walkthrough paths for demos (Quick Start, Chaos & Fix-It, Traces, Platform, LiveDebugger) |
 | **Solutions** | `/solutions` | 55+ industry verticals with Dynatrace capability mapping, clickable demo journeys |
 
-> **Note:** The primary navigation is the Home page with 3 tabs: Welcome, Customer Details, Generate Prompts. Chaos control is also accessible via the Nemesis modal on the Home page. Active Journeys shows running services and their status.
+> **Note:** The Home page has two separate pathways from the Welcome screen:
+> - **AI Pathway** (requires GitHub PAT): Welcome → Customer Details → Generate with AI (automated pipeline with journey picker)
+> - **Manual Pathway**: Welcome → Customer Details → Generate Prompts (copy/paste to external AI)
+>
+> The AI pathway card is greyed out if no GitHub PAT is configured. Clicking it opens Settings → Copilot tab. Chaos control is also accessible via the Nemesis modal on the Home page. Active Journeys shows running services and their status.
 
 > 📸 **Screenshot: Chaos Control Page** — *The Demonstrator UI Chaos Control page showing: the service selector dropdown with a healthcare service selected, the chaos type picker (enable_errors, slow_responses, etc.), the intensity slider, and below it the "Active Faults" list showing one or two injected faults with their target service, type, and a "Revert" button.*
 
 ### Home Page Flow
 
 ```
-Welcome Tab → Step 1: Company Details → Step 2: Generate Prompts → Step 3: Run Simulation
+Welcome Tab (Two Pathways)
+     │
+     ├── AI Pathway (GitHub Models — requires GitHub PAT)
+     │   └── Customer Details → Generate with AI
+     │       ├── Automated pipeline: C-Suite prompt → Journey extraction
+     │       ├── Journey Picker Modal (select from AI-suggested journeys)
+     │       ├── Journey-specific prompt generation → AI completion
+     │       ├── Auto-parse response → populate config → launch simulation
+     │       └── 🔍 "View AI Prompts in Dynatrace" link (AI Observability)
+     │
+     ├── Manual Pathway (no AI required)
+     │   └── Customer Details → Generate Prompts
+     │       ├── Copy generated prompts to external AI (ChatGPT, etc.)
+     │       ├── Paste AI response back → parse → populate config
+     │       └── Launch simulation
      │
      ├── Template Library sidebar (left panel)
      │   ├── 110+ pre-built industry templates (55+ verticals)
@@ -499,9 +538,12 @@ Welcome Tab → Step 1: Company Details → Step 2: Generate Prompts → Step 3:
          └── Progress tracked across sessions
 ```
 
+</details>
+
 ---
 
-## Persistence
+<details>
+<summary><h2>Persistence</h2></summary>
 
 | File | Contents | Survives Restart? |
 |------|----------|-------------------|
@@ -513,26 +555,33 @@ Welcome Tab → Step 1: Company Details → Step 2: Generate Prompts → Step 3:
 | `dashboards/saved/*.json` | Saved dashboard preset configurations (31 presets) | ✅ |
 | `data/field-repo.json` | Field definitions across all verticals (4800+ lines) | ✅ |
 
+</details>
+
 ---
 
-## Troubleshooting
+<details>
+<summary><h2>Troubleshooting</h2></summary>
 
 | Symptom | Cause | Fix |
 |---------|-------|-----|
 | **"Cannot reach X.X.X.X:8080"** on Config tab | You're using the **public** Elastic IP | Change to your **private IP** (`hostname -I \| awk '{print $1}'`). AWS doesn't support NAT hairpin — see Step 6a |
-| **EdgeConnect shows offline** | OAuth creds wrong, name mismatch, or EdgeConnect not running | Check `docker logs edgeconnect-bizobs`. The `name:` in `edgeConnect.yaml` must match the EdgeConnect name in DT UI (e.g. `bizobs-demonstrator`). Re-run `./setup.sh`. Double-check `client_id`, `client_secret`, `resource` in YAML (Step 2B → Step 3a) |
+| **EdgeConnect shows offline** | OAuth creds wrong, name mismatch, or EdgeConnect not running | Check `sudo docker logs edgeconnect-bizobs`. The `name:` in `edgeConnect.yaml` must match the EdgeConnect name in DT UI (e.g. `bizobs-demonstrator`). Re-run `sudo ./setup.sh`. Double-check `client_id`, `client_secret`, `resource` in YAML (Step 2B → Step 3a) |
 | **Test connection fails but EdgeConnect is green** | Server not running, or host pattern not registered | 1) Verify server: `curl http://localhost:8080/api/health` 2) Wait 15s and retry (propagation delay) 3) Ensure private IP is the host pattern |
 | **No services in Dynatrace** | OneAgent not installed or feature flags not enabled | Run Get Started checklist in Demonstrator UI — deploy OneAgent Feature Flags step |
 | **Demonstrator UI shows "Connection failed"** | Server IP not configured or EdgeConnect not tunneling | Settings → Config tab → set private IP + Test. Settings → EdgeConnect tab → verify green |
 | **Chaos injection sends 200+ events** | `entitySelector` too broad (old bug) | Fixed in v2.9.10+ — now scoped to target service name |
-| **AI agents don't respond** | Ollama not running or model not pulled | `ollama pull llama3.2` and `curl http://localhost:11434/api/tags` to verify |
-| **`npx dt-app deploy` fails** | Missing credentials, wrong scope, or wrong directory | Re-run `./setup.sh` (it sets credentials automatically). Ensure the OAuth client has `app-engine:apps:install` + `app-engine:apps:run` scopes (Step 2B). Run from project root, not `edgeconnect/` |
+| **AI agents don't respond** | Ollama not running or model not pulled | `ollama pull llama3.2:1b` and `curl http://localhost:11434/api/tags` to verify |
+| **AI generation fails** | GitHub PAT not configured or expired | Configure in Demonstrator UI → Settings → Copilot tab. Ensure PAT has access to GitHub Models |
+| **`npx dt-app deploy` fails** | Missing credentials, wrong scope, or wrong directory | Re-run `sudo ./setup.sh` (it sets credentials automatically). Ensure the OAuth client has `app-engine:apps:install` + `app-engine:apps:run` scopes (Step 2B). Run from project root, not `edgeconnect/` |
 | **Settings won't save (400 error)** | Sprint environment app-settings API limitation | App falls back to localStorage automatically — safe to ignore |
 | **`api_endpoint_host` rejected** | Using tenant URL instead of AppEngine URL | Use `YOUR_TENANT.sprint.apps.dynatracelabs.com` (with `.apps.`), not `YOUR_TENANT.sprint.dynatracelabs.com` |
 
+</details>
+
 ---
 
-## Full Removal & Reinstall
+<details>
+<summary><h2>Full Removal & Reinstall</h2></summary>
 
 To completely remove the Demonstrator from a host and start fresh, use the included `uninstall.sh` script.
 
@@ -540,14 +589,14 @@ To completely remove the Demonstrator from a host and start fresh, use the inclu
 
 ```bash
 cd /home/ec2-user/Business-Observability-Demonstrator
-bash uninstall.sh
+sudo bash uninstall.sh
 ```
 
 ### Uninstall (remove everything including Ollama)
 
 ```bash
 cd /home/ec2-user/Business-Observability-Demonstrator
-bash uninstall.sh --all
+sudo bash uninstall.sh --all
 ```
 
 ### What the uninstall does
@@ -566,37 +615,40 @@ After uninstalling, clone and run setup:
 
 ```bash
 cd /home/ec2-user
-git clone https://github.com/LawrenceBarratt90/Business-Observability-Demonstrator.git
+sudo git clone https://github.com/LawrenceBarratt90/Business-Observability-Demonstrator.git
 cd Business-Observability-Demonstrator
-./setup.sh
+sudo ./setup.sh
 ```
 
 The `setup.sh` script will prompt for your Dynatrace credentials and handle everything: Node.js, npm install, EdgeConnect, AppEngine deploy, and server startup.
 
-> **Tip:** If you saved a `setup.conf` previously, copy it into the new clone before running `setup.sh` to skip credential prompts.
+> **Tip:** If you saved a `setup.conf` previously, copy it into the new clone before running `sudo ./setup.sh` to skip credential prompts.
+
+</details>
 
 ---
 
-## Log Housekeeping
+<details>
+<summary><h2>Log Housekeeping</h2></summary>
 
 The Demonstrator includes automatic log rotation to prevent disk fills.
 
 ### Manual cleanup
 
 ```bash
-bash scripts/log-cleanup.sh
+sudo bash scripts/log-cleanup.sh
 ```
 
 ### Install daily cron (runs at 3 AM)
 
 ```bash
-bash scripts/log-cleanup.sh --install
+sudo bash scripts/log-cleanup.sh --install
 ```
 
 ### Remove the cron job
 
 ```bash
-bash scripts/log-cleanup.sh --uninstall
+sudo bash scripts/log-cleanup.sh --uninstall
 ```
 
 ### What it cleans
@@ -608,23 +660,75 @@ bash scripts/log-cleanup.sh --uninstall
 | `dist/logs/agents.log` | Truncated when >50MB |
 | `~/.npm/_logs/` | Debug logs older than 7 days deleted |
 
+</details>
+
 ---
 
-## Tech Stack Summary
+<details>
+<summary><h2>Updating</h2></summary>
+
+To update the Demonstrator after code changes without a full reinstall, use the included `update.sh` script.
+
+### Update everything (server + AppEngine UI)
+
+```bash
+sudo bash update.sh
+```
+
+### Server-side only (skip AppEngine deploy)
+
+```bash
+sudo bash update.sh --server
+```
+
+### AppEngine UI only (hot deploy — users don't need to restart)
+
+```bash
+sudo bash update.sh --ui
+```
+
+### Pull + build without restarting
+
+```bash
+sudo bash update.sh --no-restart
+```
+
+### What the update does
+
+| Step | Action | Flag to skip |
+|------|--------|--------------|
+| 1 | `git pull` from configured remote (stashes local changes first) | — |
+| 2 | `npm install` (only if package.json changed) | — |
+| 3 | Compile TypeScript agents (`npm run build:agents`) | `--ui` |
+| 4 | Stop → start server (with log rotation) | `--ui` or `--no-restart` |
+| 5 | `npx dt-app build && npx dt-app deploy` (reads setup.conf for OAuth creds) | `--server` |
+
+> **AppEngine deploys are hot** — the app updates in Dynatrace immediately. Users just refresh the page; no need to restart anything.
+
+</details>
+
+---
+
+<details>
+<summary><h2>Tech Stack Summary</h2></summary>
 
 | Layer | Technology |
 |-------|-----------|
 | Engine Runtime | Node.js v22+ (ESM), Express.js 4, Socket.IO 4 |
-| AI Agents | TypeScript → compiled to `dist/`, LLM via Ollama |
+| AI Generation | GitHub Models API (GPT-4.1, Claude Sonnet 4, o4-mini) via server-side proxy |
+| AI Agents | TypeScript → compiled to `dist/`, LLM via Ollama (llama3.2:1b) with rule-based fallbacks |
 | AppEngine UI | React 18, Dynatrace Strato components, TypeScript |
 | Observability | Dynatrace OneAgent + OpenTelemetry SDK |
 | Config-as-Code | Monaco v2 (Settings API deployment) |
 | Tunnel | Dynatrace EdgeConnect |
 | Auth | OAuth 2.0 (client_credentials), API Token |
 
+</details>
+
 ---
 
-## OpenTelemetry (OTel) in Child Services
+<details>
+<summary><h2>OpenTelemetry (OTel) in Child Services</h2></summary>
 
 Child services are spawned with `--require otel.cjs` so they get full OpenTelemetry auto-instrumentation from startup. Each child process receives its own `OTEL_SERVICE_NAME` environment variable matching its Dynatrace service name, ensuring traces appear under the correct service identity in Dynatrace.
 
@@ -633,9 +737,12 @@ The `otel.cjs` bootstrap:
 - Tags Ollama spans with `gen_ai.*` semantic conventions (`gen_ai.operation.name`, `gen_ai.request.model`, `gen_ai.response.model`)
 - Uses OTLP/HTTP exporter to send traces to the local OneAgent endpoint
 
+</details>
+
 ---
 
-## Additional Assets
+<details>
+<summary><h2>Additional Assets</h2></summary>
 
 | File | Purpose |
 |------|--------|
@@ -643,6 +750,8 @@ The `otel.cjs` bootstrap:
 | `Business-Observability-Demonstrator-Partner-Event.pptx` | 16-slide, 16:9 partner presentation |
 | `generate-partner-ppt.py` | Python script to regenerate the PowerPoint deck |
 | `BUSINESS-GUIDE.md` | Business perspective and value proposition |
+
+</details>
 
 ---
 
