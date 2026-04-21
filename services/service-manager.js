@@ -21,6 +21,12 @@ const dormantServices = {};
 // during a company-level stop operation (cleared after 30s)
 const stoppedCompanies = new Set();
 
+function normalizeServiceIdentifier(name) {
+  return String(name || '')
+    .replace(/[^a-zA-Z0-9]/g, '')
+    .toLowerCase();
+}
+
 /**
  * Block service creation for a specific company (temporary, auto-clears after 30s)
  */
@@ -174,8 +180,8 @@ export function getServiceNameFromStep(stepName, context = {}) {
   if (!stepName) return null;
   
   // If already a proper service name, keep it
-  if (/Service$|API$|Processor$|Manager$|Gateway$/.test(String(stepName))) {
-    return String(stepName);
+  if (/Service$|API$|Processor$|Manager$|Gateway$/i.test(String(stepName))) {
+    return normalizeServiceIdentifier(stepName);
   }
   
   // Extract context information for more intelligent naming
@@ -227,8 +233,9 @@ export function getServiceNameFromStep(stepName, context = {}) {
   serviceName = serviceName.replace(/HandlerService$/, 'Service'); 
   serviceName = serviceName.replace(/StepService$/, 'Service');
   
-  console.log(`[service-manager] Converting step "${stepName}" to clean service "${serviceName}"`);
-  return serviceName;
+  const normalizedServiceName = normalizeServiceIdentifier(serviceName);
+  console.log(`[service-manager] Converting step "${stepName}" to clean service "${normalizedServiceName}"`);
+  return normalizedServiceName;
 }
 
 // Get port for service using robust port manager
@@ -242,7 +249,7 @@ export async function getServicePort(stepName, companyName = null) {
   if (!baseServiceName) return null;
   
   // Create compound service name for internal tracking and port allocation
-  const internalServiceName = `${baseServiceName}-${companyName.replace(/[^a-zA-Z0-9]/g, '')}`;
+  const internalServiceName = `${baseServiceName}-${normalizeServiceIdentifier(companyName)}`;
   // Use clean service name for Dynatrace service identification (per user request)
   const dynatraceServiceName = baseServiceName;
   
@@ -448,7 +455,8 @@ export async function ensureServiceRunning(stepName, companyContext = {}) {
     endpoint: companyContext.endpoint
   };
   
-  const baseServiceName = companyContext.serviceName || getServiceNameFromStep(stepName, stepContext);
+  const requestedServiceName = companyContext.serviceName || getServiceNameFromStep(stepName, stepContext);
+  const baseServiceName = normalizeServiceIdentifier(requestedServiceName);
   
   // Extract company context with defaults
   const companyName = companyContext.companyName || 'DefaultCompany';
@@ -459,7 +467,7 @@ export async function ensureServiceRunning(stepName, companyContext = {}) {
   const category = stepContext.category || 'general';
   
   // Create a unique service key per company to allow service reuse within same company
-  const internalServiceName = `${baseServiceName}-${companyName.replace(/[^a-zA-Z0-9]/g, '')}`;
+  const internalServiceName = `${baseServiceName}-${normalizeServiceIdentifier(companyName)}`;
   // Use clean service name for Dynatrace service identification (per user request)
   const dynatraceServiceName = baseServiceName;
   console.log(`[service-manager] Company-specific service name: ${internalServiceName} (base: ${baseServiceName}, company: ${companyName})`);
